@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.unclepomedev.intellijvexplugin</id>
+    <id>com.github.unclepomedev.houdinivexassist</id>
     <name>HoudiniVexAssist</name>
     <vendor>unclepomedev</vendor>
 
@@ -9,7 +9,5 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.unclepomedev.intellijvexplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.unclepomedev.intellijvexplugin.startup.MyProjectActivity" />
     </extensions>
 </idea-plugin>
