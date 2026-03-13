@@ -1,4 +1,5 @@
 PROJECT_ROOT := justfile_directory()
+MAIN_RESOURCES := "src/main/resources"
 # Override via HOUDINI_RESOURCES env var for your platform/version
 HOUDINI_RESOURCES := env_var_or_default("HOUDINI_RESOURCES", "/Applications/Houdini/Houdini21.0.631/Frameworks/Houdini.framework/Versions/Current/Resources")
 
@@ -10,13 +11,17 @@ dump:
     set -e
 
     echo "Initializing Houdini environment..."
-    cd {{ HOUDINI_RESOURCES }}
+    cd "{{ HOUDINI_RESOURCES }}"
     source houdini_setup
 
-    echo "Dumping VEX API to {{ PROJECT_ROOT }}/vex_api_dump.json ..."
-    hython $HH/python3.11libs/opnode_sum.py > "{{ PROJECT_ROOT }}/vex_api_dump.json"
+    echo "Dumping VEX API to {{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_api_dump.json ..."
+    tmp_json="$(mktemp "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_api_dump.json.tmp.XXXXXX")"
+    trap 'rm -f "$tmp_json"' EXIT
+    hython "$HH/python3.11libs/opnode_sum.py" > "$tmp_json"
+    mv "$tmp_json" "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_api_dump.json"
+    trap - EXIT
 
-    echo "Unzip VEX HELP to {{ PROJECT_ROOT }}/vex_help ..."
-    unzip -qo {{HOUDINI_RESOURCES}}/houdini/help/vex.zip "functions/*" -d "{{PROJECT_ROOT}}/vex_help"
+    echo "Unzip VEX HELP to {{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_help ..."
+    unzip -qo "{{HOUDINI_RESOURCES}}/houdini/help/vex.zip" "functions/*" -d "{{PROJECT_ROOT}}/{{ MAIN_RESOURCES }}/vex_help"
 
     echo "Done"
