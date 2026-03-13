@@ -1,4 +1,4 @@
-package com.github.unclepomedev.intellijvexplugin
+package com.github.unclepomedev.houdinivexassist
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls
