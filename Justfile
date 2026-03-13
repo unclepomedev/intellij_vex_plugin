@@ -22,6 +22,11 @@ dump:
     trap - EXIT
 
     echo "Unzip VEX HELP to {{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_help ..."
-    unzip -qo "{{HOUDINI_RESOURCES}}/houdini/help/vex.zip" "functions/*" -d "{{PROJECT_ROOT}}/{{ MAIN_RESOURCES }}/vex_help"
+    tmp_help="$(mktemp -d "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_help.tmp.XXXXXX")"
+    trap 'rm -rf "$tmp_help"' EXIT
+    unzip -qo "{{ HOUDINI_RESOURCES }}/houdini/help/vex.zip" "functions/*" -d "$tmp_help"
+    rm -rf "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_help"
+    mv "$tmp_help" "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_help"
+    trap - EXIT
 
     echo "Done"
