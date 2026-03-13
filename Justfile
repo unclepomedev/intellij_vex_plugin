@@ -30,3 +30,6 @@ dump:
     trap - EXIT
 
     echo "Done"
+
+parser:
+    ./gradlew generateLexer generateParser

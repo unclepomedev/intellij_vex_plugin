@@ -7,3 +7,5 @@
 build
 vex_api_dump.json
 vex_help
+/src/main/gen/
+

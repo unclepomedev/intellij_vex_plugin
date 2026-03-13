@@ -1,0 +1,48 @@
+{
+  parserClass="com.github.unclepomedev.houdinivexassist.parser.VexParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Vex"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.unclepomedev.houdinivexassist.psi"
+  psiImplPackage="com.github.unclepomedev.houdinivexassist.psi.impl"
+
+  elementTypeHolderClass="com.github.unclepomedev.houdinivexassist.psi.VexTypes"
+  elementTypeClass="com.github.unclepomedev.houdinivexassist.psi.VexElementType"
+  tokenTypeClass="com.github.unclepomedev.houdinivexassist.psi.VexTokenType"
+
+  tokens=[
+    SPACE='regexp:\s+'
+    LINE_COMMENT='regexp://.*'
+    BLOCK_COMMENT='regexp:/\*([^*]|\*+[^*/])*\*+/'
+    NUMBER='regexp:\d+(\.\d*)?'
+    STRING="regexp:\"[^\"]*\"|'[^']*'"
+    ATTRIBUTE="regexp:[fiuvsp]?@\w+"
+    IDENTIFIER="regexp:[a-zA-Z_]\w*"
+    LBRACE="{"
+    RBRACE="}"
+    LPAREN="("
+    RPAREN=")"
+    SEMICOLON=";"
+    COMMA=","
+  ]
+}
+
+vexFile ::= item_*
+
+private item_ ::= function_def | statement | macro | COMMENT
+
+function_def ::= type IDENTIFIER LPAREN parameter_list? RPAREN block
+parameter_list ::= parameter (COMMA parameter)*
+parameter ::= type IDENTIFIER
+block ::= LBRACE item_* RBRACE
+
+statement ::= expression SEMICOLON | block | declaration SEMICOLON
+declaration ::= type IDENTIFIER ( '=' expression )?
+expression ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | function_call | assign_expr
+function_call ::= IDENTIFIER LPAREN argument_list? RPAREN
+argument_list ::= expression (COMMA expression)*
+assign_expr ::= ATTRIBUTE '=' expression
+
+type ::= 'int' | 'float' | 'vector' | 'vector2' | 'vector4' | 'matrix' | 'matrix3' | 'string' | 'void'
+macro ::= 'regexp:#.*'
