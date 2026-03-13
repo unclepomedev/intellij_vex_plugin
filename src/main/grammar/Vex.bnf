@@ -13,11 +13,12 @@
 
   tokens=[
     SPACE='regexp:\s+'
-    LINE_COMMENT='regexp://.*'
-    BLOCK_COMMENT='regexp:/\*([^*]|\*+[^*/])*\*+/'
+    COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
     NUMBER='regexp:\d+(\.\d*)?'
     STRING="regexp:\"[^\"]*\"|'[^']*'"
     ATTRIBUTE="regexp:[fiuvsp]?@\w+"
+    MACRO='regexp:#.*'
+    TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void'
     IDENTIFIER="regexp:[a-zA-Z_]\w*"
     LBRACE="{"
     RBRACE="}"
@@ -25,24 +26,24 @@
     RPAREN=")"
     SEMICOLON=";"
     COMMA=","
+    EQUALS="="
   ]
 }
 
 vexFile ::= item_*
 
-private item_ ::= function_def | statement | macro | COMMENT
+private item_ ::= macro | function_def | statement | COMMENT
 
-function_def ::= type IDENTIFIER LPAREN parameter_list? RPAREN block
+macro ::= MACRO
+
+function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block
 parameter_list ::= parameter (COMMA parameter)*
-parameter ::= type IDENTIFIER
+parameter ::= TYPE IDENTIFIER
 block ::= LBRACE item_* RBRACE
 
-statement ::= expression SEMICOLON | block | declaration SEMICOLON
-declaration ::= type IDENTIFIER ( '=' expression )?
+statement ::= block | expression SEMICOLON | declaration SEMICOLON
+declaration ::= TYPE IDENTIFIER ( EQUALS expression )?
 expression ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | function_call | assign_expr
 function_call ::= IDENTIFIER LPAREN argument_list? RPAREN
 argument_list ::= expression (COMMA expression)*
-assign_expr ::= ATTRIBUTE '=' expression
-
-type ::= 'int' | 'float' | 'vector' | 'vector2' | 'vector4' | 'matrix' | 'matrix3' | 'string' | 'void'
-macro ::= 'regexp:#.*'
+assign_expr ::= ATTRIBUTE EQUALS expression

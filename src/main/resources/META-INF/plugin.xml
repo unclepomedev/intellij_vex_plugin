@@ -9,5 +9,8 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <lang.parserDefinition
+                language="VEX"
+                implementationClass="com.github.unclepomedev.houdinivexassist.parser.VexParserDefinition"/>
     </extensions>
 </idea-plugin>

@@ -16,8 +16,7 @@ import com.intellij.psi.TokenType;
 %eof}
 
 WHITE_SPACE=[\ \t\n\r\f]+
-LINE_COMMENT="//".*
-BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*\*"/"
+COMMENT="/"\*([^*]|\*+[^*/])*\*"/"
 NUMBER=[0-9]+(\.[0-9]*)?
 STRING=(\"[^\"]*\")|(\'[^\']*\')
 ATTRIBUTE=[fiuvsp]?@[a-zA-Z0-9_]+
@@ -28,8 +27,7 @@ MACRO="#".*
 
 <YYINITIAL> {
   {WHITE_SPACE}       { return TokenType.WHITE_SPACE; }
-  {LINE_COMMENT}      { return VexTypes.COMMENT; }
-  {BLOCK_COMMENT}     { return VexTypes.COMMENT; }
+  {COMMENT}           { return VexTypes.COMMENT; }
   {NUMBER}            { return VexTypes.NUMBER; }
   {STRING}            { return VexTypes.STRING; }
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
@@ -41,8 +39,7 @@ MACRO="#".*
   ")"                 { return VexTypes.RPAREN; }
   ";"                 { return VexTypes.SEMICOLON; }
   ","                 { return VexTypes.COMMA; }
-
-  "int"|"float"|"vector"|"vector2"|"vector4"|"matrix"|"matrix3"|"string"|"void" { return VexTypes.TYPE; }
+  "="                 { return VexTypes.EQUALS; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 
