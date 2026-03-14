@@ -100,6 +100,9 @@ if_statement ::= IF LPAREN expr RPAREN statement (ELSE statement)?
 for_statement ::= FOR LPAREN for_init expr_statement expr? RPAREN statement
 private for_init ::= declaration_statement | expr_statement
 
+foreach_statement ::= FOREACH LPAREN foreach_vars SEMICOLON expr RPAREN statement
+private foreach_vars ::= (TYPE? IDENTIFIER COMMA)? TYPE? IDENTIFIER
+
 while_statement ::= WHILE LPAREN expr RPAREN statement
 do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON
 
@@ -150,11 +153,9 @@ private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT
 postfix_expr ::= expr postfix_op
 private postfix_op ::= PLUSPLUS | MINUSMINUS
 
+call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN
 member_expr ::= expr DOT IDENTIFIER
-
 primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal
-
 vector_literal ::= LBRACE argument_list? RBRACE
 
-call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN
 argument_list ::= expr (COMMA expr)*
