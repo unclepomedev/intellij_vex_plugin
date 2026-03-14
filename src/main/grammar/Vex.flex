@@ -76,6 +76,7 @@ MACRO="#".*
   "break"             { return VexTypes.BREAK; }
   "continue"          { return VexTypes.CONTINUE; }
   "return"            { return VexTypes.RETURN; }
+  "struct"            { return VexTypes.STRUCT; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 

@@ -24,12 +24,11 @@ class VexParserTest : VexTestBase() {
         assertFalse("Standard code should not produce parse errors", hasErrors)
     }
 
-    // TODO: this is temporal error-free behavior
     fun testBrokenSyntaxCode() {
         val code = "if (a > b {"
         val file = myFixture.configureByText(VexFileType, code)
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
-        assertFalse("Broken code should not produce parse errors", hasErrors)
+        assertTrue("Broken code should not produce parse errors", hasErrors)
     }
 
     fun testIfStatementAndMemberAccess() {
@@ -43,6 +42,9 @@ class VexParserTest : VexTestBase() {
         val code = """
             for (i = 0; i < 10; i++) {
                 if (i % 2 == 0) continue;
+                break;
+            }
+            for (int j = 0; j < 5; j++) {
                 break;
             }
             foreach (int ptnum; pts) {
@@ -121,5 +123,21 @@ class VexParserTest : VexTestBase() {
         val file = myFixture.configureByText(VexFileType, code)
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("All foreach variations from official docs should be parsed", hasErrors)
+    }
+
+    fun testStructAndFunctions() {
+        val code = """
+            struct MyStruct {
+                int a;
+                float b;
+            }
+            
+            void myFunc(int a; float b; vector c) {
+                @P.x += a;
+            }
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Struct and semicolon separated arguments should be parsed", hasErrors)
     }
 }
