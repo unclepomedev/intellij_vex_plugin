@@ -1,0 +1,48 @@
+{
+  parserClass="com.github.unclepomedev.houdinivexassist.parser.VexParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Vex"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.unclepomedev.houdinivexassist.psi"
+  psiImplPackage="com.github.unclepomedev.houdinivexassist.psi.impl"
+
+  elementTypeHolderClass="com.github.unclepomedev.houdinivexassist.psi.VexTypes"
+  elementTypeClass="com.github.unclepomedev.houdinivexassist.psi.VexElementType"
+  tokenTypeClass="com.github.unclepomedev.houdinivexassist.psi.VexTokenType"
+
+  tokens=[
+    SPACE='regexp:\s+'
+    COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
+    NUMBER='regexp:\d+(\.\d*)?'
+    STRING="regexp:\"[^\"]*\"|'[^']*'"
+    ATTRIBUTE="regexp:[fiuvsp]?@\w+"
+    MACRO='regexp:#.*'
+    TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void'
+    IDENTIFIER="regexp:[a-zA-Z_]\w*"
+    LBRACE="{"
+    RBRACE="}"
+    LPAREN="("
+    RPAREN=")"
+    SEMICOLON=";"
+    COMMA=","
+    EQUALS="="
+  ]
+}
+
+vexFile ::= item_*
+
+private item_ ::= MACRO | function_def | statement | COMMENT
+
+function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block
+parameter_list ::= parameter (COMMA parameter)*
+parameter ::= TYPE IDENTIFIER
+block ::= LBRACE item_* RBRACE
+
+statement ::= block | expression SEMICOLON | declaration SEMICOLON
+declaration ::= TYPE IDENTIFIER ( EQUALS expression )?
+expression ::= function_call | assign_expr | IDENTIFIER | NUMBER | STRING | ATTRIBUTE
+function_call ::= IDENTIFIER LPAREN argument_list? RPAREN
+argument_list ::= expression (COMMA expression)*
+private lvalue ::= IDENTIFIER | ATTRIBUTE
+assign_expr ::= lvalue EQUALS expression
