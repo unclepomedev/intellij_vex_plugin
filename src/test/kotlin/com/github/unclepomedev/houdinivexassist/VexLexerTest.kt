@@ -28,8 +28,7 @@ class VexLexerTest : VexTestBase() {
         )
 
         doTest(
-            "internal",
-            VexTypes.IDENTIFIER to "internal"
+            "internal", VexTypes.IDENTIFIER to "internal"
         )
     }
 
@@ -48,26 +47,19 @@ class VexLexerTest : VexTestBase() {
 
     fun testComments() {
         doTest(
-            "// comment\nint",
-            VexTypes.COMMENT to "// comment",
-            TokenType.WHITE_SPACE to "\n",
-            VexTypes.TYPE to "int"
+            "// comment\nint", VexTypes.COMMENT to "// comment", TokenType.WHITE_SPACE to "\n", VexTypes.TYPE to "int"
         )
         doTest(
-            "/* comment\n */int",
-            VexTypes.COMMENT to "/* comment\n */",
-            VexTypes.TYPE to "int"
+            "/* comment\n */int", VexTypes.COMMENT to "/* comment\n */", VexTypes.TYPE to "int"
         )
     }
 
     fun testStrings() {
         doTest(
-            "\"double\"",
-            VexTypes.STRING to "\"double\""
+            "\"double\"", VexTypes.STRING to "\"double\""
         )
         doTest(
-            "'single'",
-            VexTypes.STRING to "'single'"
+            "'single'", VexTypes.STRING to "'single'"
         )
     }
 
@@ -135,6 +127,74 @@ class VexLexerTest : VexTestBase() {
             VexTypes.COMMA to ",",
             TokenType.WHITE_SPACE to " ",
             VexTypes.MACRO to "#define"
+        )
+    }
+
+    fun testControlKeywords() {
+        doTest(
+            "if else for foreach while do break continue return",
+            VexTypes.IF to "if",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.ELSE to "else",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.FOR to "for",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.FOREACH to "foreach",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.WHILE to "while",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.DO to "do",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.BREAK to "break",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.CONTINUE to "continue",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.RETURN to "return"
+        )
+    }
+
+    fun testArrayAttributes() {
+        doTest(
+            "f[]@uvs i[]@pts []@myattr",
+            VexTypes.ATTRIBUTE to "f[]@uvs",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.ATTRIBUTE to "i[]@pts",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.ATTRIBUTE to "[]@myattr"
+        )
+    }
+
+    fun testTypes() {
+        doTest(
+            "int float vector vector2 vector4 matrix matrix3 string void",
+            VexTypes.TYPE to "int",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "float",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "vector",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "vector2",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "vector4",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "matrix",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "matrix3",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "string",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "void"
+        )
+    }
+
+    fun testFloatNumbers() {
+        doTest(
+            "42 3.14159 10.",
+            VexTypes.NUMBER to "42",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "3.14159",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "10."
         )
     }
 }

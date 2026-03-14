@@ -18,7 +18,7 @@
     COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
     NUMBER='regexp:\d+(\.\d*)?'
     STRING="regexp:\"[^\"]*\"|'[^']*'"
-    ATTRIBUTE="regexp:[fiuvsp]?@\w+"
+    ATTRIBUTE="regexp:[fiuvsp]?(\\[\\])?@\\w+"
     MACRO='regexp:#.*'
     TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void'
     IDENTIFIER="regexp:[a-zA-Z_]\w*"
@@ -28,6 +28,11 @@
     RPAREN=")"
     SEMICOLON=";"
     COMMA=","
+    DOT="."
+    PLUSEQ="+="
+    MINUSEQ="-="
+    MULEQ="*="
+    DIVEQ="/="
     EQUALS="="
     EQEQ="=="
     NEQ="!="
@@ -35,6 +40,8 @@
     GT=">"
     LE="<="
     GE=">="
+    PLUSPLUS="++"
+    MINUSMINUS="--"
     PLUS="+"
     MINUS="-"
     MUL="*"
@@ -45,9 +52,18 @@
     NOT="!"
     QMARK="?"
     COLON=":"
+    IF="if"
+    ELSE="else"
+    FOR="for"
+    FOREACH="foreach"
+    WHILE="while"
+    DO="do"
+    BREAK="break"
+    CONTINUE="continue"
+    RETURN="return"
   ]
-  
   extends(".*_expr")=expr
+  extends(".*_statement")=statement
 }
 
 vexFile ::= item_*
@@ -56,20 +72,54 @@ private item_ ::= MACRO | function_def | statement | COMMENT | fallback_item
 
 // TODO: mark as error
 private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
-                        | LBRACE | RBRACE | LPAREN | RPAREN | SEMICOLON | COMMA 
-                        | EQUALS | EQEQ | NEQ | LT | GT | LE | GE 
-                        | PLUS | MINUS | MUL | DIV | MOD 
+                        | LBRACE | RBRACE | LPAREN | RPAREN | SEMICOLON | COMMA | DOT
+                        | PLUSEQ | MINUSEQ | MULEQ | DIVEQ
+                        | EQUALS | EQEQ | NEQ | LT | GT | LE | GE
+                        | PLUSPLUS | MINUSMINUS | PLUS | MINUS | MUL | DIV | MOD
                         | ANDAND | OROR | NOT | QMARK | COLON
+                        | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN
 
 function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block
 parameter_list ::= parameter (COMMA parameter)*
 parameter ::= TYPE IDENTIFIER
 block ::= LBRACE item_* RBRACE
 
-statement ::= block | expr SEMICOLON | declaration SEMICOLON
-declaration ::= TYPE IDENTIFIER ( EQUALS expr )?
+statement ::= block
+            | if_statement
+            | for_statement
+            | foreach_statement
+            | while_statement
+            | do_while_statement
+            | return_statement
+            | control_statement
+            | declaration_statement
+            | expr_statement
+
+if_statement ::= IF LPAREN expr RPAREN statement (ELSE statement)?
+
+for_statement ::= FOR LPAREN for_init expr_statement expr? RPAREN statement
+private for_init ::= declaration_statement | expr_statement
+
+foreach_statement ::= FOREACH LPAREN foreach_vars SEMICOLON expr RPAREN statement
+private foreach_vars ::= foreach_var COMMA foreach_var
+                       | foreach_var SEMICOLON foreach_var
+                       | foreach_var
+private foreach_var ::= TYPE? IDENTIFIER
+
+while_statement ::= WHILE LPAREN expr RPAREN statement
+do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON
+
+return_statement ::= RETURN expr? SEMICOLON
+
+control_statement ::= (BREAK | CONTINUE) SEMICOLON
+
+declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON
+private declaration_item ::= IDENTIFIER (EQUALS expr)?
+
+expr_statement ::= expr? SEMICOLON
 
 expr ::= assign_expr
+       | ternary_expr
        | logical_or_expr
        | logical_and_expr
        | equality_expr
@@ -77,26 +127,38 @@ expr ::= assign_expr
        | add_expr
        | mul_expr
        | prefix_expr
+       | postfix_expr
        | call_expr
+       | member_expr
        | primary_expr
 
-assign_expr ::= expr EQUALS expr { rightAssociative=true }
+assign_expr ::= expr (EQUALS | PLUSEQ | MINUSEQ | MULEQ | DIVEQ) expr { rightAssociative=true }
+ternary_expr ::= expr QMARK expr COLON expr { rightAssociative=true }
+
 logical_or_expr ::= expr OROR expr
 logical_and_expr ::= expr ANDAND expr
+
 equality_expr ::= expr equality_op expr
 private equality_op ::= EQEQ | NEQ
+
 relational_expr ::= expr relational_op expr
 private relational_op ::= LT | GT | LE | GE
+
 add_expr ::= expr add_op expr
 private add_op ::= PLUS | MINUS
+
 mul_expr ::= expr mul_op expr
 private mul_op ::= MUL | DIV | MOD
+
 prefix_expr ::= prefix_op expr
-private prefix_op ::= PLUS | MINUS | NOT
+private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT
 
-primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal
-
-vector_literal ::= LBRACE argument_list? RBRACE
+postfix_expr ::= expr postfix_op
+private postfix_op ::= PLUSPLUS | MINUSMINUS
 
 call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN
+member_expr ::= expr DOT IDENTIFIER
+primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal
+vector_literal ::= LBRACE argument_list? RBRACE
+
 argument_list ::= expr (COMMA expr)*

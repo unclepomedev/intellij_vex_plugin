@@ -36,4 +36,8 @@ dump:
     echo "Done"
 
 parser:
+    #!/usr/bin/env bash
+    set -e
+
+    rm -rf src/main/gen
     ./gradlew generateLexer generateParser
