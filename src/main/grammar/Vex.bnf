@@ -18,7 +18,7 @@
     COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
     NUMBER='regexp:\d+(\.\d*)?'
     STRING="regexp:\"[^\"]*\"|'[^']*'"
-    ATTRIBUTE="regexp:[fiuvsp]?@\w+"
+    ATTRIBUTE="regexp:[fiuvsp]?(\\[\\])?@\\w+"
     MACRO='regexp:#.*'
     TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void'
     IDENTIFIER="regexp:[a-zA-Z_]\w*"
@@ -29,6 +29,10 @@
     SEMICOLON=";"
     COMMA=","
     DOT="."
+    PLUSEQ="+="
+    MINUSEQ="-="
+    MULEQ="*="
+    DIVEQ="/="
     EQUALS="="
     EQEQ="=="
     NEQ="!="
@@ -67,6 +71,7 @@ private item_ ::= MACRO | function_def | statement | COMMENT | fallback_item
 // TODO: mark as error
 private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
                         | LBRACE | RBRACE | LPAREN | RPAREN | SEMICOLON | COMMA | DOT
+                        | PLUSEQ | MINUSEQ | MULEQ | DIVEQ
                         | EQUALS | EQEQ | NEQ | LT | GT | LE | GE
                         | PLUS | MINUS | MUL | DIV | MOD
                         | ANDAND | OROR | NOT | QMARK | COLON
@@ -114,7 +119,7 @@ expr ::= assign_expr
        | member_expr
        | primary_expr
 
-assign_expr ::= expr (EQUALS | PLUS EQUALS | MINUS EQUALS | MUL EQUALS | DIV EQUALS) expr { rightAssociative=true }
+assign_expr ::= expr (EQUALS | PLUSEQ | MINUSEQ | MULEQ | DIVEQ) expr { rightAssociative=true }
 ternary_expr ::= expr QMARK expr COLON expr { rightAssociative=true }
 
 logical_or_expr ::= expr OROR expr

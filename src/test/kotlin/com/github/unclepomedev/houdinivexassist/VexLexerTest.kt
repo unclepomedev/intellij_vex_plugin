@@ -166,12 +166,18 @@ class VexLexerTest : VexTestBase() {
 
     fun testTypes() {
         doTest(
-            "float vector vector4 matrix3 string void",
+            "int float vector vector2 vector4 matrix matrix3 string void",
+            VexTypes.TYPE to "int",
+            TokenType.WHITE_SPACE to " ",
             VexTypes.TYPE to "float",
             TokenType.WHITE_SPACE to " ",
             VexTypes.TYPE to "vector",
             TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "vector2",
+            TokenType.WHITE_SPACE to " ",
             VexTypes.TYPE to "vector4",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "matrix",
             TokenType.WHITE_SPACE to " ",
             VexTypes.TYPE to "matrix3",
             TokenType.WHITE_SPACE to " ",

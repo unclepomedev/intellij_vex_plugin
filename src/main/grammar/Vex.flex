@@ -20,7 +20,7 @@ WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
 NUMBER=[0-9]+(\.[0-9]*)?
 STRING=(\"[^\"]*\")|(\'[^\']*\')
-ATTRIBUTE=[fiuvsp]?@[a-zA-Z0-9_]+
+ATTRIBUTE=[fiuvsp]?(\[\])?@[a-zA-Z0-9_]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
 MACRO="#".*
 
@@ -43,6 +43,10 @@ MACRO="#".*
   ";"                 { return VexTypes.SEMICOLON; }
   ","                 { return VexTypes.COMMA; }
   "."                 { return VexTypes.DOT; }
+  "+="                { return VexTypes.PLUSEQ; }
+  "-="                { return VexTypes.MINUSEQ; }
+  "*="                { return VexTypes.MULEQ; }
+  "/="                { return VexTypes.DIVEQ; }
   "="                 { return VexTypes.EQUALS; }
   "=="                { return VexTypes.EQEQ; }
   "!="                { return VexTypes.NEQ; }
@@ -70,8 +74,6 @@ MACRO="#".*
   "break"             { return VexTypes.BREAK; }
   "continue"          { return VexTypes.CONTINUE; }
   "return"            { return VexTypes.RETURN; }
-
-  [fiuvsp]?(\[\])?@[a-zA-Z0-9_]+  { return VexTypes.ATTRIBUTE; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 
