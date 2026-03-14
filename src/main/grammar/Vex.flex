@@ -43,6 +43,22 @@ MACRO="#".*
   ";"                 { return VexTypes.SEMICOLON; }
   ","                 { return VexTypes.COMMA; }
   "="                 { return VexTypes.EQUALS; }
+  "=="                { return VexTypes.EQEQ; }
+  "!="                { return VexTypes.NEQ; }
+  "<"                 { return VexTypes.LT; }
+  ">"                 { return VexTypes.GT; }
+  "<="                { return VexTypes.LE; }
+  ">="                { return VexTypes.GE; }
+  "+"                 { return VexTypes.PLUS; }
+  "-"                 { return VexTypes.MINUS; }
+  "*"                 { return VexTypes.MUL; }
+  "/"                 { return VexTypes.DIV; }
+  "%"                 { return VexTypes.MOD; }
+  "&&"                { return VexTypes.ANDAND; }
+  "||"                { return VexTypes.OROR; }
+  "!"                 { return VexTypes.NOT; }
+  "?"                 { return VexTypes.QMARK; }
+  ":"                 { return VexTypes.COLON; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 
