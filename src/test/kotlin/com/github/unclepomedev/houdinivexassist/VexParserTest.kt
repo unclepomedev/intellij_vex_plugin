@@ -25,6 +25,7 @@ class VexParserTest : VexTestBase() {
         assertFalse("Standard code should not produce parse errors", hasErrors)
     }
 
+    // TODO: this is temporal error-free behavior
     fun testBrokenSyntaxCode() {
         val code = "if (a > b {"
         val file = myFixture.configureByText(VexFileType, code)

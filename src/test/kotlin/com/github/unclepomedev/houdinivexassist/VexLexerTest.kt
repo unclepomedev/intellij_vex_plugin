@@ -19,20 +19,23 @@ class VexLexerTest : VexTestBase() {
     }
 
     fun testKeywordAndIdentifier() {
-        doTest("int a;",
+        doTest(
+            "int a;",
             VexTypes.TYPE to "int",
             TokenType.WHITE_SPACE to " ",
             VexTypes.IDENTIFIER to "a",
             VexTypes.SEMICOLON to ";"
         )
 
-        doTest("internal",
+        doTest(
+            "internal",
             VexTypes.IDENTIFIER to "internal"
         )
     }
 
     fun testAttributes() {
-        doTest("@P v@Cd i@ptnum s@name",
+        doTest(
+            "@P v@Cd i@ptnum s@name",
             VexTypes.ATTRIBUTE to "@P",
             TokenType.WHITE_SPACE to " ",
             VexTypes.ATTRIBUTE to "v@Cd",
@@ -44,31 +47,73 @@ class VexLexerTest : VexTestBase() {
     }
 
     fun testComments() {
-        doTest("// comment\nint",
+        doTest(
+            "// comment\nint",
             VexTypes.COMMENT to "// comment",
             TokenType.WHITE_SPACE to "\n",
             VexTypes.TYPE to "int"
         )
-        doTest("/* comment\n */int",
+        doTest(
+            "/* comment\n */int",
             VexTypes.COMMENT to "/* comment\n */",
             VexTypes.TYPE to "int"
         )
     }
 
     fun testStrings() {
-        doTest("\"double\"",
+        doTest(
+            "\"double\"",
             VexTypes.STRING to "\"double\""
         )
-        doTest("'single'",
+        doTest(
+            "'single'",
             VexTypes.STRING to "'single'"
         )
     }
 
     fun testUnknownCharacters() {
-        doTest("　あ\u0000",
+        doTest(
+            "　あ\u0000",
             TokenType.BAD_CHARACTER to "　",
             TokenType.BAD_CHARACTER to "あ",
             TokenType.BAD_CHARACTER to "\u0000"
+        )
+    }
+
+    fun testOperators() {
+        doTest(
+            "== != < > <= >= + - * / % && || ! ? :",
+            VexTypes.EQEQ to "==",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NEQ to "!=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LT to "<",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.GT to ">",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LE to "<=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.GE to ">=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.PLUS to "+",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MINUS to "-",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MUL to "*",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.DIV to "/",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MOD to "%",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.ANDAND to "&&",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.OROR to "||",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NOT to "!",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.QMARK to "?",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.COLON to ":"
         )
     }
 }
