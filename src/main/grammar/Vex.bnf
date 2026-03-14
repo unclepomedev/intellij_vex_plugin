@@ -87,12 +87,15 @@ struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE { pin=1 }
 struct_member ::= TYPE ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }
 private struct_member_recover ::= !(TYPE | RBRACE)
 
-function_signature ::= IDENTIFIER LPAREN parameter_list? RPAREN
+function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
 
-function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block { pin=3 }
+function_def ::= TYPE IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin=3 }
 
-parameter_list ::= parameter ((COMMA | SEMICOLON) parameter)*
-parameter ::= TYPE IDENTIFIER?
+parameter_list_def ::= parameter_def ((COMMA | SEMICOLON) parameter_def)*
+parameter_def ::= TYPE IDENTIFIER
+
+parameter_list_sig ::= parameter_sig ((COMMA | SEMICOLON) parameter_sig)*
+parameter_sig ::= TYPE IDENTIFIER?
 block ::= LBRACE item_* RBRACE
 
 statement ::= block

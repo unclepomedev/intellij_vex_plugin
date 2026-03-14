@@ -143,4 +143,16 @@ class VexParserTest : VexTestBase() {
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Struct and semicolon separated arguments should be parsed", hasErrors)
     }
+
+    fun testBrokenStructSyntax() {
+        val code = """
+            struct Bad {
+                int a
+                float b = 1.0;
+            }
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertTrue("Broken struct syntax should produce parse errors", hasErrors)
+    }
 }
