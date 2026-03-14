@@ -42,6 +42,7 @@ MACRO="#".*
   ")"                 { return VexTypes.RPAREN; }
   ";"                 { return VexTypes.SEMICOLON; }
   ","                 { return VexTypes.COMMA; }
+  "."                 { return VexTypes.DOT; }
   "="                 { return VexTypes.EQUALS; }
   "=="                { return VexTypes.EQEQ; }
   "!="                { return VexTypes.NEQ; }
@@ -59,6 +60,18 @@ MACRO="#".*
   "!"                 { return VexTypes.NOT; }
   "?"                 { return VexTypes.QMARK; }
   ":"                 { return VexTypes.COLON; }
+
+  "if"                { return VexTypes.IF; }
+  "else"              { return VexTypes.ELSE; }
+  "for"               { return VexTypes.FOR; }
+  "foreach"           { return VexTypes.FOREACH; }
+  "while"             { return VexTypes.WHILE; }
+  "do"                { return VexTypes.DO; }
+  "break"             { return VexTypes.BREAK; }
+  "continue"          { return VexTypes.CONTINUE; }
+  "return"            { return VexTypes.RETURN; }
+
+  [fiuvsp]?(\[\])?@[a-zA-Z0-9_]+  { return VexTypes.ATTRIBUTE; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 
