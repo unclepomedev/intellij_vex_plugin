@@ -65,7 +65,7 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         return when (tokenType) {
             VexTypes.IF, VexTypes.ELSE, VexTypes.FOR, VexTypes.FOREACH,
             VexTypes.WHILE, VexTypes.DO, VexTypes.BREAK, VexTypes.CONTINUE,
-            VexTypes.RETURN, VexTypes.STRUCT -> KEYWORD_KEYS
+            VexTypes.RETURN, VexTypes.STRUCT, VexTypes.EXPORT, VexTypes.FUNCTION -> KEYWORD_KEYS
 
             VexTypes.TYPE -> TYPE_KEYS
             VexTypes.NUMBER -> NUMBER_KEYS
@@ -86,8 +86,10 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
 
             VexTypes.PLUS, VexTypes.MINUS, VexTypes.MUL, VexTypes.DIV, VexTypes.MOD,
             VexTypes.EQUALS, VexTypes.PLUSEQ, VexTypes.MINUSEQ, VexTypes.MULEQ, VexTypes.DIVEQ,
+            VexTypes.MODEQ, VexTypes.ANDEQ, VexTypes.OREQ, VexTypes.XOREQ, VexTypes.LSHIFTEQ, VexTypes.RSHIFTEQ,
             VexTypes.EQEQ, VexTypes.NEQ, VexTypes.LT, VexTypes.GT, VexTypes.LE, VexTypes.GE,
             VexTypes.ANDAND, VexTypes.OROR, VexTypes.NOT, VexTypes.PLUSPLUS, VexTypes.MINUSMINUS,
+            VexTypes.LSHIFT, VexTypes.RSHIFT, VexTypes.BITAND, VexTypes.BITOR, VexTypes.BITXOR, VexTypes.BITNOT,
             VexTypes.QMARK, VexTypes.COLON -> OPERATION_SIGN_KEYS
 
             else -> EMPTY_KEYS
