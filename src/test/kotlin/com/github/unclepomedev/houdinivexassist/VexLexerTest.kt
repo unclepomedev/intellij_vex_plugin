@@ -74,7 +74,7 @@ class VexLexerTest : VexTestBase() {
 
     fun testOperators() {
         doTest(
-            "== != < > <= >= + - * / % && || ! ? : =",
+            "== != < > <= >= + - * / % && || ! ? : = += -= *= /= %= &= |= ^= <<= >>= << >> & | ^ ~",
             VexTypes.EQEQ to "==",
             TokenType.WHITE_SPACE to " ",
             VexTypes.NEQ to "!=",
@@ -108,6 +108,38 @@ class VexLexerTest : VexTestBase() {
             VexTypes.COLON to ":",
             TokenType.WHITE_SPACE to " ",
             VexTypes.EQUALS to "=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.PLUSEQ to "+=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MINUSEQ to "-=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MULEQ to "*=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.DIVEQ to "/=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MODEQ to "%=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.ANDEQ to "&=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.OREQ to "|=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.XOREQ to "^=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LSHIFTEQ to "<<=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.RSHIFTEQ to ">>=",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LSHIFT to "<<",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.RSHIFT to ">>",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.BITAND to "&",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.BITOR to "|",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.BITXOR to "^",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.BITNOT to "~"
         )
     }
 
@@ -172,7 +204,7 @@ class VexLexerTest : VexTestBase() {
 
     fun testTypes() {
         doTest(
-            "int float vector vector2 vector4 matrix matrix3 string void",
+            "int float vector vector2 vector4 matrix matrix3 string void bsdf dict",
             VexTypes.TYPE to "int",
             TokenType.WHITE_SPACE to " ",
             VexTypes.TYPE to "float",
@@ -189,7 +221,11 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.TYPE to "string",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "void"
+            VexTypes.TYPE to "void",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "bsdf",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.TYPE to "dict"
         )
     }
 
@@ -201,6 +237,38 @@ class VexLexerTest : VexTestBase() {
             VexTypes.NUMBER to "3.14159",
             TokenType.WHITE_SPACE to " ",
             VexTypes.NUMBER to "10."
+        )
+    }
+
+    fun testAdvancedKeywords() {
+        doTest(
+            "struct export function",
+            VexTypes.STRUCT to "struct",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.EXPORT to "export",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.FUNCTION to "function"
+        )
+    }
+
+    fun testNumbers() {
+        doTest(
+            "42 3.14159 10. .5 1e-5 2.5E4 0x1A 0Xff",
+            VexTypes.NUMBER to "42",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "3.14159",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "10.",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to ".5",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "1e-5",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "2.5E4",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "0x1A",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.NUMBER to "0Xff"
         )
     }
 }

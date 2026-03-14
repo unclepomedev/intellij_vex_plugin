@@ -16,11 +16,11 @@
   tokens=[
     SPACE='regexp:\s+'
     COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
-    NUMBER='regexp:\d+(\.\d*)?'
+    NUMBER='regexp:([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)'
     STRING="regexp:\"[^\"]*\"|'[^']*'"
     ATTRIBUTE="regexp:[fiuvsp]?(\\[\\])?@\\w+"
     MACRO='regexp:#.*'
-    TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void'
+    TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void|bsdf|dict'
     IDENTIFIER="regexp:[a-zA-Z_]\w*"
     LBRACE="{"
     RBRACE="}"
@@ -55,6 +55,18 @@
     NOT="!"
     QMARK="?"
     COLON=":"
+    MODEQ="%="
+    ANDEQ="&="
+    OREQ="|="
+    XOREQ="^="
+    LSHIFTEQ="<<="
+    RSHIFTEQ=">>="
+    LSHIFT="<<"
+    RSHIFT=">>"
+    BITAND="&"
+    BITOR="|"
+    BITXOR="^"
+    BITNOT="~"
     IF="if"
     ELSE="else"
     FOR="for"
@@ -65,6 +77,8 @@
     CONTINUE="continue"
     RETURN="return"
     STRUCT="struct"
+    EXPORT="export"
+    FUNCTION="function"
   ]
   extends(".*_expr")=expr
   extends(".*_statement")=statement
@@ -77,9 +91,10 @@ private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fall
 private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
                         | LBRACK | RBRACK | ARROW
                         | SEMICOLON | COMMA | DOT
-                        | PLUSEQ | MINUSEQ | MULEQ | DIVEQ
+                        | PLUSEQ | MINUSEQ | MULEQ | DIVEQ | MODEQ | ANDEQ | OREQ | XOREQ | LSHIFTEQ | RSHIFTEQ
                         | EQUALS | EQEQ | NEQ | LT | GT | LE | GE
                         | PLUSPLUS | MINUSMINUS | PLUS | MINUS | MUL | DIV | MOD
+                        | LSHIFT | RSHIFT | BITAND | BITOR | BITXOR | BITNOT
                         | ANDAND | OROR | NOT | QMARK | COLON
                         | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT
 
@@ -89,7 +104,7 @@ private struct_member_recover ::= !(TYPE | RBRACE)
 
 function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
 
-function_def ::= TYPE IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin=3 }
+function_def ::= EXPORT? FUNCTION? TYPE IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin="LPAREN" }
 
 parameter_list_def ::= parameter_def ((COMMA | SEMICOLON) parameter_def)*
 parameter_def ::= TYPE IDENTIFIER
@@ -136,8 +151,12 @@ expr ::= assign_expr
        | ternary_expr
        | logical_or_expr
        | logical_and_expr
+       | bitwise_or_expr
+       | bitwise_xor_expr
+       | bitwise_and_expr
        | equality_expr
        | relational_expr
+       | shift_expr
        | add_expr
        | mul_expr
        | prefix_expr
@@ -146,17 +165,24 @@ expr ::= assign_expr
        | member_expr
        | primary_expr
 
-assign_expr ::= expr (EQUALS | PLUSEQ | MINUSEQ | MULEQ | DIVEQ) expr { rightAssociative=true }
+assign_expr ::= expr (EQUALS | PLUSEQ | MINUSEQ | MULEQ | DIVEQ | MODEQ | ANDEQ | OREQ | XOREQ | LSHIFTEQ | RSHIFTEQ) expr { rightAssociative=true }
 ternary_expr ::= expr QMARK expr COLON expr { rightAssociative=true }
 
 logical_or_expr ::= expr OROR expr
 logical_and_expr ::= expr ANDAND expr
+
+bitwise_or_expr ::= expr BITOR expr
+bitwise_xor_expr ::= expr BITXOR expr
+bitwise_and_expr ::= expr BITAND expr
 
 equality_expr ::= expr equality_op expr
 private equality_op ::= EQEQ | NEQ
 
 relational_expr ::= expr relational_op expr
 private relational_op ::= LT | GT | LE | GE
+
+shift_expr ::= expr shift_op expr
+private shift_op ::= LSHIFT | RSHIFT
 
 add_expr ::= expr add_op expr
 private add_op ::= PLUS | MINUS
@@ -165,7 +191,7 @@ mul_expr ::= expr mul_op expr
 private mul_op ::= MUL | DIV | MOD
 
 prefix_expr ::= prefix_op expr
-private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT
+private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT | BITNOT
 
 postfix_expr ::= expr postfix_op
 private postfix_op ::= PLUSPLUS | MINUSMINUS

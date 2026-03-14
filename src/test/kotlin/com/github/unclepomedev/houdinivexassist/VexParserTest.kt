@@ -155,4 +155,68 @@ class VexParserTest : VexTestBase() {
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertTrue("Broken struct syntax should produce parse errors", hasErrors)
     }
+
+    fun testBitwiseAndShiftOperators() {
+        val code = """
+            int a = 1 << 4;
+            int b = a >> 2;
+            int c = a & b | ~a ^ 0xFF;
+            a <<= 1;
+            b &= c;
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Bitwise and shift operators should be parsed", hasErrors)
+
+        val cDecl = PsiTreeUtil.findChildrenOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexDeclarationStatement::class.java
+        )
+            .find { it.text.startsWith("int c =") }
+        assertNotNull("Could not find declaration for 'c'", cDecl)
+
+        val orExpr = PsiTreeUtil.findChildOfType(
+            cDecl,
+            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseOrExpr::class.java
+        )
+        assertNotNull("c initializer should be a bitwise OR expression", orExpr)
+
+        val andExpr = PsiTreeUtil.getChildOfType(
+            orExpr,
+            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseAndExpr::class.java
+        )
+        assertNotNull("Left child should be a bitwise AND expression", andExpr)
+        assertEquals("a & b", andExpr!!.text)
+
+        val xorExpr = PsiTreeUtil.getChildOfType(
+            orExpr,
+            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseXorExpr::class.java
+        )
+        assertNotNull("Right child should be a bitwise XOR expression", xorExpr)
+        assertEquals("~a ^ 0xFF", xorExpr!!.text)
+
+        val notExpr =
+            PsiTreeUtil.getChildOfType(xorExpr, com.github.unclepomedev.houdinivexassist.psi.VexPrefixExpr::class.java)
+        assertNotNull("Left child of XOR should be a prefix expression (~a)", notExpr)
+        assertEquals("~a", notExpr!!.text)
+    }
+
+    fun testAdvancedFunctionDefinitions() {
+        val code = """
+            export function void my_main() {
+                @P = {0,0,0};
+            }
+            
+            export int get_id() {
+                return @ptnum;
+            }
+            
+            function string get_name() {
+                return "test";
+            }
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Export and function modifiers should be parsed", hasErrors)
+    }
 }
