@@ -1,5 +1,6 @@
-package com.github.unclepomedev.houdinivexassist
+package com.github.unclepomedev.houdinivexassist.lang
 
+import com.github.unclepomedev.houdinivexassist.psi.VexFile
 import com.github.unclepomedev.houdinivexassist.parser.VexParser
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 import com.intellij.lang.ASTNode

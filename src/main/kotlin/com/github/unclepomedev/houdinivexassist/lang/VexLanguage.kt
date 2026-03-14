@@ -1,4 +1,4 @@
-package com.github.unclepomedev.houdinivexassist
+package com.github.unclepomedev.houdinivexassist.lang
 
 import com.intellij.lang.Language
 

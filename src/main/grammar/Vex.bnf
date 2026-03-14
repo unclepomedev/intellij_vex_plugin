@@ -11,6 +11,8 @@
   elementTypeClass="com.github.unclepomedev.houdinivexassist.psi.VexElementType"
   tokenTypeClass="com.github.unclepomedev.houdinivexassist.psi.VexTokenType"
 
+  generateTokenAccessors=true
+
   tokens=[
     SPACE='regexp:\s+'
     COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
@@ -27,22 +29,74 @@
     SEMICOLON=";"
     COMMA=","
     EQUALS="="
+    EQEQ="=="
+    NEQ="!="
+    LT="<"
+    GT=">"
+    LE="<="
+    GE=">="
+    PLUS="+"
+    MINUS="-"
+    MUL="*"
+    DIV="/"
+    MOD="%"
+    ANDAND="&&"
+    OROR="||"
+    NOT="!"
+    QMARK="?"
+    COLON=":"
   ]
+  
+  extends(".*_expr")=expr
 }
 
 vexFile ::= item_*
 
-private item_ ::= MACRO | function_def | statement | COMMENT
+private item_ ::= MACRO | function_def | statement | COMMENT | fallback_item
+
+// TODO: mark as error
+private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
+                        | LBRACE | RBRACE | LPAREN | RPAREN | SEMICOLON | COMMA 
+                        | EQUALS | EQEQ | NEQ | LT | GT | LE | GE 
+                        | PLUS | MINUS | MUL | DIV | MOD 
+                        | ANDAND | OROR | NOT | QMARK | COLON
 
 function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block
 parameter_list ::= parameter (COMMA parameter)*
 parameter ::= TYPE IDENTIFIER
 block ::= LBRACE item_* RBRACE
 
-statement ::= block | expression SEMICOLON | declaration SEMICOLON
-declaration ::= TYPE IDENTIFIER ( EQUALS expression )?
-expression ::= function_call | assign_expr | IDENTIFIER | NUMBER | STRING | ATTRIBUTE
-function_call ::= IDENTIFIER LPAREN argument_list? RPAREN
-argument_list ::= expression (COMMA expression)*
-private lvalue ::= IDENTIFIER | ATTRIBUTE
-assign_expr ::= lvalue EQUALS expression
+statement ::= block | expr SEMICOLON | declaration SEMICOLON
+declaration ::= TYPE IDENTIFIER ( EQUALS expr )?
+
+expr ::= assign_expr
+       | logical_or_expr
+       | logical_and_expr
+       | equality_expr
+       | relational_expr
+       | add_expr
+       | mul_expr
+       | prefix_expr
+       | call_expr
+       | primary_expr
+
+assign_expr ::= expr EQUALS expr { rightAssociative=true }
+logical_or_expr ::= expr OROR expr
+logical_and_expr ::= expr ANDAND expr
+equality_expr ::= expr equality_op expr
+private equality_op ::= EQEQ | NEQ
+relational_expr ::= expr relational_op expr
+private relational_op ::= LT | GT | LE | GE
+add_expr ::= expr add_op expr
+private add_op ::= PLUS | MINUS
+mul_expr ::= expr mul_op expr
+private mul_op ::= MUL | DIV | MOD
+prefix_expr ::= prefix_op expr
+private prefix_op ::= PLUS | MINUS | NOT
+
+primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal
+
+vector_literal ::= LBRACE argument_list? RBRACE
+
+call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN
+argument_list ::= expr (COMMA expr)*

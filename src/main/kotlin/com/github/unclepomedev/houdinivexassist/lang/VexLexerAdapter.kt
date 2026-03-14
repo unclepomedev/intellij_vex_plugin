@@ -1,4 +1,4 @@
-package com.github.unclepomedev.houdinivexassist
+package com.github.unclepomedev.houdinivexassist.lang
 
 import com.github.unclepomedev.houdinivexassist.lexer.VexLexer
 import com.intellij.lexer.FlexAdapter
