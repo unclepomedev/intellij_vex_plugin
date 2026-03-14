@@ -26,6 +26,9 @@
     RBRACE="}"
     LPAREN="("
     RPAREN=")"
+    LBRACK="["
+    RBRACK="]"
+    ARROW="->"
     SEMICOLON=";"
     COMMA=","
     DOT="."
@@ -61,6 +64,7 @@
     BREAK="break"
     CONTINUE="continue"
     RETURN="return"
+    STRUCT="struct"
   ]
   extends(".*_expr")=expr
   extends(".*_statement")=statement
@@ -68,20 +72,30 @@
 
 vexFile ::= item_*
 
-private item_ ::= MACRO | function_def | statement | COMMENT | fallback_item
+private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fallback_item
 
-// TODO: mark as error
 private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
-                        | LBRACE | RBRACE | LPAREN | RPAREN | SEMICOLON | COMMA | DOT
+                        | LBRACK | RBRACK | ARROW
+                        | SEMICOLON | COMMA | DOT
                         | PLUSEQ | MINUSEQ | MULEQ | DIVEQ
                         | EQUALS | EQEQ | NEQ | LT | GT | LE | GE
                         | PLUSPLUS | MINUSMINUS | PLUS | MINUS | MUL | DIV | MOD
                         | ANDAND | OROR | NOT | QMARK | COLON
-                        | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN
+                        | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT
 
-function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block
-parameter_list ::= parameter (COMMA parameter)*
-parameter ::= TYPE IDENTIFIER
+struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE { pin=1 }
+struct_member ::= TYPE ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }
+private struct_member_recover ::= !(TYPE | RBRACE)
+
+function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
+
+function_def ::= TYPE IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin=3 }
+
+parameter_list_def ::= parameter_def ((COMMA | SEMICOLON) parameter_def)*
+parameter_def ::= TYPE IDENTIFIER
+
+parameter_list_sig ::= parameter_sig ((COMMA | SEMICOLON) parameter_sig)*
+parameter_sig ::= TYPE IDENTIFIER?
 block ::= LBRACE item_* RBRACE
 
 statement ::= block
@@ -95,26 +109,26 @@ statement ::= block
             | declaration_statement
             | expr_statement
 
-if_statement ::= IF LPAREN expr RPAREN statement (ELSE statement)?
+if_statement ::= IF LPAREN expr RPAREN statement (ELSE statement)? { pin=1 }
 
-for_statement ::= FOR LPAREN for_init expr_statement expr? RPAREN statement
+for_statement ::= FOR LPAREN for_init expr_statement expr? RPAREN statement { pin=1 }
 private for_init ::= declaration_statement | expr_statement
 
-foreach_statement ::= FOREACH LPAREN foreach_vars SEMICOLON expr RPAREN statement
-private foreach_vars ::= foreach_var COMMA foreach_var
-                       | foreach_var SEMICOLON foreach_var
-                       | foreach_var
+foreach_statement ::= FOREACH LPAREN foreach_body RPAREN statement { pin=1 }
+private foreach_body ::= foreach_var SEMICOLON foreach_var SEMICOLON expr
+                       | foreach_var COMMA foreach_var SEMICOLON expr
+                       | foreach_var SEMICOLON expr
 private foreach_var ::= TYPE? IDENTIFIER
 
-while_statement ::= WHILE LPAREN expr RPAREN statement
-do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON
+while_statement ::= WHILE LPAREN expr RPAREN statement { pin=1 }
+do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON { pin=1 }
 
-return_statement ::= RETURN expr? SEMICOLON
+return_statement ::= RETURN expr? SEMICOLON { pin=1 }
 
-control_statement ::= (BREAK | CONTINUE) SEMICOLON
+control_statement ::= (BREAK | CONTINUE) SEMICOLON { pin=1 }
 
-declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON
-private declaration_item ::= IDENTIFIER (EQUALS expr)?
+declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON { pin=1 }
+private declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
 
 expr_statement ::= expr? SEMICOLON
 

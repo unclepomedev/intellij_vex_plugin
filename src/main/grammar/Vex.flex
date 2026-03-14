@@ -40,6 +40,9 @@ MACRO="#".*
   "}"                 { return VexTypes.RBRACE; }
   "("                 { return VexTypes.LPAREN; }
   ")"                 { return VexTypes.RPAREN; }
+  "["                 { return VexTypes.LBRACK; }
+  "]"                 { return VexTypes.RBRACK; }
+  "->"                { return VexTypes.ARROW; }
   ";"                 { return VexTypes.SEMICOLON; }
   ","                 { return VexTypes.COMMA; }
   "."                 { return VexTypes.DOT; }
@@ -76,6 +79,7 @@ MACRO="#".*
   "break"             { return VexTypes.BREAK; }
   "continue"          { return VexTypes.CONTINUE; }
   "return"            { return VexTypes.RETURN; }
+  "struct"            { return VexTypes.STRUCT; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 
