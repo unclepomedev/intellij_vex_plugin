@@ -96,11 +96,15 @@ statement ::= block
             | expr_statement
 
 if_statement ::= IF LPAREN expr RPAREN statement (ELSE statement)?
-for_statement ::= FOR LPAREN expr_statement expr_statement expr? RPAREN statement
-foreach_statement ::= FOREACH LPAREN (TYPE? IDENTIFIER COMMA)? TYPE? IDENTIFIER SEMICOLON expr RPAREN statement
+
+for_statement ::= FOR LPAREN for_init expr_statement expr? RPAREN statement
+private for_init ::= declaration_statement | expr_statement
+
 while_statement ::= WHILE LPAREN expr RPAREN statement
 do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON
+
 return_statement ::= RETURN expr? SEMICOLON
+
 control_statement ::= (BREAK | CONTINUE) SEMICOLON
 
 declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON
