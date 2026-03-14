@@ -9,5 +9,6 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--TODO: setup parser modules-->
     </extensions>
 </idea-plugin>

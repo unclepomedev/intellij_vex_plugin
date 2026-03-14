@@ -34,3 +34,6 @@ dump:
     rm -rf "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_help.old"
 
     echo "Done"
+
+parser:
+    ./gradlew generateLexer generateParser
