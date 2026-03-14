@@ -28,7 +28,7 @@ class VexParserTest : VexTestBase() {
         val code = "if (a > b {"
         val file = myFixture.configureByText(VexFileType, code)
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
-        assertTrue("Broken code should not produce parse errors", hasErrors)
+        assertTrue("Broken code should produce parse errors", hasErrors)
     }
 
     fun testIfStatementAndMemberAccess() {
@@ -129,7 +129,10 @@ class VexParserTest : VexTestBase() {
         val code = """
             struct MyStruct {
                 int a;
-                float b;
+                float b = 1.0;
+                vector c[] = {{1,0,0}, {0,1,0}};
+                int myfunc -> function_name(int, float);
+                void run -> runner();
             }
             
             void myFunc(int a; float b; vector c) {

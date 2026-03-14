@@ -113,7 +113,7 @@ class VexLexerTest : VexTestBase() {
 
     fun testMiscellaneousTokens() {
         doTest(
-            "123 { } ( ) , #define",
+            "123 { } ( ) [ ] -> , #define",
             VexTypes.NUMBER to "123",
             TokenType.WHITE_SPACE to " ",
             VexTypes.LBRACE to "{",
@@ -123,6 +123,12 @@ class VexLexerTest : VexTestBase() {
             VexTypes.LPAREN to "(",
             TokenType.WHITE_SPACE to " ",
             VexTypes.RPAREN to ")",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LBRACK to "[",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.RBRACK to "]",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.ARROW to "->",
             TokenType.WHITE_SPACE to " ",
             VexTypes.COMMA to ",",
             TokenType.WHITE_SPACE to " ",

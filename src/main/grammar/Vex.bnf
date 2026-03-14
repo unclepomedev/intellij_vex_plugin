@@ -26,6 +26,9 @@
     RBRACE="}"
     LPAREN="("
     RPAREN=")"
+    LBRACK="["
+    RBRACK="]"
+    ARROW="->"
     SEMICOLON=";"
     COMMA=","
     DOT="."
@@ -72,6 +75,7 @@ vexFile ::= item_*
 private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fallback_item
 
 private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
+                        | LBRACK | RBRACK | ARROW
                         | SEMICOLON | COMMA | DOT
                         | PLUSEQ | MINUSEQ | MULEQ | DIVEQ
                         | EQUALS | EQEQ | NEQ | LT | GT | LE | GE
@@ -80,13 +84,15 @@ private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
                         | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT
 
 struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE { pin=1 }
-struct_member ::= TYPE IDENTIFIER SEMICOLON { pin=1 recoverWhile=struct_member_recover }
+struct_member ::= TYPE ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }
 private struct_member_recover ::= !(TYPE | RBRACE)
+
+function_signature ::= IDENTIFIER LPAREN parameter_list? RPAREN
 
 function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block { pin=3 }
 
 parameter_list ::= parameter ((COMMA | SEMICOLON) parameter)*
-parameter ::= TYPE IDENTIFIER
+parameter ::= TYPE IDENTIFIER?
 block ::= LBRACE item_* RBRACE
 
 statement ::= block
@@ -119,7 +125,7 @@ return_statement ::= RETURN expr? SEMICOLON { pin=1 }
 control_statement ::= (BREAK | CONTINUE) SEMICOLON { pin=1 }
 
 declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON { pin=1 }
-private declaration_item ::= IDENTIFIER (EQUALS expr)? { pin=1 }
+private declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
 
 expr_statement ::= expr? SEMICOLON
 
