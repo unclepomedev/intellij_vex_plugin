@@ -1,6 +1,6 @@
 package com.github.unclepomedev.houdinivexassist
 
-import com.github.unclepomedev.houdinivexassist.lang.VexLexerAdapter
+import com.github.unclepomedev.houdinivexassist.lexer.VexLexerAdapter
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType

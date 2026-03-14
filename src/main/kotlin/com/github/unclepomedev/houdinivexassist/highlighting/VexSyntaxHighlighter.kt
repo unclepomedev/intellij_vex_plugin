@@ -1,5 +1,6 @@
-package com.github.unclepomedev.houdinivexassist.lang
+package com.github.unclepomedev.houdinivexassist.highlighting
 
+import com.github.unclepomedev.houdinivexassist.lexer.VexLexerAdapter
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
@@ -14,27 +15,29 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
 
     companion object {
         // attach attribute keys ==========================================================
-        val KEYWORD = createTextAttributesKey("VEX_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
-        val NUMBER = createTextAttributesKey("VEX_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
-        val STRING = createTextAttributesKey("VEX_STRING", DefaultLanguageHighlighterColors.STRING)
-        val COMMENT = createTextAttributesKey("VEX_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
-        val ATTRIBUTE = createTextAttributesKey("VEX_ATTRIBUTE", DefaultLanguageHighlighterColors.INSTANCE_FIELD)
+        private val KEYWORD = createTextAttributesKey("VEX_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
+        private val NUMBER = createTextAttributesKey("VEX_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
+        private val STRING = createTextAttributesKey("VEX_STRING", DefaultLanguageHighlighterColors.STRING)
+        private val COMMENT = createTextAttributesKey("VEX_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+        private val ATTRIBUTE =
+            createTextAttributesKey("VEX_ATTRIBUTE", DefaultLanguageHighlighterColors.INSTANCE_FIELD)
 
-        val MACRO = createTextAttributesKey("VEX_MACRO", DefaultLanguageHighlighterColors.METADATA)
+        private val MACRO = createTextAttributesKey("VEX_MACRO", DefaultLanguageHighlighterColors.METADATA)
 
-        val IDENTIFIER = createTextAttributesKey("VEX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
-        val TYPE = createTextAttributesKey("VEX_TYPE", DefaultLanguageHighlighterColors.KEYWORD)
-        val BAD_CHARACTER =
+        private val IDENTIFIER = createTextAttributesKey("VEX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
+        private val TYPE = createTextAttributesKey("VEX_TYPE", DefaultLanguageHighlighterColors.KEYWORD)
+        private val BAD_CHARACTER =
             createTextAttributesKey("VEX_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
 
-        val OPERATION_SIGN =
+        private val OPERATION_SIGN =
             createTextAttributesKey("VEX_OPERATION_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
-        val PARENTHESES = createTextAttributesKey("VEX_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES)
-        val BRACES = createTextAttributesKey("VEX_BRACES", DefaultLanguageHighlighterColors.BRACES)
-        val BRACKETS = createTextAttributesKey("VEX_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
-        val COMMA = createTextAttributesKey("VEX_COMMA", DefaultLanguageHighlighterColors.COMMA)
-        val SEMICOLON = createTextAttributesKey("VEX_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
-        val DOT = createTextAttributesKey("VEX_DOT", DefaultLanguageHighlighterColors.DOT)
+        private val PARENTHESES =
+            createTextAttributesKey("VEX_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES)
+        private val BRACES = createTextAttributesKey("VEX_BRACES", DefaultLanguageHighlighterColors.BRACES)
+        private val BRACKETS = createTextAttributesKey("VEX_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
+        private val COMMA = createTextAttributesKey("VEX_COMMA", DefaultLanguageHighlighterColors.COMMA)
+        private val SEMICOLON = createTextAttributesKey("VEX_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
+        private val DOT = createTextAttributesKey("VEX_DOT", DefaultLanguageHighlighterColors.DOT)
 
         // array per color ================================================================
         private val KEYWORD_KEYS = arrayOf(KEYWORD)
