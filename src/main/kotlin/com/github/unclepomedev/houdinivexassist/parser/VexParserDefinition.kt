@@ -1,7 +1,8 @@
-package com.github.unclepomedev.houdinivexassist.lang
+package com.github.unclepomedev.houdinivexassist.parser
 
+import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
+import com.github.unclepomedev.houdinivexassist.lexer.VexLexerAdapter
 import com.github.unclepomedev.houdinivexassist.psi.VexFile
-import com.github.unclepomedev.houdinivexassist.parser.VexParser
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition

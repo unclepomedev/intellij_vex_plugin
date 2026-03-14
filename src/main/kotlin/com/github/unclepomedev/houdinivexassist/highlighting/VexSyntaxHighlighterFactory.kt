@@ -1,4 +1,4 @@
-package com.github.unclepomedev.houdinivexassist.lang
+package com.github.unclepomedev.houdinivexassist.highlighting
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
