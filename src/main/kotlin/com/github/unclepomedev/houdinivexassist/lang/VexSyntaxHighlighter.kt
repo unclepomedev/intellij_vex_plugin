@@ -26,6 +26,15 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         val BAD_CHARACTER =
             createTextAttributesKey("VEX_BAD_CHARACTER", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
 
+        val OPERATION_SIGN =
+            createTextAttributesKey("VEX_OPERATION_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
+        val PARENTHESES = createTextAttributesKey("VEX_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES)
+        val BRACES = createTextAttributesKey("VEX_BRACES", DefaultLanguageHighlighterColors.BRACES)
+        val BRACKETS = createTextAttributesKey("VEX_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
+        val COMMA = createTextAttributesKey("VEX_COMMA", DefaultLanguageHighlighterColors.COMMA)
+        val SEMICOLON = createTextAttributesKey("VEX_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
+        val DOT = createTextAttributesKey("VEX_DOT", DefaultLanguageHighlighterColors.DOT)
+
         // array per color ================================================================
         private val KEYWORD_KEYS = arrayOf(KEYWORD)
         private val TYPE_KEYS = arrayOf(TYPE)
@@ -36,6 +45,15 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         private val MACRO_KEYS = arrayOf(MACRO)
         private val IDENTIFIER_KEYS = arrayOf(IDENTIFIER)
         private val BAD_CHAR_KEYS = arrayOf(BAD_CHARACTER)
+
+        private val OPERATION_SIGN_KEYS = arrayOf(OPERATION_SIGN)
+        private val PARENTHESES_KEYS = arrayOf(PARENTHESES)
+        private val BRACES_KEYS = arrayOf(BRACES)
+        private val BRACKETS_KEYS = arrayOf(BRACKETS)
+        private val COMMA_KEYS = arrayOf(COMMA)
+        private val SEMICOLON_KEYS = arrayOf(SEMICOLON)
+        private val DOT_KEYS = arrayOf(DOT)
+
         private val EMPTY_KEYS = emptyArray<TextAttributesKey>()
     }
 
@@ -58,6 +76,19 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
             VexTypes.IDENTIFIER -> IDENTIFIER_KEYS
 
             TokenType.BAD_CHARACTER -> BAD_CHAR_KEYS
+
+            VexTypes.LPAREN, VexTypes.RPAREN -> PARENTHESES_KEYS
+            VexTypes.LBRACE, VexTypes.RBRACE -> BRACES_KEYS
+            VexTypes.LBRACK, VexTypes.RBRACK -> BRACKETS_KEYS
+            VexTypes.COMMA -> COMMA_KEYS
+            VexTypes.SEMICOLON -> SEMICOLON_KEYS
+            VexTypes.DOT -> DOT_KEYS
+
+            VexTypes.PLUS, VexTypes.MINUS, VexTypes.MUL, VexTypes.DIV, VexTypes.MOD,
+            VexTypes.EQUALS, VexTypes.PLUSEQ, VexTypes.MINUSEQ, VexTypes.MULEQ, VexTypes.DIVEQ,
+            VexTypes.EQEQ, VexTypes.NEQ, VexTypes.LT, VexTypes.GT, VexTypes.LE, VexTypes.GE,
+            VexTypes.ANDAND, VexTypes.OROR, VexTypes.NOT, VexTypes.PLUSPLUS, VexTypes.MINUSMINUS,
+            VexTypes.QMARK, VexTypes.COLON -> OPERATION_SIGN_KEYS
 
             else -> EMPTY_KEYS
         }
