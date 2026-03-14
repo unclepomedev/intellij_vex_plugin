@@ -32,9 +32,7 @@
 
 vexFile ::= item_*
 
-private item_ ::= macro | function_def | statement | COMMENT
-
-macro ::= MACRO
+private item_ ::= MACRO | function_def | statement | COMMENT
 
 function_def ::= TYPE IDENTIFIER LPAREN parameter_list? RPAREN block
 parameter_list ::= parameter (COMMA parameter)*
@@ -46,4 +44,5 @@ declaration ::= TYPE IDENTIFIER ( EQUALS expression )?
 expression ::= function_call | assign_expr | IDENTIFIER | NUMBER | STRING | ATTRIBUTE
 function_call ::= IDENTIFIER LPAREN argument_list? RPAREN
 argument_list ::= expression (COMMA expression)*
-assign_expr ::= ATTRIBUTE EQUALS expression
+private lvalue ::= IDENTIFIER | ATTRIBUTE
+assign_expr ::= lvalue EQUALS expression

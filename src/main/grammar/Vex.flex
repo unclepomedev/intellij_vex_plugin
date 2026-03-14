@@ -16,7 +16,7 @@ import com.intellij.psi.TokenType;
 %eof}
 
 WHITE_SPACE=[\ \t\n\r\f]+
-COMMENT="/"\*([^*]|\*+[^*/])*\*"/"
+COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
 NUMBER=[0-9]+(\.[0-9]*)?
 STRING=(\"[^\"]*\")|(\'[^\']*\')
 ATTRIBUTE=[fiuvsp]?@[a-zA-Z0-9_]+
