@@ -40,6 +40,8 @@
     GT=">"
     LE="<="
     GE=">="
+    PLUSPLUS="++"
+    MINUSMINUS="--"
     PLUS="+"
     MINUS="-"
     MUL="*"
@@ -73,7 +75,7 @@ private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
                         | LBRACE | RBRACE | LPAREN | RPAREN | SEMICOLON | COMMA | DOT
                         | PLUSEQ | MINUSEQ | MULEQ | DIVEQ
                         | EQUALS | EQEQ | NEQ | LT | GT | LE | GE
-                        | PLUS | MINUS | MUL | DIV | MOD
+                        | PLUSPLUS | MINUSMINUS | PLUS | MINUS | MUL | DIV | MOD
                         | ANDAND | OROR | NOT | QMARK | COLON
                         | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN
 
@@ -115,6 +117,7 @@ expr ::= assign_expr
        | add_expr
        | mul_expr
        | prefix_expr
+       | postfix_expr
        | call_expr
        | member_expr
        | primary_expr
@@ -124,16 +127,25 @@ ternary_expr ::= expr QMARK expr COLON expr { rightAssociative=true }
 
 logical_or_expr ::= expr OROR expr
 logical_and_expr ::= expr ANDAND expr
+
 equality_expr ::= expr equality_op expr
 private equality_op ::= EQEQ | NEQ
+
 relational_expr ::= expr relational_op expr
 private relational_op ::= LT | GT | LE | GE
+
 add_expr ::= expr add_op expr
 private add_op ::= PLUS | MINUS
+
 mul_expr ::= expr mul_op expr
 private mul_op ::= MUL | DIV | MOD
+
 prefix_expr ::= prefix_op expr
-private prefix_op ::= PLUS | MINUS | NOT
+private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT
+
+postfix_expr ::= expr postfix_op
+private postfix_op ::= PLUSPLUS | MINUSMINUS
+
 member_expr ::= expr DOT IDENTIFIER
 
 primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal

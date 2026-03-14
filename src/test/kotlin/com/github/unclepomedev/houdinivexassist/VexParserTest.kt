@@ -41,18 +41,18 @@ class VexParserTest : VexTestBase() {
 
     fun testLoops() {
         val code = """
-            for (i = 0; i < 10; i += 1) {
+            for (i = 0; i < 10; i++) {
                 if (i % 2 == 0) continue;
                 break;
             }
             foreach (int ptnum; pts) {
-                @P += 1.0;
+                @P.y++;
             }
             while (a < b) { 
-                a += 1; 
+                ++a; 
             }
             do {
-                b -= 1;
+                b--;
             } while (b > 0);
         """.trimIndent()
         val file = myFixture.configureByText(VexFileType, code)
@@ -92,5 +92,15 @@ class VexParserTest : VexTestBase() {
         assertFalse("Multiple variable declarations should be parsed", hasErrors)
     }
 
-    // TODO: ++, --
+    fun testIncrementDecrement() {
+        val code = """
+            int a = 0;
+            int b = a++;
+            int c = --b;
+            @P.x++;
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Increment and decrement should be parsed", hasErrors)
+    }
 }

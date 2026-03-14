@@ -20,7 +20,7 @@ WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
 NUMBER=[0-9]+(\.[0-9]*)?
 STRING=(\"[^\"]*\")|(\'[^\']*\')
-ATTRIBUTE=[fiuvsp]?(\[\])?@[a-zA-Z0-9_]+
+ATTRIBUTE=[fiuvsp]?(\[\])?\@[a-zA-Z0-9_]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
 MACRO="#".*
 
@@ -54,6 +54,8 @@ MACRO="#".*
   ">"                 { return VexTypes.GT; }
   "<="                { return VexTypes.LE; }
   ">="                { return VexTypes.GE; }
+  "++"                { return VexTypes.PLUSPLUS; }
+  "--"                { return VexTypes.MINUSMINUS; }
   "+"                 { return VexTypes.PLUS; }
   "-"                 { return VexTypes.MINUS; }
   "*"                 { return VexTypes.MUL; }
