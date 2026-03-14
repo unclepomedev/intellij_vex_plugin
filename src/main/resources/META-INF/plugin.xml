@@ -14,5 +14,6 @@
 
         <lang.parserDefinition language="VEX"
                                implementationClass="com.github.unclepomedev.houdinivexassist.lang.VexParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.lang.VexSyntaxHighlighterFactory"/>
     </extensions>
 </idea-plugin>
