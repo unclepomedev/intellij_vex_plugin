@@ -155,4 +155,36 @@ class VexParserTest : VexTestBase() {
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertTrue("Broken struct syntax should produce parse errors", hasErrors)
     }
+
+    fun testBitwiseAndShiftOperators() {
+        val code = """
+            int a = 1 << 4;
+            int b = a >> 2;
+            int c = a & b | ~a ^ 0xFF;
+            a <<= 1;
+            b &= c;
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Bitwise and shift operators should be parsed", hasErrors)
+    }
+
+    fun testAdvancedFunctionDefinitions() {
+        val code = """
+            export function void my_main() {
+                @P = {0,0,0};
+            }
+            
+            export int get_id() {
+                return @ptnum;
+            }
+            
+            function string get_name() {
+                return "test";
+            }
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Export and function modifiers should be parsed", hasErrors)
+    }
 }
