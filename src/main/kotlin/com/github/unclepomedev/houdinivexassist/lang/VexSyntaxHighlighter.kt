@@ -3,6 +3,7 @@ package com.github.unclepomedev.houdinivexassist.lang
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
+import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
@@ -24,7 +25,7 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         val IDENTIFIER = createTextAttributesKey("VEX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
         val TYPE = createTextAttributesKey("VEX_TYPE", DefaultLanguageHighlighterColors.KEYWORD)
         val BAD_CHARACTER =
-            createTextAttributesKey("VEX_BAD_CHARACTER", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
+            createTextAttributesKey("VEX_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
 
         val OPERATION_SIGN =
             createTextAttributesKey("VEX_OPERATION_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
