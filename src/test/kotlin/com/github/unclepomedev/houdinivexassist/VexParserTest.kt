@@ -103,4 +103,23 @@ class VexParserTest : VexTestBase() {
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Increment and decrement should be parsed", hasErrors)
     }
+
+    fun testForeachVariations() {
+        val code = """
+            // Simple form
+            foreach (int val; myarray) {}
+            foreach (val; myarray) {}
+            
+            // Enumerated form (Comma)
+            foreach (int idx, int val; myarray) {}
+            foreach (idx, val; myarray) {}
+            
+            // Enumerated form (Semicolon)
+            foreach (int idx; int val; myarray) {}
+            foreach (idx; val; myarray) {}
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("All foreach variations from official docs should be parsed", hasErrors)
+    }
 }

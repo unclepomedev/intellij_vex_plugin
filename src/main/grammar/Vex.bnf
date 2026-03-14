@@ -101,7 +101,10 @@ for_statement ::= FOR LPAREN for_init expr_statement expr? RPAREN statement
 private for_init ::= declaration_statement | expr_statement
 
 foreach_statement ::= FOREACH LPAREN foreach_vars SEMICOLON expr RPAREN statement
-private foreach_vars ::= (TYPE? IDENTIFIER COMMA)? TYPE? IDENTIFIER
+private foreach_vars ::= foreach_var COMMA foreach_var
+                       | foreach_var SEMICOLON foreach_var
+                       | foreach_var
+private foreach_var ::= TYPE? IDENTIFIER
 
 while_statement ::= WHILE LPAREN expr RPAREN statement
 do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON
