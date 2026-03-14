@@ -9,10 +9,10 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="VEX File" implementationClass="com.github.unclepomedev.houdinivexassist.VexFileType"
+        <fileType name="VEX File" implementationClass="com.github.unclepomedev.houdinivexassist.lang.VexFileType"
                   fieldName="INSTANCE" language="VEX" extensions="vfl;vex"/>
 
         <lang.parserDefinition language="VEX"
-                               implementationClass="com.github.unclepomedev.houdinivexassist.VexParserDefinition"/>
+                               implementationClass="com.github.unclepomedev.houdinivexassist.lang.VexParserDefinition"/>
     </extensions>
 </idea-plugin>
