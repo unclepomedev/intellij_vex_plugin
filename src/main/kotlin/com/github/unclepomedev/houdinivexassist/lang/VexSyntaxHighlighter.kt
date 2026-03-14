@@ -90,7 +90,7 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
             VexTypes.EQEQ, VexTypes.NEQ, VexTypes.LT, VexTypes.GT, VexTypes.LE, VexTypes.GE,
             VexTypes.ANDAND, VexTypes.OROR, VexTypes.NOT, VexTypes.PLUSPLUS, VexTypes.MINUSMINUS,
             VexTypes.LSHIFT, VexTypes.RSHIFT, VexTypes.BITAND, VexTypes.BITOR, VexTypes.BITXOR, VexTypes.BITNOT,
-            VexTypes.QMARK, VexTypes.COLON -> OPERATION_SIGN_KEYS
+            VexTypes.QMARK, VexTypes.COLON, VexTypes.ARROW -> OPERATION_SIGN_KEYS
 
             else -> EMPTY_KEYS
         }
