@@ -96,7 +96,7 @@ private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
                         | PLUSPLUS | MINUSMINUS | PLUS | MINUS | MUL | DIV | MOD
                         | LSHIFT | RSHIFT | BITAND | BITOR | BITXOR | BITNOT
                         | ANDAND | OROR | NOT | QMARK | COLON
-                        | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT | EXPORT | FUNCTION
+                        | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT
 
 struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE { pin=1 }
 struct_member ::= TYPE ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }

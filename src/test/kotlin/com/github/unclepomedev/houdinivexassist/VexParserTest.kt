@@ -167,6 +167,38 @@ class VexParserTest : VexTestBase() {
         val file = myFixture.configureByText(VexFileType, code)
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Bitwise and shift operators should be parsed", hasErrors)
+
+        val cDecl = PsiTreeUtil.findChildrenOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexDeclarationStatement::class.java
+        )
+            .find { it.text.startsWith("int c =") }
+        assertNotNull("Could not find declaration for 'c'", cDecl)
+
+        val orExpr = PsiTreeUtil.findChildOfType(
+            cDecl,
+            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseOrExpr::class.java
+        )
+        assertNotNull("c initializer should be a bitwise OR expression", orExpr)
+
+        val andExpr = PsiTreeUtil.getChildOfType(
+            orExpr,
+            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseAndExpr::class.java
+        )
+        assertNotNull("Left child should be a bitwise AND expression", andExpr)
+        assertEquals("a & b", andExpr!!.text)
+
+        val xorExpr = PsiTreeUtil.getChildOfType(
+            orExpr,
+            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseXorExpr::class.java
+        )
+        assertNotNull("Right child should be a bitwise XOR expression", xorExpr)
+        assertEquals("~a ^ 0xFF", xorExpr!!.text)
+
+        val notExpr =
+            PsiTreeUtil.getChildOfType(xorExpr, com.github.unclepomedev.houdinivexassist.psi.VexPrefixExpr::class.java)
+        assertNotNull("Left child of XOR should be a prefix expression (~a)", notExpr)
+        assertEquals("~a", notExpr!!.text)
     }
 
     fun testAdvancedFunctionDefinitions() {
