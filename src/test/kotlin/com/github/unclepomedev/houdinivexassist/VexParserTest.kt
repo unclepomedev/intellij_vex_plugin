@@ -1,7 +1,6 @@
 package com.github.unclepomedev.houdinivexassist
 
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
-import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.util.PsiTreeUtil
 
 class VexParserTest : VexTestBase() {

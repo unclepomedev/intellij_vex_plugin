@@ -82,7 +82,7 @@ class VexLexerTest : VexTestBase() {
 
     fun testOperators() {
         doTest(
-            "== != < > <= >= + - * / % && || ! ? :",
+            "== != < > <= >= + - * / % && || ! ? : =",
             VexTypes.EQEQ to "==",
             TokenType.WHITE_SPACE to " ",
             VexTypes.NEQ to "!=",
@@ -113,7 +113,28 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.QMARK to "?",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.COLON to ":"
+            VexTypes.COLON to ":",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.EQUALS to "=",
+        )
+    }
+
+    fun testMiscellaneousTokens() {
+        doTest(
+            "123 { } ( ) , #define",
+            VexTypes.NUMBER to "123",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LBRACE to "{",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.RBRACE to "}",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.LPAREN to "(",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.RPAREN to ")",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.COMMA to ",",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MACRO to "#define"
         )
     }
 }
