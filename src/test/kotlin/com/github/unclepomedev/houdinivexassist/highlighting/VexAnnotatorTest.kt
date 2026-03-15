@@ -88,7 +88,7 @@ class VexAnnotatorTest : VexTestBase() {
             int b = a + <error descr="Unresolved variable: 'c'">c</error>;
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testResolvedVariableIsNotHighlighted() {
