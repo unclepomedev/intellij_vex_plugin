@@ -68,4 +68,15 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testValidVariableInDifferentStructs() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct A { int val; }
+            struct B { int val; }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }

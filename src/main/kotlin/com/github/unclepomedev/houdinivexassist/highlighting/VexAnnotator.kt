@@ -44,15 +44,17 @@ class VexAnnotator : Annotator {
         scope: PsiElement,
         holder: AnnotationHolder
     ): Boolean {
-        // all decls in the same scope
-        val allDeclsInScope = PsiTreeUtil.findChildrenOfType(scope, VexDeclarationItem::class.java)
+        val declarationsInScope = CachedValuesManager.getCachedValue(scope) {
+            val decls = PsiTreeUtil.findChildrenOfType(scope, VexDeclarationItem::class.java)
+                .filter { findDeclarationScope(it) == scope }
+            CachedValueProvider.Result.create(decls, scope)
+        }
 
         // Find one that was declared before it and have the same direct parent scope.
-        val hasConflict = allDeclsInScope.any { sibling ->
+        val hasConflict = declarationsInScope.any { sibling ->
             sibling != element &&
                     sibling.identifier.text == varName &&
-                    sibling.textOffset < element.textOffset &&
-                    findDeclarationScope(sibling) == scope
+                    sibling.textOffset < element.textOffset
         }
 
         if (hasConflict) {
@@ -76,8 +78,12 @@ class VexAnnotator : Annotator {
         val funcDef = scope.parent as VexFunctionDef
         val paramList = funcDef.parameterListDef ?: return
 
-        val hasConflict = PsiTreeUtil.findChildrenOfType(paramList, VexParameterDef::class.java)
-            .any { it.identifier.text == varName }
+        val parameters = CachedValuesManager.getCachedValue(paramList) {
+            val params = PsiTreeUtil.findChildrenOfType(paramList, VexParameterDef::class.java)
+            CachedValueProvider.Result.create(params, paramList)
+        }
+
+        val hasConflict = parameters.any { it.identifier.text == varName }
 
         if (hasConflict) {
             holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is already defined as a parameter")
