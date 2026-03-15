@@ -120,7 +120,6 @@ jobs:
 
       # Run Qodana inspections
       - name: Qodana - Code Inspection
-        if: ${{ secrets.QODANA_TOKEN != '' }}
         uses: JetBrains/qodana-action@v2025.3.1
         with:
           pr-mode: false
