@@ -1,0 +1,47 @@
+package com.github.unclepomedev.houdinivexassist.formatting
+
+import com.github.unclepomedev.houdinivexassist.psi.VexTypes
+import com.intellij.formatting.*
+import com.intellij.lang.ASTNode
+import com.intellij.psi.TokenType
+import com.intellij.psi.formatter.common.AbstractBlock
+
+class VexBlock(
+    node: ASTNode,
+    wrap: Wrap?,
+    alignment: Alignment?,
+    private val spacingBuilder: SpacingBuilder
+) : AbstractBlock(node, wrap, alignment) {
+
+    override fun buildChildren(): List<Block> {
+        val blocks = mutableListOf<Block>()
+        var child = myNode.firstChildNode
+        while (child != null) {
+            if (child.elementType != TokenType.WHITE_SPACE && child.textRange.length > 0) {
+                blocks.add(VexBlock(child, null, null, spacingBuilder))
+            }
+            child = child.treeNext
+        }
+        return blocks
+    }
+
+    override fun getIndent(): Indent? {
+        val elementType = myNode.elementType
+        val parentType = myNode.treeParent?.elementType
+
+        if (parentType == VexTypes.BLOCK || parentType == VexTypes.STRUCT_DEF) {
+            if (elementType != VexTypes.LBRACE && elementType != VexTypes.RBRACE) {
+                return Indent.getNormalIndent()
+            }
+        }
+        return Indent.getNoneIndent()
+    }
+
+    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
+        return spacingBuilder.getSpacing(this, child1, child2)
+    }
+
+    override fun isLeaf(): Boolean {
+        return myNode.firstChildNode == null
+    }
+}
