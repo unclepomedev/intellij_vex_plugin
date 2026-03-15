@@ -18,6 +18,7 @@
     COMMENT='regexp://.*|/\*([^*]|\*+[^*/])*\*+/'
     NUMBER='regexp:([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)'
     STRING="regexp:\"[^\"]*\"|'[^']*'"
+    UNCLOSED_STRING="regexp:\"[^\r\n\"]*|'[^\r\n']*"
     ATTRIBUTE="regexp:[fiuvsp]?(\\[\\])?@\\w+"
     MACRO='regexp:#.*'
     TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void|bsdf|dict'

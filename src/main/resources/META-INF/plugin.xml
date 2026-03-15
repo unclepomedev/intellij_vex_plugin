@@ -17,6 +17,7 @@
         <lang.syntaxHighlighterFactory language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexSyntaxHighlighterFactory"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexAnnotator"/>
         <lang.braceMatcher language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexBraceMatcher"/>
+        <lang.quoteHandler language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexQuoteHandler"/>
         <completion.contributor language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.completion.VexCompletionContributor"/>
     </extensions>
 </idea-plugin>
