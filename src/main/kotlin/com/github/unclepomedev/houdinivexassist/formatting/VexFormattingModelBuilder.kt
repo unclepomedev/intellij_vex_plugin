@@ -22,18 +22,21 @@ class VexFormattingModelBuilder : FormattingModelBuilder {
     private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
         return SpacingBuilder(settings, VexLanguage.INSTANCE)
             // symbols
-            .before(VexTypes.SEMICOLON).spaceIf(false) // no space before `;`
-            .before(VexTypes.COMMA).spaceIf(false)     // no space before `,`
-            .after(VexTypes.COMMA).spaceIf(true)       // space after `,`
+            .before(VexTypes.SEMICOLON).spaceIf(false)
+            .before(VexTypes.COMMA).spaceIf(false)
+            .after(VexTypes.COMMA).spaceIf(true)
 
-            // parentheses
-            .between(VexTypes.RPAREN, VexTypes.BLOCK).spaceIf(true)     // space between `)` and `{`
-            .between(VexTypes.IDENTIFIER, VexTypes.LPAREN).spaceIf(false)  // no space between function-name and `(`
-            .after(VexTypes.LPAREN).spaceIf(false)
-            .before(VexTypes.RPAREN).spaceIf(false)    // e.g. (int a)
-
-            // 1-space before identifier
+            // identifiers
             .between(VexTypes.TYPE, VexTypes.IDENTIFIER).spaces(1)
+            .between(VexTypes.STRUCT, VexTypes.IDENTIFIER).spaces(1)
+
+            // blocks & parentheses
+            .between(VexTypes.IDENTIFIER, VexTypes.LBRACE).spaceIf(true) // struct MyData {
+            .between(VexTypes.RPAREN, VexTypes.BLOCK).spaceIf(true)      // int myFunc(...) {
+            .between(VexTypes.RPAREN, VexTypes.STATEMENT).spaceIf(true)  // if (...) {
+            .between(VexTypes.IDENTIFIER, VexTypes.LPAREN).spaceIf(false) // myFunc(...)
+            .after(VexTypes.LPAREN).spaceIf(false)
+            .before(VexTypes.RPAREN).spaceIf(false)
 
             // comparison/logic operators
             .aroundInside(VexTypes.LT, VexTypes.RELATIONAL_EXPR).spaceIf(true)
