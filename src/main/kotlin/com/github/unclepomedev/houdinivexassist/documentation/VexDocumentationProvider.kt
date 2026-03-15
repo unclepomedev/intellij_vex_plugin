@@ -6,7 +6,6 @@ import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.ConcurrentHashMap
 
@@ -37,11 +36,11 @@ class VexDocumentationProvider : AbstractDocumentationProvider() {
         }
 
         val path = "vex_help/functions/$name.txt"
-        val stream = javaClass.classLoader.getResourceAsStream(path) ?: return null
+        val helpText = javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
+            stream.bufferedReader(StandardCharsets.UTF_8).readText()
+        } ?: return null
 
-        val helpText = InputStreamReader(stream, StandardCharsets.UTF_8).use { reader -> reader.readText() }
         val formattedDoc = VexDocFormatter.format(name, helpText)
-
         docCache[name] = formattedDoc
         return formattedDoc
     }
