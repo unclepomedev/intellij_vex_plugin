@@ -7,6 +7,14 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 
 class VexFormatterTest : VexTestBase() {
 
+    private fun reformatAndAssert(before: String, after: String) {
+        myFixture.configureByText(VexFileType, before)
+        WriteCommandAction.runWriteCommandAction(project) {
+            CodeStyleManager.getInstance(project).reformat(myFixture.file)
+        }
+        myFixture.checkResult(after)
+    }
+
     fun testBasicFormatting() {
         val before = """
             int   myFunc ( int a,int b ){
@@ -22,12 +30,94 @@ class VexFormatterTest : VexTestBase() {
             }
         """.trimIndent()
 
-        myFixture.configureByText(VexFileType, before)
+        reformatAndAssert(before, after)
+    }
 
-        WriteCommandAction.runWriteCommandAction(project) {
-            CodeStyleManager.getInstance(project).reformat(myFixture.file)
-        }
+    fun testComprehensiveFormatting() {
+        val before = """
+            struct   MyData{
+            int  val;
+            }
+            
+            int   myFunc ( int a,int b ){
+                int c=a+b ;
+                    int d = -5;
+                    
+                    if (c==d){
+                    c+=1;
+                    }
+                
+                return c;
+            }
+            
+            void test ( ){
+            myFunc ( 1 ,-2) ;
+            }
+        """.trimIndent()
 
-        myFixture.checkResult(after)
+        val after = """
+            struct MyData {
+                int val;
+            }
+            
+            int myFunc(int a, int b) {
+                int c = a + b;
+                int d = -5;
+            
+                if (c == d) {
+                    c += 1;
+                }
+            
+                return c;
+            }
+            
+            void test() {
+                myFunc(1, -2);
+            }
+        """.trimIndent()
+
+        reformatAndAssert(before, after)
+    }
+
+    fun testAdvancedOperatorsAndMultilineLists() {
+        val before = """
+            int myFunc (
+            int a,
+            int b
+            ) {
+                int x=a<<2 ;
+                int y=b>>1;
+                int z = a|b&x^y ;
+                return x>y?x :y;
+            }
+
+            void test ( ){
+                myFunc (
+                1 ,
+                2
+                ) ;
+            }
+        """.trimIndent()
+
+        val after = """
+            int myFunc(
+                int a,
+                int b
+            ) {
+                int x = a << 2;
+                int y = b >> 1;
+                int z = a | b & x ^ y;
+                return x > y ? x : y;
+            }
+
+            void test() {
+                myFunc(
+                    1,
+                    2
+                );
+            }
+        """.trimIndent()
+
+        reformatAndAssert(before, after)
     }
 }

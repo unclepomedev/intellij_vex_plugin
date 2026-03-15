@@ -22,32 +22,61 @@ class VexFormattingModelBuilder : FormattingModelBuilder {
     private fun createSpacingBuilder(settings: CodeStyleSettings): SpacingBuilder {
         return SpacingBuilder(settings, VexLanguage.INSTANCE)
             // symbols
-            .before(VexTypes.SEMICOLON).spaceIf(false) // no space before `;`
-            .after(VexTypes.COMMA).spaceIf(true)       // space after `,`
+            .before(VexTypes.SEMICOLON).spaceIf(false)
+            .before(VexTypes.COMMA).spaceIf(false)
+            .after(VexTypes.COMMA).spaceIf(true)
 
-            // operators
-            .around(VexTypes.EQUALS).spaceIf(true)     // `=`
-            .around(VexTypes.PLUSEQ).spaceIf(true)     // `+=`
-            .around(VexTypes.MINUSEQ).spaceIf(true)    // `-=`
-            .around(VexTypes.MULEQ).spaceIf(true)      // `*=`
-            .around(VexTypes.DIVEQ).spaceIf(true)      // `/=`
-            .around(VexTypes.PLUS).spaceIf(true)       // `+`
-            .around(VexTypes.MINUS).spaceIf(true)      // `-`
-            .around(VexTypes.MUL).spaceIf(true)        // `*`
-            .around(VexTypes.DIV).spaceIf(true)        // `/`
-            .around(VexTypes.LT).spaceIf(true)         // `<`
-            .around(VexTypes.GT).spaceIf(true)         // `>`
-            .around(VexTypes.LE).spaceIf(true)         // `<=`
-            .around(VexTypes.GE).spaceIf(true)         // `>=`
-            .around(VexTypes.EQEQ).spaceIf(true)       // `==`
-            .around(VexTypes.NEQ).spaceIf(true)        // `!=`
-
-            // parentheses
-            .between(VexTypes.RPAREN, VexTypes.BLOCK).spaceIf(true)     // space between `)` and `{`
-            .between(VexTypes.IDENTIFIER, VexTypes.LPAREN).spaceIf(false)  // no space between function-name and `(`
-            .after(VexTypes.LPAREN).spaceIf(false)
-            .before(VexTypes.RPAREN).spaceIf(false)    // e.g. (int a)
-
+            // identifiers
             .between(VexTypes.TYPE, VexTypes.IDENTIFIER).spaces(1)
+            .between(VexTypes.STRUCT, VexTypes.IDENTIFIER).spaces(1)
+
+            // blocks & parentheses
+            .between(VexTypes.IDENTIFIER, VexTypes.LBRACE).spaceIf(true) // struct MyData {
+            .between(VexTypes.RPAREN, VexTypes.BLOCK).spaceIf(true)      // int myFunc(...) {
+            .between(VexTypes.RPAREN, VexTypes.STATEMENT).spaceIf(true)  // if (...) {
+            .between(VexTypes.IDENTIFIER, VexTypes.LPAREN).spaceIf(false) // myFunc(...)
+            .after(VexTypes.LPAREN).spaceIf(false)
+            .before(VexTypes.RPAREN).spaceIf(false)
+
+            // comparison/logic operators
+            .aroundInside(VexTypes.LT, VexTypes.RELATIONAL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.GT, VexTypes.RELATIONAL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.LE, VexTypes.RELATIONAL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.GE, VexTypes.RELATIONAL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.EQEQ, VexTypes.EQUALITY_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.NEQ, VexTypes.EQUALITY_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.ANDAND, VexTypes.LOGICAL_AND_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.OROR, VexTypes.LOGICAL_OR_EXPR).spaceIf(true)
+
+            // arithmetic operators
+            .aroundInside(VexTypes.PLUS, VexTypes.ADD_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.MINUS, VexTypes.ADD_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.MUL, VexTypes.MUL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.DIV, VexTypes.MUL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.MOD, VexTypes.MUL_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.LSHIFT, VexTypes.SHIFT_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.RSHIFT, VexTypes.SHIFT_EXPR).spaceIf(true)
+
+            // assignment operators
+            .around(VexTypes.EQUALS).spaceIf(true)
+            .around(VexTypes.PLUSEQ).spaceIf(true)
+            .around(VexTypes.MINUSEQ).spaceIf(true)
+            .around(VexTypes.MULEQ).spaceIf(true)
+            .around(VexTypes.DIVEQ).spaceIf(true)
+            .around(VexTypes.MODEQ).spaceIf(true)
+            .around(VexTypes.ANDEQ).spaceIf(true)
+            .around(VexTypes.OREQ).spaceIf(true)
+            .around(VexTypes.XOREQ).spaceIf(true)
+            .around(VexTypes.LSHIFTEQ).spaceIf(true)
+            .around(VexTypes.RSHIFTEQ).spaceIf(true)
+
+            // bit operators
+            .aroundInside(VexTypes.BITOR, VexTypes.BITWISE_OR_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.BITXOR, VexTypes.BITWISE_XOR_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.BITAND, VexTypes.BITWISE_AND_EXPR).spaceIf(true)
+
+            // ternary operator
+            .aroundInside(VexTypes.QMARK, VexTypes.TERNARY_EXPR).spaceIf(true)
+            .aroundInside(VexTypes.COLON, VexTypes.TERNARY_EXPR).spaceIf(true)
     }
 }
