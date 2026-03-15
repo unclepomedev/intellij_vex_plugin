@@ -7,11 +7,23 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.ConcurrentHashMap
+import java.util.*
+
 
 class VexDocumentationProvider : AbstractDocumentationProvider() {
+    companion object {
+        private const val MAX_DOC_CACHE_ENTRIES = 256
+    }
 
-    private val docCache = ConcurrentHashMap<String, String>()
+    // LRU cache
+    private val docCache: MutableMap<String, String> =
+        Collections.synchronizedMap(
+            object : LinkedHashMap<String, String>(MAX_DOC_CACHE_ENTRIES, 0.75f, true) {
+                override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?): Boolean {
+                    return size > MAX_DOC_CACHE_ENTRIES
+                }
+            }
+        )
 
     override fun getCustomDocumentationElement(
         editor: Editor, file: PsiFile, contextElement: PsiElement?, targetOffset: Int
