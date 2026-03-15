@@ -1,0 +1,22 @@
+= pcnumfound =
+
+#type: vex
+#context: all
+#tags: ptcloud
+#group: ptcloud
+
+"""This node returns the number of points found by pcopen."""
+
+This node returns the number of points found by a [pcopen|/vex/functions/pcopen] query.
+
+For example, if 10 points are being filtered, and 6 are within the
+search radius, `pcnumfound` will return 6.
+
+:usage: `int pcnumfound(int handle)`
+
+Returns the number of found points from the search performed by
+[pcopen|/vex/functions/pcopen].
+
+@related
+- [pcopen|/vex/functions/pcopen]
+

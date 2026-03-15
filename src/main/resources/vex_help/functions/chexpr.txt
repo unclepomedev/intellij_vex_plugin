@@ -1,0 +1,21 @@
+= chexpr =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel with a new segment expression."""
+
+:usage: `float chexpr(string channel, string new_expr_function)`
+
+
+Evaluates a channel with a new segment expression and return its value.
+
+    This can be used to extract in and out segment values, slopes and acceleration using channel expression local variables like $IT, $OT, $IV, $OV.
+
+@related
+
+- [Vex:chexprf]
+- [Vex:chexprt]
+

@@ -1,0 +1,15 @@
+= distance_pointline =
+
+#type: vex
+#context: all
+#tags: proximity
+#group: math
+
+"""This function returns the closest distance between the point Q and the
+infinite line going through O parallel to vector D."""
+
+:usage: `float distance_pointline(vector Q, vector O, vector D)`
+
+This function returns the closest distance between the point <<Q>> and the
+infinite line parallel to <<D>> going through point <<O>>. The direction
+vector <<D>> does not have to be normalized.

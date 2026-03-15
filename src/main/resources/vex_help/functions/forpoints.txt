@@ -1,0 +1,40 @@
+= forpoints =
+
+#type: vexstatement
+#context: image3d
+#group: utility
+
+In the [image3d context|/vex/contexts/image3d], when geometry is specified (i.e. metaball geometry or particles), you can iterate over the metaballs which affect a point in space.
+
+{{{
+#!vex
+forpoints ( position [, distance] ) {
+
+}
+}}}
+
+...where the position is a vector representing a point in space. The statement will be executed once for each metaball/particle at the position passed in.
+
+If you specify the distance, all metaballs/particles within the distance of the point specified will be iterated through. The distance parameter is optional and may result in slower execution of the shader.
+
+Inside the loop, you can call the [Vex:mdensity] and [Vex:mattrib] functions to query the contribution of the current point instead of getting a "blended" value.
+
+For example, the following code will take the point color of the metaball which contributes the maximum weight to the point in space:
+
+{{{
+#!vex
+float d = 0, max = 0;
+vector clr = 0;
+vector blended_color;
+
+forpoints ( P ) {
+    d = mdensity(P);
+    if (d > max) {
+        clr = mattrib("Cd", P);
+        max = d;
+    }
+    blended_color = d * clr;
+}
+}}}
+
+Note that when you call [Vex:mattrib] inside a `forpoints` loop, the attribute is not pre-blended by the density of the metaball.

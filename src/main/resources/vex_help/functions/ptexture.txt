@@ -1,0 +1,65 @@
+= ptexture =
+
+#type: vex
+#context: all
+#tags: shading, map, file
+#group: texture
+
+"""Computes a filtered sample from a ptex texture map. Use texture instead."""
+
+:usage: `<type> ptexture(string map, int face_id, ...)`
+
+:usage: `<type> ptexture(string map, int face_id, float s, float t, ...)`
+
+This function is deprecated since ptex support has been integrated into the `texture()` function.
+
+
+== Optional arguments ==
+
+table>>
+    tr>>
+        th>> Keyword
+        th>> Values
+    tr>>
+        td>>
+        `channel`
+        td>>
+        An integer value indicating which channel of the ptex image to use.
+
+    tr>>
+        td>>
+        `filter`
+        td>>
+            The texture filter to use when filtering the texture.  Choices for the filter are:
+            - `point`: Point Filter (no filtering)
+            - `bilinear`:  Bilinear Texture Filter
+            - `box`:  Box Texture Filter
+            - `gaussian`:  Gaussian Texture Filter (default)
+            - `bicubic`:  Bicubic Texture Filter
+            - `catmullrom`:  Catmull-Rom Texture Filter
+            - `mitchell`:  Mitchell Texture Filter
+    tr>>
+        td>>
+            `filtersharp`
+        td>>
+            A floating point value indicating the filter sharpness.  This is only valid for the bicubic filter.  The range is 0-1 (the default is 1.0).
+    tr>>
+        td>>
+            `lerp`
+        td>>
+            An boolean value indicating whether to interpolate between Mip maps.  The default is true.
+    tr>>
+        td>>
+            `blur`
+        td>>
+            The texture blur value used for evaluation (default 0).
+    tr>>
+        td>>
+            `width`
+        td>>
+            The texture width value used for evaluation (default 1).
+
+
+@related
+
+- [Vex:texture]

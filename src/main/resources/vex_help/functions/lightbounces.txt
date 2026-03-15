@@ -1,0 +1,16 @@
+= lightbounces =
+
+#type: vex
+#context: shading
+#tags: light
+#group: shading
+
+"""Returns the bounce mask for a light struct."""
+
+:usage: `int lightbounces(light lp)`
+
+Returns the bounce mask for the light struct passed in. The bounce mask is based on the light object's __Lighting contribution__ parameter.
+
+@related
+
+- [Vex:getlight]

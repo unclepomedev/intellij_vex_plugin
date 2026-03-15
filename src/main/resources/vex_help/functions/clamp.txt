@@ -1,0 +1,28 @@
+= clamp =
+
+#type: vex
+#context: all
+#tags: interp
+#group: interp
+
+"""Returns value clamped between min and max."""
+
+:usage: `int clamp(int value, int min, int max)`
+:usage: `float clamp(float value, float min, float max)`
+
+    Returns <<value>> clamped between <<min>> and <<max>>.
+
+:usage: `vector2 clamp(vector2 value, vector2 min, vector2 max)`
+:usage: `vector clamp(vector value, vector min, vector max)`
+:usage: `vector4 clamp(vector4 value, vector4 min, vector4 max)`
+
+    Returns a new vector containing the clamped value of each component.
+
+
+@related
+
+- [Vex:fit]
+- [Vex:fit01]
+- [Vex:fit10]
+- [Vex:fit11]
+- [Vex:efit]

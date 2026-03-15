@@ -1,0 +1,19 @@
+= re_match =
+
+#type: vex
+#context: all
+#group: string
+
+"""Returns 1 if the entire input string matches the expression"""
+
+:usage: `int re_match(const string regex, const string input)`
+
+Returns `1` if the entire `input` string matches the `regex`, or `0` if it doesn't match.
+
+
+@related
+
+- [Vex:re_find]
+- [Vex:re_findall]
+- [Vex:re_replace]
+- [Vex:re_split]

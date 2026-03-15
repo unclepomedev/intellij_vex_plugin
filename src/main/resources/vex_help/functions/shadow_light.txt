@@ -1,0 +1,40 @@
+= shadow_light =
+
+#type: vex
+#context: displace, fog, surface
+#tags: light, pbr, raytracing
+#group: shading
+
+"""Executes the shadow shader for a given light and returns the amount of shadowing as a multiplier of the shaded color."""
+
+:usage: `vector shadow_light(int lightid, vector pos, vector dir, float time, ...)`
+
+This operation is similar to the shadow() function but it allows execution
+of the shadow shader outside an illuminance loop.  The position and
+direction toward the light source are provided directly, and the shadow
+shader is executed - returning the shadow multiplier.  To produce the final
+shadowed color, multiply the shaded color by the value returned by
+shadow_light.
+
+Keyword variadic arguments can be passed to the shadow shader, for import
+in the shadow shader with with simport().
+
+:arg:lightid:
+    A light identifier, as returned by [Vex:getlights].
+
+:arg:pos:
+    The origin of the ray (such as the global variable `P`).
+
+:arg:dir:
+    Direction vector from the origin. The length of this vector should be
+    the distance from _pos_ to the light source.
+
+:arg:time:
+    Time to send the ray at.
+
+
+@related
+
+- [Vex:shadow]
+- [Vex:sample_light]
+- [Vex:intersect_lights]

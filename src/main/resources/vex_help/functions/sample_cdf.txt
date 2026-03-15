@@ -1,0 +1,58 @@
+= sample_cdf =
+#type: vex
+#context: all
+#tags: pbr, bsdf, sampling
+#group: sampling
+
+"""Samples a cumulative distribution function (CDF)."""
+
+
+== Overview ==
+
+Use this function to sample values from a CDF array created with the [Vex:create_cdf] function. See [Vex:create_cdf] for more information.
+
+See the [Vex:create_cdf] function docs for example code.
+
+
+== Usage ==
+
+:usage: `int sample_cdf(float cdf[], float uniform_rand)`
+
+    Returns the index of the sampled CDF.
+
+:usage: `void sample_cdf(float cdf[], float uniform_rand, int &index, float &x)`
+
+    Writes the index of the sampled CDF and value to output arguments.
+
+:usage: `void sample_cdf(float cdf[], float uniform_rand, int &index, float &x, float &pdf)`
+
+    Writes the index of the sampled CDF, the sampled value, and the corresponding PDF to output arguments.
+
+:arg:cdf:
+
+    The CDF to sample from (create this using [Vex:create_cdf]).
+
+:arg:uniform_rand:
+
+    A uniform random variable (must be in range 0 to 1).
+
+:arg:&index:
+
+    Outputs the index of the sampled CDF element.
+
+:arg:&x:
+
+    Outputs the value of the sampled CDF element.
+
+:arg:&pdf:
+
+    Outputs the PDF of the sampled CDF element.
+
+:returns:
+    The first form returns the index of the sampled value. The other forms write the index to an output argument instead.
+
+
+@related
+
+- [Vex:create_cdf]
+- [Vex:create_pdf]

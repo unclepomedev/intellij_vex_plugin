@@ -1,0 +1,16 @@
+= isalpha =
+
+#type: vex
+#context: all
+#group: string
+
+"""Returns 1 if all the characters in the string are alphabetic"""
+
+:usage: `int isalpha(const string str)`
+
+Returns 1 if all the characters in the string are alphabetic. No numerals, punctuation
+or other special characters. If any are present then returns 0.
+
+@related
+
+- [Vex:isdigit]

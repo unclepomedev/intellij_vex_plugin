@@ -1,0 +1,19 @@
+= relpath =
+
+#type: vex
+#context: all
+#group: string
+#since: 18.0
+
+"""Returns the relative path to a file."""
+
+:usage: `string relpath(string abspath)`
+
+Returns the supplied path converted to a relative path, expressed as
+relative to Houdini's current working directory. The file does not need to
+exist.
+
+@related
+
+- [Vex:abspath]
+

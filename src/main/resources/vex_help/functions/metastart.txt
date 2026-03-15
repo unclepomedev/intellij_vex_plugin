@@ -1,0 +1,18 @@
+= metastart =
+
+#type: vex
+#context: all
+#tags: metaball
+#group: metaball
+
+"""Open a geometry file and return a "handle" for the metaballs of
+interest, at the position p."""
+
+:usage: `int metastart(string filename, vector p)`
+
+Open a geometry file and return a "handle" for the metaballs of
+interest, at the position <<p>>. You can then use
+[metanext|Vex:metanext] to move the handle to the next metaball for
+evaluation, and [metaimport|Vex:metaimport] to query attributes of the
+metaball.
+

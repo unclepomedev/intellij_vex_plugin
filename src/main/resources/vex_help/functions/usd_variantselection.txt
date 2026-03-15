@@ -1,0 +1,35 @@
+= usd_variantselection =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim, usd_variant
+#group: usd
+#since: 17.5
+
+"""Returns the currently selected variant in a given variant set."""
+
+:usage: `string usd_variantselection(<stage>, string primpath, string variantset)`
+
+This function returns the current variant in a given variant set on a given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:variantset:
+    The variant set name.
+
+:returns:
+    The currently selected variant in a given variant set on a given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the currently selected variant in the variant set "shapes" on a "shape_shifter" primitive.
+string selected_variant = usd_variantselection(0, "/geo/shape_shifter", "shapes");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_variants]
+- [Vex:usd_setvariantselection]

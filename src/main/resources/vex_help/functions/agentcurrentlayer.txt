@@ -1,0 +1,30 @@
+= agentcurrentlayer =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+
+"""Returns the name of the current layer of an agent primitive."""
+
+WARNING:
+    This function has been deprecated. Use [Vex:agentcurrentlayers] instead.
+
+:usage: `string agentcurrentlayer(<geometry>, int prim)`
+    #status: deprecated
+
+Returns an empty string if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentcollisionlayer]
+- [Vex:agentlayerbindings]
+- [Vex:agentlayers]
+- [Vex:agentlayershapes]
+- [Vex:setagentcollisionlayer]
+- [Vex:setagentcurrentlayer]

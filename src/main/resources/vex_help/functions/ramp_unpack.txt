@@ -1,0 +1,23 @@
+= ramp_unpack =
+
+#type: vex
+#context: all
+#tags: ramp
+#group: utility
+#since: 18.5
+
+"""Unpacks a string-encoded ramp into a set of arrays."""
+
+:usage: `void ramp_unpack(string ramp, string &basis[], float &pos[], float &value[] )`
+:usage: `void ramp_unpack(string ramp, string &basis[], float &pos[], vector &value[] )`
+:usage: `void ramp_unpack(string ramp, string &basis[], float &pos[], vector4 &value[] )`
+
+Ramps are commonly packed as JSON formatted strings by Houdini operations.
+This will unpack them into three arrays of basis, position, and value, which
+can then be used by the spline or ramp_lookup functions.
+
+@related
+
+- [Vex:spline]
+- [Vex:ramp_lookup]
+- [Vex:ramp_pack]

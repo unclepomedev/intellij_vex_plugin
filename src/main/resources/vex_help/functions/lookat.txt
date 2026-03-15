@@ -1,0 +1,20 @@
+= lookat =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: transform
+
+"""Computes a rotation matrix or angles to orient the negative z-axis along the vector (to-from) under the transformation."""
+
+:usage: `matrix3 lookat(vector from, vector to)`
+:usage: `matrix3 lookat(vector from, vector to, float roll)`
+:usage: `matrix3 lookat(vector from, vector to, vector up)`
+:usage: `vector lookat(vector from, vector to, float roll, int xyz)`
+:usage: `vector lookat(vector from, vector to, vector up, int xyz)`
+
+Computes a rotation matrix or angles to orient the negative z-axis along the
+vector (to-from) under the transformation. If an up vector is specified, this
+will determine the roll.
+
+:include _common#xyz:

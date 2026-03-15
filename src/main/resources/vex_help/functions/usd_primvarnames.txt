@@ -1,0 +1,32 @@
+= usd_primvarnames =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar, usd_prim
+#group: usd
+#since: 18.0
+
+"""Returns the names of the primvars available on the given USD primitive."""
+
+:usage: `string[] usd_primvarnames(<stage>, string primpath)`
+
+This function returns the primvar names that are available on the given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    String array containing the names of the primitive's primvars.
+
+@examples 
+{{{
+#!vex
+// Get the primvar names from the primitive.
+string primvar_names[] = usd_primvarnames(0, "/geo/src_sphere");
+}}}
+
+@related
+- [Vex:usd_iprimvarnames]
+- [Vex:usd_isprimvar]
+- [Vex:usd_isprim]

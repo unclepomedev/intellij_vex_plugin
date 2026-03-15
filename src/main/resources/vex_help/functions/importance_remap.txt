@@ -1,0 +1,39 @@
+= importance_remap =
+
+#type: vex
+#context: all
+#tags: map, file
+#group: texture
+#since: 18.5
+
+"""Remaps a texture coordinate to another coordinate in the map to optimize sampling of brighter areas."""
+
+:usage: `vector2 importance_remap(string map, vector2 uv, ...)`
+
+This function remaps texture coordinates to new texture coordinates based on importance sampling of the texture.
+
+:arg:map:
+    The filename of the texture map to use to guide resampling.
+
+:arg:`uv`:
+    Components should be in the range `0` to `1`. The function remaps these coordinates so more "important" areas of the input text (that is, brighter areas) get more samples.
+
+:varg:`maxres`:
+    #type: int
+    #default: 0
+
+    While building lookup tables for importance sampling, the function resamples the texture for faster evaluation. This argument clamps the resolution of the resampled map. Depending on the use, importance sample tables can often be significantly smaller resolution than the source image with no perceptible loss.
+
+    A value of `0` (the default) just uses the original texture size.
+
+    NOTE:
+        It's a good idea to limit the lookup table size, since you typically don't need much resolution for importance sampling, and a large texture can generate a huge LUT.
+
+:returns:
+    The remapped texture coordinates.
+
+
+@related
+
+- [Vex:texture]
+- [Vex:filter_remap]

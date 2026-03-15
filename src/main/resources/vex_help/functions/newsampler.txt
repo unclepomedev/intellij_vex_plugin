@@ -1,0 +1,24 @@
+= newsampler =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: sampling, pbr
+#group: sampling
+
+"""Initializes a sampling sequence for the nextsample function."""
+
+:usage: `int newsampler(...)`
+:usage: `int newsampler(int seed, ...)`
+
+    Returns an initialized sampler sequence for use as the first argument
+    to the [Vex:nextsample] function.
+
+:arg:seed:
+    You can specify a seed value for the sequence.
+    Using the same seed will generate the same sequence.
+    This can be useful when random sampling into a point cloud, for consistent results.
+
+
+@related
+
+- [Vex:nextsample]

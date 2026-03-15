@@ -1,0 +1,34 @@
+= usd_clearmetadata =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Clears the value of the metadata."""
+
+:usage: `int usd_clearmetadata(int stagehandle, string path, string name)`
+
+This function clears the value of the given metadata.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Clear the metadata value.
+usd_clearmetadata(0, "/geo/sphere", "customData:some_name");
+}}}
+
+@related
+- [Vex:usd_ismetadata]
+- [Vex:usd_metadata]
+- [Vex:usd_setmetadata]

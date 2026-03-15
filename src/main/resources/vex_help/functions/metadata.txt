@@ -1,0 +1,32 @@
+= metadata =
+
+#type: vex
+#context: cop2
+#tags: cop2
+#group: image
+
+"""Returns a metadata value from a composite operator."""
+
+:usage: `<type> metadata(int opinput, string name)`
+:usage: `float|int metadata(int opinput, string name, int index)`
+
+Returns the metadata value associated with metadata `name`, or zero if the 
+metadata doesn't exist, the input isn't connected, or the index is out of range
+(identity matrices for the matrix versions).
+
+:include _common#opinput_arg:
+
+:arg:name:
+   The name of the metadata to fetch.
+
+:arg:index:
+   For compound data types, this indicates the component of the
+   vector/matrix, or which item of the array, to fetch.
+
+
+@related:
+- [Vex:hasmetadata]
+- [Vex:cinput]
+- [Vex:binput]
+- [Vex:finput]
+- [Vex:ninput]

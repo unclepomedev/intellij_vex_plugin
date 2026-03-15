@@ -1,0 +1,40 @@
+= chsetattr =
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Sets the value of a CHOP attribute."""
+
+:usage: `int chsetattr(string attrclass, string attrname, int channel, int sample, <type> value)`
+
+    Sets the attribute to the given value in the current CHOP.
+
+:usage: `int chsetattr(string attrname, int channel, int sample, <type> value)`
+
+    This version assumes the attribute class argument to be `""` (guess the class from the other arguments).
+
+:include chattr#about_chop_attrs:
+
+This function sets the value of a CHOP attribute. Use [Vex:chattr] to read CHOP attributes.
+
+:include chattr#attribclass_arg:
+
+:arg:attrname:
+    The name of the attribute to write.
+
+:include chattr#channel_arg:
+
+:include chattr#sample_arg:
+
+:arg:value:
+    The new attribute value. The type of the argment determines the type of the attribute.
+
+:returns:
+    Returns `1` if the write succeeded, or `0` otherwise.
+
+
+@related
+
+- [Vex:chattr]
+- [Vex:chattrnames]

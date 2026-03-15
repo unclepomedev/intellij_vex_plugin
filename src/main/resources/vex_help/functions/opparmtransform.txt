@@ -1,0 +1,29 @@
+= opparmtransform =
+
+#type: vex
+#context: all
+#tags: transform
+#group: nodes
+
+"""Returns the parm transform associated with an OP."""
+
+:usage: `matrix opparmtransform(string path)`
+:usage: `matrix opparmtransform(string path, float time)`
+:usage: `matrix opparmtransform(int opid)`
+:usage: `matrix opparmtransform(int opid, float time)`
+
+Returns the parm transform associated with an OP. If the specified OP has no
+transform associated with it (such as a COP), then an identity matrix is returned. It is possible to specify the time at which to evaluate the transform (in seconds, not frames).
+
+NOTE:
+    The op: syntax can be used to simulate this behavior using the standard transform functions.
+
+@related
+- [ntransform|Vex:ntransform]
+- [ptransform|Vex:ptransform]
+- [getspace|Vex:getspace]
+- [optransform|Vex:optransform]
+- [oppreconstrainttransform|Vex:oppreconstrainttransform]
+- [opparenttransform|Vex:opparenttransform]
+
+

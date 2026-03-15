@@ -1,0 +1,48 @@
+= getsmoothP =
+
+#type: vex
+#context: shading
+#tags: shading
+#group: shading
+
+"""Returns modified surface position based on a smoothing function."""
+
+Returns a modified surface position based on a smoothing function.
+
+:usage: `int getsmoothP(vector &smoothP, vector ray_origin, ...)`
+    
+    Overwrites the `smoothP` variable with the modified surface position.
+    This function is only meaningful for some primitive types (such as polygons).
+
+:usage: `vector getsmoothP(...)`
+
+    Uses the global variables `Eye` and `I` to fill in the ray origin and direction.
+
+
+== Variadic arguments ==
+
+:varg:style:
+    #type: string
+    
+    `none`:
+        No smoothing.
+
+    `shadow`:
+        Apply a smoothing function appropriate to elimination of the shadow
+        terminator issue for polygons.
+
+
+@examples
+
+{{{
+#!vex
+shadow
+fastshadow()
+{
+    vector        surfP;
+    if (!getsmoothP(surfP, Eye, I))
+        surfP = Ps;                // Set to the Ps (surface P) variable
+    vector shad = trace(surfP, normalize(L), Time, "raystyle", "shadow");
+    Cl *= ({1,1,1} - shad);
+}
+}}}

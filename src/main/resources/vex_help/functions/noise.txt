@@ -1,0 +1,54 @@
+= noise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""There are two forms of Perlin-style noise: a non-periodic noise which
+changes randomly throughout N-dimensional space, and a periodic form
+which repeats over a given range of space."""
+
+:usage: `float noise(float pos)`
+:usage: `vector noise(float pos)`
+
+    Sample one or three numbers at the given position from 1D noise.
+
+:usage: `float noise(float posx, float posy)`
+:usage: `vector noise(float posx, float posy)`
+
+    Sample one or three numbers at the given position from 2D noise.
+
+:usage: `float noise(vector pos)`
+:usage: `vector noise(vector pos)`
+
+    Sample one or three numbers at the given position from 3D noise.
+
+:usage: `float noise(vector4 pos)`
+:usage: `vector noise(vector4 pos)`
+
+    Sample one or three numbers at the given position from 4D noise.
+
+
+There are two forms of Perlin-style noise: a non-periodic noise which
+changes randomly throughout N-dimensional space, and a periodic form
+which repeats over a given range of space.
+
+NOTE:
+    This function generates non-periodic noise. Use the
+    [pnoise|Vex:pnoise] function to generate periodic Perlin noise.
+
+The various functions return the noise value at a 4D (vector4 argument),
+3D (vector argument), 2D (two float arguments) or 1D (float argument)
+position. You can get a random float value or a vector of three random
+values.
+
+The noise is in the range 0-1 with a median of 0.5. The distribution of
+the noise depends on the dimension, with higher dimensions approaching a
+Gaussian distribution of noise values.
+
+
+@related
+
+:include _common#noiselinks/:
+

@@ -1,0 +1,42 @@
+= rotate_x_to =
+
+#type: vex
+#context: all
+#tags: vector, transform
+#group: transform
+
+"""Rotates a vector by a rotation that would bring the x-axis to a given direction."""
+
+:usage: `vector2 rotate_x_to(vector2 direction, vector2 v)`
+:usage: `vector  rotate_x_to(vector  direction, vector  v)`
+:usage: `vector4 rotate_x_to(vector4 direction, vector4 v)`
+
+:arg:direction:
+    Direction to which a vector along the positive x-axis, e.g. (1,0,0),
+    would be rotated.  This does not need to be normalized.
+
+:arg:v:
+    Vector to which to apply the rotation.
+
+Applies to `v`, the rotation that would move (1,0), (1,0,0), or (1,0,0,0) to
+`direction` most directly.
+
+In the case of `direction` being (-1,0,0), there are multiple distinct
+rotations that would move (1,0,0) to (-1,0,0) with a
+half turn rotation, so one is chosen arbitrarily, negating `v.x` and `v.z`.
+In 2D, there is only one distinct rotation that moves (1,0) to (-1,0),
+equivalent to negating `v`.  In 4D, the rotation where `v` is negated
+is also chosen.
+
+This is used by functions like `sample_direction_cone` and `sample_sphere_cone`
+to rotate the cone centre from (1,0,0) to a given direction vector.
+
+
+@related
+
+- [Vex:sample_circle_arc]
+- [Vex:sample_direction_cone]
+- [Vex:sample_orientation_cone]
+- [Vex:sample_circle_slice]
+- [Vex:sample_sphere_cone]
+- [Vex:sample_hypersphere_cone]

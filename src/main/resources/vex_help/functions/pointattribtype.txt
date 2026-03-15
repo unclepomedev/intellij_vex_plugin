@@ -1,0 +1,14 @@
+= pointattribtype =
+
+#type: vex
+#context: all
+#tags: point, attrib
+#group: attrib
+
+"""Returns the type of a geometry point attribute."""
+
+:usage: `int pointattribtype(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+See [Vex:attribtype] for more information.

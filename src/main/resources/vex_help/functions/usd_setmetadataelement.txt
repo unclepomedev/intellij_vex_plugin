@@ -1,0 +1,36 @@
+= usd_setmetadataelement =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Sets the value of an element in an array metadata."""
+
+:usage: `int usd_setmetadataelement(int stagehandle, string path, string name, int index, <type> value)`
+
+This function sets the element value in an array metadata. 
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:arg:index:
+    An index of an element in the array metadata.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the value of element at index 2 in the array attribute.
+usd_setmetadata(0, "/geo/sphere", "customData:a_float_arr", 2, 0.25);
+}}}
+
+@related
+- [Vex:usd_ismetadata]
+- [Vex:usd_metadataelement]

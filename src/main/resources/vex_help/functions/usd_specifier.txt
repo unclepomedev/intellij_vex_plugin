@@ -1,0 +1,31 @@
+= usd_specifier =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 19.0
+
+"""Returns the primitive's specifier."""
+
+:usage: `string usd_specifier(<stage>, string primpath)`
+
+This function returns the given primitive's specifier, e.g., "def", "class", etc.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The specifier of the given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the sphere primitive's specifier.
+string specifier = usd_specifier(0, "/geo/sphere");
+}}}
+
+@related
+- [Vex:usd_typename]
+- [Vex:usd_isabstract]

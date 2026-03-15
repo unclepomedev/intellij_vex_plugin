@@ -1,0 +1,36 @@
+= usd_isprimvar =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Checks if the primitive has a primvar of the given name."""
+
+:usage: `int usd_isprimvar(<stage>; string primpath; string name)`
+
+This function checks whether the primitive has a primvar of the given name.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:returns:
+    `1` if the primvar exists directly on the given primitive, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere primitive has a primvar "some_primvar".
+int is_primvar = usd_isprimvar(0, "/geometry/sphere", "some_primvar");
+}}}
+
+@related
+- [Vex:usd_isiprimvar] 
+- [Vex:usd_isarrayprimvar]
+- [Vex:usd_isindexedprimvar]
+- [Vex:usd_primvar]

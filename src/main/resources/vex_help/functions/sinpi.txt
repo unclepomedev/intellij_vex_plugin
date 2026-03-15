@@ -1,0 +1,22 @@
+= sinpi =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the sine of the argument scaled by Pi."""
+
+:usage: `<type> sinpi(<type> n)`
+
+    Returns the sine of `n`, where `n` is in semi-circles.
+
+@related
+
+- [Vex:sinh]
+- [Vex:cospi]
+- [Vex:tanpi]
+- [Vex:sin]
+- [Vex:cos]
+- [Vex:tan]
+- [Vex:asin]

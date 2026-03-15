@@ -1,0 +1,15 @@
+= ihasplane =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns 1 if the specified input has a plane named `planename`."""
+
+:usage: `int ihasplane(int opinput, string planename)`
+
+Returns 1 if the specified input has a plane named `planename`. Input
+numbers start at 0.
+
+:include _common#opinput_arg:

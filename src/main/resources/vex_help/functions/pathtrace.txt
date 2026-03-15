@@ -1,0 +1,29 @@
+= pathtrace =
+
+#type: vex
+#context: shading
+#group: shading
+
+"""Computes global illumination using PBR for secondary bounces."""
+
+:usage: `vector pathtrace(vector P, vector N, ...)`
+
+`pathtrace` works like [Vex:irradiance], but uses the physically based
+rendering (PBR) engine to do secondary bounces.
+
+`pathtrace` provides a simple (and not very flexible) method of invoking the
+PBR rendering engine from micro-polygon rendering. It uses path tracing and
+the `F` (BSDF) output, not `Cf`/`Of` on the hit shaders. Maximum path depth
+is controlled by the "diffuse bounces" parameter on the PBR tab of the
+[mantra output driver|Node:out/ifd].
+
+Irradiance caching works the same way it works with [Vex:occlusion].
+
+:include _rayopts_variadic:
+
+
+@related
+
+- [Vex:occlusion]
+- [Vex:irradiance]
+

@@ -1,0 +1,28 @@
+= albedo =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf
+#group: bsdf
+
+"""Returns the albedo (percentage of reflected light) for a bsdf given the outgoing light direction."""
+
+:usage: `vector albedo(bsdf b, ...)`
+:usage: `vector albedo(bsdf b, int mask, ...)`
+:usage: `vector albedo(bsdf b, vector viewer, ...)`
+:usage: `vector albedo(bsdf b, vector viewer, int mask, ...)`
+
+:arg:viewer:
+    Vector toward viewer.
+
+:arg:mask:
+    A bitmask composed from values representing different shading components.
+    
+    :include pbr_mask_h:
+
+
+@related
+
+- [Vex:bouncemask]
+- [Vex:eval_bsdf]
+- [Vex:sample_bsdf]

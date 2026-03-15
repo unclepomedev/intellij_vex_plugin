@@ -1,0 +1,23 @@
+= detail =
+
+#type: vex
+#context: all
+#tags: attrib, detail
+#group: attrib
+#redirect: ../attrib_suite#detail
+
+"""Reads the value of a detail attribute value from a geometry."""
+
+:usage: `<type> detail(<geometry>, string attribute_name, int ignored=0)`
+:usage: `<type>[] detail(<geometry>, string attribute_name, int ignored=0)`
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:arg:ignored:
+    The last argument is always ignored.
+    It is just there so you can change a prim/point/vertex call (which each have an element number argument) to a detail call by changing the name without having to change the arguments as well.
+
+:returns:
+    `0` if importing the attribute failed, or the value of the attribute on success.

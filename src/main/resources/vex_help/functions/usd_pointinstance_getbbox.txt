@@ -1,0 +1,37 @@
+= usd_pointinstance_getbbox =
+
+#type: vex
+#context: all
+#tags: usd, usd_pointinstance
+#group: usd
+#since: 18.0
+
+"""Sets two vectors to the minimum and maximum corners of the bounding box for the given instance inside point instancer."""
+
+:usage: `int usd_pointinstance_getbbox( <stage>, string primpath, int instance_index, string purpose, vector &min, vector &max )`
+
+This function returns an axis-aligned bounding box for the given instance. The point corresponding to the minimum corner of the bounding box will be returned in min, while the maximum will be in max. Always returns 1. 
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:instance_index:
+    The index of the instance whose bounding box to return.
+
+:arg:purpose:
+    The primitive's purpose for which to return the bounding box (e.g., "render").
+
+:returns:
+    Always 1.
+
+@examples 
+{{{
+#!vex
+// Get the bounding box of the first instanced sphere.
+vector min, max;
+usd_pointinstance_getbbox(0, "/src/instanced_spheres", 0, "render", min, max);
+}}}
+
+@related
+- [Vex:usd_getpointinstancebounds]

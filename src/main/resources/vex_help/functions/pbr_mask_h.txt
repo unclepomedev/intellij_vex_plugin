@@ -1,0 +1,3 @@
+﻿#type: include
+
+See [Vex:bouncemask] for information on component label bitmasks.

@@ -1,0 +1,12 @@
+= sleep =
+
+#type: vex
+#context: all
+#tags: utility
+#group: utility
+
+"""Yields processing for a certain number of milliseconds."""
+
+:usage: `void sleep(int milliseconds)`
+
+Yields processing for a certain number of milliseconds.

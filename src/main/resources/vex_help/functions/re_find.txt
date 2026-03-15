@@ -1,0 +1,39 @@
+= re_find =
+
+#type: vex
+#context: all
+#group: string
+
+"""Matches a regular expression in a string"""
+
+:usage: `int re_find(const string regex, const string input)`
+:usage: `int re_find(const string regex, const string input, const int start)`
+:usage: `int re_find(const string regex, const string input, const int start, const int end)`
+
+    Returns `1` if `regex` matches in `input`, or `0` otherwise.
+
+:usage: `string re_find(const string regex, const string input)`
+:usage: `string re_find(const string regex, const string input, const int start)`
+:usage: `string re_find(const string regex, const string input, const int start, const int end)`
+
+    Returns the first substring that matches `regex` in `input`.
+
+:usage: `int re_find(int &start_pos[], int &end_pos[], const string regex, const string input)`
+:usage: `int re_find(int &start_pos[], int &end_pos[], const string regex, const string input, const int start)`
+:usage: `int re_find(int &start_pos[], int &end_pos[], const string regex, const string input, const int start, const int end)`
+
+    Returns `1` if `regex` matches in input, or `0` otherwise. Fills the `start_pos` and `end_pos` array variables with the start and end positions of each match.
+
+:usage: `string[] re_find(const string regex, const string input)`
+:usage: `string[] re_find(const string regex, const string input, const int start)`
+:usage: `string[] re_find(const string regex, const string input, const int start, const int end)`
+
+    Returns an array of substrings that match `regex` in `input`.
+
+
+@related
+
+- [Vex:re_match]
+- [Vex:re_findall]
+- [Vex:re_replace]
+- [Vex:re_split]

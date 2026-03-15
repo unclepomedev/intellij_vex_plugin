@@ -1,0 +1,30 @@
+= solvepoly =
+
+#type: vex
+#context: all
+#tags: math, solve
+#group: math
+
+"""Finds the real roots of a polynomial."""
+
+:usage: `int solvepoly(float coef[], float &roots[], int maxiter=0)`
+
+:arg:coef:
+    An array of coefficients of the polynomial.
+    
+    You must order the coefficients such that `coef[i]` should be `x^i`.
+    *This is reverse of the order you would write the polynomial out normally*.
+
+:arg:&roots:
+    The function overwrites this array with the real roots of the polynomial,
+    in ascending order.
+    
+:returns:
+    The number of real roots.
+
+
+@related
+
+- [Vex:solvequadratic]
+- [Vex:solvecubic]
+

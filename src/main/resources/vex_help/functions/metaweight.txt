@@ -1,0 +1,15 @@
+= metaweight =
+
+#type: vex
+#context: all
+#tags: metaball
+#group: metaball
+
+"""Returns the metaweight of the geometry at position p."""
+
+:usage: `float metaweight(<geometry>, vector p)`
+
+Returns the metaweight of the geometry at position <<p>>.
+This is the result of evaluating all the metaballs in the
+geometry at that position.  Usually this is the sum of their
+values, but meta expressions can change that.

@@ -1,0 +1,49 @@
+= usd_attrib =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 17.5
+
+"""Reads the value of an attribute from the USD primitive."""
+
+:usage: `<type> usd_attrib(<stage>; string primpath; string name)`
+:usage: `<type>[] usd_attrib(<stage>; string primpath; string name)`
+:usage: `<type> usd_attrib(<stage>; string primpath; string name; float timecode)`
+:usage: `<type>[] usd_attrib(<stage>; string primpath; string name; float timecode)`
+
+This function returns a value of a given attribute on a given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:include _common#usd_timecode:
+
+:returns:
+    The value of an existing attribute, or zero/empty value if the attribute does not exist. Use [Vex:usd_isattrib] if you want to check whether the attribute exists.
+
+
+@examples 
+
+{{{
+#!vex
+// Get the value of some attributes on the cube primitive.
+float a = usd_attrib("opinput:0", "/geo/cube", "attribute_name_a");
+vector b[] = usd_attrib(0, "/geo/cube", "attribute_name_b");
+
+// Get the value of attribute "bar" at various time codes.
+f[]@b_at_current_frame = usd_attrib(0, "/geo/sphere", "bar");
+f[]@b_at_frame_7       = usd_attrib(0, "/geo/sphere", "bar", 7.0);
+}}}
+
+
+@related
+
+- [Vex:usd_isprim]
+- [Vex:usd_isattrib]
+- [Vex:usd_attribtypename]

@@ -1,0 +1,18 @@
+= smoothrotation =
+
+#type: vex
+#context: all
+#tags: matrix, vector
+#group: transform
+
+"""Returns the closest equivalent Euler rotations to a reference rotation."""
+
+:usage: `vector smoothrotation(int order, vector r, vector r_reference)`
+
+Returns the Euler rotations that have the closest values to <<r_reference>> while still describing the same orientation as <<r>>.
+Typically, <<r_reference>> will be the rotations from the previous sample or frame.
+
+The angles are in radians.  Use the `radians()` function to convert degrees into radians.
+
+:arg:order:
+    :include _common#xyz/:

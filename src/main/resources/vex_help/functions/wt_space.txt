@@ -1,0 +1,15 @@
+= wt_space =
+
+#type: vex
+#context: all
+#tags: map, transform
+#group: transform
+
+"""Transforms a position value from World to Texture space."""
+
+:usage: `matrix wt_space()`
+:usage: `vector wt_space(vector v)`
+:usage: `vector4 wt_space(vector4 v)`
+
+Transforms a position value from _World_ to _Texture_ space.
+

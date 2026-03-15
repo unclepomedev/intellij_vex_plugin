@@ -1,0 +1,27 @@
+= usd_makevalidprimname =
+
+#type: vex
+#context: all
+#tags: usd
+#group: usd
+#since: 19.0
+
+"""Forces a string to conform to the rules for naming USD primitives."""
+
+:usage: `string usd_makevalidprimname(string name)`
+
+This function ensures that a string meets the requirements of a legal USD
+primitive name that can be used as part of a valid primitive path.
+
+:arg:name:
+    String that should be turned into a valid primitive name.
+
+:returns:
+    A possibly modified version of the original string which conforms to the
+    requirements for naming USD primitives. Invalid characters such as spaces
+    and most punctuation will be converted to underscores. Note that this means
+    the translation is not reversible. If the original string is already a
+    legal primitive name, the string is returned unchanged.
+
+@related
+- [Vex:usd_makevalidprimpath]

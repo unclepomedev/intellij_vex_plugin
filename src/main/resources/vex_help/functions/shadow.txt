@@ -1,0 +1,19 @@
+= shadow =
+
+#type: vex
+#context: displace, fog, surface
+#tags: surface
+#group: shading
+
+"""Calls shadow shaders for the current light source."""
+
+This function can only be called from within an [Vex:illuminance] statement.
+
+:usage: `void shadow(vector &Cl)`
+:usage: `vector shadow(vector Cl)`
+
+    Uses the `P` and `L` global variables.
+
+:usage: `void shadow(vector &Cl, vector P, vector L)`
+:usage: `vector shadow(vector Cl, vector P, vector L)`
+

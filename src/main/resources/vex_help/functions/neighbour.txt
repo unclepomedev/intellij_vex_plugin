@@ -1,0 +1,29 @@
+= neighbour =
+
+#type: vex
+#context: all
+#tags: point, proximity
+#group: geo
+
+"""Returns the point number of the next point connected to a given point."""
+
+This function lets you walk the points connected to a point (separated by a single edge). To get a list of all connected points at once, use [Vex:neighbours].
+
+:usage: `int neighbour(<geometry>, int point_num, int neighbour_num)`
+
+:include _common#geometry:
+
+:arg:point_num:
+    The number of the point whose neighbours you want to find.
+
+:arg:neighbour_num:
+    Which neighbour to find. The neighbours are in no particular order. Use [Vex:neighbourcount] to get the total number of connected points.
+
+:returns:
+    The point index of the neighbour of the point. The order is undefined, but will be consistent for consistent geometry. Returns `-1` if the `neighbournum` is out of range for that point, or the point is out of range for that input, or the input doesn't exist.
+
+
+@related
+
+- [Vex:neighbourcount]
+- [Vex:neighbours]

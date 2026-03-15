@@ -1,0 +1,25 @@
+= removepointgroup =
+
+#type: vex
+#context: all
+#tags: group, point, create
+#group: attrib
+
+"""Removes a point group from a geometry."""
+
+If you don't know the class of group until runtime, use [Vex:removeattrib].
+
+:usage: `int removepointgroup(int geohandle, string name)`
+
+    Removes a point group from the given geometry.
+
+@related
+
+- [Vex:removeattrib]
+- [Vex:removedetailattrib]
+- [Vex:removepointattrib]
+- [Vex:removepointgroup]
+- [Vex:removevertexattrib]
+- [Vex:removevertexgroup]
+- [Vex:removeprimattrib]
+- [Vex:removeprimgroup]

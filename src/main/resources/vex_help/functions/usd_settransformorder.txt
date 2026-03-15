@@ -1,0 +1,33 @@
+= usd_settransformorder =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Sets the primitive's transform order"""
+
+:usage: `int usd_settransformorder(int stagehandle, string primpath, string[] transformorder)`
+
+This function sets the primitive's transform order. Transform order is a sequence of transform operations, whose full names are stored in `xformOpOrder` attribute as a string array. Thus, this function sets that attribute.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:transformorder:
+    The transform order to set on the primitive. It is a list of transform operation full names.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+string  ops[] = {"xformOp:translate:xform_cube_t", "xformOp:rotateZ:xform_cube_r", "xformOp:rotateXYZ:xform_cube_r", "xformOp:scale:xform_cube_s"};
+usd_settransformorder(0, "/geo/cube", ops);
+}}}
+
+@related
+- [Vex:usd_transformorder]

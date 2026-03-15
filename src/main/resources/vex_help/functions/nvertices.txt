@@ -1,0 +1,13 @@
+= nvertices =
+
+#type: vex
+#context: all
+#tags: vertex, count
+#group: geo
+
+"""Returns the number of vertices in the input or geometry file."""
+
+:usage: `int nvertices(<geometry>)`
+
+:include _common#geometry:
+

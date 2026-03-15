@@ -1,0 +1,34 @@
+= pointedge =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Finds and returns a half-edge with the given endpoints."""
+
+:usage: `int pointedge(<geometry>, int point1, int point2)`
+
+Returns `-1` if no such half-edge exists. Otherwise returns the number of a half-edge that either has `point1` as source or has `point2` as desination, or the other way around.
+
+:include _common#geometry:
+
+:arg:`point1`, `point2`:
+    The point numbers in the geometry for the two endpoints of the returned half-edge.  `0` is the first point.
+
+
+@examples
+
+{{{
+#!vex
+
+int edge_count = 0;
+
+// Determine if there is an edge between points 23 and 25:
+int h0 = pointedge("defgeo.bgeo", 23, 25);
+if (h0 != -1)
+{
+// Edge exists!
+}
+}}}
+

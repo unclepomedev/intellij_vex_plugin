@@ -1,0 +1,13 @@
+= chdict =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+#since: 18.5
+
+"""Evaluates a key-value dictionary parameter and return its value."""
+
+:usage: `dict chdict(string channel)`
+
+Evaluates a key value dictionary parameter and return its value.

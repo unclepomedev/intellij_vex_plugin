@@ -1,0 +1,23 @@
+= filtershadow =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading, light, shadow
+#group: light
+
+"""Sends a ray from the position P along direction D."""
+
+:usage: `vector filtershadow(vector P, vector D, float bias, ...)`
+
+Sends a ray from the position <<P>> along direction <<D>>. The length of
+the <<D>> vector represents the farthest distance considered when check
+for occlusion.
+
+Each occluding surface will be evaluated and its opacity will be added
+to the total occlusion. The return code of this function is the total
+occlusion of shaded surfaces between the point <<P>> and the point
+specified by <<P>> + <<D>>.
+
+:include _area_variadic:
+
+:include _rayopts_variadic:

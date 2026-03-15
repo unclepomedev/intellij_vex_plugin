@@ -1,0 +1,13 @@
+= getobjectname =
+
+#type: vex
+#context: shading
+#tags: shading
+#group: shading
+
+"""Returns the name of the current object whose shader is being run."""
+
+:usage: `string getobjectname()`
+
+Returns the name of the current object whose shader is being run, or the
+empty string if there is no current object.

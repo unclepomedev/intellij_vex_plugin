@@ -1,0 +1,37 @@
+= usd_addschemaattrib =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 20.0
+
+"""Creates an attribute of a given type on a primitive, and sets the `custom` metadata flag to `False`."""
+
+:usage: `int usd_addschemaattrib(int stagehandle, string primpath, string name, string typename)`
+
+This function adds an attribute of a given type to the primitive. There are a few attributes which are considered part of a schema but which are not automatically added to a prim (such as the `extentsHint` attribute of the `GeomModelAPI schema). In these rare cases, this function will add the attribute to a prim, marking it as a non-custom attribute. The data type of the attribute is not verified, so be sure to set the type expected by the schema. To create custom attributes, use [Vex:usd_addattrib].
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:arg:typename:
+    The name or an alias of the type.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Adds a half-precision float attribute and sets its falue.
+usd_applyapi(0, "/geo", "GeomModelAPI");
+usd_addschemaattrib(0, "/geo", "extentsHint", "float[]");
+}}}
+
+@related
+- [Vex:usd_addattrib]

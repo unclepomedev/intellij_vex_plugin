@@ -1,0 +1,19 @@
+= decodeutf8 =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+#since: 19.0
+
+"""Decodes a UTF8 string into a series of codepoints."""
+
+:usage: `int [] decodeutf8(string str)`
+
+Converts a UTF8 string into a series of code points. VEX treats its strings as UTF8 by default, but this means indexing into strings can have unusual behavior. Generating code points ensures there
+is one index for each logical character.
+
+@related
+
+- [Vex:encodeutf8]
+

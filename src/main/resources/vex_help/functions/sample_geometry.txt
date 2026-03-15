@@ -1,0 +1,116 @@
+= sample_geometry =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading, rays, sampling, light, pbr
+#group: sampling
+
+"""Samples geometry in the scene and returns information from the shaders of surfaces that were sampled."""
+
+:usage: `int sample_geometry(vector origin, vector sample, float time, ...)`
+
+The sample_geometry operation in VEX is used to distribute a single sample
+point on geometry objects in the scene, and to execute the surface shader
+at that point.  The operation is similar to the [Vex:trace] and
+[Vex:gather] functions in that it accepts a variadic argument list of
+shader outputs to be exported by the operation.  However, `sample_geometry`
+is different from raytracing functions in that it does not actually send a
+ray into the scene to determine where shaders should be run.  The <<origin>>
+and <<sample>> parameters have different meanings depending on the
+type of distribution.  <<time>> can be used with motion blur to distribute
+sample points in time as well as in space.
+
+=== Area Distribution ===
+
+In this mode, points will be distributed over multiple primitives according to
+their area.  More samples will be placed on primitives with large surface
+areas than on primitives with small surface areas.  The <<sample>> parameter
+should contain uniform random variables in the range of 0 to 1.  The
+<<origin>> parameter has no effect.
+
+=== Parametric Distribution ===
+
+In this mode, primitive and subdivision IDs along with parametric surface
+coordinates are mapped to surface positions.  This mode is useful when trying
+to maintain a coherent set of surface positions (for example, in a point cloud) across multiple frames because the same primitive ID, subdivision ID, s, and t coordinates map to similar surface positions even when a mesh is deforming.
+The <<sample>> parameter contains the s and t coordinates (in the first and
+second components), while the <<origin>> parameter contains the primitive and
+subdivision IDs (again, in the first and second components).
+
+=== Solid Angle Distribution ===
+
+This mode is similar to the "area" mode, except that points on a particular
+primitive are distributed according to solid angle rather than area.  More
+specifically, samples will be distributed according to hemispherical coverage
+relative to <<origin>>.  The <<sample>> parameter should contain uniform
+random variables in the range of 0 to 1.
+
+== Details ==
+
+:include _lightmask_variadic:
+
+:include _rayopts_variadic:
+
+:include _gather_variadic:
+
+
+@examples
+
+The following example demonstrates how `sample_geometry` can be used to
+illuminate one surface from another.  Rather than using a light source,
+illumination is gathered from other surfaces in the scene named
+`/obj/sphere_object*` and will illuminate any surfaces with the geolight
+surface shader assigned.
+
+A few observations about the shader:
+* The `ray:solidangle` output is used to scale back geometry sample contributions by the solid angle subtended by the hit surface.  This ensures that the result of using sample_geometry will match physically based irradiance.
+* The [Vex:trace] instruction is used for shadowing
+* High-quality sampling patterns from [Vex:newsampler] and [Vex:nextsample] are used for antialiasing
+
+{{{
+#!vex
+surface
+geolight(int nsamples = 64)
+{
+    vector	sam;
+    vector	clr, pos;
+    float	angle, sx, sy;
+    int		sid;
+    int		i;
+
+    sid = newsampler();
+
+    Cf = 0;
+    for (i = 0; i < nsamples; i++)
+    {
+        nextsample(sid, sx, sy, "mode", "qstrat");
+        sam = set(sx, sy, 0.0);
+        if (sample_geometry(P, sam, Time,
+            "distribution", "solidangle",
+            "scope", "/obj/sphere_object*",
+            "ray:solidangle", angle, "P", pos, "Cf", clr))
+        {
+            if (!trace(P, normalize(pos-P), Time,
+                "scope", "/obj/sphere_object*",
+                "maxdist", length(pos-P)-0.01))
+            {
+                clr *= angle / (2*PI);
+                clr *= max(dot(normalize(pos-P), normalize(N)), 0);
+            }
+            else
+                clr = 0;
+        }
+        Cf += clr;
+    }
+    Cf /= nsamples;
+}
+}}}
+
+
+@related
+
+- [Vex:gather]
+- [Vex:trace]
+- [Vex:newsampler]
+- [Vex:nextsample]
+

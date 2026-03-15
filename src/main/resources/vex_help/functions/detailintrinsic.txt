@@ -1,0 +1,30 @@
+= detailintrinsic =
+
+#type: vex
+#context: all
+#tags: attrib, detail, intrinsic
+#group: attrib
+
+"""Reads the value of a detail intrinsic from a geometry."""
+
+:box:
+    #id: info
+    
+    Intrinsic values are similar to attributes, but are computed on-demand by Houdini rather than stored.
+
+:usage: `<type> detailintrinsic(<geometry>, string intrinsic_name)`
+:usage: `<type>[] detailintrinsic(<geometry>, string intrinsic_name)`
+
+:include _common#geometry:
+
+:include _common#intrinsicname:
+
+:returns:
+    The intrinsic value, or `0` if the given intrinsic does not exist.
+
+
+@related
+
+- [Vex:primintrinsic]
+
+

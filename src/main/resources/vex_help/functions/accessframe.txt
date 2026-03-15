@@ -1,0 +1,15 @@
+= accessframe =
+
+"""Tells the COP manager that you need access to the given frame."""
+
+#type: vex
+#context: cop2
+#group: image
+
+:usage: `void accessframe(int frame)`
+
+
+@related
+
+- [Node:cop2/tima]
+- [Node:cop2/timefilter]

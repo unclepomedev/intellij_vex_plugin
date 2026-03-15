@@ -1,0 +1,19 @@
+= hscript_rand =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Produces the exact same results as the Houdini expression function of
+the same name."""
+
+:usage: `float|vector|vector4 hscript_rand(float seed)`
+
+Produces the exact same results as the Houdini expression function of
+the same name. This function will generate different random values for
+every floating point seed. This is different that the
+[Vex:random] function which converts the floating point argument
+to an integer seed. The `hscript_rand()` function may produce different
+results on different hardware or operating systems.
+

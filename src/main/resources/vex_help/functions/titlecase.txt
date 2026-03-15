@@ -1,0 +1,23 @@
+= titlecase =
+
+#type: vex
+#context: all
+#group: string
+
+"""Returns a string that is the titlecase version of the input string."""
+
+:usage: `string titlecase(const string str)`
+
+Converts a normal sentence into titlecase. The rules in use are as follows:
+
+- First and last world are always capitalized
+- Subtitles are capitalized
+- Capitalize all words other than: articles, prepositions, and conjunctions.
+- Hyphenated words that are capitalized should have their second part capitalized as well
+- Words that already contain capital letters are not modified
+
+@related
+
+- [Vex:tolower]
+- [Vex:toupper]
+

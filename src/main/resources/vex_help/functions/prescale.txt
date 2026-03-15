@@ -1,0 +1,24 @@
+= prescale =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: transform
+#since: 17.5
+
+"""Prescales the given matrix in three directions simultaneously (X, Y, Z -
+given by the components of the scale_vector)."""
+
+:usage: `void prescale(matrix &m, vector scale_vector)`
+:usage: `void prescale(matrix3 &m, vector scale_vector)`
+
+    Prescales the matrix in three directions simultaneously by the factors in the vector.
+    This modifies the matrix in-place, rather than returning a new matrix.
+
+@related
+
+- [Vex:pretranslate]
+- [Vex:prerotate]
+- [Vex:translate]
+- [Vex:rotate]
+- [Vex:scale]

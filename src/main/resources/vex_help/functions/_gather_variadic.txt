@@ -1,0 +1,224 @@
+#type: include
+
+== Ray sending options ==
+
+:varg:width:
+    #type: float
+    #default: -1
+    
+    Specifies the filter width at the source of the ray. If `angle` is also specified, the filter width will become larger with increasing distance along the ray. By default, the filter width will be initialized from the current shading context, so it's normally not necessary to specify `width` directly. Negative values are ignored and will also cause the filter width to be initialized from the current shading context.
+
+:varg:distribution:
+    #type: string
+    #default: "cosine"
+    
+    Determines the sampling distribution.
+
+    For [Vex:gather]:
+    * `cosine` -- Rays are distributed by the cosine (diffuse) function over the hemisphere.
+    * `uniform` -- Rays are distributed uniformly over the hemisphere
+
+    For [Vex:sample_geometry]:
+    * `area` -- Samples are distributed by primitive area
+    * `parametric` -- Samples are distributed by primitive ID, subdivision ID, and parametric surface coordinates (s, t).
+    * `solidangle` -- Samples are distributed either by primitive area or by primitive area and solid angle subtended by the primitive.
+
+:varg:biasdir:
+    #type: vector
+    #default: Ng
+
+    Overrides the bias direction when __Bias Along Normal__ is enabled.  When no `biasdir` is specified, the geometric normal `Ng` is used.  When bias along normal is disabled, this option has no effect.
+
+:varg:SID:
+    #type: int
+    #default: 0
+    
+    Sample identifier to be passed to the called shader.  If the calling shader has used SID to generate samples, it can be useful to pass the modified sample identifier to the called shader so that it can begin sampling at the specified offset.  This value will be used to initialize the SID global in the hit surface.
+
+:varg:rayweight:
+    #type: float
+    #default: 1
+    
+    A hint to mantra to indicate the relative contribution of this ray to the final shading. This value is used by the ray clip threshold to limit sending of rays (similar to ray bounce).
+
+:varg:raystyle:
+    #type: string
+    #default: "refract"
+    
+    The type of rays you are sending.  Mantra will use `raystyle` to determine both the default raytracing mask and bounce limit used for ray termination.
+
+    * `reflect` -- Sending reflection rays.  Mantra will use the reflection mask and reflection limit to terminate raytracing.
+    * `refract` -- (default) Sending refraction rays.  Mantra will use the refraction mask and refraction limit to terminate raytracing.
+    * `diffuse` -- Sending diffuse rays.  Mantra will use the diffuse limit for diffuse rays.
+    * `shadow` -- Sending shadow rays.  Mantra will not modify the raytracing level and will trace against `shadowmask` if inside a shadow or light shader.
+    * `primary` -- Sending primary rays.  This style can be used when a shader needs to change the direction of a primary ray without affecting the behavior of render settings that apply only to directly visible objects (such as matte and phantom).  Mantra will still increment the raytracing level when sending `primary` rays.
+    * `nolimit` -- Sending reflection rays with no limit on the number of raytracing bounces.  Mantra will still increment the raytracing level when sending `nolimit` rays.
+
+:varg:categories:
+    #type: string
+    
+    A category expression used to select the objects which can be hit by rays. When specified, this overrides the existing `reflectcategories` and `refractcategories` parameters.
+    
+    For example, `^hidden` will hit all objects which do not have the hidden category, and `shiny|happy` will hit all objects with either the shiny or happy category.
+
+    The intersection of the scope and categories parameters are used to choose the objects which can be hit by rays.
+
+:varg:samplebase:
+    #type: float
+    #default: 0
+    
+    Typically, rays are distributed over the surface of the micro-polygon being shaded. This argument can be used to control the area. A value of 0 will force all rays to be sent from the same point. A value of 1 will cover the entire micro-polygon. (Gather only)
+
+:varg:transparentsamples:
+    #type: int
+    #default: 1
+    
+    The number of transparent samples to take for stochastic transparency with array outputs. Normally this value should be set to 1 unless you have requested exports in array variables - in which case the ray tracer will insert an entry in the array for each sample along the ray.
+
+    NOTE:
+        `transparentsamples` must be 1 when importing `F` or `ray:material` using `screendoor` `samplefilter`.
+
+
+== Sending information to the surface's shader ==
+    
+Using a keyword in the form `"send:<<name>>", value`, you can pass data from the originating surface to surfaces which are intersected by the ray. These arguments pass any values you want.
+
+{{{
+#!vex
+gather(P, dir, "send:N", normalize(N)) { ... }
+}}}
+
+You can extract this passed data on the receiving end (that is, in the surface being hit by the ray) with the [Vex:rayimport] function. The first argument is the name (without the `send:` prefix) and the second argument is a variable in which to store the imported value.
+
+`int rayimport(string name, <type> &value)`
+
+`rayimport` returns `1` if the value was imported successfully.
+
+
+== Importing information from the ray ==
+
+You can specify names of global or exported variables to import from the hit shader in the form `"<<varname>>", &var`, typically including `Cf` (color vector of surface hit) and `Of` (opacity vector of surface hit).
+
+{{{
+#!vex
+vector  hitcf;
+gather(P, dir, "bias", 0.01, "Cf", hitcf) {...}
+}}}
+
+In addition, you can import the following special keywords to get information about the ray itself:
+
+:varg:ray:origin:
+    #type: &vector
+    
+    The origin of the ray (defined in `else` clause also).
+
+:varg:ray:direction:
+    #type: &vector
+    
+    The direction of the ray (defined in `else` clause also).
+
+:varg:ray:length:
+    #type: &float
+    
+    The distance to the first surface which was hit by the ray.
+
+:varg:ray:area:
+    #type: &float
+    
+    The total surface area of all the geometry in the raytracing scope.
+
+:varg:ray:solidangle:
+    #type: &float
+    
+    The estimated solid angle subtended by all geometry in the raytracing scope.  For large objects close to or enclosing the ray origin, this may be a very poor estimate while for individual primitives the estimate can be very good.
+
+You can retrieve information about more than one hit along
+the ray by requesting data in an array variable.  When an imported
+value is of an array type, the [Vex:trace] function will automatically append
+an entry in the array for each individual hit point that was composited
+during ray tracing.  For the `opacity` sample filter (see below), an entry will be
+created in the array for each semi-transparent sample encountered until
+full opacity is reached.  When using array outputs, it may also be useful
+to use the `all` sample filter, which will cause all hits along the ray to
+be inserted regardless of whether the opacity limit was exceeded.
+
+{{{
+#!vex
+// Find the position and normal for all hit points along the ray,
+// regardless of visibility.
+vector a_pos[];
+vector a_nml[];
+trace(P, dir, Time,
+        "samplefilter", "all",
+            "P", a_pos,
+            "N", a_nml);
+}}}
+
+
+== Sample filtering options ==
+
+By default, Houdini composites the global variables using opacity blending. In some cases, it's more useful to get the value from the closest surface (regardless of whether it's transparent). You can use the special `samplefilter` keyword with a string value of either `closest` or `opacity` to control whether the value of a global is from the closest surface or opacity blended.
+
+:varg:samplefilter:
+    #type: string
+    
+    When the `samplefilter` keyword is encountered in the argument list, _all following_ import variables will use the specified filtering mode. You can specify multiple `samplefilter` arguments in a single gather statement to filter different variables in different ways.
+
+    The current types of allowed for `samplefilter` are
+
+    `minimum`:
+            Take the minimum value of all the samples.  Note that with tuple values, the minimum value of each component will be used.
+    `maximum`:
+            Take the maximum value of all the samples.  Note that with tuple values, the maximum value of each component will be used.
+    `opacity`:
+            Composite samples using the over operation.
+    `closest`:
+            This is the default behavior, returning only the closest surface.
+    `screendoor`:
+            Use stochastic compositing of the samples.
+    `sum`:
+            Return the sum of the values for all samples.
+    `sum_square`:
+            Return the sum of the squares of the values of all samples.
+    `sum_reciprocal`:
+            Return the sum of the reciprocals of each sample.
+
+NOTE:
+    When using [Vex:sample_geometry], the default `samplefilter` is set to `closest` by default, since opacity blending only works when compositing data along a ray.
+
+{{{
+#!vex
+gather(P, dir,
+        "samplefilter", "opacity",
+            "Cf", hitCf,
+            "Of", hitOf,
+        "samplefilter", "closest",
+            "P", hitP,
+            "N", hitN)
+{
+    trace(pos, dir, time,
+            // Composite the bsdf of the hit surfaces using stochastic transparency
+            "samplefilter", "screendoor",
+            "F", hitF,
+            // But find the closest sample's position
+            "samplefilter", "closest",
+            "P", hitP);
+}
+}}}
+
+
+
+== Pipeline options ==
+
+:varg:pipeline:
+    #type: string
+    
+    As you specify variables, you can intersperse `pipeline` keyword options to control where in the pipeline to fill out read/write variables. The value can be one of `surface`, `atmosphere`, or `displacement`. You can specify the `pipeline` option multiple times. Each use of the option affects any variables specified after it (up to the next usage of `pipeline` if any).
+
+    {{{
+    #!vex
+    gather(p, d, "pipeline", "surface", "Cf", surfCf,
+                 "pipeline", "atmosphere" "Cf", fogCf, "P", hitP)
+    }}}
+
+

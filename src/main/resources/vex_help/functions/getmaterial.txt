@@ -1,0 +1,19 @@
+= getmaterial =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: light, pbr
+#group: shading
+
+"""Returns a material struct for the current surface."""
+
+:usage: `material getmaterial()`
+
+The material handle returned is opaque, but can be used by other functions to query information about the material (see details on the [mantra specific type|/vex/lang#mantratypes]).
+
+@related
+- [Vex:getlights]
+- [Vex:getlightscope]
+- [Vex:getscope]
+- [Vex:haslight]
+- [Vex:renderstate]

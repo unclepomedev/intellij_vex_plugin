@@ -1,0 +1,24 @@
+= diag =
+
+#type: vex
+#context: all
+#tags: vector, matrix
+#group: math
+
+"""Extracts diagonal entries or constructs a diagonal matrix."""
+
+:usage: `vector2 diag(matrix2 m)`
+:usage: `vector diag(matrix3 m)`
+:usage: `vector4 diag(matrix m)`
+
+Extracts the [main diagonal|Wp:Main_diagonal] of the input matrix.
+
+:usage: `matrix2 diag(vector2 v)`
+:usage: `matrix3 diag(vector v)`
+:usage: `matrix diag(vector4 v)`
+
+Constructs a [diagonal matrix|Wp:Diagonal_matrix] with the input vector as its main diagonal.
+
+@related 
+
+- [VEX:sum]

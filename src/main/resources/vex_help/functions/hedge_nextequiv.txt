@@ -1,0 +1,40 @@
+= hedge_nextequiv =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the next half-edges equivalent to a given half-edge."""
+
+:usage: `int hedge_nextequiv(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The next half-edge equivalent to `hedge`, or `hedge` if there are no other half-edges equivalent to it.
+    Successive calls to `hedge_nextequiv()` cycle through all the equivalent half-edges.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+// Determine the number of half-edges equivalent to half-edge number 3 (including itself)
+int num_equiv = 0;
+int h = 3;
+do
+{
+h = hedge_nextequiv("defgeo.bgeo", h);
+num_equiv++;
+} while (h != 3);
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

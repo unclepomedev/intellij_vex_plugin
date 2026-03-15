@@ -1,0 +1,35 @@
+= ocio_transformview =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Transform colors _to_ a view using Open Color IO"""
+
+:usage: `vector ocio_transformview(string src, string display, string view; vector clr)`
+
+    Transform a three-component color into a new view.
+
+:usage: `vector4 ocio_transformview(string src, string display, string view; vector4 clr)`
+
+    Transform a four-component color into a new view.
+
+:arg:src:
+    The name of the color space to transform from.
+
+:arg:display:
+    The name of the display containing the desired view.
+
+:arg:view:
+    The view to use as the destination to transform to.
+
+:arg:clr:
+    The color to transform.
+
+
+@related
+
+- [Vex:ocio_spaces]
+- [Vex:ocio_activeviews]
+- [Vex:ocio_transformviewreverse]

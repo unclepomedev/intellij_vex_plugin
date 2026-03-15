@@ -1,0 +1,33 @@
+= usd_typename =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Returns the name of the primitive's type."""
+
+:usage: `string usd_typename(<stage>, string primpath)`
+
+This function returns the type name of the given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The name of the primitive's type.
+
+@examples 
+{{{
+#!vex
+// Get the primitive's type name, eg "Cube".
+string type_name = usd_typename(0, "/geo/cube");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_istype]
+- [Vex:usd_hasapi]
+- [Vex:usd_name]

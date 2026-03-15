@@ -1,0 +1,13 @@
+= npoints =
+
+#type: vex
+#context: all
+#tags: point, count
+#group: geo
+
+"""Returns the number of points in the input or geometry file."""
+
+:usage: `int npoints(<geometry>)`
+
+:include _common#geometry:
+

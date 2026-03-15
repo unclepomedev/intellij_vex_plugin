@@ -1,0 +1,50 @@
+= curvearclen =
+
+#type: vex
+#context: all
+#tags: prim, measure
+#group: attrib
+#since: 18.5
+
+"""Evaluates the length of an arc on a primitive defined by an array of points using parametric uv coordinates."""
+
+:usage: `float curvearclen(vector positions[]; float uv1; float uv2; int closedflag; int fmt; int order)`
+:usage: `float curvearclen(vector positions[]; float uv1; float uv2; int closedflag; int fmt; int order; int divs)`
+:usage: `float curvearclen(vector positions[]; float uv1; float uv2; int closedflag; int fmt; int order; int divs; int primuvmode)`
+:usage: `float curvearclen(vector positions[]; float uv1; float uv2; int closedflag; int fmt; int order; int divs; int primuvmode; float primuvtol)`
+
+Returns the arc length between two parametric UV coordinates on a given primitive. This lets you measure the distance across a polygon face or along a curve.
+
+:include _common#geometry_output:
+
+:arg:points:
+    The array of control points to define the curve.
+
+:arg:uv1:
+    The start coordinate in the primitive's parametric space to measure between.
+
+:arg:uv2:
+    The end coordinate in the primitive's parametric space to measure between.
+
+:arg:closedflag:
+    The curve can be closed or open. In a closed curve, the last control point will be connected to the first one.
+
+:arg:fmt:
+    The curve type to create. You can used constants defined in math.h, or 0 to create a polygon curve, 1 to create a bezier curve or 2 to create a NURBS curve.
+
+:arg:order:
+    The curve order for NURBS or Bezier curves. This is ignored for polygon curves.
+
+:arg:divs:
+    The number of divisions per segment to use or 10 if not supplied.
+
+:arg:primuvmode:
+    Define the uv1 and uv2 coordinates units. See [Vex:primuvconvert] for the list of modes.
+
+:arg:primuvtol:
+    A tolerance used when computing the curve length to do uv coordinates conversions.
+
+@related
+- [Vex:primarclen]
+- [Vex:primuvconvert]
+

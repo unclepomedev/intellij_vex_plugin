@@ -1,0 +1,25 @@
+= rawcolormap =
+
+#type: vex
+#context: all
+#tags: color, map, file, texture
+#group: texture
+
+"""Looks up an unfiltered color from a texture file."""
+
+:usage: `vector|vector4 rawcolormap(string filename, vector uvw, ...)`
+:usage: `vector|vector4 rawcolormap(string filename, float u, float v, ...)`
+:usage: `vector|vector4 rawcolormap(string filename, vector uv, vector du, vector dv, int samples, ...)`
+:usage: `vector|vector4 rawcolormap(string filename, vector uv0, vector uv1, vector uv2, vector uv3, ...)`
+:usage: `vector|vector4 rawcolormap(string filename, vector uv0, vector uv1, vector uv2, vector uv3, int samples, ...)`
+:usage: `vector|vector4 rawcolormap(string filename, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3, int samples, ...)`
+
+This function has the same arguments as [Vex:colormap], but does not do bilinear interpolation of the pixel values. See [Vex:colormap] for information on the arguments.
+
+If you call the function with a `vector4` return type, the fourth component is the alpha channel of the texture. If the image does not have alpha, the fourth component is always `1`.
+
+
+@related
+
+- [Vex:colormap]
+- [Vex:texture]

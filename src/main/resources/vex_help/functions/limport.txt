@@ -1,0 +1,22 @@
+= limport =
+
+#type: vex
+#context: displace, fog, shadow, surface
+#tags: shadedata, surface, shadow, fog
+#group: shading
+
+"""Imports a variable from the light shader for the surface."""
+
+NOTE:
+    This function is only valid inside an [Vex:illuminance] loop.
+
+:usage: `int limport(const string name; <type> &value)`
+
+:arg:name:
+    The name of the shader variable to read.
+
+:arg:&value:
+    If the named variable is defined and exported, the function overwrites this variable with the variable's value.
+
+:returns:
+    Returns `1` if the shader variable is defined and exported, or `0` otherwise.

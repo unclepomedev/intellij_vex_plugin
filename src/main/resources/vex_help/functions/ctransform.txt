@@ -1,0 +1,27 @@
+= ctransform =
+
+#type: vex
+#context: all
+#tags: transform, color, convert
+#group: color
+
+"""Transforms between color spaces."""
+
+:usage: `vector ctransform(string fromspace, string tospace; vector clr)`
+:usage: `vector ctransform(string tospace; vector clr)`
+
+If you don't give a <<fromspace>>, assumes `"cspace:rgb"`.
+
+Transforms color tuple <<clr>> from one color space to another.
+
+The possible arguments for <<fromspace>> and <<tospace>> are
+`"cspace:rgb"`, `"cspace:hsl"`, `"cspace:hsv"`, `"cspace:XYZ"`,
+`"cspace:Lab"`, and `"cspace:tmi"`.
+
+== Notes ==
+
+* The hue-based systems are normalized with the hue going from `0` to `1`. LAB and TMI are not normalized.
+
+* For `"cspace:rgb"`, the primaries are assumed to be in linear NTSC space (gamma 1.0), using C reference white.
+
+* C reference white is used for conversion when converting from XYZ to LAB space (and vice versa).

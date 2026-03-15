@@ -1,0 +1,16 @@
+= getcomponents =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: pbr, bsdf, labels
+#group: shading
+
+:usage: `string[] getcomponents()`
+
+Returns an array of strings containing the components specified by the
+[Hprop:vm_exportcomponents] rendering property.
+
+
+@related
+
+- [Hprop:vm_exportcomponents]

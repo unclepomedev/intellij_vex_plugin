@@ -1,0 +1,18 @@
+= nbouncetypes =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf, labels
+#group: shading
+
+:usage: `int nbouncetypes()`
+
+Return the number of different bounce types supported by the renderer.
+
+:include pbr_mask_h:
+
+
+@related
+
+- [Vex:bouncemask]
+- [Vex:getbounces]

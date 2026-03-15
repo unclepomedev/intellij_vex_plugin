@@ -1,0 +1,27 @@
+= getlightname =
+
+#type: vex
+#context: shading
+#tags: light
+#group: shading
+
+"""Returns the name of the current light when called from within an illuminance loop, or converts an integer light ID into the light's name."""
+
+:usage: `string getlightname()`
+
+Returns the name of the current light when called from within an
+[Vex:illuminance] loop or when a current light has been set using
+[Vex:setcurrentlight].
+
+:usage: `string getlightname(int lightid)`
+
+Returns the name of the light referred to by the given integer
+light ID. Integer light IDs are used by some low-level VEX functions
+instead of strings for efficiency.
+
+@related
+
+- [Vex:illuminance]
+- [Vex:getlights]
+- [Vex:getphotonlight]
+- [Vex:intersect_lights]

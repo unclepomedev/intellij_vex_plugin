@@ -1,0 +1,40 @@
+= usd_setattrib =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 17.5
+
+"""Sets the value of an attribute."""
+
+:usage: `int usd_setattrib(int stagehandle, string primpath, string name, <type> value)`
+:usage: `int usd_setattrib(int stagehandle, string primpath, string name, <type> value[])`
+
+This function sets the attribute value. 
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the value of some attributes.
+usd_setattrib(0, "/geo/sphere", "float_attrib", 0.25);
+usd_setattrib(0, "/geo/sphere", "string_attrib", "foo bar baz");
+usd_setattrib(0, "/geo/sphere", "vector_attrib", {1.25, 1.50, 1.75});
+
+float  f_arr[] = {0, 0.25, 0.5, 0.75, 1};
+usd_setattrib(0, "/geo/sphere", "float_array_attrib", f_arr);
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_attrib]

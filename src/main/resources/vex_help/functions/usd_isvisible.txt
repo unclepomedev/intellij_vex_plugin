@@ -1,0 +1,33 @@
+= usd_isvisible =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Checks if the primitive is visible."""
+
+:usage: `int usd_isvisible(<stage>, string primpath)`
+:usage: `int usd_isvisible(<stage>, string primpath, float timecode)`
+
+This function checks whether the given primitive is visible.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:include _common#usd_timecode:
+
+:returns:
+    1 if the primitive is visible, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere primitive is visible.
+int is_visible = usd_isvisible(0, "/geometry/sphere");
+}}}
+
+@related
+- [Vex:usd_setvisible]

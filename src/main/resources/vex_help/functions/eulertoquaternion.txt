@@ -1,0 +1,24 @@
+= eulertoquaternion =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: convert
+
+"""Creates a vector4 representing a quaternion from euler angles."""
+
+[Unit quaternions are used to represent rotations|Wp:Quaternions_and_spatial_rotation]. This VEX function creates a unit quaternion that represents a rotation.
+
+:usage: `vector4 eulertoquaternion(vector rotations, int order)`
+
+Creates a vector4 representing a unit quaternion from a vector representing Euler rotations in X, Y, and Z.
+
+The angles are in radians.  Use the `radians()` function to convert degrees into radians.
+
+:arg:order:
+    :include _common#xyz/:
+
+@related
+- [dihedral|Vex:dihedral]
+- [qconvert|Vex:qconvert]
+- [quaternion|Vex:quaternion]

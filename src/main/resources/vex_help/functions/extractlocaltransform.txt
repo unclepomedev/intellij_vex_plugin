@@ -1,0 +1,23 @@
+= extractlocaltransform =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+#since: 18.0
+
+"""Extracts Local Transform from a World Transform with Scale Inheritance."""
+
+:usage: `matrix extractlocaltransform(matrix world, matrix parent_world, matrix parent_local, int scale_inherit_mode)`
+
+Returns a new local transform given its world and new parent transforms.
+
+:usage: `matrix extractlocaltransform(matrix world, matrix parent_world, matrix parent_local, int mode, matrix &effective_local_transform)`
+
+Returns a new world transform given its local and parent world transforms. The local transform including any inherited scales is stored in the effective_local_transform matrix;
+
+:include _common#scale_inherit_mode:
+
+@related
+- [Vex:combinelocaltransform]
+

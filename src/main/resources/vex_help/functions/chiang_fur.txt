@@ -1,0 +1,79 @@
+= chiang_fur =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+#since: 20.0
+
+"""Returns a chiang_fur BSDF."""
+
+:usage: `bsdf chiang_fur(vector nn, vector tanV, float mask, float cuticle, float R_v, float R_s, float TT_v, float TT_s, float TRT_v, float TRT_s, float shift, vector absorption_coeff, float ior, float R2_v, float R2_s, vector R2_color, ...)`
+
+:usage: `bsdf chiang_fur(vector nn, vector tanV, float mask, float cuticle, float R_v, float R_s, float TT_v, float TT_s, float TRT_v, float TRT_s, float shift, vector absorption_coeff, float ior, ...)`
+
+	Creates a BSDF for the computation of a physically based fur and hair
+	model described in "A Practical and Controllable Hair
+	and Fur Model for Production Path Tracing" by Chiang, "Physically-Accurate
+	Fur Reflectance: Modeling, Measurement and Rendering" by Ling-Qi Yan et al.
+	Chiang Fur is an extension of the [Chiang model - shader|chiang].
+	This model considers a structural feature of fur and thick hair,
+	the so-called medulla.
+
+	NOTE:
+		This model is only suitable for curve geometry.
+
+    See [Writing PBR shaders in VEX|/vex/pbr] for information on BSDFs.
+
+:arg:nn:
+	bump/shading normal.
+
+:arg:tanV:
+	tangent vector along `V`.
+
+:arg:mask:
+        Masking main lobes in favour of medulla.
+
+:arg:cuticle:
+        Modulates fresnel factor of the hair's outermost layer.
+
+:arg:R_v:
+	Longitudinal roughness value `v` for lobe `R` (section 4.1 of the paper).
+
+:arg:R_s:
+	Azimuthal roughness value `s` for lobe `R` (section 4.1 of the paper).
+
+:arg:TT_v:
+	Longitudinal roughness value `v` for lobe `TT` (section 4.1 of the paper).
+
+:arg:TT_s:
+	Azimuthal roughness value `S` for lobe `TT` (section 4.1 of the paper).
+
+:arg:TRT_v:
+	Longitudinal roughness value `v` for lobe `TRT` (section 4.1 of the paper).
+
+:arg:TRT_s:
+	Azimuthal roughness value `s` for lobe `TRT` (section 4.1 of the paper).
+
+:arg:shift:
+	Represents the cuticle angle, which affects the position of the specular highlight. The input ranges between `-1` and `1`, and is internally mapped to -90 to 90 (e.g. three degrees would be `3/90 = 0.03333`).
+
+:arg:absorption_coeff:
+	The absorption coefficient (section 4.2 of the paper).
+
+:arg:ior:
+	Index of refraction (e.g. `1.55`).
+
+:arg:R2_v:
+	Longitudinal roughness value `v` of extra lobe `R2`.
+
+:arg:R2_s:
+	Azimuthal roughness value `s` of extra lobe `R2`.
+
+:arg:R2_color:
+        Extra `R2` lobes have a color input to colorize the reflection, for example to promote iridescence colors.
+
+@related
+
+- [Writing PBR shaders in VEX|/vex/pbr]
+- [Karma Fur|Node:vop/kma_fur]

@@ -1,0 +1,24 @@
+= curlxnoise2d =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Computes 2d divergence free noise based on simplex noise."""
+
+:usage: `vector curlxnoise2d(float x, float y)`
+:usage: `vector curlxnoise2d(vector xyt)`
+
+Computes a divergence free vector field based on the cross product of the derivatives of two simplex noise functions.
+
+The resulting vectors all lie along the X-Y plane.
+
+NOTE:
+    This is not the same as projecting a `curlnoise` to a plane!
+
+See [noise and randomness|/vex/random]  in the VEX language
+guide for more information.
+
+@related
+- [pnoise|Vex:curlxnoise]

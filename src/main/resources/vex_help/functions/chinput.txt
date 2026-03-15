@@ -1,0 +1,45 @@
+= chinput =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the value of a channel at the specified sample."""
+
+:usage: `<type> chinput(int channel_index, int|float sample)`
+:usage: `<type> chinput(int opinput, int channel_index, int|float sample)`
+
+    Read a sample from the channel at the given index.
+    The version without `opinput` assumes the first input (0).
+
+:usage: `<type> chinput(string channel_name, int|float sample)`
+:usage: `<type> chinput(int opinput, string channel_name, int|float sample)`
+
+    Read a sample from the channel with the given name.
+    The version without `opinput` assumes the first input (0).
+
+:usage: `int chinput(int channel_index, int|float sample, vector &t, vector &r, vector &s)`
+:usage: `int chinput(int opinput, int channel_index, int|float sample, vector &t, vector &r, vector &s)`
+
+    Read samples from the 9 channels starting at the given index.
+    The samples are returned in the 3 vector output arguments.
+    Returns 1 on success or 0 on failure.
+    The version without `opinput` assumes the first input (0).
+
+:usage: `int chinput(string channel_name, int|float sample, vector &t, vector &r, vector &s)`
+:usage: `int chinput(int opinput, string channel_name, int|float sample, vector &t, vector &r, vector &s)`
+
+    Read samples from the 9 channels starting at the given channel name.
+    The samples are returned in the 3 vector output arguments.
+    Returns 1 on success or 0 on failure.
+    The version without `opinput` assumes the first input (0).
+
+:include _common#opinput_arg:
+
+:arg:sample:
+    If this is fractional, the value is linearly interpolated from the
+    two nearest points.
+
+:returns:
+    The value of a channel at the specified sample in an input. 

@@ -1,0 +1,15 @@
+= reflect =
+
+#type: vex
+#context: all
+#tags: shading
+#group: shading
+
+"""Returns the vector representing the reflection of the direction
+against the normal."""
+
+:usage: `vector reflect(vector direction, vector normal)`
+
+Returns the vector representing the reflection of the <<direction>>
+against the <<normal>>.
+

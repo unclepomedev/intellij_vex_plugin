@@ -1,0 +1,39 @@
+= usd_metadata =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Reads the value of metadata from the USD object."""
+
+:usage: `<type> usd_metadata(<stage>; string path; string name)`
+:usage: `<type>[] usd_metadata(<stage>; string path; string name)`
+
+This function returns a value of a given metadata from a given object.
+
+:include _common#usd_stage:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:returns:
+    The value of an existing metadata, or zero/empty value if the metadata does not exist. Use [Vex:usd_ismetadata] if you want to check whether the metadata exists.
+
+@examples 
+{{{
+#!vex
+// Get the documentation string of the cube primitive.
+string docs = usd_metadata(0, "/geo/cube", "documentation");
+
+// Get custom data from a parameter.
+string attrib_path = usd_makeattribpath(0, "/geo/cube", "some_attribute");
+float custom_val = usd_metadata(0, attrib_path, "customData:foo:bar");
+}}}
+
+@related
+- [Vex:usd_ismetadata]
+- [Vex:usd_setmetadata]
+- [Vex:usd_metadataelement]

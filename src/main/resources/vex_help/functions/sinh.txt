@@ -1,0 +1,29 @@
+= sinh =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the hyperbolic sine of the argument."""
+
+:usage: `float sinh(float n)`
+
+    Returns the hyperbolic sine of `n`.
+
+:usage: `vector2 sinh(vector2 v)`
+:usage: `vector sinh(vector v)`
+:usage: `vector4 sinh(vector4 v)`
+
+    Returns a new vector with `sinh()` applied to each component.
+
+
+@related
+
+- [Vex:sin]
+- [Vex:cosh]
+- [Vex:tanh]
+- [Vex:cos]
+- [Vex:tan]
+
+

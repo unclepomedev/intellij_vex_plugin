@@ -1,0 +1,46 @@
+= pointhedgenext =
+
+#type: vex
+#context: all
+#tags: hedge, point
+#group: hedge
+
+"""Returns the *next* half-edge with the same source as a given half-edge."""
+
+:usage: `int pointhedgenext(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The next half-edge that has the same source as `hedge`.
+    
+    Successive calls to this function iterate over all outgoing half-edges out of the same point.
+    The iteration order does not necessarily agree with the order of the edges around a point in a manifold setting.
+    
+    Returns `-1` if `hedge` is not valid, or the there are no more shared vertices with the source vertex of this hedge (same as `op:vertexnext`).
+
+
+@examples
+
+{{{
+#!vex
+
+int edge_count = 0;
+
+// Count number of *edges* (not half-edges) incident to point number 23.
+int hout = pointhedge("defgeo.bgeo", 23);
+while ( hout != -1 )
+{
+    if (hedge_isprimary("defgeo.bgeo", hout))
+        edge_count++;
+    int hin = hedge_prev("defgeo.bgeo", hout);
+    if (hedge_isprimary("defgeo.bgeo", hin))
+        edge_count++;
+    hout = pointhedgenext("defgeo", hout);
+}
+
+}}}
+

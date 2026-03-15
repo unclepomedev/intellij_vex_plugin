@@ -1,0 +1,31 @@
+= usd_ismodel =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 19.0
+
+"""Checks if the primitive is a model."""
+
+:usage: `int usd_ismodel(<stage>, string primpath)`
+
+This function checks whether the given primitive is a model, based on its kind
+metadata.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    1 if the primitive is of a model kind, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere primitive is a model.
+int is_model = usd_ismodel(0, "/geometry/sphere");
+}}}
+
+@related
+- [Vex:usd_isabstract]

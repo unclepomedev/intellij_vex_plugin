@@ -1,0 +1,36 @@
+= hedge_next =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the half-edge that follows a given half-edge in its polygon."""
+
+:usage: `int hedge_next(<geometry>, int hedge)`
+
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The number of the half-edges that follow (its source is the destination of) `hedge` in the polygon that contains it. Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int nexthedge;
+
+// Get the next half-edge of half-edge number 3.
+nexthedge = hedge_next("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

@@ -1,0 +1,40 @@
+= nearpoint =
+
+#type: vex
+#context: all
+#tags: point, proximity
+#group: geo
+
+"""Finds the closest point in a geometry."""
+
+:usage: `int nearpoint(<geometry>, vector pt)`
+:usage: `int nearpoint(<geometry>, vector pt, float maxdist)`
+:usage: `int nearpoint(<geometry>, string ptgroup, vector pt)`
+:usage: `int nearpoint(<geometry>, string ptgroup, vector pt, float maxdist)`
+
+Returns the number of the closest point on the geometry.
+This will only search against points, not the surface locations
+of the geometry.  Use [Vex:xyzdist] to find the closest point on surfaces or curves.
+
+-1 is returned if no point is found in the search distance.
+
+:include _common#geometry:
+
+:arg:ptgroup:
+  A point group pattern to limit the search to.  Can be a SOP-style group
+  pattern such as `0-10` or `@Cd.x>0.5`.  An empty string will match all points.
+
+:arg:pt:
+  The position in space to find the closest point on the geometry to.
+
+:arg:maxdist:
+  The maximum distance to search.  The operation can be sped up if it
+  is allowed to quit early.
+
+
+@related
+
+- [Vex:nearpoints]
+- [Vex:pcfind]
+- [Vex:pcfind_radius]
+- [Vex:pgfind]

@@ -1,0 +1,73 @@
+= ptransform =
+
+#type: vex
+#context: all
+#tags: transform, point
+#group: transform
+
+"""Transforms a vector from one space to another."""
+
+:usage: `vector ptransform(vector vec, matrix transform)`
+:usage: `vector4 ptransform( vector4 vec; matrix transform)`
+
+    Transforms the vector using the given transform matrix.
+
+:usage: `vector ptransform(string tospace, vector vec)`
+:usage: `vector4 ptransform(string tospace, vector4 vec)`
+
+    Transforms from `"space:current"`.
+
+:usage: `vector ptransform(string fromspace, string tospace, vector vec)`
+:usage: `vector4 ptransform(string fromspace, string tospace, vector4 vec)`
+
+    Transforms the vector from `fromspace` into `tospace`.
+
+:arg:`fromspace`, `tospace`:
+    :include _space_args:
+
+* [Vex:ptransform] interprets the vector as a position.
+* [Vex:vtransform] interprets the vector as a direction
+vector, and so doesn't apply the translations from the matrix.
+* [Vex:ntransform] interprets the vector as a normal vector,
+and so multiplies by the inverse transpose of the matrix (ignoring the
+translations).
+
+
+@examples
+
+The version with only a <<tospace>> argument assumes <<fromspace>> is
+`"space:current"`. For example:
+
+{{{
+#!vex
+Pworld = ptransform("space:world", P);
+}}}
+
+...is equivalent to:
+
+{{{
+#!vex
+Pworld = ptransform("space:current", "space:world", P);
+}}}
+
+Transform a vector from its current space to object space:
+
+{{{
+#!vex
+ospace = ptransform("space:object", P)
+}}}
+
+Transform a vector from object space to mantra's natural coordinate
+space ("camera" space):
+
+{{{
+#!vex
+ospace = ptransform("space:object", "space:current", P)
+}}}
+
+
+@related
+- [Vex:ntransform]
+- [Vex:vtransform]
+- [Vex:getspace]
+

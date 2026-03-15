@@ -1,0 +1,23 @@
+= npointsgroup =
+
+#type: vex
+#context: all
+#tags: count, point, groups
+#group: groups
+
+"""Returns the number of points in the group."""
+
+:usage: `int npointsgroup(<geometry>, string groupname)`
+
+:include _common#geometry:
+
+:arg:groupname:
+    A group name or ad-hoc group, like `0-3` or `@Cd.x>0.5`. This matches the
+    SOP group naming convention, in particular that an empty string means all
+    points.
+
+@related
+
+- [Vex:expandpointgroup]
+- [Vex:inpointgroup]
+- [Vex:hasattrib]

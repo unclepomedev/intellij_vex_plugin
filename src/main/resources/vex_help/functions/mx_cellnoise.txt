@@ -1,0 +1,30 @@
+= mx_cellnoise =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""MaterialX compatible cellnoise"""
+
+:usage: `float mx_cellnoise(float pos)`
+:usage: `float mx_cellnoise(vector2 pos)`
+:usage: `float mx_cellnoise(vector pos)`
+:usage: `float mx_cellnoise(vector4 pos)`
+
+:usage: `vector mx_cellnoise(float pos)`
+:usage: `vector mx_cellnoise(vector2 pos)`
+:usage: `vector mx_cellnoise(vector pos)`
+:usage: `vector mx_cellnoise(vector4 pos)`
+
+:usage: `vector mx_cellnoise(float   pos, int periodx)`
+:usage: `vector mx_cellnoise(vector2 pos, int periodx, int periody)`
+:usage: `vector mx_cellnoise(vector  pos, int periodx, int periody, int periodz)`
+:usage: `vector mx_cellnoise(vector4 pos, int periodx, int periody, int periodz, int periodw)`
+
+:usage: `float mx_cellnoise(float   pos, int periodx)`
+:usage: `float mx_cellnoise(vector2 pos, int periodx, int periody)`
+:usage: `float mx_cellnoise(vector  pos, int periodx, int periody, int periodz)`
+:usage: `float mx_cellnoise(vector4 pos, int periodx, int periody, int periodz, int periodw)`
+
+    Returns a random number between 0 and 1.  This function will produce the same values as the standard MaterialX library.

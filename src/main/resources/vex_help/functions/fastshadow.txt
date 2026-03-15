@@ -1,0 +1,22 @@
+= fastshadow =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading, shadow, light
+#group: light
+
+"""Sends a ray from the position P along the direction specified by the
+direction D."""
+
+:usage: `float fastshadow(vector P, vector D, float bias, ...)`
+
+Sends a ray from the position <<P>> along the direction specified by the
+direction <<D>>. The length of the <<D>> vector represents the farthest
+distance considered when check for occlusion.
+
+Returns 1 if there are no occluding objects found, or 0 if the ray hit
+an object in between.
+
+:include _area_variadic:
+
+:include _rayopts_variadic:

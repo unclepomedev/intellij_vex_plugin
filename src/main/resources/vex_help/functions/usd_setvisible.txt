@@ -1,0 +1,36 @@
+= usd_setvisible =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Makes the primitive visible or invisible."""
+
+:usage: `int usd_setvisible(int stagehandle, string primpath, int flag)`
+
+This function makes the primitive visible or invisible, depending on the given flag parameter.
+
+NOTE: This function is similar to `usd_setvisibility()` which, in addition to making a primitive visible or invisible, can also configure it to inherit visibility from the parent.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:flag:
+    Non-zero to make the primitive visible or 0 to make it invisible.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the sphere primitive as visible.
+usd_setvisible(0, "/geo/sphere", true);
+}}}
+
+@related
+- [Vex:usd_setvisibility]
+- [Vex:usd_isvisible]

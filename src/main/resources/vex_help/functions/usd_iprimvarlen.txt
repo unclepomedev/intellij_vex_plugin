@@ -1,0 +1,40 @@
+= usd_iprimvarlen =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 19.0
+
+"""Returns the length of the array primvar directly on the USD primitive or on USD primitive's ancestor."""
+
+:usage: `int usd_iprimvarlen(<stage>; string primpath; string name)`
+:usage: `int usd_iprimvarlen(<stage>; string primpath; string name; float timecode)`
+
+This function returns the length of a given primvar found directly on the given primitive or inherited from primitive's ancestor. 
+
+For array primvars it is the length of an array, and for non-array primvars the length is 1.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:include _common#usd_timecode:
+
+:returns:
+    The length of the array primvar, or `1` if the primvar is not an array, or `0` if the primvar does not exist. Use [Vex:usd_isarrayprimvar] to check if the primvar is an array.
+
+@examples 
+{{{
+#!vex
+// Get the array length of the primvar on cube or its ancestor.
+int array_length = usd_iprimvarlen(0, "/geo/cube", "array_primvar_name");
+}}}
+
+@related
+- [Vex:usd_primvarlen]
+- [Vex:usd_isiprimvar]
+- [Vex:usd_iprimvarsize]

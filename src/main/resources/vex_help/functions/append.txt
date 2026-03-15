@@ -1,0 +1,32 @@
+= append =
+
+#type: vex
+#context: all
+#group: array
+
+"""Adds an item to an array or string."""
+
+:usage: `void append(string &array; string value)`
+
+    Appends the second string to the first.
+
+:usage: `void append(<type> &array[]; <type> value)`
+
+    Appends the given value to the end of the array. Increases the size of `array` by 1. This is the same as [push(array, value)|Vex:push].
+
+:usage: `void append(<type> &array[]; <type> values[])`
+
+    Concatenates the values from the `values` array to the end of `array`. Increases the size of `array` by `len(values)`. This is the same as [push(array, values)|Vex:push].
+
+:tip:
+    #id: array_set_item
+    
+    You can set an individual item in an array using `array[n] = x`.
+    
+
+@related
+
+- [/vex/arrays]
+- [Vex:len]
+- [Vex:push]
+- [Vex:resize]

@@ -1,0 +1,30 @@
+= tet_adjacent =
+
+#type: vex
+#context: all
+#tags: tet, proximity
+#group: tet
+
+"""Returns primitive number of an adjacent tetrahedron."""
+
+:usage: `int tet_adjacent(<geometry>, int primindex, int faceno)`
+
+:include _common#geometry:
+
+:arg:primindex:
+    The primitive number.
+
+:arg:faceno:
+    The face on the tetrahedron.  Face 0 is the triangle that doesn't
+    have vertex 0.
+
+:returns:
+    The primitive number of the tetrahedron opposite the given vertex.
+    Returns `-1` f the primitive is not a tet or doesn't have an adjacent tetrahedron.
+
+Use [Vex:tet_faceindex] to get the vertex indices of each face of a tetrahedron.
+
+
+@related
+
+- [Vex:tet_faceindex]

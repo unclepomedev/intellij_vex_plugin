@@ -1,0 +1,60 @@
+= solveik =
+
+#type: vex
+#context: all
+#tags: transform, solve
+#group: transform
+#since: 17.5
+
+"""Applies an inverse kinematics algorithm to a skeleton."""
+
+:usage: `vector[] solveik(float lengths[], vector targetpos, vector twistpos, float twist, int twistflag, float dampen, int resiststraight, float trackingthres, matrix relmat, vector constraints[])`
+:usage: `matrix3[] solveik(float lengths[], vector targetpos, vector twistpos, float twist, int twistflag, float dampen, int resiststraight, float trackingthres, matrix relmat, vector constraints[])`
+
+Returns a array of local bone rotations in degrees.
+
+:arg:lengths:
+    The lengths of all the bones to solve.
+
+:arg:targetpos:
+    A target position in worldspace.
+
+:arg:twistpos:
+    A twist affect position in worldspace.
+
+:arg:twist:
+    A twist angle in degrees.
+
+:arg:twistflag:
+    Apply twist using the twist affector or not.
+
+:arg:dampen:
+    Dampening factor for the whole chain.
+
+:arg:resiststraight:
+    Resist straightening.
+
+:arg:trackingthres:
+    Tracking threshold.
+
+:arg:relmat:
+    A relative matrix used to transform the target and twist positions relative to the origin.
+    This is normally the invert matrix of the root of the chain.
+
+:arg:constraints:
+    This is a vector array used to define the per bone restangles, dampening, minangles, maxangles, min damp, max damp, and rolloff.
+    If the array is empty, same default values present in the bone objects are used.
+    If the array size is equal to the number of input bones, the rest angles are defined.
+    If the array size is equal to 2 times the number of input bones, the rest angles and the dampening are defined.
+    If the array size is equal to 3 times the number of input bones, the rest angles, the dampening, the min/max angles are defined. Min/Max angles share the same values.
+    If the array size is equal to 4 times the number of input bones, the rest angles, the dampening, the min/max angles are defined. Min/Max angles have different values.
+    If the array size is equal to 5 times the number of input bones, the rest angles, the dampening, the min/max angles and damp angles are defined.
+    If the array size is equal to 6 times the number of input bones, the rest angles, the dampening, the min/max angles, min/max damp angles are defined.
+    If the array size is equal to 7 times the number of input bones, the rest angles, the dampening, the min/max angles, min/max damp angles, and rolloff are defined.
+
+@related
+- [Vex:solveconstraint]
+- [Vex:solvecurve]
+- [Vex:solvefbik]
+
+

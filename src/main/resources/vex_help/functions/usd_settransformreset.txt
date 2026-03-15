@@ -1,0 +1,34 @@
+= usd_settransformreset =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Sets/clears the primitive's transform reset flag"""
+
+:usage: `int usd_settransformreset(int stagehandle, string primpath, int flag)`
+
+This function sets the primitive's transform reset flag, i.e., whether the primitive uses the world co-ordinate system as the initial space, or whether it inherits the space transformation from the parent (default).
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:flag:
+    If `1`, the primitive will have its transform reset, i.e. will use the world co-ordinate system as the initial space. If `0` it will inherit the space transform from the parent.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Ignore parent's transform.
+usd_settransformreset(0, "/geo/cone", 1);
+}}}
+
+@related
+- [Vex:usd_transformorder]
+- [Vex:usd_istransformreset]

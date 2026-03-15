@@ -1,0 +1,24 @@
+= primattrib =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+#redirect: ../attrib_suite#primattrib
+
+"""Reads a primitive attribute value from a geometry, outputting a success flag."""
+
+:usage: `<type> primattrib(<geometry>, string attribute_name, int prim, int &success)`
+:usage: `<type>[] primattrib(<geometry>, string attribute_name, int prim, int &success)`
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:arg:prim:
+    The primitive number.
+
+:arg:&success:
+    Set to `1` if the import was successful,
+    `0` on error (for example, the attribute or primitive number don't exist).
+

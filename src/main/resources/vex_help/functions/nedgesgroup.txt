@@ -1,0 +1,22 @@
+= nedgesgroup =
+
+#type: vex
+#context: all
+#tags: geo
+#group: geo
+
+"""Returns the number of edges in the group."""
+
+:usage: `int nedgesgroup(<geometry>, string groupname)`
+
+:include _common#geometry:
+
+:arg:groupname:
+    A group name or ad-hoc group, like `0` or `p0-1`. This matches the
+    SOP group naming convention, in particular that an empty string means all
+    edges.
+
+@related
+
+- [Vex:expandedgegroup]
+- [Vex:inedgegroup]

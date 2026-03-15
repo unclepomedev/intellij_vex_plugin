@@ -1,0 +1,38 @@
+= setprimattrib =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+
+"""Sets a primitive attribute in a geometry."""
+
+If you don't know the attribute class ahead of time, use [Vex:setattrib].
+
+:usage: `int setprimattrib(int geohandle, string name, int prim_num, <type> value, string mode="set")`
+:usage: `int setprimattrib(int geohandle, string name, int prim_num, <type> value[], string mode="set")`
+
+:include _common#set_attrib_info:
+
+:include _common#geohandle_arg:
+
+:arg:name:
+    The attribute to set on the given primitive.
+    
+:arg:prim_num:
+    The number of the primitive to set the attribute on.
+
+:arg:value:
+    The value to set the attribute to.
+
+    Note that within a VEX program only one type may be written to a single attribute.  Ie, you cannot mix writes of float an integer.  This can be surprising as a literal like `1` will be an integer write so be ignored if floats were previously written.
+
+:include _common#set_attrib_mode:
+
+
+@related
+- [Vex:setattrib]
+- [Vex:setpointattrib]
+- [Vex:setvertexattrib]
+- [Vex:setdetailattrib]
+- [Vex:prim]

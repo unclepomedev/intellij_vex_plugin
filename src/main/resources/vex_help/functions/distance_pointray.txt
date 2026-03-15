@@ -1,0 +1,15 @@
+= distance_pointray =
+
+#type: vex
+#context: all
+#tags: proximity
+#group: math
+
+"""This function returns the closest distance between the point Q and the
+semi-finite ray starting at O and extending in the direction D."""
+
+:usage: `float distance_pointray(vector Q, vector O, vector D)`
+
+This function returns the closest distance between the point <<Q>> and the
+semi-finite ray parallel to <<D>> starting at point <<O>>. The direction
+vector <<D>> does not have to be normalized.

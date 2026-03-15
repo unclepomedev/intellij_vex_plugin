@@ -1,0 +1,34 @@
+= ninput =
+
+#type: vex
+#context: cop2
+#tags: cop2, pixel, sample
+#group: image
+
+"""Reads a component from a pixel and its eight neighbors."""
+
+:usage: `matrix3 ninput(int opinput, int plane, int component, int array_index, int u, int v, int frame, ...)`
+:usage: `matrix3 ninput(int opinput, int plane, int component, int array_index; float u, float v; int frame, ...)`
+
+Reads the given component from the targeted pixel and its eight neighbors and returns them in a 3x3 matrix.
+Note that this function only reads one component (for example, red, green, or blue) at a time.
+To sample full color, you need to call the function three times with `component` set to 0, 1, and 2.
+
+:include _common#opinput_arg:
+
+:arg:plane:
+    The index of the plane to read from.
+
+:arg:component:
+    The index of the component to read from. For example, 0 is red, 1 is green, 2 is blue in an RGB plane.
+
+:include binput#arrayindex_arg:
+
+:include binput#uv_arg:
+
+
+@related
+
+- [Vex:binput]
+- [Vex:cinput]
+- [Vex:finput]

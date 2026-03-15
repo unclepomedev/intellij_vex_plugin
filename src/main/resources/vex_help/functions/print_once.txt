@@ -1,0 +1,42 @@
+= print_once =
+
+#type: vex
+#context: all
+#tags: string, utility, print
+#group: utility
+
+"""Prints a message only once, even in a loop."""
+
+:usage: `void print_once(string msg, ...)`
+
+Prints the string passed to the function exactly one time, even in a loop.
+This is useful to print a message before the first iteration of a loop, without having to count iterations.
+
+:arg:msg:
+    The string to print. This string does support interpolating values.
+    Use [Vex:sprintf] to generate the <<msg>> string if you need to include values.
+
+:varg:global:
+    #type: int
+    #default: 0
+    
+    Normally, multiple instances of `print_once()` call sites
+    will work independently of each other.  That is, if two separate
+    call sites to `print_once()` are passed the same string, the string will be
+    printed twice (once per call site).  With the "global" flag turned on, strings
+    are checked across all instances of the `print_once()` functions.
+
+
+@examples
+
+{{{
+#!vex
+
+// Only print "Hello world" one time
+for (int i = 0; i < 100; ++i)
+    print_once("Hello world\n");
+
+// Print a missing texture warning, just one time across all shaders
+print_once( sprintf("Missing texture map: %s\n", texture_map), "global", 1);
+
+}}}

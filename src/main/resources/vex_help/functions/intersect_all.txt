@@ -1,0 +1,51 @@
+= intersect_all =
+
+#type: vex
+#context: all
+#tags: ray, intersect
+#group: geo
+
+"""Computes all intersections of the specified ray with geometry."""
+
+To get only the _first_ intersection, use [Vex:intersect].
+
+:usage: `int intersect_all( <geometry>; string group; vector orig; vector dir; vector &pos[]; int &prim[]; vector &uvw[], float tol=0.01, float ttol=0.01 )`
+
+:include _common#geometry:
+
+:include intersect#group:
+
+:include intersect#orig:
+
+:include intersect#dir:
+
+:arg:&pos:
+    The function overwrites this array with the world space positions of each hit.
+
+:arg:&prim:
+    The function overwrites this array with the primitive numbers of the primitives hit by the ray.
+
+:arg:&uvw:
+    The function overwrites this array with the parametric UVW coordinates of where each intersection occurred on the primitive.
+
+:arg:`tol`, `ttol`:
+    `tol` is the 3D tolerance. `ttol` is the ray tolerance.
+    Collision points within the parametric ray tolerance, `ttol` will be merged
+    together, often useful to avoid getting extra intersects when hitting the edges
+    of geometry.
+    
+    To get _all_ intersections without merging, set `ttol` to `-1`.
+
+:returns:
+    The number of intersections, or `0` if the ray didn't hit anything.
+
+NOTE:
+    When intersections are performed against metaball geometry, it is
+    impossible to determine the primitive number of the metaball which
+    was hit. In this case, the function returns the number of primitives
+    in the intersection geometry.
+
+
+@related
+
+- [Vex:intersect]

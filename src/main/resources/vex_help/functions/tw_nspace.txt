@@ -1,0 +1,13 @@
+= tw_nspace =
+
+#type: vex
+#context: all
+#tags: map, transform
+#group: transform
+
+"""Transforms a normal vector from Texture to World space."""
+
+:usage: `vector tw_nspace(vector v)`
+
+Transforms a normal vector from _Texture_ to _World_ space.
+

@@ -1,0 +1,21 @@
+= strip =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Strips leading and trailing whitespace from a string."""
+
+:usage: `string strip(string value)`
+:usage: `string strip(string value, string whitespace)`
+
+Returns a string with the leading and trailing whitespace removed.  If
+whitespace is provided, it is a string of characters that will be stripped.
+
+This is also equivalent of doing both [Vex:rstrip] and [Vex:lstrip] on a string.
+
+@related
+
+- [Vex:rstrip]
+- [Vex:lstrip]

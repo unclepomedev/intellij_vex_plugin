@@ -1,0 +1,94 @@
+= metaimport =
+
+#type: vex
+#context: all
+#tags: metaball
+#group: metaball
+
+"""Once you get a handle to a metaball using metastart and metanext, you
+can query attributes of the metaball with metaimport."""
+
+:usage: `int metaimport(int handle, string attrib, vector P, <type> &value)`
+:usage: `<type>[] metaimport(string file, string attribute; vector P)`
+
+    Rather than iterating over all the values, this form imports the values from all metaballs simultaneously. As with the scalar form, you can use the keywords...
+
+    - `meta:density`
+    - `meta:prim`
+    - `meta:transform`
+
+    ...to import non-attribute information from the metaballs.
+
+Once you get a handle to a metaball using [Vex:metastart] and
+[Vex:metanext], you can query attributes of the metaball with
+`metaimport`.
+
+There are three "special" attributes you can query:
+
+`float meta:density` :
+The density of the current metaball
+
+`float meta:prim` :
+The primitive number of the current metaball
+
+`matrix meta:transform` :
+The transform associated with the current metaball. Applying the
+inverse of this transform will transform a point into the "space" of
+the metaball.
+
+For example, the [Vex:metaweight] function can be expressed in the following
+way:
+
+{{{
+#!vex
+float
+metaweight(string file; vector P)
+{
+int        handle;
+float    density, tmp;
+
+density = 0;
+handle = metastart(file, P);
+while (metanext(handle))
+{
+if (metaimport(handle, "meta:density", P, tmp))
+density += tmp;
+}
+return density;
+}
+}}}
+
+The attributes evaluated are un-premultiplied by the weight of the
+metaball at the position and must be multiplied for blending. For
+example, to evaluate a vector attribute (say color) on metaballs, the
+following function could be used:
+
+{{{
+#!vex
+vector
+meta_attribute(string file, attrib_name; vector P)
+{
+int        handle;
+vector    result, tmp;
+float    density;
+
+handle = metastart(file, P);
+result = 0;
+while (metanext(handle))
+{
+if (metaimport(handle, "meta:density", P, density))
+{
+if (metaimport(handle, attrib_name, P, tmp))
+result += density * tmp;
+}
+return result;
+}
+}}}
+
+In the i3d context, there is a default metaball geometry (specified
+by the `-g` option on the command line to the i3dgen program). If the
+filename is an empty string, the default geometry will be used.
+
+
+
+

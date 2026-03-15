@@ -1,0 +1,24 @@
+= chinputlimits =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Computes the minimum and maximum value of samples in an input channel."""
+
+:usage: `int chinputlimits(int opinput, int channel, float &channel_min, float &channel_max)`
+
+:arg:`opinput`:
+    CHOP Input index or -1 if omitted.
+
+:include chattr#channel_arg:
+
+:arg:`channel_min`:
+    Computed minimum channel value;
+
+:arg:`channel_max`:
+    Computed maximum channel value;
+
+:returns:
+    Returns 1 on success or 0 on failure.

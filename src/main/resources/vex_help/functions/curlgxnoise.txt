@@ -1,0 +1,15 @@
+= curlgxnoise =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""Computes divergence free noise based on simplex noise."""
+
+:usage: `vector curlgxnoise(vector xyz)`
+:usage: `vector curlgxnoise(vector4 xyzt)`
+
+Evaluates a divergence free vector field by computing curl of simplex noise
+(see [gxnoise|Vex:gxnoise]).
+

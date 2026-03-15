@@ -1,0 +1,23 @@
+= tet_faceindex =
+
+#type: vex
+#context: all
+#tags: tet, vertex
+#group: tet
+
+"""Returns vertex indices of each face of a tetrahedron."""
+
+:usage: `int tet_faceindex(int faceno, int vtxno)`
+
+Returns `-1` if an invalid number is specified.
+
+Returns `0` to `3` to refer to the four vertices of a generic tetrahedron.
+
+:arg:faceno:
+    The face on the tetrahedron.  Face 0 is the triangle that doesn't
+    have vertex 0.
+
+:arg:vtxno:
+    Which vertex on the triangle to return, `0` to `2`.  Starts with
+    the lowest number and follows Houdini's winding convention, ie,
+    face 0 is vertices 1, 2, and 3.

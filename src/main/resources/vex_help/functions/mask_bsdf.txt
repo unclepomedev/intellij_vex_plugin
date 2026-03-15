@@ -1,0 +1,32 @@
+= mask_bsdf =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf
+#group: bsdf
+
+"""Returns new BSDF that only includes the components specified by the mask."""
+
+:usage: `bsdf mask_bsdf(bsdf b, int mask)`
+
+:arg:b:
+    BSDF to mask.
+
+:arg:mask:
+    A bitmask indicating which types of shading component bounces to evaluate.
+    
+    :include pbr_mask_h:
+
+@examples
+
+{{{
+#!vex
+// outF will have every component from inF except refraction
+bsdf outF = mask_bsdf(inF, PBR_ALL_MASK & ~PBR_REFRACT_MASK);
+}}}
+
+@related
+
+- [Vex:albedo]
+- [Vex:eval_bsdf]
+- [Vex:sample_bsdf]

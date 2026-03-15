@@ -1,0 +1,11 @@
+= import =
+
+#type: vex
+#context: sop
+#index: no
+#status: deprecated
+
+"""Reads attribute data."""
+
+WARNING:
+    This function has been deprecated. Use [Vex:getattrib] instead.

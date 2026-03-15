@@ -1,0 +1,34 @@
+= usd_addcollectionexclude =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Excludes an object from the collection"""
+
+:usage: `int usd_addcollectionexclude(int stagehandle, string collectionpath, string path)`
+
+This function excludes the object from the collection. This is usually achieved by adding an explicit path to the collection's exclude list, but it may just remove a path from the collection's include list, if it's sufficient.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_collectionpath:
+
+:include _common#usd_path:
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Exclude sphere3 from cube's collection.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+usd_addcollectionexclude(0, collection_path, "/geo/sphere3");
+}}}
+
+@related
+- [Vex:usd_iscollection]
+- [Vex:usd_addcollectioninclude]

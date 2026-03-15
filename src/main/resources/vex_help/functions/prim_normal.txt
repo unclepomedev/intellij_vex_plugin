@@ -1,0 +1,21 @@
+= prim_normal =
+
+#type: vex
+#context: all
+#tags: prim, normals
+#group: normals
+
+"""Returns the normal of the primitive (prim_number) at parametric location u, v."""
+
+:usage: `vector prim_normal(<geometry>, int prim_number, vector uvw)`
+:usage: `vector prim_normal(<geometry>, int prim_number, float u, float v)`
+:usage: `vector prim_normal(<geometry>, int prim_number, float u, float v, float w)`
+
+:include _common#geometry:
+
+:arg:`uvw`, `u`, `v`, `w`:
+    When <<w>> is not given, it is treated as zero.
+
+:returns:
+    The normal of the primitive (prim_number) at parametric location <<u>>, <<v>>, <<w>>. 
+

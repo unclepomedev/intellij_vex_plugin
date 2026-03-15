@@ -1,0 +1,35 @@
+= usd_isarrayiprimvar =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 19.0
+
+"""Checks if there is an array primvar directly on the USD primitive or on USD primitive's ancestor."""
+
+:usage: `int usd_isarrayiprimvar(<stage>; string primpath; string name)`
+
+This function checks whether the primvar is an array, if it's found directly on the given primitive or is inherited from primitive's ancestor. 
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:returns:
+    `1` if the primvar exists and is an array, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if primvar "some_primvar" is an array.
+int is_array = usd_isarrayiprimvar(0, "/geometry/sphere", "some_primvar");
+}}}
+
+@related
+- [Vex:usd_isarrayprimvar]
+- [Vex:usd_isiprimvar]
+- [Vex:usd_iprimvarlen]

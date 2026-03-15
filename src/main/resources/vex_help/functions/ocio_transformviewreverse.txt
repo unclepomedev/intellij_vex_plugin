@@ -1,0 +1,37 @@
+= ocio_transformviewreverse =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Transform colors _from_ a display/view using Open Color IO"""
+
+:usage: `vector ocio_transformviewreverse(string src, string display, string view; vector clr)`
+
+    Transform a three-component color from the display/view.
+
+:usage: `vector4 ocio_transformviewreverse(string src, string display, string view; vector4 clr)`
+
+    Transform a four-component color from the display/view.
+
+:arg:src:
+    The name of the color space to transform from.
+
+:arg:display:
+    The name of the display containing the desired view.
+
+:arg:view:
+    The view to use as the source to transform from.
+
+:arg:clr:
+    The color to transform.
+
+NOTE:
+    Transforming colors to a display/view (tonemapping) can be a lossy operation and is not always an invertable process.
+
+@related
+
+- [Vex:ocio_spaces]
+- [Vex:ocio_activeviews]
+- [Vex:ocio_transformview]

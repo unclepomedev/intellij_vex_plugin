@@ -1,0 +1,38 @@
+= usd_addrelationshiptarget =
+
+#type: vex
+#context: all
+#tags: usd, usd_relationship
+#group: usd
+#since: 18.0
+
+"""Adds a target to the primitive's relationship"""
+
+:usage: `int usd_addrelationshiptarget(int stagehandle; string primpath; string name; string target)`
+
+This function adds a target to the primitive's relationship.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    The relationship name.
+
+:arg:target:
+    The the target path to add.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Add the sphere to cube's relationship.
+usd_addrelationshiptarget(0, "/geo/cube", "relationship_name", "/geo/sphere");
+}}}
+
+@related
+- [Vex:usd_isrelationship]
+- [Vex:usd_removerelationshiptarget]
+

@@ -1,0 +1,30 @@
+= getattrib =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#redirect: ../attrib_suite#getattrib
+
+"""Reads an attribute value from geometry, with validity check."""
+
+:usage: `<type> getattrib(<geometry>, string attribclass, string attribute_name, int elemnum, int &success)`
+:usage: `<type>[] getattrib(<geometry>, string attribclass, string attribute_name, int elemnum, int &success)`
+    
+    This general form lets you specify the attribute "class" at run-time. This can be useful for writing general code that can work on different classes.
+    If you know the class of attribute you want to read ahead of time, using [Vex:detailattrib], [Vex:primattrib], [Vex:pointattrib], or [Vex:vertexattrib] may be faster.
+
+:include _common#geometry:
+
+:include _common#attribclass:
+
+:include _common#attribname:
+
+:include _common#elemnum:
+
+:arg:success:
+    If the given attribute exists and can be read, the function sets this variable to `1`. Otherwise, it sets this variable to `0`.
+
+:returns:
+    The value of the attribute.
+

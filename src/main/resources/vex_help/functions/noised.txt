@@ -1,0 +1,28 @@
+= noised =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Derivatives of Perlin Noise."""
+
+:usage: `void noised(float x, float &v, float &dvdx)`
+:usage: `void noised(float x, vector &v, vector &dvdx)`
+:usage: `void noised(float x, float y, float &v, float &dvdx, float &dvdy)`
+:usage: `void noised(float x, float y, vector &v, vector &dvdx, vector &dvdy)`
+:usage: `void noised(vector xyz, float &v, float &dvdx, float &dvdy, float &dvdz)`
+:usage: `void noised(vector xyz, vector &v, vector &dvdx, vector &dvdy, vector &dvdz)`
+:usage: `void noised(vector4 xyzw, float &v, float &dvdx, float &dvdy, float &dvdz, float &dvdw)`
+:usage: `void noised(vector4 xyzw, vector &v, vector &dvdx, vector &dvdy, vector &dvdz, vector &dvdw)`
+
+This computes both the perlin noise value, and the derivatives of the
+noise along each axis.  This can be performed quite efficiently as
+there are analytic derivatives available.
+
+See [noise and randomness|/vex/random]  in the VEX language
+guide for more information.
+
+@related
+- [noise|Vex:noise]
+

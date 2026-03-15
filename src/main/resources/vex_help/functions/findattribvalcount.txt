@@ -1,0 +1,21 @@
+= findattribvalcount =
+
+#type: vex
+#context: all
+#tags: attrib, search
+#group: attrib
+
+"""Returns number of elements where an integer or string attribute has a certain value."""
+
+:usage: `int findattribvalcount( <geometry>, string attribclass, string attribute_name, int|string value)`
+
+Returns the number of elements that has that integer or string value set on the given attribute name.
+
+:include _common#geometry:
+
+:include _common#attribclassnogroup:
+
+:include _common#attribnamenogroup:
+
+:arg:value:
+    The value to match.  Must be of the same type as the attribute.

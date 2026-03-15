@@ -1,0 +1,41 @@
+= usd_getbounds =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform, usd_bbox
+#group: usd
+#since: 18.0
+
+"""Obtains the primitive's bounds"""
+
+:usage: `int usd_getbounds(<stage>, string primpath, string purpose, vector &min, vector &max)`
+:usage: `int usd_getbounds(<stage>, string primpath, string purpose, float timecode, vector &min, vector &max)`
+:usage: `int usd_getbounds(<stage>, string primpath, string[] purpose, vector &min, vector &max)`
+:usage: `int usd_getbounds(<stage>, string primpath, string[] purpose, float timecode, vector &min, vector &max)`
+
+This function returns primitive's axis-aligned bounding box. The point corresponding to the minimum corner of the bounding box will be returned in min, while the maximum will be in max. Always returns 1. 
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:purpose:
+    The primitive's purpose for which to return the bounding box (e.g., "render").
+
+:include _common#usd_timecode:
+
+:returns:
+    Always 1.
+
+@examples 
+{{{
+#!vex
+// Get the sphere's bounding box.
+vector min, max;
+usd_getbounds(0, "/src/sphere", "render", min, max);
+}}}
+
+@related
+- [Vex:usd_getbbox]
+- [Vex:usd_worldtransform]
+- [Vex:usd_localtransform]

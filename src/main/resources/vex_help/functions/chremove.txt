@@ -1,0 +1,38 @@
+= chremove =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Removes channels from a CHOP node."""
+
+:usage: `int chremove(int channel_index)`
+:usage: `int chremove(int channel_indices[])`
+:usage: `int chremove(string channel_name)`
+:usage: `int chremove(string channel_names[])`
+
+This function removes  channels from a CHOP node. It works only when iterating over Clip, Channel or Samples, not when iterating over ChannelSample.
+
+Returns 1 if all channels were removed or 0 otherwise. 
+
+:arg:`channel_index`:
+    #id: channel_index_arg
+
+    The channel index to remove.
+
+:arg:`channel_indices`:
+    #id: channel_indices_arg
+
+    The array of channel indices to remove.
+
+:arg:`channel_name`:
+    #id: channel_name_arg
+
+    The channel name to remove.
+
+:arg:`channel_names`:
+    #id: channel_names_arg
+
+    The array of channel names to remove.
+

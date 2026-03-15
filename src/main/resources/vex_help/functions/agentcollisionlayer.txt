@@ -1,0 +1,30 @@
+= agentcollisionlayer =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+
+"""Returns the name of the collision layer of an agent primitive."""
+
+WARNING:
+    This function has been deprecated. Use [Vex:agentcollisionlayers] instead.
+
+:usage: `string agentcollisionlayer(<geometry>, int prim)`
+    #status: deprecated
+
+Returns an empty string if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentcurrentlayer]
+- [Vex:agentlayerbindings]
+- [Vex:agentlayers]
+- [Vex:agentlayershapes]
+- [Vex:setagentcollisionlayer]
+- [Vex:setagentcurrentlayer]

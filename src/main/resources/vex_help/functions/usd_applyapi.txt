@@ -1,0 +1,26 @@
+= usd_applyapi =
+
+#type: vex
+#context: all
+#tags: usd
+#group: usd
+#since: 20.0
+
+"""Apply an API schema to a primitive."""
+
+:usage: `int usd_applyapi(int stagehandle, string primpath, string apischemaname)`
+
+This function applies an API schema to a primitive. This function will only work for single-apply API schemas (such as GeomModelAPI), not for multiple-apply API schemas (such as CollectionAPI).
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:apischemaname:
+    API schema name.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@related
+- [Vex:usd_hasapi]

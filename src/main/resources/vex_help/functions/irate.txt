@@ -1,0 +1,15 @@
+= irate =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the frame rate of the specified input."""
+
+:usage: `float irate(int opinput)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The frame rate of the specified input.

@@ -1,0 +1,14 @@
+= switch =
+
+#type: vex
+#context: all
+#group: shading
+
+"""Use a different bsdf for direct or indirect lighting."""
+
+:usage: `bsdf switch(bsdf direct, bsdf indirect)`
+
+This makes it possible to use a different bsdf for direct and indirect lighting.
+
+@related
+- [Node:vop/switchlightingbsdf.txt]

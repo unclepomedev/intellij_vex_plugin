@@ -1,0 +1,27 @@
+= length2 =
+
+#type: vex
+#context: all
+#tags: vector, measure
+#group: math
+
+"""Returns the squared distance of the vector or vector4."""
+
+:usage: `float length2(vector2 v)`
+:usage: `float length2(vector v)`
+:usage: `float length2(vector4 v)`
+
+    Returns the squared distance of the vector.
+
+
+@examples
+
+{{{
+#!vex
+length2({0.5, 0.75, 0}) == 0.8125;
+}}}
+
+
+@related
+
+- [length|Vex:length]

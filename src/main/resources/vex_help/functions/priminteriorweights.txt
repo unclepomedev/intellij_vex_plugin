@@ -1,0 +1,29 @@
+= priminteriorweights =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+
+"""Finds the indices and weightings of the vertices that will compute an
+interior point given the UVW coordinates."""
+
+:usage: `int priminteriorweights( <geometry>; int prim_num; vector uvw; int &verts[]; float &weights[])`
+
+:include _common#geometry:
+
+:arg:prim_num:
+    The primitive number to read the attribute from.
+
+:arg:uvw:
+    The primitive UVW coordinates at which to read the attribute.
+
+Finds the indices and weightings of the vertices that will compute an interior
+point given the UVW coordinates. The indices are linear vertex indices.
+
+@related
+
+- [Vex:primuv]
+- [Vex:prim_attribute]
+- [Vex:uvsample]
+- [Vex:xyzdist]

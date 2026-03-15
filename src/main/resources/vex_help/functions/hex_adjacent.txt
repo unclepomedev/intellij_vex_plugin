@@ -1,0 +1,29 @@
+= hex_adjacent =
+
+#type: vex
+#context: all
+#tags: hex, proximity
+#group: hex
+
+"""Returns primitive number of an adjacent hexahedron."""
+
+:usage: `int hex_adjacent(<geometry>, int primindex, int faceno)`
+
+:include _common#geometry:
+
+:arg:primindex:
+    The primitive number.
+
+:arg:faceno:
+    The face on the hexahedron.   Ranges from `0` to `5`.
+
+:returns:
+    The primitive number of the hexahedron attached to the given face.
+    Returns `-1` f the primitive is not a hex or doesn't have an adjacent hexahedron.
+
+Use [Vex:hex_faceindex] to get the vertex indices of each face of a hexahedron.
+
+
+@related
+
+- [Vex:hex_faceindex]

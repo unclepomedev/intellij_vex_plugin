@@ -1,0 +1,17 @@
+= getlightscope =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: light, pbr
+#group: shading
+
+"""Returns a selection of lights that illuminate a given material."""
+
+:usage: `void getlightscope(material mat, string &scope, string &categories)`
+
+Given a material handle, determine the lights illuminating the surface.  The light selection is given by the scope/categories returned.
+
+@related
+- [Vex:getmaterial]
+- [Vex:getscope]
+- [Vex:trace]

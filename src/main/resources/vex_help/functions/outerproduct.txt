@@ -1,0 +1,15 @@
+= outerproduct =
+
+#type: vex
+#context: all
+#tags: vector, matrix
+#group: math
+
+"""Returns the outer product between the arguments."""
+
+:usage: `matrix2 outerproduct(vector2 v, vector2 v)`
+:usage: `matrix3 outerproduct(vector v, vector v)`
+:usage: `matrix outerproduct(vector4 v, vector4 v)`
+
+Returns the [outer product|Wp:Outer_product] of the given vectors.
+

@@ -1,0 +1,17 @@
+= pointattribsize =
+
+#type: vex
+#context: all
+#tags: point, attrib
+#group: attrib
+
+"""Returns the size of a geometry point attribute."""
+
+:usage: `int pointattribsize(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+See [Vex:attribsize] for more information.
+
+Returns `0` if the attribute cannot be found.
+

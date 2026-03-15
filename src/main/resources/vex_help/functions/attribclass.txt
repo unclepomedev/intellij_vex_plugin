@@ -1,0 +1,29 @@
+= attribclass =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Returns the class of a geometry attribute."""
+
+:usage: `string attribclass(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+:arg:attribute_name:
+    The name of the attribute to read.
+
+    If attributes with the same name exist at multiple "levels", returns the _lowest level_ at which the attribute exists. For example, if there is a primitive attribute `foo` and a vertex attribute `foo`, `attribclass(0, "foo")` will return `"vertex"`.
+
+:returns:
+    A string describing the class (`"detail"`, `"prim"`, `"point"`, or `"vertex"`) of the given attribute. If the attribute does not exist, returns an empty string (`""`).
+
+@related
+
+- [Vex:addattrib]
+- [Vex:attrib]
+- [Vex:getattrib]
+- [Vex:attribtype]
+
+

@@ -1,0 +1,37 @@
+= usd_addorient =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Applies a quaternion orientation to the primitive""" 
+
+:usage: `int usd_addorient(int stagehandle; string primpath; string suffix; vector4 orient)`
+
+This function applies a quaternion orientation to the primitive. It creates and sets a value of a transform operation attribute that defines the orientation, and appends it to the primitive's transform order.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:include _common#usd_xformopsuffix:
+
+:arg:orient:
+    The quaternion (in a vector4 format) representing the orientation.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Orient the cube
+vector4 quat = eulertoquaternion(radians({30,0,0}), XFORM_XYZ);
+usd_addorient(0, "/dst/cone", "my_orientation", quat);
+}}}
+
+@related
+- [Vex:usd_transformorder]
+

@@ -1,0 +1,32 @@
+= usd_isprim =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Checks if the path refers to a valid primitive."""
+
+:usage: `int usd_isprim(<stage>, string primpath)`
+
+This function checks whether the path points to a valid USD primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    1 if the primitive at the given path is valid, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the stage coming on the first input has a sphere primitive 
+// at scene graph location "/geometry/sphere".
+int is_valid_primitive = usd_isprim(0, "/geometry/sphere");
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_isstage]

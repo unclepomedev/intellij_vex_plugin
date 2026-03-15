@@ -1,0 +1,32 @@
+= serialize =
+
+#type: vex
+#context: all
+#group: sensor
+#group: convert
+
+"""Flattens an array of vector or matrix types into an array of floats."""
+
+:usage: `float[] serialize(<vector> vectors[])`
+:usage: `float[] serialize(<matrix> matrices[])`
+
+These functions will serialize the arrays of tuple values.
+That is, the values of the tuples are extracted one by one into a
+flat floating point array.
+
+
+@examples
+
+{{{
+#!vex
+vector v[] = { {1,2,3}, {7,8,9} }; // A vector[] of length 2
+float  f[];
+
+f = serialize(v);
+// Now f[] has a length of 6 and equals { 1,2,3,7,8,9 }
+}}}
+
+
+@related
+
+- [Vex:unserialize]

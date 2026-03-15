@@ -1,0 +1,15 @@
+= alphaname =
+
+#type: vex
+#context: cop2
+#tags: output_plane
+#group: image
+
+"""Returns the default name of the alpha plane (as it appears in the
+compositor preferences)."""
+
+:usage: `string alphaname()`
+
+Returns the default name of the alpha plane (as it appears in the
+compositor preferences). Using this instead of hardcoding the default
+makes your code more portable. Default is "A".

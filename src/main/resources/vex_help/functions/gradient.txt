@@ -1,0 +1,41 @@
+= gradient =
+
+#type: vex
+#context: all
+#tags: shading, volume
+#group: shading
+
+"""Returns the gradient of a field."""
+
+:usage: `vector gradient(float val, ...)`
+:usage: `vector gradient(vector P, float val, ...)`
+
+This method computes the derivative of a volume field using the partial
+derivatives with respect to a given position (`Du`, `Dv`, and `Dw`).  If no
+position is provided, `P` is assumed in shading contexts.  If only `Du` and
+`Dv` are defined, the derivative will be tangent to the surface being
+rendered.
+
+:include _derive_variadic:
+
+
+@examples
+
+Return the gradient of the density field:
+
+{{{
+#!vex
+surface test_grad(float density = 0)
+{
+Cf = gradient(density);
+}
+}}}
+
+
+@related
+
+- [Vex:volume]
+- [Vex:Du]
+- [Vex:Dv]
+- [Vex:Dw]
+

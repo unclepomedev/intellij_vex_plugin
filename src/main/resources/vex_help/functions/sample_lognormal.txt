@@ -1,0 +1,47 @@
+= sample_lognormal =
+
+#type: vex
+#context: all
+#group: sampling
+
+"""Samples the log-normal distribution based on parameters of the underlying normal distribution."""
+
+:usage: `float sample_lognormal(float mu, float sigma, float u)`
+:usage: `float sample_lognormal(float mu, float sigma, float minvalue, float maxvalue, float u)`
+
+:arg:mu:
+    The mean of the underlying normal distribution.
+
+:arg:sigma:
+    The standard deviation of the underlying normal distribution.
+
+:arg:u:
+    A number in the range `[0,1)`.
+
+`minvalue`,`maxvalue`:
+    When given, instead of sampling the full log-normal distribution,
+    the distribution with its range limited to `[minvalue,maxvalue]` will be
+    sampled.
+
+Samples the log-normal distribution with the specified `mu` and `sigma`, optionally
+with a `minvalue` and `maxvalue`.  To use parameters that are more understandable,
+`median` and `stddev`, please use `sample_lognormal_by_median`.
+Given uniform random `u` values in `[0,1)`, this will return log-normally
+distributed random numbers.  The return value will be monotone increasing
+with respect to `u`.
+
+The log-normal distribution is sampled by sampling a normal distribution
+and exponentiating the result, giving a value that is always positive, so
+this distribution is often used for generating random point scales.
+
+@related
+
+- [Vex:sample_lognormal_by_median]
+- [Vex:sample_normal]
+- [Vex:rand]
+- [Vex:sample_exponential]
+- [Vex:sample_cauchy]
+- [Vex:sample_discrete]
+- [Vex:sample_direction_uniform]
+- [Vex:log]
+- [Vex:exp]

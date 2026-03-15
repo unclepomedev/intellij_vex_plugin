@@ -1,0 +1,39 @@
+= usd_getbbox =
+
+#type: vex
+#context: all
+#tags: usd, usd_bbox
+#group: usd
+#since: 18.0
+
+"""Sets two vectors to the minimum and maximum corners of the bounding box for the primitive."""
+
+:usage: `int usd_getbbox(<stage>, string primpath, string purpose, vector &min, vector &max)`
+
+This function returns primitive's axis-aligned bounding box. The point corresponding to the minimum corner of the bounding box will be returned in min, while the maximum will be in max. Always returns 1. 
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:purpose:
+    The primitive's purpose for which to return the bounding box (e.g., "render").
+
+:returns:
+    Always 1.
+
+@examples 
+{{{
+#!vex
+// Get the sphere's bounding box.
+vector min, max;
+usd_getbbox(0, "/src/sphere", "render", min, max);
+}}}
+
+@related
+- [Vex:usd_getbounds]
+- [Vex:usd_getbbox_center]
+- [Vex:usd_getbbox_size]
+- [Vex:usd_getbbox_min]
+- [Vex:usd_getbbox_max]
+- [Vex:usd_relbox]

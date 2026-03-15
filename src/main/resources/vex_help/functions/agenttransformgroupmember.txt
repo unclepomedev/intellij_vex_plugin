@@ -1,0 +1,39 @@
+= agenttransformgroupmember =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns whether a transform is a member of the specified transform group."""
+
+See [Transform Groups|/crowds/agents#xformgroups] for more information.
+
+:usage: `int agenttransformgroupmember(<geometry>, int prim, string transformgroup, int transform)`
+:usage: `int agenttransformgroupmember(<geometry>, int prim, int transformgroupidx, int transform)`
+
+Returns a non-zero value if the transform is a member of the specified transform group, and zero otherwise.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transformgroup:
+    Name of a transform group in the agent's definition.
+
+:arg:transformgroupidx:
+    Index of a transform group in the agent's definition.
+    A transform group's index can be obtained via [Vex:agentfindtransformgroup].
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+@related
+- [Vex:agentcliptransformgroups]
+- [Vex:agentfindtransformgroup]
+- [Vex:agentrigfind]
+- [Vex:agenttransformgroups]
+- [Vex:agenttransformgroupmemberchannel]
+- [Hom:hou.AgentTransformGroup]
+

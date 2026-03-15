@@ -1,0 +1,51 @@
+= intersect_lights =
+
+#type: vex
+#context: displace, fog, surface
+#tags: light, pbr, raytracing
+#group: shading
+
+"""Finds the nearest intersection of a ray with any of a list of (area) lights and runs the light shader at the intersection point."""
+
+NOTE:
+    This function only works with area lights.
+    
+:usage: `int intersect_lights(int lightids[], vector pos, vector dir, float time, int &idx, float &dist, vector &clr, float &scale, ...)`
+
+:arg:lightids:
+    An array of light IDs, as returned by [Vex:getlights].
+
+:arg:pos:
+    The origin of the ray (such as the global variable `P`).
+
+:arg:dir:
+    Direction vector from the origin. The length of this vector does not affect
+    the distance the ray will travel.
+
+:arg:time:
+    Time to send the ray at.
+
+The function modifies the values of the following arguments:
+
+:arg:idx:
+    The light index for the light that was hit by the ray, or -1 if no intersection was found.
+
+:arg:dist:
+    The distance to the nearest intersected light.
+
+:arg:clr:
+    The light color set by the light shader.
+
+:arg:scale:
+    The light average hemispherical intensity (for area lights).
+
+:returns:
+    A [component bitmask|bouncemask] indicating what types of component bounces the light affects,
+    or `0` if the ray did not hit a light.
+    
+
+@related
+
+- [Vex:getlights]
+- [Vex:getlightname]
+- [Vex:sample_light]

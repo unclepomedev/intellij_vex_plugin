@@ -1,0 +1,27 @@
+= degrees =
+
+#type: vex
+#context: all
+#tags: math, trig, convert
+#group: convert
+
+"""Converts the argument from radians into degrees."""
+
+:usage: `float degrees(float num_in_rads)`
+
+    Returns the given radians in degrees.
+
+:usage: `vector2 degrees(vector2 nums_in_rads)`
+:usage: `vector degrees(vector nums_in_rads)`
+:usage: `vector4 degrees(vector4 nums_in_rads)`
+
+    Returns a new vector with the components converted to degrees.
+
+Most VEX trig functions work with radians, but most users are more comfortable with degrees. You may want to convert from degrees in the UI to radians for internal use.
+
+
+@related
+
+- [Vex:radians]
+
+

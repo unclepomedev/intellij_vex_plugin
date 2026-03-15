@@ -1,0 +1,21 @@
+= re_findall =
+
+#type: vex
+#context: all
+#group: string
+
+"""Finds all instances of the given regular expression in the string"""
+
+:usage: `string[] re_findall(const string regex, const string input)`
+:usage: `string[] re_findall(const string regex, const string input, const int start)`
+:usage: `string[] re_findall(const string regex, const string input, const int start, const int end)`
+
+Returns an array of all strings that match the entire `regex` expression (no capture groups). 
+
+
+@related
+
+- [Vex:re_find]
+- [Vex:re_match]
+- [Vex:re_replace]
+- [Vex:re_split]

@@ -1,0 +1,15 @@
+= iplanename =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the name of the plane specified by the planeindex of the given input"""
+
+:usage: `string iplanename(int opinput, int planeindex)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The name of the plane specified by the planeindex of the given input (e.g. "C", "A").

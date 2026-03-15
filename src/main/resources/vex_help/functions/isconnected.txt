@@ -1,0 +1,15 @@
+= isconnected =
+
+#type: vex
+#context: chop, cop2, sop
+#tags: utility
+#group: nodes
+
+"""Returns 1 if input_number is connected, or 0 if the input is not connected."""
+
+:usage: `int isconnected(int opinput)`
+
+:include _common#opinput_arg:
+
+:returns:
+    1 if <<input_number>> is connected, or 0 if the input is not connected.

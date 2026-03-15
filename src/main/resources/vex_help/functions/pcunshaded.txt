@@ -1,0 +1,43 @@
+= pcunshaded =
+
+#type: vex
+#context: all
+#tags: ptcloud
+#group: ptcloud
+
+"""Iterate over all of the points of a read-write channel which haven't
+had any data written to the channel yet."""
+
+:usage: `int pcunshaded(int handle, string channel_name)`
+
+Like [Vex:pciterate], this function can be used to iterate over
+points which were found in a [Vex:pcopen] query. The first argument is
+the <<handle>> returned by `pcopen`.
+
+However, where `pciterate` iterates over all the points, this function
+only iterates over points where the channel in <<channel_name>> has
+not yet been written to.
+
+The function returns 1 while there are points left in the iteration loop,
+or 0 when there are no further points. This lets you use the function as
+the condition in a [while loop|/vex/statement].
+
+Warnings:
+
+* This function will not work correctly when used in multi-threaded OPs.
+It is not possible to nest `pcunshaded` or [pciterate|Vex:pciterate]
+loops for the same handle. That is, for a single [pcopen|Vex:pcopen]
+call, only one `pcunshaded` or [pciterate|Vex:pciterate] loop may be
+entered.
+
+* Computations involving derivatives inside `pcunshaded` loops may have
+slightly different results. If derivatives are required for variables
+which aren't set by [pcimport|Vex:pcimport] it may be better to
+pre-compute the derivatives before the `pcunshaded` loop is entered.
+
+@related
+
+- [Vex:pcopen]
+- [Vex:pciterate]
+- [Vex:pcimport]
+- [Vex:pcexport]

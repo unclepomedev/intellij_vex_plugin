@@ -1,0 +1,41 @@
+= vertexprim =
+
+#type: vex
+#context: all
+#tags: vertex, prim
+#group: geo
+
+"""Returns the number of the primitive containing a given vertex."""
+
+:usage: `int vertexprim(<geometry>, int linearvertex)`
+
+NOTE:
+    To convert the linear index into a primitive number and primitive vertex number,
+    use [Vex:vertexprim] and [Vex:vertexprimindex].
+
+:include _common#geometry:
+
+:include _common#linearvertex:
+
+:returns:
+    The primitive number of the primitive containing the vertex,
+    or `-1` if the vertex has no primitive.
+
+
+@examples
+
+{{{
+#!vex
+
+int	pt;
+
+// Get the primitive of vertex 3
+pt = vertexprim("defgeo.bgeo", 3);
+
+}}}
+
+
+@related
+
+- [Vex:vertexpoint]
+- [Vex:vertexindex]

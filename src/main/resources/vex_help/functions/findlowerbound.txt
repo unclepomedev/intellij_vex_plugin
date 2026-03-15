@@ -1,0 +1,25 @@
+= findlowerbound=
+
+#type: vex
+#context: all
+#tags: array
+#group: array
+
+
+"""Finds the largest item smaller than a target value in an array."""
+
+:usage: `int findlowerbound(<type> array[]; <type> target)`
+:usage: `int findlowerbound(<type> array[]; <type> target; int start)`
+:usage: `int findlowerbound(<type> array[]; <type> target; int start; int end)`
+
+    Returns the position of the largest item in `array` that is also smaller than the `target` value. You can limit the result to the lower bound at or after a `start` position, and at or before an `end` position.
+
+    Returns a negative number if every item in the array range is larger than `target`.
+
+@related
+
+- [Vex:find]
+- [Vex:findsorted]
+- [Vex:findlowerboundsorted]
+- [Arrays|/vex/arrays]
+

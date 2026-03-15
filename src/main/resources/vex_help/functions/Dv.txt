@@ -1,0 +1,26 @@
+= Dv =
+
+#type: vex
+#context: all
+#tags: math, shading
+#group: math
+
+"""Returns the derivative of the given value with respect to V."""
+
+:usage: `float Dv(float n, ...)`
+:usage: `vector Dv(vector n, ...)`
+:usage: `vector4 Dv(vector4 n, ...)`
+
+:returns:
+    The derivative of `n` with respect to V.
+
+In shading contexts, this is the change in the variable over the area
+being shaded.
+
+:include _derive_variadic:
+
+
+@related
+
+- [Vex:Du]
+- [Vex:Dw]

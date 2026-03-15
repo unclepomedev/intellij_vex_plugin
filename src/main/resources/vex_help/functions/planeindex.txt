@@ -1,0 +1,15 @@
+= planeindex =
+
+#type: vex
+#context: cop2
+#tags: output_plane
+#group: image
+
+"""Returns the index of the plane specified by the parameter, starting
+at zero."""
+
+:usage: `int planeindex(string planename)`
+
+Returns the index of the plane specified by the parameter, starting at
+zero.
+

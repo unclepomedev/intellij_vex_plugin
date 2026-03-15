@@ -1,0 +1,38 @@
+= hedge_primary =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the primary half-edge equivalent to a given half-edge."""
+
+:usage: `int hedge_primary(<geometry>, int hedge)`
+
+Each class of equivalent half-edges has precisely one primary half-edge. In particular, a half-edge which is equivalent to no other half-edges is always primary. Primary half-edges are useful for accounting for each edge exactly once as each edge may be realized by any number of equivalent half-edges.
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The primary half-edge `hedge` that shares the source and destination of `hedge` (possibly in reverse order).
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int primhedge;
+
+// Get the primary half-edge equivalent  to half-edge number 3.
+primhedge = hedge_primary("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

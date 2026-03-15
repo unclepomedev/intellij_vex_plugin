@@ -1,0 +1,14 @@
+= chsetrate =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Sets the sampling rate of the CHOP channel data."""
+
+:usage: `int chsetrate(int clip_rate)`
+:usage: `int chsetrate(float clip_rate)`
+    Sets the sampling rate of the channel data.
+
+

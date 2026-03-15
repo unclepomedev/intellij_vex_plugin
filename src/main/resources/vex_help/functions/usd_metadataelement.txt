@@ -1,0 +1,35 @@
+= usd_metadataelement =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Reads the value of an element from the array metadata."""
+
+:usage: `<type> usd_metadataelement(<stage>; string path; string name; int index)`
+
+This function returns an element value of of a given array metadata at a given index.
+
+:include _common#usd_stage:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:arg:index:
+    The index into the array. 
+
+:returns:
+    The value of an element in an existing array metadata, or zero/empty value if the metadata does not exist. Use [Vex:usd_ismetadata] if you want to check whether the metadata exists.
+
+@examples 
+{{{
+#!vex
+// Get the value of an element at index 3 in the "foo:bar" array custom data.
+string docs = usd_metadataelement(0, "/geo/cube", "customData:foo:bar", 3);
+}}}
+
+@related
+- [Vex:usd_metadata]

@@ -1,0 +1,35 @@
+= filterstep =
+
+#type: vex
+#context: all
+#tags: shading
+#group: shading
+
+"""Returns the anti-aliased weight of the step function."""
+
+:usage: `float filterstep(float edge, float x, ...)`
+:usage: `float filterstep(float edge, float x0, float x1, ...)`
+
+Returns the anti-aliased weight of the step function. The
+step function returns 0 if x is less than edge and 1 if x is greater
+than edge. `filterstep` returns a fraction representing the
+filtered area under the step function.  Filtering is computed using
+derivatives `Du()` and `Dv()` which are only non-zero in shading and COP
+contexts, so `filterstep` will not perform filtering in other contexts.
+
+:include _imagefilter_variadic:
+
+
+@examples
+
+{{{
+#!vex
+f = filterstep(0.5, s+t, "filter", "gauss", "width", 2);
+}}}
+
+The `filterstep(float edge, x, ...)` form is roughly equivalent to:
+
+{{{
+#!vex
+f = filterstep(edge, x, x + abs(Du(x) + Dv(x)));
+}}}

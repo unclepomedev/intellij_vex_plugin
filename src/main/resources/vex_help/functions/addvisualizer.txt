@@ -1,0 +1,24 @@
+= addvisualizer =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Appends to a geometry's visualizer detail attribute."""
+
+This function creates the `visualizer` detail string array attribute if it doesn't exist, then appends the given visualizer string to it. If the visualizer string already exists in the array, the function does not add it again.
+
+:usage: `int addvisualizer(int geohandle, string op_url)`
+
+:include _common#geohandle_arg:
+
+:arg:op_url:
+    A string in the form`"op:/path/to/node"`. The geometry will use that node's visualizers.
+    
+* Houdini looks up the visualizers by the `op:` reference, so changes to the visualizers on the referenced nodes will be reflected in the visualization of the geometry.
+
+
+@related
+
+- [Vex:adddetailattrib]

@@ -1,0 +1,21 @@
+= fuzzy_nxor =
+
+#type: vex
+#context: all
+#tags: fuzzy
+#group: fuzzy
+
+:usage: `int fuzzy_nxor(int a, int b, ...)`
+:usage: `float fuzzy_nxor(float a, float b, ...)`
+
+    Returns the fuzzy "NXOR" (Zadeh NXOR) of the input fuzzy values.
+
+
+@related
+
+- [Vex:fuzzy_and]
+- [Vex:fuzzy_nand]
+- [Vex:fuzzy_not]
+- [Vex:fuzzy_or]
+- [Vex:fuzzy_nor]
+- [Vex:fuzzy_xor]

@@ -1,0 +1,31 @@
+= usd_iscollectionpath =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Checks if the path is a valid collection path."""
+
+:usage: `int usd_iscollectionpath(<stage>; string collectionpath)`
+
+This function checks whether the given path is of a valid collection format.
+
+:include _common#usd_stage:
+
+:include _common#usd_collectionpath:
+
+:returns:
+    `1` if the path is of a valid collection path format, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if string is an acceptable collection path.
+int is_valid_collection_path = usd_iscollectionpath(0, "/geo/cube.collection:some_collection");
+}}}
+
+@related
+- [Vex:usd_iscollection]
+- [Vex:usd_makecollectionpath]

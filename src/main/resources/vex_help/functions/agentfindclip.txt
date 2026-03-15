@@ -1,0 +1,32 @@
+= agentfindclip =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Finds the index of a clip in an agent's definition."""
+
+:usage: `int agentfindclip(<geometry>, int prim, string clipname)`
+
+Returns the index of a clip in the agent's definition.
+Returns -1 if `prim` is out of range, `prim` is not an agent primitive, or the clip does not exist.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    Name of a clip in the agent's definition.
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentclipchannel]
+- [Vex:agentclipchannelnames]
+- [Vex:agentcliplength]
+- [Vex:agentclipsample]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsamplerate]
+- [Vex:agentclipsampleworld]
+- [Vex:agentclipstarttime]

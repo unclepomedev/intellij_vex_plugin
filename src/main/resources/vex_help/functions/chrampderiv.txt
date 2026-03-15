@@ -1,0 +1,35 @@
+= chrampderiv =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+#since: 18.0
+
+"""Evaluates the derivative of a parm parameter with respect to position."""
+
+:usage: `float chrampderiv(string channel, float ramppos)`
+:usage: `float chrampderiv(string channel, float ramppos, float time)`
+:usage: `vector chrampderiv(string channel, float ramppos)`
+:usage: `vector chrampderiv(string channel, float ramppos, float time)`
+
+Evaluates the derivative of a parm parameter with respect to position.
+
+The ramppos is where on the ramp to evaluate.  The ramppos is clamped to the range `[0,1]`
+
+The time parameter can be used if the ramp is animated to evaluate
+at other than the current time.
+Note that this does not take a derivative with respect to time.
+
+
+@related
+
+- [Vex:chramp]
+- [Vex:ch]
+- [Vex:chf]
+- [Vex:chi]
+- [Vex:chv]
+- [Vex:chs]
+- [Vex:ch3]
+- [Vex:ch4]
+

@@ -1,0 +1,40 @@
+= setvertexgroup =
+
+#type: vex
+#context: all
+#tags: vertex, groups
+#group: groups
+
+"""Adds or removes a vertex to/from a group in a geometry."""
+
+:usage: `int setvertexgroup(int geohandle, string name, int prim_num, int vertex_num, int value, string mode="set")`
+
+:include _common#geohandle_arg:
+
+*To use a linear vertex index*, set the `prim_num` to the *linear vertex number* and set `vertex_num` to `-1`. Note that *this is different* from how most other vertex functions work.
+
+:arg:name:
+    The name of the group to modify.
+
+:arg:prim_num:
+    The number of the primitive containing the vertex you want to add/remove.
+
+:arg:vertex_num:
+    The vertex offset on the primitive of the vertex you want to add/remove.
+
+:arg:value:
+    `1` to put the vertex in the group, `0` to remove the vertex from the group.
+    This is ignored if `mode` is `"toggle"`.
+
+:arg:mode:
+    Use `"set"` to set the vertex's membership according to the `value`.
+    Use `"toggle"` to toggle the vertex's membership, regardless of the `value`.
+
+
+@related
+
+- [/vex/groups]
+- [Vex:setprimgroup]
+- [Vex:setpointgroup]
+- [Vex:vertexindex]
+

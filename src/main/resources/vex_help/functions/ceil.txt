@@ -1,0 +1,15 @@
+= ceil =
+
+#type: vex
+#context: all
+#tags: math, number
+#group: math
+
+"""Returns the smallest integer greater than or equal to the argument."""
+
+:usage: `float ceil(float n)`
+:usage: `<vector> ceil(<vector> v)`
+    
+    Returns the smallest integer greater than or equal to `n`. For vectors, this is done per-component.
+
+

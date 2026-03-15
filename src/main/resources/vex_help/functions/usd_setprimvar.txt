@@ -1,0 +1,40 @@
+= usd_setprimvar =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Sets the value of a primvar."""
+
+:usage: `int usd_setprimvar(int stagehandle, string primpath, string name, <type> value)`
+:usage: `int usd_setprimvar(int stagehandle, string primpath, string name, <type> value[])`
+
+This function sets the primvar's value. 
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the value of some primvars.
+usd_setprimvar(0, "/geo/sphere", "float_primvar", 0.25);
+usd_setprimvar(0, "/geo/sphere", "string_primvar", "foo bar baz");
+usd_setprimvar(0, "/geo/sphere", "vector_primvar", {1.25, 1.50, 1.75});
+
+float  f_arr[] = {0, 0.25, 0.5, 0.75, 1};
+usd_setprimvar(0, "/geo/sphere", "float_array_primvar", f_arr);
+}}}
+
+@related
+- [Vex:usd_primvar]
+- [Vex:usd_setprimvarindices]

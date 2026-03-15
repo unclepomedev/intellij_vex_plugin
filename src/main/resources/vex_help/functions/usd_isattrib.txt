@@ -1,0 +1,34 @@
+= usd_isattrib =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 17.5
+
+"""Checks if the primitive has an attribute by the given name."""
+
+:usage: `int usd_isattrib(<stage>; string primpath; string name)`
+
+This function checks whether the given primitive has an attribute of a given name.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:returns:
+    `1` if the primitive has the given attribute, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere has an attribute "some_attribute".
+int is_valid_attrib = usd_isattrib(0, "/geometry/sphere", "some_attribute");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_isstage]

@@ -1,0 +1,17 @@
+= VEX |> Functions =
+
+See [VEX contexts|/vex/contexts/] to learn about the different contexts (such as surface shaders or displacement shaders) in which the various functions and [statements|/vex/statement] are available.
+
+@subtopics Functions
+
+:list:
+    #query: (type:vex OR type:vexstatement) ANDNOT sortkey:__*
+    #groupedby: group
+    #sortedby: sortkey
+    #sortable: true
+    #labels: _groups_en.ini
+
+    :filter:
+        #expr: "/since/19.0" in keys
+        #marker: fa-star
+        #label: New

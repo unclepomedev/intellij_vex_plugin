@@ -1,0 +1,29 @@
+= usd_isstage =
+
+#type: vex
+#context: all
+#tags: usd
+#group: usd
+#since: 17.5
+
+"""Checks if the stage is valid."""
+
+:usage: `int usd_isstage(<stage>)`
+
+This function verifies whether a given input contains a valid USD stage. If so, all other USD functions will be able to access it to perform queries and actions. Otherwise, they will fail.
+
+:include _common#usd_stage:
+
+:returns:
+    1 if the stage is valid, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the first input has a valid stage.
+int is_valid_stage_on_first_input = usd_isstage(0);
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_isprim]

@@ -1,0 +1,15 @@
+= iaspect =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the aspect ratio of the specified input."""
+
+:usage: `float iaspect(int opinput)`
+
+Returns the aspect ratio of the specified input.
+
+:include _common#opinput_arg:
+

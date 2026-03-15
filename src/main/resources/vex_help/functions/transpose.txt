@@ -1,0 +1,14 @@
+= transpose =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Transposes the given matrix."""
+
+:usage: `void transpose(<matrix> &m)`
+:usage: `<matrix> transpose(<matrix> m)`
+
+    [Transposes|Wp:Transpose] the given matrix.
+

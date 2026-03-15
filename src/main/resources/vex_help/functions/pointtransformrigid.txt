@@ -1,0 +1,31 @@
+= pointtransformrigid =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#since: 18.5
+
+"""Returns a rigid point transform from a point index."""
+
+:usage: `matrix pointtransformrigid(<geometry>, int pnt)`
+
+Returns a rigid transform associated with the point index.
+This function uses the [standard instancing point attributes|/copy/instanceattrs] to build the matrix, and [polar decomposition|Vex:polardecomp] is performed to make it rigid.
+
+:include _common#geometry:
+
+:arg:pnt:
+    The point index to query.
+
+@related
+
+- [Vex:pointtransform]
+- [Vex:pointtransforms]
+- [Vex:pointtransformsrigid]
+- [Vex:pointlocaltransforms]
+- [Vex:setpointtransforms]
+
+
+
+

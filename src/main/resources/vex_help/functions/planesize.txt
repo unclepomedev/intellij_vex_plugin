@@ -1,0 +1,15 @@
+= planesize =
+
+#type: vex
+#context: cop2
+#tags: output_plane
+#group: image
+
+"""Returns the number of components in the plane (1 for scalar planes
+and up to 4 for vector planes)."""
+
+:usage: `int planesize(int planeindex)`
+
+Returns the number of components in the plane (1 for scalar planes and
+up to 4 for vector planes). Returns 0 if the index is out of range.
+

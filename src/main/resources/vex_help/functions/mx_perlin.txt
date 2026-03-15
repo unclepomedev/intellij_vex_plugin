@@ -1,0 +1,15 @@
+= mx_perlin =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""MaterialX compatible Perlin noise"""
+
+:usage: `float|vector mx_perlin(vector2 pos)`
+:usage: `float|vector mx_perlin(vector pos)`
+:usage: `float|vector mx_perlin(vector pos, int periodx, int periody, int periodz)`
+:usage: `float|vector mx_perlin(vector2 pos, int periodx, int periody)`
+
+    Returns a noise value that matches the values as in the standard MaterialX library.

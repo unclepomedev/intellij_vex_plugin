@@ -1,0 +1,30 @@
+= chf =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel (or parameter) and return its value."""
+
+:usage: `float chf(string channel)`
+:usage: `float chf(string channel, float time_in_sec)`
+
+:usage: `float chf(int op_id, int parm_index, int vector_index)`
+:usage: `float chf(int op_id, int parm_index, int vector_index, float time_in_sec)`
+
+:include ch#ch_functions:
+
+
+@related
+
+- [Vex:ch]
+- [Vex:chs]
+- [Vex:chi]
+- [Vex:chv]
+- [Vex:ch3]
+- [Vex:ch4]
+- [Vex:chramp]
+- [Vex:chrampderiv]
+- [Vex:chid]
+- [Vex:opid]

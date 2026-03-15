@@ -1,0 +1,35 @@
+= hasdetailattrib =
+
+#type: vex
+#context: all
+#tags: attrib, detail
+#group: attrib
+
+"""Returns if a geometry detail attribute exists."""
+
+:usage: `int hasdetailattrib(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+Returns `1` if the given attribute exists or `0` otherwise.
+
+
+@examples
+
+{{{
+#!vex
+
+int	exists;
+// Determine if the P attribute exists.
+exists = hasdetailattrib("defgeo.bgeo", "P");
+
+}}}
+
+
+@related
+
+- [Vex:hasattrib]
+- [Vex:hasprimattrib]
+- [Vex:haspointattrib]
+- [Vex:hasvertexattrib]
+

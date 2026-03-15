@@ -1,0 +1,12 @@
+= chsetlength =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Sets the length of the CHOP channel data."""
+
+:usage: `int chsetlength(int clip_length)`
+    Sets the length of the channel data.
+

@@ -1,0 +1,24 @@
+= agentcliptransformgroups =
+
+#type: vex
+#context: all
+#tags: crowds, clip, transform
+#group: crowd
+
+"""Returns the transform groups for an agent primitive's current animation clips."""
+
+See [Transform Groups|/crowds/agents#xformgroups] for more information.
+
+:usage: `string[] agentcliptransformgroups(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+@related
+- [Vex:agenttransformgroupmember]
+- [Vex:agenttransformgroups]
+- [Hom:hou.AgentTransformGroup]

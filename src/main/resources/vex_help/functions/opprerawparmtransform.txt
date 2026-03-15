@@ -1,0 +1,34 @@
+= opprerawparmtransform =
+
+#type: vex
+#context: all
+#tags: transform
+#group: nodes
+#since: 18.0
+
+"""Returns the pre and raw parm transform associated with an OP."""
+
+:usage: `matrix opprerawparmtransform(string path)`
+:usage: `matrix opprerawparmtransform(string path, float time)`
+:usage: `matrix opprerawparmtransform(int opid)`
+:usage: `matrix opprerawparmtransform(int opid, float time)`
+:usage: `matrix opprerawparmtransform(int opid, int trsorder, int xyzorder, int mask)`
+
+Returns the pre and raw parm transform associated with an OP. If the specified OP has no
+transform associated with it (such as a COP), then an identity matrix is returned. It is possible to specify the time at which to evaluate the transform (in seconds, not frames).
+
+The raw parameter transform is built from the transform parameters and does not include the effect of the CHOP IK solver.
+
+NOTE:
+    The op: syntax can be used to simulate this behavior using the standard transform functions.
+
+@related
+- [ntransform|Vex:ntransform]
+- [ptransform|Vex:ptransform]
+- [getspace|Vex:getspace]
+- [optransform|Vex:optransform]
+- [oppreconstrainttransform|Vex:oppreconstrainttransform]
+- [opparenttransform|Vex:opparmtransform]
+- [opparenttransform|Vex:opparenttransform]
+
+

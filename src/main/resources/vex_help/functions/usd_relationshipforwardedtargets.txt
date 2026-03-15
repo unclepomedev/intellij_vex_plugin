@@ -1,0 +1,33 @@
+= usd_relationshipforwardedtargets =
+
+#type: vex
+#context: all
+#tags: usd, usd_relationship
+#group: usd
+#since: 18.0
+
+"""Obtains the relationship forwarded targets."""
+
+:usage: `string[] usd_relationshipforwardedtargets(<stage>; string primpath; string name)`
+
+This function returns the list of forwarded targets of a given relationship.  This is a convenience function to expand all the nested relationships, since a target in a relationship can be another relationship.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    The relationship name.
+
+:returns:
+    List of forwarded targets in a relationship.
+
+@examples 
+{{{
+#!vex
+// Get the list of forwarded targets in cube's "some_relationship" relationship.
+string targets[] = usd_relationshipforwardedtargets(0, "/geo/cube", "some_relationship");
+}}}
+
+@related
+- [Vex:usd_isrelationship]

@@ -1,0 +1,187 @@
+= set =
+
+#type: vex
+#context: all
+#tags: data
+#group: utility
+
+"""Creates a new value based on its arguments, such as creating a vector from its components."""
+
+The `set()` function has a *wide variety* of forms allowing you to perform many different types of conversions.
+
+TIP:
+    When filling a matrix in Houdini, the numbers go across the first row, then across the second row, and so on ("row-major").
+
+:usage: `vector2 set( float v1; float v2 )`
+:usage: `vector set( float v1; float v2; float v3 )`
+:usage: `vector4 set( float v1; float v2; float v3; float v4 )`
+:usage: `matrix2 set( float v1; float v2; float v3; float v4 )`
+:usage: `matrix3 set( float v1; float v2; float v4; float v4; float v5; float v6; float v7; float v8; float v9 )`
+:usage: `matrix set( float v1; float v2; float v3; float v4; float v5; float v6; float v7; float v8; float v9; float v10; float v11; float v12; float v13; float v14; float v15; float v16 )`
+
+    Create a vector or matrix type from the values in the arguments.
+    
+    {{{
+    #!vex
+    vector4 v = set(1.0, 2.0, 3.0, 4.0);
+    matrix3 m = set(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
+    }}}
+    
+    The [Vex:assign] function performs the opposite of this operation (pulling components out into variables).
+
+:usage: `<vector> set( float nums[] )`
+:usage: `<matrix> set( float nums[] )`
+
+    Creates a vector/matrix from an array of floats.
+    
+    {{{
+    #!vex
+    float[] nums = {1.0, 2.0, 3.0, 4.0};
+    vector4 v = set(nums);
+    }}}
+
+:usage: `<vector> set( float|int v )`
+:usage: `<matrix> set( float|int v )`
+
+    If you set a vector or matrix type from a single value, the vector/matrix is filled in with that value for all components.
+    
+    {{{
+    #!vex
+    vector4 v = set(2.0);  // -> {2.0, 2.0, 2.0, 2.0}
+    }}}
+
+:usage: `matrix2 set( vector2 row1; vector2 row2 )`
+:usage: `matrix3 set( vector row1; vector row2; vector row3 )`
+:usage: `matrix set( vector4 row1; vector4 row2; vector4 row3; vector4 row4 )`
+
+    Creates a matrix type from a series of vector arguments of the same size representing the rows.
+    
+    {{{
+    #!vex
+    matrix3 m = set({0.0, 1.0, 0.0}, {1.0, 0.0, 1.0}, {0.0, 1.0, 0.0});
+    }}}
+
+:usage: `matrix2 set( vector2 rows[] )`
+:usage: `matrix3 set( vector rows[] )`
+:usage: `matrix set( vector4 rows[] )`
+
+    You can also set a matrix type from an array of vectors representing rows. If there are not enough vectors in the array to fill the matrix, the extra rows will contain zeros.
+
+:usage: `vector2[] set( matrix2 m )`
+:usage: `vector[] set( matrix3 m )`
+:usage: `vector4[] set( matrix m )`
+
+    Creates an array of vectors from the rows of a matrix of the same size.
+    
+    {{{
+    matrix3 m3 = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+    vector[] vs = set(m3);  // -> array [ {1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0} ]
+    }}}
+
+:usage: `vector set( vector2 v)`
+:usage: `vector4 set( vector2 v)`
+:usage: `vector4 set( vector v)`
+:usage: `matrix3 set( matrix2 m)`
+:usage: `matrix set( matrix2 m)`
+:usage: `matrix set( matrix3 m)`
+
+    If you set a larger vector or matrix type from a smaller type, the extra components will be zero.
+    
+    {{{
+    #!vex
+    vector2 v2 = {1.0, 2.0};
+    vector4 v4 = set(v2);  // -> {1.0, 2.0, 0.0, 0.0}
+    }}}
+ 
+:usage: `float set( vector v)`
+:usage: `float set( vector4 v)`
+:usage: `vector2 set( vector4 v)`
+:usage: `vector2 set( vector v)`
+:usage: `vector set( vector4 v)`
+ 
+    If you set a smaller vector with a larger vector, the smaller type will take components from the left.
+     
+    {{{
+    #!vex
+    vector4 v4 = {1.0, 2.0, 3.0, 4.0};
+    vector2 v2 = set(v4)  // -> {1.0, 2.0}
+    }}}
+
+:usage: `matrix2 set( matrix3 m)`
+:usage: `matrix2 set( matrix m)`
+:usage: `matrix3 set( matrix m)`
+
+    If you set a smaller matrix with a larger matrix, the smaller type will take the top-left corner.
+    
+    {{{
+    #!vex
+    matrix3 m3 = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+    matrix2 m2 = set(m3);  // -> {1.0, 2.0, 4.0, 5.0}
+    }}}
+
+:usage: `float[] set( <vector> v)`
+:usage: `float[] set( <matrix> m)`
+
+    Creates an array of floats from the components of a vector or matrix type.
+
+    {{{
+    #!vex
+    matrix3 m3 = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+    float[] nums = set(m3);  // -> array [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ]
+    }}}
+
+:usage: `<vector>[] set( float nums[] )`
+:usage: `<matrix>[] set( float nums[] )` 
+
+    Creates an array of vector/matrix types by taking one component at a time from an array of floats. This is the same as using the [Vex:unserialize] function.
+    
+    {{{
+    #!vex
+    float[] nums = {1.0, 2.0, 3.0, 4.0};
+    vector2[] vs = set(nums);  // -> [ {1.0, 2.0}, {3.0, 4.0} ]
+    }}}
+
+:usage: `int set(float v)`
+:usage: `float set(int v)`
+:usage: `float[] set( int vs[])`
+:usage: `int[] set( float vs[])`
+
+    You can set a float from an int, or an int from a float, or an array of floats from an array of ints, or an array of ints from an array of floats.
+    
+    {{{
+    #!vex
+    float[] fracs = { 1.1, 2.2, 3.3, 4.4, 5.5, 6.6 };
+    int[] floored = set(fracs);  // -> array [ 1, 2, 3, 4, 5, 6 ]
+    }}}
+
+:usage: `float[] set( float num )`
+
+    Sets all the items in an array of float to the same value.
+
+:usage: `float set( float nums[] )`
+
+    Returns the first item in the array.
+
+:usage: `dict set( string key, ...)`
+    
+    Initializes a dictionary with a series of key/value pairs.  Every other parameter should
+    be a string for the key and be followed by the value for that key.
+
+:usage: `<type> set(<type> v)`
+:usage: `<type>[] set(<type> v[])`
+
+    If you call `set()` with the same argument type and return type, it simply returns the argument value.
+
+    {{{
+    #!vex
+    string s = set("Hello");  // -> "Hello"
+    }}}
+
+
+@related
+
+- [Vex:assign]
+
+
+
+  

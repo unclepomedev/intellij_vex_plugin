@@ -1,0 +1,21 @@
+= pointattrib =
+
+#type: vex
+#context: all
+#tags: point, attrib
+#group: attrib
+#redirect: ../attrib_suite#pointattrib
+
+"""Reads a point attribute value from a geometry and outputs a success/fail flag."""
+
+:usage: `<type> pointattrib(<geometry>, string attribute_name, int pointnumber, int &success)`
+:usage: `<type>[] pointattrib(<geometry>, string attribute_name, int pointnumber, int &success)`
+
+:include _common#geometry:
+
+:arg:&success:
+    The function overwrites this variable with `1` if the attribute exists and was read successfully, or `0` otherwise.
+
+:returns:
+    The value of the given attribute on the given point number, or `0` if the attribute or point do not exist.
+

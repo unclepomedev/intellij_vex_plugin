@@ -1,0 +1,17 @@
+= lstrip =
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Strips leading whitespace from a string."""
+
+:usage: `string lstrip(string value)`
+:usage: `string lstrip(string value, string whitespace)`
+
+Returns a string with the leading whitespace removed.  If whitespace is provided, it is a string of characters that will be stripped.
+
+@related
+
+- [Vex:rstrip]
+- [Vex:strip]

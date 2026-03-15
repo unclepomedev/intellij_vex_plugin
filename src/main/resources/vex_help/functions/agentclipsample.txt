@@ -1,0 +1,59 @@
+= agentclipsample =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Samples a channel of an agent's clip at a specific time."""
+
+:usage: `float agentclipsample(<geometry>, int prim, string clipname, float time, int channel_index)`
+:usage: `float agentclipsample(<geometry>, int prim, string clipname, float time, string channel)`
+:usage: `float agentclipsample(<geometry>, int prim, int clipindex, float time, int channel_index)`
+:usage: `float agentclipsample(<geometry>, int prim, int clipindex, float time, string channel)`
+
+Evaluates the clip at the given time and returns the value of the specified channel.
+Returns zero if `clipname` is not one of the agent's [animation clips|Vex:agentclipcatalog],  `prim` is out of range, `prim` is not an agent primitive, `channel_index` is out of range, or `channel` does not exist.
+
+For sampling the clip's transform channels, use [Vex:agentclipsamplelocal] or [Vex:agentclipsampleworld] instead.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    The name of the animation clip.
+
+:include _common#agent_clipindex:
+
+:arg:time:
+    The time (in seconds) to evaluate the clip at. If this time is greater than the [clip's length|Vex:agentcliplength], it will be wrapped around.
+
+:arg:channel_index:
+    Index of a channel in the animation clip, as returned by [Vex:agentclipchannel].
+
+:arg:channel:
+    Name of a channel in the animation clip.
+
+
+@examples
+
+Sample a channel of the walk clip after 1.2 seconds.
+
+{{{
+#!vex
+float value = agentclipsample(0, @primnum, "walk", 1.2, "latch_leftfoot");
+}}}
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentclipchannel]
+- [Vex:agentclipnames]
+- [Vex:agentcliplength]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsamplerate]
+- [Vex:agentclipsampleworld]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:agentfindclip]

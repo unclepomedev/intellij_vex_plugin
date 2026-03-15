@@ -1,0 +1,32 @@
+= relbbox =
+
+#type: vex
+#context: all
+#tags: bbox, measure
+#group: measure
+
+"""Returns the relative position of the point given with respect to the bounding box of the geometry."""
+
+:usage: `vector relbbox(<geometry>, vector position)`
+
+    Returns the relative position of the point given with respect to the
+    bounding box of the primitives in the geometry.
+
+:usage: `vector relbbox(<geometry>, string primgroup, vector position)`
+
+    Use the bounding box of the primitives in the named primitive group.
+
+:usage: `vector relbbox(vector position)`
+
+    WARNING:
+        This form of `relbbox` is deprecated and may be removed in the future. 
+        Use the other forms as needed.
+
+:include _common#geometry:
+
+
+@related
+
+- [Vex:relpointbbox]
+- [Vex:pointbbox]
+- [Vex:bbox]

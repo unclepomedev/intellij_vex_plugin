@@ -1,0 +1,35 @@
+= hedge_dstvertex =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the destination vertex of a half-edge."""
+
+:usage: `int hedge_dstvertex(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The vertex number of the half-edge's destination vertex, or `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int dstvtx;
+
+// Get the destination vertex half-edge number 3.
+dstvtx = hedge_dstvertex("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

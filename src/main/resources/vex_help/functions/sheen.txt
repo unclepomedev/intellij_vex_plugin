@@ -1,0 +1,28 @@
+= sheen =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+#since: 21.0
+
+"""Returns a Zeltner Sheen BSDF."""
+
+:usage: `bsdf sheen(vector nml, float roughness, ...)`
+
+    Returns Zeltner Sheen BSDF.
+    
+    See [writing a PBR shader|/vex/pbr] for information on BSDFs.
+
+:arg:nml:
+    The normal of the surface to use for evaluate.
+
+:arg:roughness:
+    Low value can produce high-sheen fabric like appearance, while high value
+    can produce dusty appearance.
+
+:include _lightmask_variadic:
+
+@related
+
+- [Writing a PBR shader|/vex/pbr]

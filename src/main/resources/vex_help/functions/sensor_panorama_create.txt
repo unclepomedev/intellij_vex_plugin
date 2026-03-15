@@ -1,0 +1,45 @@
+= sensor_panorama_create =
+
+#type: vex
+#context: all
+#tags: photon, map, file
+#group: sensor
+
+"""Sensor function to render GL scene and query the result."""
+
+:usage: `int sensor_panorama_create(float time, vector pos, int size, float near, float far, string candidateobj, string includeobj, string excludeobj, int uselit)`
+
+This function will render the surrounding environment using the GL render and
+provides a handle to use for querying the results.
+
+NOTE:
+    Because this needs to render the scene, it only works in interactive sessions of Houdini.
+
+:arg:time:
+    The period in time when the render should be performed.
+
+:arg:pos:
+    The location in world space coordinates where the render should be performed.
+
+:arg:size:
+    The resolution of the performed render.
+
+:arg:near:
+    The near plane restriction.
+
+:arg:far:
+    The far plane restriction.
+
+:arg:candidateobj:
+    A bundle, group, or expression that represents what objects will be displayed if their display setting is enabled.
+
+:arg:includeobj:
+    A bundle, group, or expression that represents what objects will always be displayed.
+
+:arg:excludeobj:
+    A bundle, group, or expression that represents what objects will never be displayed.
+
+:arg:uselit:
+    Usually for AI purposes you want to not have any lighting as you are using
+    color as a key to differentiate actors.  However, if you want to display
+    what a creature sees, lighting makes things more visually accurate.

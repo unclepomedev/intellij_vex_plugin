@@ -1,0 +1,38 @@
+= len =
+
+#type: vex
+#context: all
+#group: array
+
+"""Returns the length of an array."""
+
+:usage: `int len(<vector> v)`
+:usage: `int len(<matrix> m)`
+:usage: `int len(<type> array[])`
+:usage: `int len(string s)`
+:usage: `int len(dict d)`
+    
+    Returns the number of items/components in the given object. For an array, this is the number of items in the array. For a matrix or vector, this is the number of components.
+    
+    For a string, this returns the number of _bytes_ (not characters).
+
+    For a dictionary, this returns the number of keys in the dictionary.
+
+    Don't confuse this function with [Vex:length], which returns the magnitude of a vector.
+
+
+@examples
+
+{{{
+#!vex
+len("hello") == 5;
+len({ {1,0,0}, {0,1,0}, {0,0,1} }) == 9;
+len({0, 10, 20, 30}) == 4;
+}}}
+
+
+@related
+
+- [/vex/arrays]
+- [Vex:resize]
+

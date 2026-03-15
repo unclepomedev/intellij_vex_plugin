@@ -1,0 +1,15 @@
+= pcfarthest =
+
+#type: vex
+#context: all
+#tags: ptcloud, proximity, measure
+#group: ptcloud
+
+"""Returns the distance to the farthest point found in the search
+performed by pcopen."""
+
+:usage: `float pcfarthest(int handle)`
+
+Returns the distance to the farthest point found in the search performed
+by pcopen. If no points were found, the function will return a very
+large value (1.0x10^37)

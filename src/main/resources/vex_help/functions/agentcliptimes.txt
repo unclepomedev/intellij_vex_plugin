@@ -1,0 +1,29 @@
+= agentcliptimes =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Returns the current times for an agent primitive's animation clips."""
+
+:usage: `float[] agentcliptimes(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentcliplength]
+- [Vex:agentclipnames]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsampleworld]
+- [Vex:agentclipweights]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

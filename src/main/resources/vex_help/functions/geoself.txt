@@ -1,0 +1,12 @@
+= geoself =
+
+#type: vex
+#context: all
+#tags: util
+#group: geo
+
+"""Returns a handle to the current geometry."""
+
+:usage: `int geoself()`
+
+Returns a handle to the current geometry, suitable for the geometry creation operations.

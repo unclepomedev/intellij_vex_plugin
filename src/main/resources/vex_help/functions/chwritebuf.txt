@@ -1,0 +1,14 @@
+= chwritebuf =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Writes a value of CHOP context temporary buffer at the specified index."""
+
+:usage: `int chwritebuf(int index, float value)`
+:usage: `int chwritebuf(int index, vector t, vector r, vector s)`
+
+Writes a value of a CHOP context temporary buffer at the specified index.
+Return 1 if the write succeeded, 0 otherwise.

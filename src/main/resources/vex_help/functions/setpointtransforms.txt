@@ -1,0 +1,35 @@
+= setpointtransforms =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#since: 18.5
+
+"""Sets an array of point transforms at the given point indices."""
+
+:usage: `int setpointtransforms(int geohandle, int pnts[], matrix transforms[])`
+:usage: `int setpointtransforms(int geohandle, int pnts[], matrix transforms[], int constrain)`
+
+Sets an array of transforms associated with the point indices. This function set the `v@P` and the `3@transform` attributes.
+
+:include _common#geohandle_arg:
+
+:arg:pnts:
+    The array of point indices to set.
+
+:arg:transforms:
+    The array of transforms to set.
+
+:arg:constrain:
+    When True, update the children point transforms when modifying a point world 
+    transform. When False, the children points stay in place like when using 
+    Child Compensation on a transform handle. Defaults to True;
+
+@related
+
+- [Vex:pointtransforms]
+- [Vex:pointlocaltransforms]
+
+
+

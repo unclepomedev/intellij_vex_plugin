@@ -1,0 +1,11 @@
+= hscript_snoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+:usage: `float hscript_snoise(vector pos)`
+
+@related
+- [hscript_noise|Vex:hscript_noise]

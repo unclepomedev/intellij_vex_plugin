@@ -1,0 +1,12 @@
+= getobjectid =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading raytracing
+#group: shading
+
+"""Returns the object id for the current shading context."""
+
+:usage: `int getobjectid()`
+
+Returns the object id.

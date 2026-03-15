@@ -1,0 +1,91 @@
+= wnoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Generates Worley (cellular) noise."""
+
+:usage: `void wnoise( float position; int &seed; float &f1; float &f2 )`
+:usage: `void wnoise( float position; int &seed; float &f1; float &f2; float &f3; float &f4 )`
+
+    Generates 1D noise.
+
+:usage: `void wnoise( float position; int &seed; float &f1; float &f2; int peiod)`
+:usage: `void wnoise( float position; int &seed; float &f1; float &f2; float &f4; float &f4; int period)`
+
+    Generates periodic 1D noise.
+
+:usage: `void wnoise( float posx; float posy; int &seed; float &f1; float &f2 )`
+:usage: `void wnoise( float posx; float posy; int &seed; float &f1; float &f2; float &f3; float &f4 )`
+
+    Generates 2D noise. This is similar to the other forms but uses pairs of floats instead of a vector.
+
+:usage: `void wnoise( float posx; float posy; int &seed; float &f1; float &f2; int periodx; int periody )`
+:usage: `void wnoise( float posx; float posy; int &seed; float &f1; float &f2; float &f3; float &f4; int periodx; int periody)`
+
+    Generates periodic 2D noise.
+
+:usage: `void wnoise( vector2 position; int &seed; float &f1; float &f2 )`
+:usage: `void wnoise( vector2 position; int &seed; float &f1; float &f2; float &f3; float &f4 )`
+
+    Generates 2D noise.
+
+:usage: `void wnoise( vector2 position; int &seed; float &f1; float &f2; int periodx; int periody )`
+:usage: `void wnoise( vector2 position; int &seed; float &f1; float &f2; float &f3; float &f4; int periodx; int periody)`
+
+    Generates periodic 2D noise.
+
+:usage: `void wnoise( vector position; int &seed; float &f1; float &f2 )`
+:usage: `void wnoise( vector position; int &seed; float &f1; float &f2; float &f3; float &f4 )`
+
+    Generates 3D noise.
+
+:usage: `void wnoise( vector position; int &seed; float &f1; float &f2; int periodx; int periody; int periodx )`
+:usage: `void wnoise( vector position; int &seed; float &f1; float &f2; float &f3; float &f4; int periodx; int periody; int periodz )`
+
+    Generates periodic 3D noise.
+
+:usage: `void wnoise( vector4 position; int &seed; float &f1; float &f2 )`
+:usage: `void wnoise( vector4 position; int &seed; float &f1; float &f2; float &f3; float &f4 )`
+
+    Generates 4D noise.
+
+:usage: `void wnoise( vector4 position; int &seed; float &f1; float &f2; int periodx; int periody; int periodz; int periodw )`
+:usage: `void wnoise( vector4 position; int &seed; float &f1; float &f2; float &f3; float &f4; int periodx; int periody; int periodz; int periodw )`
+
+    Generates periodic 4D noise.
+
+
+:arg:position:
+    #id: position_arg
+    
+    The position at which to sample the noise.
+
+:arg:seed:
+    #id: seed_arg
+    
+    Outputs an integer value associated with the nearest seed point. This seed is pretty much guaranteed to be unique for every point (meaning that it's unlikely that two points close by have the same seed associated with them).
+
+:arg:`f1`, `f2`, `f3`, `f4`:
+    #id: f_args
+    
+    These variables are overwritten with the distances to the nearest seed points, in order of closeness.
+    
+    You can combine these distances to generate noise patterns. The noise generated tends to be very "cellular" in nature. In fact, one of the nice things is that you can determine "cell" boundaries by using the expression: `if (f2 - f1)` which will be true if the point in space is crossing the boundary between two cells.
+
+:arg:`period`, `periodx`, `periody`, `periodz`, `periodw`:
+    #id: period_args
+    
+    If you include the period argument(s), the function generates repeating (periodic) noise.
+
+
+Worley noise scatters seed points randomly through space (according to a nice Poisson distribution). The functions outputs the distances to the 2 (or 4) seed points nearest to the sample position.
+
+
+@related
+
+:include _common#noiselinks/:
+
+

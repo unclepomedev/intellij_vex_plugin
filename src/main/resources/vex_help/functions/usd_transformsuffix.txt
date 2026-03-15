@@ -1,0 +1,31 @@
+= usd_transformsuffix =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Extracts the transform operation suffix from the full name"""
+
+:usage: `string usd_transformsuffix(string name)`
+
+This function returns the suffix contained in the full name of a transform operation.
+
+:arg:name:
+    The full name of the transform operation, which includes the standard namespace, encodes transformation type, and optionally contains the suffix.
+
+:returns:
+    The suffix contained in the transform operation name.
+
+@examples 
+{{{
+#!vex
+// Get the suffix of the first transform operation on the cube
+string cube_xform_ops[] = usd_transformorder(0, "/geo/cube");
+string suffix = usd_transformsuffix(cube_xform_ops[0]);
+}}}
+
+@related
+- [Vex:usd_transformname]
+- [Vex:usd_transformtype]

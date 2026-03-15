@@ -1,0 +1,12 @@
+= wo_nspace =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Transforms a normal vector from World to Object space."""
+
+:usage: `vector wo_nspace(vector v)`
+
+Transforms a normal vector from _World_ to _Object_ space.

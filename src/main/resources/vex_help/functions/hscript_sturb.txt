@@ -1,0 +1,11 @@
+= hscript_sturb =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+:usage: `float hscript_sturb(vector pos, int turbulence)`
+
+@related
+- [hscript_noise|Vex:hscript_noise]

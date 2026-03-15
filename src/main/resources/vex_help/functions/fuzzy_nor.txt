@@ -1,0 +1,21 @@
+= fuzzy_nor =
+
+#type: vex
+#context: all
+#tags: fuzzy
+#group: fuzzy
+
+:usage: `int fuzzy_nor(int a, int b, ...)`
+:usage: `float fuzzy_nor(float a, float b, ...)`
+
+    Returns the fuzzy "NOR" (Zadeh NOR) of the input fuzzy values.
+
+
+@related
+
+- [Vex:fuzzy_and]
+- [Vex:fuzzy_nand]
+- [Vex:fuzzy_not]
+- [Vex:fuzzy_or]
+- [Vex:fuzzy_xor]
+- [Vex:fuzzy_nxor]

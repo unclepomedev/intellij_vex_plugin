@@ -1,0 +1,18 @@
+= osd_limitsurfacevertex =
+
+#type: vex
+#context: all
+#tags: subd, vertex
+#group: subd
+
+"""Evaluates a vertex attribute at the subdivision limit surface using Open Subdiv."""
+
+This is like [Vex:osd_limitsurface] but for vertex attributes instead of point attributes.
+See [Vex:osd_limitsurface] for more information.
+
+:usage: `int osd_limitsurfacevertex(<geometry>, string attrib_name, int face_id, float u, float v, <type> &result)`
+:usage: `int osd_limitsurfacevertex(<geometry>, string attrib_name, int face_id, float u, float v, float &result[])`
+
+:include _common#geometry:
+
+

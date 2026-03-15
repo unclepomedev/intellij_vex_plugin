@@ -1,0 +1,15 @@
+= endswith =
+
+#type: vex
+#context: all
+#group: string
+
+"""Indicates the string ends with the specified string."""
+
+:usage: `int endswith(const string haystack, const string needle)`
+
+Returns 1 if the string ends with the given string. 0 otherwise.
+
+@related
+
+- [Vex:startswith]

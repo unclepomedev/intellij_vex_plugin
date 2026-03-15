@@ -1,0 +1,81 @@
+= intersect =
+
+#type: vex
+#context: all
+#tags: ray, intersect, search
+#group: geo
+
+"""This function computes the first intersection of a ray with geometry."""
+
+To get a list of _all_ intersections along a ray, use [Vex:intersect_all].
+
+:usage: `int intersect(<geometry>, vector orig, vector dir, vector &p, float &u, float &v)`
+:usage: `int intersect(<geometry>, vector orig, vector dir, vector &p, float &u, float &v, ...)`
+
+    Computes the first intersection of the specified ray with the geometry.
+    To get _all_ intersections along a vector, use [Vex:intersect_all] instead.
+    The variadic argument `"farthest"` can be used to indicate whether to return the last intersection instead of the first.
+
+:usage: `int intersect(<geometry>, vector orig, vector dir, vector &p, vector &uvw)`
+
+    Computes the first intersection of the specified ray with the geometry.
+    To get _all_ intersections along a vector, use [Vex:intersect_all] instead.
+
+:usage: `int intersect(<geometry>, string group, vector orig, vector dir, vector &p, vector &uvw)`
+
+    Computes the intersection of the specified ray with primitives in the given group.
+
+:include _common#geometry:
+
+:arg:group:
+    #id: group
+    
+    If given, only intersect primitives in this group.
+
+:arg:orig:
+    #id: orig
+    
+    The ray origin point.
+
+:arg:dir:
+    #id: dir
+    
+    The ray direction _and maximum distance_.
+    This function does not expect a normalized direction vector.
+    Instead, it uses the length of the vector as the maximum distance to search.
+
+:arg:&p:
+    If the ray intersects a primitive, this variable is overwritten with the intersection position in world space.
+
+:arg:`&u`, `&v`, `&uvw`:
+    If the ray intersects a primitive, this/these variable(s) is/are overwritten with the parametric intersection position on the primitive.
+
+:returns:
+    The intersected primitive number, or `-1` if there was an error or the ray didn't intersect anything.
+
+NOTE:
+    When intersections are performed against metaball geometry, it is
+    impossible to determine the primitive number of the metaball which
+    was hit. In this case, the function returns the number of primitives
+    in the intersection geometry.
+
+@examples
+{{{
+#!vex
+// Intersect against the second input's geometry, using a ray at the current
+// point's position and in the direction of its velocity vector.
+vector origin = @P;
+float max_dist = 1000;
+vector dir = max_dist * normalize(@v);
+
+vector isect_pos;
+float isect_u, isect_v;
+int isect_prim = intersect(@OpInput2, origin, dir, isect_pos, isect_u, isect_v);
+
+// Return the farthest intersection instead.
+isect_prim = intersect(@OpInput2, origin, dir, isect_pos, isect_u, isect_v, "farthest", 1);
+}}}
+
+@related
+
+- [Vex:intersect_all]

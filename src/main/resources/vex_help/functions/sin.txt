@@ -1,0 +1,22 @@
+= sin =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the sine of the argument."""
+
+:usage: `<type> sin(<type> n)`
+
+    Returns the sine of `n`, where `n` is in radians.
+
+@related
+
+- [Vex:sinh]
+- [Vex:cos]
+- [Vex:tan]
+- [Vex:sinpi]
+- [Vex:cospi]
+- [Vex:tanpi]
+- [Vex:asin]

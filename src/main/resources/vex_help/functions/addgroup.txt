@@ -1,0 +1,11 @@
+= addgroup =
+
+#type: vex
+#context: sop
+#tags: sop
+#index: no
+#status: deprecated
+
+WARNING:
+    This function has been deprecated. Use [Vex:setattrib] instead.
+

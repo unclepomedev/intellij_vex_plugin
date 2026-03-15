@@ -1,0 +1,31 @@
+= usd_attribnames =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib, usd_prim
+#group: usd
+#since: 17.5
+
+"""Returns the names of the attributes available on the primitive."""
+
+:usage: `string[] usd_attribnames(<stage>, string primpath)`
+
+This function returns the attribute names that are available on the given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    String array containing the names of the primitive's attributes.
+
+@examples 
+{{{
+#!vex
+// Get the attribute names from the primitive.
+string attrib_names[] = usd_attribnames(0, "/geo/sphere");
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_isprim]

@@ -1,0 +1,36 @@
+= pciterate =
+
+#type: vex
+#context: all
+#tags: ptcloud
+#group: ptcloud
+
+"""This function can be used to iterate over all the points which were
+found in the pcopen query."""
+
+:usage: `int pciterate(int handle)`
+
+This function can be used to iterate over all the points which were
+found in a [Vex:pcopen] query. The first argument is the <<handle>>
+returned by `pcopen`.
+The function returns 1 while there are points left in the iteration loop,
+or 0 when there are no further points. This lets you use the function as
+the condition in a [while loop|/vex/statement].
+
+Warnings:
+
+* It is not possible to nest pcunshaded or pciterate loops for the same
+handle. That is, for a single [pcopen|Vex:pcopen] call, only one
+[Vex:pcunshaded] or `pciterate` loop may be entered.
+
+* Computations involving derivatives inside [pcunshaded|Vex:pcunshaded]
+loops may have slightly different results. If derivatives are required
+for variables which aren't set by [pcimport|Vex:pcimport] it may be
+better to pre-compute the derivatives before the
+[Vex:pcunshaded] loop is entered.
+
+@related
+
+- [Vex:pcopen]
+- [Vex:pcunshaded]
+- [Vex:pcimport]

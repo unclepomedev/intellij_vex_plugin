@@ -1,0 +1,12 @@
+= qdistance =
+
+#type: vex
+#context: all
+#tags: quaternion, measure
+#group: math
+
+"""Finds distance between two quaternions."""
+
+:usage: `float qdistance(vector4 q1, vector4 q2)`
+
+Returns the approximate angle, in radians, between two quaternions.

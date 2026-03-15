@@ -1,0 +1,32 @@
+= pcsegment_radius =
+
+#type: vex
+#context: all
+#tags: ptcloud, proximity
+#group: ptcloud
+#since: 18.0
+
+"""Returns a list of closest points to a line segment from a specified file"""
+
+:usage: `int[] pcsegment_radius(<geometry>, string PChannel, string RadChannel, float radscale, vector P0, vector P1, float max_distance, int maxpoints)`
+:usage: `int[] pcsegment_radius(<geometry>, string ptgroup, string PChannel, string RadChannel, float radscale, vector P0, vector P1, float max_distance, int maxpoints)`
+:usage: `int[] pcsegment_radius(<geometry>, string PChannel, string RadChannel, float radscale, vector P0, vector P1, float max_distance, int maxpoints, float &distances[])`
+:usage: `int[] pcsegment_radius(<geometry>, string ptgroup, string PChannel, string RadChannel, float radscale, vector P0, vector P1, float max_distance, int maxpoints, float &distances[])`
+
+:include _common#geometry:
+
+These functions open a geometry file and return a list of points (treated as spheres) within <<max_distance>> of the line segment passing from <<P0>> to <<P1>>. Each point is treated as a sphere with radius equal to its <<RadChannel>> attribute, 
+    multiplied by <<radscale>>.
+
+The `ptgroup` is a point group that limits the points to search.  This is a SOP-style group pattern, so can be something like `0-10` or `@Cd.x>0.5`.  A blank string is treated as matching all points.
+
+The function also optionally takes a float array `distances`, which it modifies with the distances to each point.
+
+@related
+
+- [Vex:nearpoint]
+- [Vex:nearpoints]
+- [Vex:pccone_radius]
+- [Vex:pcfind]
+- [Vex:pcfind_radius]
+- [Vex:pgfind]

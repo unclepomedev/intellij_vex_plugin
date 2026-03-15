@@ -1,0 +1,23 @@
+= norm_inf =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns the induced matrix infinity-norm."""
+
+:usage: `float norm_inf(<matrix> m)`
+
+    Returns the induced infinity-norm of matrix <<m>>, assuming a row vector convention, which is the maximum absolute column sum.
+
+@related
+
+- [Vex:norm_1]
+- [Vex:norm_max]
+- [Vex:norm_fro]
+- [Vex:norm_spectral]
+
+- [Vex:length]
+- [Vex:length2]
+

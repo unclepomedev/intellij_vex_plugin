@@ -1,0 +1,28 @@
+= Dw =
+
+#type: vex
+#context: all
+#tags: math, vector, deriv, shading
+#group: math
+
+"""Returns the derivative of the given value with respect to the 3rd axis (for volume rendering)."""
+
+:usage: `float Dw(float p, ...)`
+:usage: `vector Dw(vector p, ...)`
+:usage: `vector4 Dw(vector4 p, ...)`
+
+:returns:
+    Returns the derivative of `p` with respect to W.
+
+    When rendering surfaces, this function returns 0.
+
+In shading contexts, this is the change in the variable over the volume being shaded.
+
+:include _derive_variadic:
+
+
+@related
+
+- [Vex:Du]
+- [Vex:Dv]
+

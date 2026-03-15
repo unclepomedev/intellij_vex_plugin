@@ -1,0 +1,14 @@
+= isshadingRHS =
+
+#type: vex
+#context: fog, light, shadow, surface, displace
+#tags: shading
+#group: shading
+
+"""Detects the orientation of default shading space."""
+
+:usage: `int isshadingRHS()`
+
+Shading can occur in either a left or right handed vector space.  This function
+can be used to check the native orientation in shading space.  By default,
+Mantra is left-handed space while Karma is in right-handed space.

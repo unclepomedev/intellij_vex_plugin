@@ -1,0 +1,17 @@
+= getrayweight =
+
+#type: vex
+#context: shading
+#tags: shading
+#group: shading
+
+"""Returns an approximation to the contribution of the ray to the final
+pixel color."""
+
+:usage: `float getrayweight()`
+
+Returns an approximation to the contribution of the ray to the final
+pixel color. Often, this is a better metric for judging contribution to
+the final pixel color than [getraylevel|Vex:getraylevel]. However, this
+relies on prior shaders giving good estimates on the contribution to
+their shading (see [reflectlight|Vex:reflectlight]).

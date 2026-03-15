@@ -1,0 +1,14 @@
+= mattrib =
+
+#type: vex
+#context: image3d
+#tags: ptcloud, metaballs
+#group: ptcloud
+
+"""Returns the value of the point attribute for the metaballs if
+metaball geometry is specified to i3dgen."""
+
+:usage: `<type> mattrib(string name, vector P)`
+
+NOTE:
+    The `image3d` context is deprecated. Use volumes instead. 

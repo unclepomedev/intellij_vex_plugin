@@ -1,0 +1,33 @@
+= __uniform_mul =
+ 
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+#since: 18.0
+
+"""Multiply matrices."""
+
+:usage: `void __uniform_mul(matrix2 &a, matrix2 b)`
+:usage: `void __uniform_mul(matrix &a, matrix b)`
+:usage: `void __uniform_mul(matrix3 &a, matrix3 b)`
+
+:usage: `void __uniform_mul(matrix2 &a, float b)`
+:usage: `void __uniform_mul(matrix &a, float b)`
+:usage: `void __uniform_mul(matrix3 &a, float b)`
+
+:usage: `void __uniform_mul(matrix2 &m, matrix2 a, matrix2 b)`
+:usage: `void __uniform_mul(matrix &m, matrix a, matrix b)`
+:usage: `void __uniform_mul(matrix3 &m, matrix3 a, matrix3 b)`
+
+:usage: `void __uniform_mul(vector2 &a, matrix2 b)`
+:usage: `void __uniform_mul(vector &a, matrix b)`
+:usage: `void __uniform_mul(vector &a, matrix3 b)`
+:usage: `void __uniform_mul(vector4 &a, matrix b)`
+
+Multiplies two matrices and returns modify the first matrix.
+
+This version of mul can be faster when running over a single
+processor, like for detail attributes or doing matrix multiplication
+for CHOP constraints.
+

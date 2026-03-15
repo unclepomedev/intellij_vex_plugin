@@ -1,0 +1,18 @@
+= wo_space =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Transforms a position value from World to Object space."""
+
+:usage: `matrix wo_space()`
+
+    In [shading contexts|/vex/contexts/shading_contexts], this transforms the current position.
+
+:usage: `vector wo_space(vector pos)`
+:usage: `vector4 wo_space(vector4 pos)`
+
+Transforms a position value from _World_ to _Object_ space.
+

@@ -1,0 +1,17 @@
+= getlightid =
+
+#type: vex
+#context: displace, fog, surface
+#tags: light
+#group: shading
+
+"""Returns the light id for a named light (or -1 for an invalid name)."""
+
+:usage: `int getlightid(string lightname)`
+
+Returns the integer light identifier of the light referred to by the given name.
+
+@related
+
+- [Vex:getlights]
+- [Vex:getlightname]

@@ -1,0 +1,48 @@
+= agentlayershapes =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+
+"""Returns the names of the shapes referenced by an agent primitive's layer."""
+
+:usage: `string[] agentlayershapes(<geometry>, int prim, string layername, string shapetype)`
+:usage: `string[] agentlayershapes(<geometry>, int prim, int layerindex, string shapetype)`
+
+    Returns the names of all shapes that are referenced by the layer and satisfy the `shapetype` filter.
+
+:usage: `string[] agentlayershapes(<geometry>, int prim, string layername, int transform)`
+:usage: `string[] agentlayershapes(<geometry>, int prim, int layerindex, int transform)`
+
+    Returns the names of all shapes that are referenced by the layer and are bound to the specified transform.
+
+Returns an empty array if `layername` is not one of the agent's [layers|Vex:agentlayers], `shapetype` is invalid, `transform` is out of range, `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:layername:
+    The name of one of the agent's layers.
+
+:arg:layerindex:
+    Index of a layer in the agent's definition.
+    A layer's index can be obtained via [Vex:agentfindlayer].
+
+:arg:shapetype:
+    Whether to inspect `"static"`, `"deforming"`, or `"all"` shapes from the specified layer.
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+
+@related
+- [Vex:agentcollisionlayer]
+- [Vex:agentcurrentlayer]
+- [Vex:agentfindlayer]
+- [Vex:agentlayerbindings]
+- [Vex:agentlayers]
+- [Vex:setagentcollisionlayer]
+- [Vex:setagentcurrentlayer]

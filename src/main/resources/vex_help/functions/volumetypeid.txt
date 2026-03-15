@@ -1,0 +1,20 @@
+= volumetypeid =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Gets the typeid of the data of a volume or VDB primitive."""
+
+:usage: `int volumetypeid(<geometry>, int primnum)`
+:usage: `int volumetypeid(<geometry>, string volumename)`
+
+:include _common#geometry:
+
+:returns:
+    The integer typeid for the data stored in the volume or VDB.  This
+    will match the result of the VEX typeid() function with the same
+    type.
+
+    Returns -1 if it isn't a volume or VDB, or isn't a VEX compatible type.

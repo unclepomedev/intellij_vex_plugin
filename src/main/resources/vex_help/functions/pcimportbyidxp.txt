@@ -1,0 +1,19 @@
+= pcimportbyidxp =
+
+#type: vex
+#context: all
+#tags: ptcloud
+#group: ptcloud
+
+"""Imports channel data from a point cloud outside a `pciterate` or a `pcunshaded` loop."""
+
+:usage: `vector4 pcimportbyidxp(int handle, string channel_name, int idx)`
+
+After a [Vex:pcopen] and a [Vex:pcnumfound], this can be used to extract specific search results from the found points.
+
+This will return 0 if the channel doesn't exist.
+
+@related
+
+- [Vex:pcopen]
+- [Vex:pcnumfound]

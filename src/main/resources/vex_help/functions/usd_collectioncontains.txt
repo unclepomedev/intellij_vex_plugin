@@ -1,0 +1,33 @@
+= usd_collectioncontains =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Checks if an object path belongs to the collection"""
+
+:usage: `int usd_collectioncontains(<stage>, string collectionpath, string path)`
+
+This function returns `1` if the given objects belongs to the collection, otherwise returns `0`.
+
+:include _common#usd_stage:
+
+:include _common#usd_collectionpath:
+
+:include _common#usd_path:
+
+:returns:
+    `1` if the given objects belongs to the collection, otherwise returns `0`.
+
+@examples 
+{{{
+#!vex
+// Check if sphere3 is in cube's collection.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+int contains_sphere3 = usd_collectioncontains(0, collection_path, "/geo/sphere3");
+}}}
+
+@related
+- [Vex:usd_iscollection]

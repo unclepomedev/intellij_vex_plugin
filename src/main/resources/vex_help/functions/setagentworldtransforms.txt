@@ -1,0 +1,31 @@
+= setagentworldtransforms =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Overrides the world space transforms of an agent primitive."""
+
+:usage: `void setagentworldtransforms(int geohandle, int prim, matrix transforms[])`
+
+When modifying a single transform, using [Vex:setagentworldtransform] instead can be significantly faster.
+
+:arg:geohandle:
+    Handle to the geometry to write to. `geoself()` can be used to get a handle to the current geometry.
+
+:arg:prim:
+    The primitive number.
+
+:arg:transforms:
+    The new transform (in world space) of each bone in the agent's rig.
+
+@related
+- [Vex:agentlocaltransforms]
+- [Vex:agenttransformtolocal]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransforms]
+- [Vex:setagentlocaltransform]
+- [Vex:setagentlocaltransforms]
+- [Vex:setagentworldtransform]
+

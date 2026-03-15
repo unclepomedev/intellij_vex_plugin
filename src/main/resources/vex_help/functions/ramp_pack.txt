@@ -1,0 +1,22 @@
+= ramp_pack =
+
+#type: vex
+#context: all
+#tags: ramp
+#group: utility
+#since: 19.0
+
+"""Packs a set of arrays into a string-encoded ramp."""
+
+:usage: `string ramp_pack(string basis[], float pos[], float value[] )`
+:usage: `string ramp_pack(string basis[], float pos[], vector value[] )`
+:usage: `string ramp_pack(string basis[], float pos[], vector4 value[] )`
+
+Ramps are commonly packed as JSON formatted strings by Houdini operations.
+This will pack them three arrays of basis, position, and value into the
+corresponding string.
+
+@related
+
+- [Vex:spline]
+- [Vex:ramp_lookup]

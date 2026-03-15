@@ -1,0 +1,31 @@
+= agentlocaltransforms =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns the current local space transforms of an agent primitive."""
+
+:usage: `matrix[] agentlocaltransforms(<geometry>, int prim)`
+
+If only a single transform is needed, using [Vex:agentlocaltransform] instead can be significantly faster.
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentlocaltransform]
+- [Vex:agenttransformtolocal]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransform]
+- [Vex:agentworldtransforms]
+- [Vex:setagentlocaltransform]
+- [Vex:setagentlocaltransforms]
+- [Vex:setagentworldtransform]
+- [Vex:setagentworldtransforms]

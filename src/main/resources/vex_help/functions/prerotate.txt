@@ -1,0 +1,29 @@
+= prerotate =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: transform
+#since: 17.5
+
+"""Applies a pre rotation to the given matrix."""
+
+:usage: `void prerotate(matrix3 &m, float amount, vector axis)`
+:usage: `void prerotate(matrix &m, float amount, vector axis)`
+:usage: `void prerotate(matrix3 &m, vector angles, int xyz)`
+:usage: `void prerotate(matrix &m, vector angles, int xyz)`
+:usage: `void prerotate(matrix3 &m, float angle, int axis)`
+:usage: `void prerotate(matrix &m, float angle, int axis)`
+
+Applies a prerotation to the given matrix. The angles must be given in
+radians and the axis must be normalized. The xyz argument is the rotate order.
+The axis can also be given as an integer where XAXIS=1, YAXIS=2 and ZAXIS=4.
+
+@related
+
+- [Vex:pretranslate]
+- [Vex:prescale]
+- [Vex:translate]
+- [Vex:rotate]
+- [Vex:scale]
+

@@ -1,0 +1,38 @@
+= usd_iprimvarindices =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 19.0
+
+"""Returns the index array of an indexed primvar directly on the USD primitive or on USD primitive's ancestor."""
+
+:usage: `int[] usd_iprimvarindices(<stage>; string primpath; string name)`
+:usage: `int[] usd_iprimvarindices(<stage>; string primpath; string name; float timecode)`
+
+This function returns the index array of an indexed primvar found directly on the given primitive or inherited from primitive's ancestor.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:include _common#usd_timecode:
+
+:returns:
+    The index array of an indexed primvar, or zero/empty value if the primvar does not exist or is not indexed. Use [Vex:usd_isiprimvar] if you want to check whether the primvar exists and [Vex:usd_isindexediprimvar] to check whether it is indexed.
+
+@examples 
+{{{
+#!vex
+// Get the index array of an indexed primvar.
+int indices[] = usd_iprimvarindices(0, "/geo/cube", "indexed_primvar_name");
+}}}
+
+@related
+- [Vex:usd_primvarindices]
+- [Vex:usd_isiprimvar]
+- [Vex:usd_isindexediprimvar]

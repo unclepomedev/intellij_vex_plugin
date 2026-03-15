@@ -1,0 +1,25 @@
+= removeprimgroup =
+
+#type: vex
+#context: all
+#tags: group, primitive, create
+#group: attrib
+
+"""Removes a primitive group from a geometry."""
+
+If you don't know the class of group until runtime, use [Vex:removeattrib].
+
+:usage: `int removeprimgroup(int geohandle, string name)`
+
+    Removes a primitive group from the given geometry.
+
+@related
+
+- [Vex:removeattrib]
+- [Vex:removedetailattrib]
+- [Vex:removepointattrib]
+- [Vex:removepointgroup]
+- [Vex:removevertexattrib]
+- [Vex:removevertexgroup]
+- [Vex:removeprimattrib]
+- [Vex:removeprimgroup]

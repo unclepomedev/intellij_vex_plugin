@@ -1,0 +1,22 @@
+= eigenvalues =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Computes the eigenvalues of a 3x3 matrix."""
+
+:usage: `void eigenvalues(int &nroot, matrix3 mat, vector &real, vector &imaginary)`
+
+Computes the [eigenvalues|Wp:Eigenvalues_and_eigenvectors] of a 3x3 matrix.
+
+:arg:nroot:
+    The function overwrites this variable with the number of real roots.
+
+:arg:mat:
+    The matrix to compute the eigenvalues for.
+
+:arg:`real`, `imaginary`:
+    The components of these two vectors are overwritten with corresponding pairs of real and imaginary parts of each eigenvalue.
+    For example, `real[0]` and `imaginary[0]` contain the real and imaginary parts of the first eigenvalue.

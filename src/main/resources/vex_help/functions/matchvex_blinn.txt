@@ -1,0 +1,23 @@
+= matchvex_blinn =
+
+#type: vex
+#context: all
+#tags: shading, pbr
+#group: shading
+
+"""Returns a BSDF that matches the output of the traditional VEX blinn function."""
+
+:usage: `bsdf matchvex_blinn(float exponent, ...)`
+:usage: `bsdf matchvex_blinn(vector nml, float exponent, ...)`
+
+[Image:/images/rendering/matchvex_blinn.png]
+
+The BSDF produced by [Vex:blinn] is not the same as the traditional VEX 
+`blinn()` output. Use this function to produce a closer approximate match to 
+the traditional VEX `blinn()`.
+
+
+@related
+
+- [Vex:blinn]
+- [Writing a PBR shader|/vex/pbr]

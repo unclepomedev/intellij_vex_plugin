@@ -1,0 +1,48 @@
+= colormap =
+
+#type: vex
+#context: all
+#tags: color, map, file, texture
+#group: texture
+
+"""Looks up a (filtered) color from a texture file."""
+
+This function does bilinear interpolation of the pixel values. To get unfiltered pixel values, use [Vex:rawcolormap].
+
+:usage: `vector|vector4 colormap(string filename, vector uvw, ...)`
+
+    Uses the first two components of <<uvw>> as unit (0-1) coordinates to point sample the texture file.
+
+:usage: `vector|vector4 colormap(string filename, float u, float v, ...)`
+
+    Uses <<u>> and <<v>> as unit (0-1) coordinates to point sample the texture file.
+
+:usage: `vector|vector4 colormap(string filename, vector uv, vector du, vector dv, int samples, ...)`
+
+    Uses the quadrilateral formed by `(uv)-(uv+du)-(uv+du+dv)-(uv+dv)` to area sample the texture file.
+    Takes <<samples>> number of stochastic samples (unless the image is a .rat file).
+
+:usage: `vector|vector4 colormap(string filename, vector uv0, vector uv1, vector uv2, vector uv3, ...)`
+
+    Uses the quadrilateral formed by `(uv0)-(uv1)-(uv2)-(uv3)` to area sample the texture file.
+    
+:usage: `vector|vector4 colormap(string filename, vector uv0, vector uv1, vector uv2, vector uv3, int samples, ...)`
+
+    Uses the quadrilateral formed by `(uv0)-(uv1)-(uv2)-(uv3)` to area sample the texture file.
+    Takes <<samples>> number of stochastic samples (unless the image is a .rat file).
+
+:usage: `vector|vector4 colormap(string filename, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3, int samples, ...)`
+
+    Uses the quadrilateral formed by `(uv0)-(uv1)-(uv2)-(uv3)` to area sample the texture file.
+    Takes <<samples>> number of stochastic samples (unless the image is a .rat file).
+
+:returns:
+    If you call the function with a `vector4` return type, the fourth component is the alpha channel of the texture. If the image does not have alpha, the fourth component is always `1`.
+
+:include _imagefilter_variadic:
+
+
+@related
+
+- [Vex:rawcolormap]
+- [Vex:texture]

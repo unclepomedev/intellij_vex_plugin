@@ -1,0 +1,31 @@
+= primintrinsic =
+
+#type: vex
+#context: all
+#tags: prim, attrib, intrinsic
+#group: attrib
+
+"""Reads a primitive intrinsic from a geometry."""
+
+:include detailintrinsic#info:
+
+:usage: `<type> primintrinsic(<geometry>, string intrinsic_name, int prim_num)`
+:usage: `<type>[] primintrinsic(<geometry>, string intrinsic_name, int prim_num)`
+
+:include detailintrinsic#info:
+
+:include _common#geometry:
+
+:include _common#intrinsicname:
+
+:arg:prim_num:
+    The number of the primitive to read the given intrinsic attribute for.
+
+:returns:
+    The value of the intrinsic attribute, or `0` if the intrinsic does not exist.
+
+
+@related
+
+- [Vex:detailintrinsic]
+

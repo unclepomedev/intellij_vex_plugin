@@ -1,0 +1,31 @@
+= irradiance =
+
+#type: vex
+#context: shading
+#tags: surface, light
+#group: shading
+
+"""Computes irradiance (global illumination) at the point P with the normal N."""
+
+:usage: `vector irradiance(vector P, vector N, ...)`
+
+Computes irradiance (global illumination) at the point P with the normal
+N.
+
+:include _lightmask_arg.txt:
+
+:include _adaptive_variadic:
+
+:include _bias_variadic:
+
+:include _rayopts_variadic:
+
+
+@related
+
+- [Vex:occlusion]
+- [Vex:pathtrace]
+- [Vex:reflectlight]
+- [Vex:gather]
+- [Vex:trace]
+- [Vex:irradiance]

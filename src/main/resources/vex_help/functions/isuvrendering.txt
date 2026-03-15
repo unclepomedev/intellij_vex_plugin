@@ -1,0 +1,14 @@
+= isuvrendering =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: surface
+#group: shading
+
+"""Indicates whether the shader is being evaluated while doing UV rendering (e.g. texture unwrapping)"""
+
+:usage: `int isuvrendering()`
+
+Returns 1 if the shader is being called while evaluating uv rendering (texture unwrapping), and 0 for normal rendering.
+
+Use this function to evaluate shaders differently when baking illumination.

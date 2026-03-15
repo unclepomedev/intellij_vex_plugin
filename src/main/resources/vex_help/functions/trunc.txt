@@ -1,0 +1,20 @@
+= trunc =
+
+#type: vex
+#context: all
+#tags: math
+#group: math
+
+"""Removes the fractional part of a floating point number."""
+
+:usage: `float trunc(float x)`
+
+    If the argument is negative, this returns [ceil(x)|Vex:ceil], otherwise it returns
+    [floor(x)|Vex:floor].
+
+:usage: `vector2 trunc(vector2 x)`
+:usage: `vector trunc(vector x)`
+:usage: `vector4 trunc(vector4 x)`
+
+    Returns a new vector with the `trunc()` of each component.
+

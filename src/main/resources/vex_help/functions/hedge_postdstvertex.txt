@@ -1,0 +1,36 @@
+= hedge_postdstvertex =
+
+#type: vex
+#context: all
+#tags: hedge, vertex
+#group: hedge
+
+"""Returns the vertex following the destination vertex of a half-edge in its primitive."""
+
+:usage: `int hedge_postdstvertex(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The vertex number of the vertex that comes after the destination vertex of the half-edge `hedge` in the primitive that contains `hedge`.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int postdstvtx;
+
+// Get the destination vertex half-edge number 3.
+postdstvtx = hedge_postdstvertex("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

@@ -1,0 +1,121 @@
+= solvefbik =
+
+#type: vex
+#context: all
+#tags: crowds, transform, solve
+#group: transform
+#since: 17.0
+
+"""Applies a full-body inverse kinematics algorithm to a skeleton."""
+
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], dict jointoptions[], matrix targetxforms[], int targets[], dict targetoptions[], int iters, float tolerance, int pinroot)`
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], int targets[], matrix targetxforms[], int iters)`
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], int targets[], matrix targetxforms[], int iters, float tolerance, int pinroot)`
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], int targets[], matrix targetxforms[], int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[])`
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], int targets[], matrix targetxforms[], int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[], int targettypes[], matrix targetoffsets[])`
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], int targets[], matrix targetxforms[], int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[], matrix goalxforms[], vector4 constrainedxforms[], vector jointlimits[])`
+:usage: `matrix[] solvefbik(matrix xforms[], int parents[], int targets[], matrix targetxforms[], int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[], int targettypes[], matrix targetoffsets[], matrix goalxforms[], vector4 constrainedxforms[], vector jointlimits[])`
+
+Returns an empty array if:
+- `xforms` is not the same size as `parents`
+- `targets` is not the same size as `targetxforms`
+- The `goalxforms`, `constrainedxforms`, and `jointlimits` arrays aren't empty, but are not the same size as `xforms`
+
+The `goalxforms`, `constrainedxforms`, and `jointlimits` parameters should be in the form produced by the [Agent Configure Joints SOP|/nodes/sop/agentconfigurejoints].
+
+:arg:xforms:
+    #id: xforms
+    The world transforms of all the transforms in the rig being solved.
+
+:arg:parents:
+    #id: parents
+    The parent transform index for each transform.  A value of -1 indicates a root.
+
+:arg:jointoptions:
+    #id: jointoptions
+    Specifies optional parameters for the joints. The valid keys are:
+
+    `limit_goalxform`:
+        A `matrix` specifying the position and orientation of the cone in the space of the parent transform.
+        This can be set from the attributes produced by [Agent Configure Joints|/nodes/sop/agentconfigurejoints].
+
+    `limit_constrainedxform`:
+        A `vector4` (quaternion) specifying the orientation of the twist axis, up axis, and out axis in the space of the child transform.
+        This can be set from the attributes produced by [Agent Configure Joints|/nodes/sop/agentconfigurejoints].
+
+    `limit_angles`:
+        A `vector` specifying the maximum rotation around each axis, in degrees.
+        This can be set from the attributes produced by [Agent Configure Joints|/nodes/sop/agentconfigurejoints].
+
+:arg:targets:
+    #id: targets
+    A list of the transform indices of the end effectors in the skeleton.
+
+:include /vex/functions/agentsolvefbik#targetxforms:
+
+:arg:targetoptions:
+    #id: targetoptions
+    Specifies optional parameters for the targets. The valid keys are:
+
+    `weight`:
+        A `float` specifying the importance of the target.
+        When multiple targets have the same priority level, targets with a higher relative weight are more likely to be reached.
+        The default value is `1.0`.
+
+    `priority`:
+        An `int` specifying the target’s priority level.
+        Targets from a lower priority level cannot interfere with targets from a higher priority level.
+        For example, priority levels can be used to ensure that the feet remain planted when manipulating the upper body of a skeleton.
+        The default value is `0`.
+
+    `depth`:
+        An `int` specifying the number of parent joints that can be adjusted to achieve the goal transform.
+        A negative depth indicates that the entire chain can be affected.
+        The default value is `-1`.
+
+    `target_type`:
+        An `int` specifying how the end effector matches the position or orientation of its target transform.
+        A value of `0` (default) indicates a position-only target, `1` indicates an orientation-only target, and `2` matches both position and orientation.
+        A value of `3` indicates a target that controls the center of mass of the skeleton (the transform index from `targets` is not used).
+        Only one center of mass target can be provided.
+
+    `joint_offset`:
+        A `matrix` specifying a local space transform that is combined with the joint transform to produce the transform that the solver attempts to align with the goal transform.
+        This can be used to place the target at an offset from the joint (for example, at the end of a bone).
+
+:include /vex/functions/agentsolvefbik#iters:
+
+:include /vex/functions/agentsolvefbik#tolerance:
+
+:include /vex/functions/agentsolvefbik#pinroot:
+
+:include /vex/functions/agentsolvefbik#targetweights:
+
+:include /vex/functions/agentsolvefbik#targetpriorities:
+
+:include /vex/functions/agentsolvefbik#targetdepths:
+
+:include /vex/functions/agentsolvefbik#targettypes:
+
+:include /vex/functions/agentsolvefbik#targetoffsets:
+
+:arg:goalxforms:
+    Part of the joint constraints as produced by [Agent Configure Joints|/nodes/sop/agentconfigurejoints].
+    An empty array indicates no joint constraints.
+
+:arg:constrainedxforms:
+    Part of the joint constraints as produced by [Agent Configure Joints|/nodes/sop/agentconfigurejoints].
+    An empty array indicates no joint constraints.
+
+:arg:jointlimits:
+    Part of the joint constraints as produced by [Agent Configure Joints|/nodes/sop/agentconfigurejoints].
+    An empty array indicates no joint constraints.
+
+@related
+- [Vex:agentsolvefbik]
+- [Vex:agentworldtransform]
+- [Vex:agentworldtransforms]
+- [Vex:setagentworldtransforms]
+- [Vex:agentrigfind]
+- [Vex:agentrigparent]
+- [Vex:solvephysfbik]

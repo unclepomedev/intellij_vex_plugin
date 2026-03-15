@@ -1,0 +1,28 @@
+= cospi =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the cosine of the argument scaled by Pi."""
+
+:usage: `float cospi(float n)`
+
+    Returns the cosine of `n`, where `n` is in semi-circles.
+
+:usage: `vector2 cospi(vector2 n )`
+:usage: `vector cospi(vector n )`
+:usage: `vector4 cospi(vector4 n )`
+
+    Returns a new vector with `cospi()` applied to each component.
+
+
+@related
+
+- [Vex:acos]
+- [Vex:cosh]
+- [Vex:sin]
+- [Vex:tan]
+- [Vex:sinpi]
+- [Vex:tanpi]

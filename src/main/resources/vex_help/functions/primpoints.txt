@@ -1,0 +1,21 @@
+= primpoints =
+
+#type: vex
+#context: all
+#tags: prim, point
+#group: geo
+
+"""Returns the list of points on a primitive."""
+
+:usage: `int [] primpoints(<geometry>, int primnum)`
+
+:include _common#geometry:
+
+:arg:primnum:
+    The primitive number to get the points of.
+
+:returns:
+    An array of points, in the same order as stored on the primitive itself.
+    If the primitive number is not valid, the array will be empty.
+
+

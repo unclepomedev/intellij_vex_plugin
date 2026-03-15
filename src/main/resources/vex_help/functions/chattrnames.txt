@@ -1,0 +1,48 @@
+= chattrnames =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Reads CHOP attribute names of a given attribute class from a CHOP input."""
+
+:usage: `string[] chattrnames(int opinput, string attribclass)`
+:usage: `string[] chattrnames(string attrclass)`
+
+Returns all the CHOP attribute names of a given attribute class from a CHOP input.
+
+:box:
+    #id: about_chop_attrs
+    
+    CHOP attributes store metadata on clips, channels, samples, or channel/sample pairs.
+
+:include _common#opinput_arg:
+
+:arg:attribclass:
+    #id: attribclass_arg
+
+    The "level" of the attribute:
+    
+    `"clip"`:
+        An attribute on a whole clip.
+    
+    `"channel"`:
+        An attribute on a whole channel.
+    
+    `"sample"`:
+        An attribute on a sample (across all channels).
+    
+    `"channelsample"`:
+        An attribute on a specific channel/sample pair.
+    
+    `""`:
+        Pass an empty string to have the function figure out the class based on the other arguments.
+
+:returns:
+    The attribute names as a string array.
+
+@related
+
+- [Vex:chattr]
+- [Vex:chsetattr]

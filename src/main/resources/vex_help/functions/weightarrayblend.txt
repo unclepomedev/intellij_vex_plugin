@@ -1,0 +1,19 @@
+= weightarrayblend =
+
+#type: vex
+#context: all
+#group: weightarray
+
+"""Blends an existing name/weight array pair with another array or named item."""
+
+The new named item is assumed to weight 1.0.
+
+:usage: `void weightarrayblend(string &names[]; float &weights[]; string newname; float blend)`
+:usage: `void weightarrayblend(int &indices[]; float &weights[]; string newindex; float blend)`
+
+    Blends the existing arrays with the new item using the specified blend value.
+
+:usage: `void weightarrayblend(string &names[]; float &weights[]; string newnames[]; float newweights[]; float blend)`
+:usage: `void weightarrayblend(string &indices[]; float &weights[]; string newindices[]; float newweights[]; float blend)`
+
+    Blends the existing arrays with another using the specified blend value. The result has the union of items in each input array.

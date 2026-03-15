@@ -1,0 +1,27 @@
+= setdetailintrinsic =
+
+#type: vex
+#context: all
+#tags: detail, intrinsic
+#group: attrib
+#since: 18.0
+
+"""Sets the value of a writeable detail intrinsic attribute."""
+
+:usage: `int setdetailintrinsic(int geohandle, string name, <type> value, string mode="set")`
+:usage: `int setdetailintrinsic(int geohandle, string name, <type> value[], string mode="set")`
+
+Despite the name, some "intrinsic" attributes on details are writeable.
+
+:include _common#geohandle_arg:
+
+:arg:name:
+    The name of the intrinsic to set.
+
+:include _common#set_attrib_mode:
+
+
+@related
+
+- [Vex:setattrib]
+- [Vex:setdetailattrib]

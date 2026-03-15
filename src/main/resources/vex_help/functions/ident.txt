@@ -1,0 +1,12 @@
+= ident =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns an identity matrix."""
+
+:usage: `<matrix> ident()`
+
+    Returns the identity matrix for the given matrix type.

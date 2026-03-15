@@ -1,0 +1,23 @@
+= hasvertexattrib =
+
+#type: vex
+#context: all
+#tags: attrib, vertex
+#group: attrib
+
+"""Returns if a geometry vertex attribute exists."""
+
+:usage: `int hasvertexattrib(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+Returns `1` if the attribute exists, or `0` otherwise.
+
+
+@examples
+
+{{{
+#!vex
+// Determine if the P attribute exists.
+int exists = hasvertexattrib("defgeo.bgeo", "P");
+}}}

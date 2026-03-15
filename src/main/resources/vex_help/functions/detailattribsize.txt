@@ -1,0 +1,16 @@
+= detailattribsize =
+
+#type: vex
+#context: all
+#tags: attrib, detail
+#group: attrib
+
+"""Returns the size of a geometry detail attribute."""
+
+:usage: `int detailattribsize(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+See [Vex:attribsize] for more information.
+
+Returns `0` if the attribute cannot be found.

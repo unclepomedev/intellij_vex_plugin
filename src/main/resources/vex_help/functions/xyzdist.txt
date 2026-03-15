@@ -1,0 +1,54 @@
+= xyzdist =
+
+#type: vex
+#context: all
+#tags: measure, proximity
+#group: measure
+
+"""Finds the distance from a point to the closest location on surface geometry."""
+
+:usage: `float xyzdist(<geometry>, vector origin)`
+
+    Finds the distance from <<origin>> to the closest location on the given geometry.
+
+:usage: `float xyzdist(<geometry>, vector origin, int &prim, vector &uv)`
+:usage: `float xyzdist(<geometry>, vector origin, int &prim, vector &uv, float maxdist)`
+
+    Finds the distance from <<origin>> to the closest location on the geometry, and
+    writes the primitive number and UV coordinates of the closest location into the output arguments.
+
+:usage: `float xyzdist(<geometry>, string primgroup, vector origin)`
+:usage: `float xyzdist(<geometry>, string primgroup, vector origin, int &prim, vector &uv)`
+:usage: `float xyzdist(<geometry>, string primgroup, vector origin, int &prim, vector &uv, float maxdist)`
+
+    Finds the distance from <<origin>> to the closest location in the given primitive group on the given geometry,
+    and writes the primitive number and UV coordinates of the closest location into the output arguments.
+
+Note: Distances to packed primitives and sphere/tube/circle primitives with
+non-uniform scales may not represent the actual closest point as the closest
+point is found in the untransformed space.
+
+:include _common#geometry:
+
+:arg:primgroup:
+    The name of a primitive group or a pattern to generate a primitive
+    group.  Uses the same semantics as a SOP group, so empty strings
+    will match all primitives.  Attribute groups like `@Cd.x>0` can
+    also be used, but note that the `@` may need to be escaped with
+    a backslash in a [Snippet VOP|Node:vop/snippet].
+
+:arg:origin:
+    The position in space to find the closest position on the geometry to.
+
+:arg:&prim:
+    The function overwrites this variable with the number of the closest primitive, or `-1` if no primitive was found.
+
+:arg:&uv:
+    The function overwrites this variable with the UV coordinates of the closest point on the closest primitive.
+    You can use [Vex:primuv] to sample an attribute value at this location.
+
+:arg:maxdist:
+    The maximum distance to search. Specifying this can speed up the function by allowing it to quit early.
+
+:returns:
+    The distance from the origin point to the closest location on the geometry.

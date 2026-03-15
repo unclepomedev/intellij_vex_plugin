@@ -1,0 +1,29 @@
+= agentclipcatalog =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Returns all of the animation clips that have been loaded for an agent primitive."""
+
+:usage: `string[] agentclipcatalog(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentcliplength]
+- [Vex:agentclipnames]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsampleworld]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

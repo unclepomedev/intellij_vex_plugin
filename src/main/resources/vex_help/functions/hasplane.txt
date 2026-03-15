@@ -1,0 +1,13 @@
+= hasplane =
+
+#type: vex
+#context: cop
+#tags: output_plane
+#group: image
+
+"""Returns 1 if the plane specified by the parameter exists in this
+COP."""
+
+:usage: `int hasplane(string planename)`
+
+Returns 1 if the plane specified by the parameter exists in this COP.

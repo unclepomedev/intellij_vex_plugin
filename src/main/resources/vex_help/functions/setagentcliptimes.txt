@@ -1,0 +1,30 @@
+= setagentcliptimes =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Sets the current times for an agent primitive's animation clips."""
+
+:usage: `void setagentcliptimes(int geohandle, int prim, float cliptimes[])`
+
+:arg:geohandle:
+    Handle to the geometry to write to. `geoself()` can be used to get a handle to the current geometry.
+
+:arg:prim:
+    The primitive number.
+
+:arg:cliptimes:
+    A list of clip times (in seconds).
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentcliplength]
+- [Vex:agentclipnames]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsampleworld]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:setagentclipnames]
+- [Vex:setagentclipweights]

@@ -1,0 +1,36 @@
+= hedge_isvalid =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Determines whether a half-edge number corresponds to a valid half-edge."""
+
+:usage: `int hedge_isvalid(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    The integer representing a half-edge.
+
+:returns:
+    `1` if `hedge` represents a valid half-edge in the referenced geometry, or `0` otherwise.
+
+
+@examples
+
+{{{
+#!vex
+
+int srcpt;
+
+// find the source point of a half-edge number 3 if it is valid
+if (hedge_isvalid("defgeo.bgeo", 3))
+srcpt = hedge_srcpoint("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

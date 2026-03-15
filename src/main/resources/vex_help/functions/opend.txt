@@ -1,0 +1,24 @@
+= opend =
+
+#type: vex
+#context: shading
+#tags: statistics, interrupt, progress
+#group: utility
+
+"""Ends a long operation."""
+
+:usage: `void opend(int handle)`
+
+Informs mantra that a long operation begun with [Vex:opstart] has completed. Pass in the value returned by [Vex:opstart].
+
+{{{
+#!vex
+int op_handle = opstart("Performing long operation");
+perform_long_operation();
+if (op_handle >= 0)
+    opend(op_handle);
+}}}
+
+
+@related
+- [Vex:opstart]

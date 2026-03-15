@@ -1,0 +1,37 @@
+= usd_setattribelement =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 18.0
+
+"""Sets the value of an element in an array attribute."""
+
+:usage: `int usd_setattribelement(int stagehandle, string primpath, string name, int index, <type> value)`
+
+This function sets the element value in an array attribute. 
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:arg:index:
+    An index of an element in the array attribute.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the value of element at index 2 in the array attribute.
+usd_setattribelement(0, "/geo/sphere", "float_array_attrib", 2, 0.25);
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_attribelement]

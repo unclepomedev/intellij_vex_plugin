@@ -1,0 +1,23 @@
+= chindex =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the channel index from a input given a channel name."""
+
+:usage: `int chindex(int opinput, string name)`
+:usage: `int chindex(string name)`
+:usage: `int[] chindex(string names[])`
+
+Returns the channel index from a input given a channel name or -1 on failure.
+
+:arg:`opinput`:
+    CHOP Input index or -1 if omitted.
+
+:arg:name:
+    Channel name to lookup.
+
+:arg:names:
+    Array of Channel names to lookup.

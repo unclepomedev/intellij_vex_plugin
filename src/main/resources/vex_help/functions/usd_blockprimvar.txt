@@ -1,0 +1,37 @@
+= usd_blockprimvar =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Blocks the primvar."""
+
+:usage: `int usd_blockprimvar(int stagehandle, string primpath, string name)`
+
+This function blocks the primvar. I.e., removes all time samples and sets the _block_ as default value.
+
+Note, if primvar is indexed, you may also want to block the indices with
+[Vex:usd_blockprimvarindices].
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Block the primvar.
+usd_blockprimvar(0, "/geo/sphere", "primvar_name");
+}}}
+
+@related
+- [Vex:usd_blockprimvarindices]
+- [Vex:usd_setprimvar]

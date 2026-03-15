@@ -1,0 +1,68 @@
+= refractlight =
+
+#type: vex
+#context: shading
+#tags: surface
+#group: shading
+
+"""Computes the illumination of surfaces refracted by the current
+surface."""
+
+:usage: `void refractlight(vector &cf, vector &of, float &af, vector P, vector D, float bias, float max_contrib, ...)`
+:usage: `void refractlight(vector &cf, vector &of, float &af, vector P, vector N, vector I, float eta, float bias, float max_contrib, ...)`
+
+Computes the illumination of surfaces refracted by the current surface.
+Computes and outputs the output color (<<cf>>), opacity (<<of>>) and
+alpha (<<af>>). See [opacity vs. alpha|/vex/contexts/shading_contexts#opacity] .
+
+<<bias>> is typically a small number (for example 0.005) used to help
+eliminate self-reflection.
+
+<<max_contrib>> tells the renderer how much the reflected light will
+contribute to the final color of the pixel. This has no effect on the
+resultant color.
+
+The first form of the refractlight() function takes a position and
+direction, typically computed by the [Vex:refract] or
+[Vex:fresnel] functions.
+
+To prevent the renderer from computing standard transparency (i.e.
+non-refracted transparency), the Of variable must be set to {1,1,1} to
+make the surface "opaque". The Af variable can be set to any arbitrary
+value.
+
+:include _lightmask_variadic:
+
+:include _area_variadic:
+
+:include _rayopts_variadic:
+
+
+@examples
+
+{{{
+#!vex
+surface
+glass(float eta=1.3, bias = 0.005)
+{
+    float    Kr, Kt;
+    vector    R, T;
+    vector    cf, of;
+    float    af;
+    frensel(normalize(I), normalize(N), eta, Kr, Kt, R, T);
+    Cf  = Kr * reflectlight(P, R, bias, Kr);
+    refractlight(cf, of, af, P, T, bias, Kt);
+    Cf += Kt * cf;
+    Af = clamp(Kr + af*Kt, 0, 1);
+    Of = 1;
+}
+}}}
+
+
+@related
+
+- [Vex:reflectlight]
+- [Vex:gather]
+- [Vex:trace]
+- [Vex:irradiance]
+

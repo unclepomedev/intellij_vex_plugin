@@ -1,0 +1,26 @@
+= agentfindlayer =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+
+"""Finds the index of a layer in an agent's definition."""
+
+:usage: `int agentfindlayer(<geometry>, int prim, string layername)`
+
+Returns the index of a layer in the agent's definition.
+Returns -1 if `prim` is out of range, `prim` is not an agent primitive, or the layer does not exist.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:layername:
+    Name of a layer in the agent's definition.
+
+@related
+- [Vex:agentlayerbindings]
+- [Vex:agentlayers]
+- [Vex:agentlayershapes]

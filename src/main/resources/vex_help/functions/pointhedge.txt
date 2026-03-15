@@ -1,0 +1,47 @@
+= pointhedge =
+
+#type: vex
+#context: all
+#tags: hedge, point
+#group: hedge
+
+"""Finds and returns a half-edge with a given source point or with given source and destination points."""
+
+:usage: `int pointhedge(<geometry>, int point)`
+:usage: `int pointhedge(<geometry>, int srcpoint, int dstpoint)`
+
+
+:include _common#geometry:
+
+:arg:`point`
+    The point number in the geometry for the source point of the returned half-edge.  `0` is the first point.
+
+:arg:`srcpoint`, `dstpoint`:
+    The point numbers in the geometry for source and destination of returned half-edge.  `0` is the first point.
+
+:returns:
+     The number of a half-edge that has `point` as source or has `srcpoint` as source and `dstpoint` as destination.
+     In the former case, using `op:pointhedgenext` one can enumerate over all the half-edges that have `point` as source.
+     Returns `-1` if the half-edge is not valid.
+
+@examples
+
+{{{
+#!vex
+
+int edge_count = 0;
+
+// Count number of *edges* (not half-edges) incident to point number 23.
+int hout = pointhedge("defgeo.bgeo", 23);
+while ( hout != -1 )
+{
+    if (hedge_isprimary("defgeo.bgeo", hout))
+        edge_count++;
+    int hin = hedge_prev("defgeo.bgeo", hout);
+    if (hedge_isprimary("defgeo.bgeo", hin))
+        edge_count++;
+    hout = pointhedgenext("defgeo", hout);
+};
+
+}}}
+

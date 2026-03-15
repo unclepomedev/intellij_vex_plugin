@@ -1,0 +1,36 @@
+= chid =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+#since: 17.5
+
+"""Resolves a channel string (or parameter) and return op_id, parm_index and vector_index."""
+
+:usage: `void chid(string channel_path, int &op_id, int &parm_index, int &vector_index )`
+:usage: `void chid(string op_path, string channel_name, int &op_id, int &parm_index, int &vector_index )`
+:usage: `int chid(int op_id, int parm_index, int vector_index )`
+
+    Resolves a channel given by a channel path or operator path and returns
+its corresponding operator id, parameter id and vector_index through output
+arguments. Return -1 values on failure. You can also use the last overloaded
+function that doesn't take a channel_path to test for validity of the keys.
+Returns 1 if the ids are valid, otherwise returns 0.
+
+    The operator id and parameter indices can change when reloading the scene or when adding spare parameters to a node.
+
+
+@related
+
+- [Vex:ch]
+- [Vex:chf]
+- [Vex:chs]
+- [Vex:chi]
+- [Vex:chv]
+- [Vex:ch3]
+- [Vex:ch4]
+- [Vex:chramp]
+- [Vex:chrampderiv]
+- [Vex:opid]
+

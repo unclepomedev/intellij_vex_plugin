@@ -1,0 +1,12 @@
+= random_ihash =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""Hashes integer numbers to integers."""
+
+:usage: `int random_ihash(int seed)`
+
+Hashes the given number into an integer value.

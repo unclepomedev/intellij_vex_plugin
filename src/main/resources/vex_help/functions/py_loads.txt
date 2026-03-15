@@ -1,0 +1,21 @@
+= py_loads =
+
+#type: vex
+#context: all
+#group: dict
+#since: 21.0
+
+"""Converts a Python dictionary string into a VEX dictionary."""
+
+:usage: `dict py_loads(string pythondict)`
+
+Tries to create a dictionary out of a Python-style dictionary string.
+If a parsing error occurs, an empty dictionary is created.   Note not
+all python dictionaries are representable as vex dictionaries, as vex
+dictionaries have requirements like arrays having uniform types.
+
+@related
+
+- [Vex:json_dumps]
+- [Vex:py_dumps]
+- [Vex:json_loads]

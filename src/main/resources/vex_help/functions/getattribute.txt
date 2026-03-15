@@ -1,0 +1,64 @@
+= getattribute =
+
+#type: vex
+#context: all
+#tags: attrib, donotuse
+#group: attrib
+
+"""Copies the value of a geometry attribute into a variable and returns a success flag."""
+
+:usage: `int getattribute(string geometry, <type> &value, string attribclass, string attribute_name, int element_number, int vertex_number)`
+:usage: `int getattribute(string geometry, <type> &value[], string attribclass, string attribute_name, int element_number, int vertex_number)`
+
+WARNING:
+    This function does not allow reading from inputs in a node context, and is harder to use than the other attribute functions. You probably want to use one of the other attribute functions instead, such as [Vex:getattrib].
+
+Returns `0` if the attribute does not exist or cannot be read, `1` on success. If the function returns `0` (failed), the given variable may remain uninitialized.
+
+:include _common#geometry:
+
+:arg:value:
+    The variable to overwrite with the attribute value.
+
+:include _common#attribclass:
+
+:include _common#attribname:
+
+:arg:element_number:
+    The point or primitive number. If you are reading a detail attribute, use `0` here.
+
+:arg:vertex_number:
+    * When reading a vertex attribute, you can specify the primitive number in the `element_number` argument and the primitive's vertex number here.
+    
+    * To use a linear vertex index, use `-1` as the `element_number` and the vertex index here.
+    
+    * If you are not reading a vertex attribute, this argument is ignored.
+
+
+@examples
+
+{{{
+#!vex
+
+vector pos, uv, clr;
+// Get the position of point 3 in "defgeo.bgeo"
+getattribute("defgeo.bgeo", pos, "point", "P", 3, 0);
+
+// Get the value of the "uv" attribute for vertex 2 of primitive
+// number 3 in the file defgeo.bgeo
+getattribute("defgeo.bgeo", uv, "vertex", "uv", 3, 2);
+
+// Get the value of the "Cd" attribute for primitive 7
+// in the SOP specified by the path "/obj/geo1/color1" (Houdini
+// only)
+getattribute("op:/obj/geo1/color1", clr, "primitive", "Cd", 7);
+}}}
+
+
+@related
+
+- [Vex:getattrib]
+- [Vex:detailattrib]
+- [Vex:primattrib]
+- [Vex:pointattrib]
+- [Vex:vertexattrib]

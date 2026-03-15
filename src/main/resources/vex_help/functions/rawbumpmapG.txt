@@ -1,0 +1,9 @@
+= rawbumpmapG =
+
+#type: vex
+#context: all
+#tags: color, map, file
+#index: no
+#status: deprecated
+
+

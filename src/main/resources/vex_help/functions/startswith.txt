@@ -1,0 +1,16 @@
+= startswith =
+
+#type: vex
+#context: all
+#group: string
+
+"""Returns 1 if the string starts with the specified string."""
+
+:usage: `int startswith(const string str, const string startswith)`
+
+Returns 1 if the string starts with the given string. 0 otherwise.
+
+@related
+
+- [Vex:endswith]
+

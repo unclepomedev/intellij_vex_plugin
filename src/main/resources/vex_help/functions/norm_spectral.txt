@@ -1,0 +1,22 @@
+= norm_spectral =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns the matrix spectral norm."""
+
+:usage: `float norm_spectral(<matrix> m)`
+
+    Returns the spectral norm of matrix <<m>>, which is the largest singular value.
+
+@related
+
+- [Vex:norm_1]
+- [Vex:norm_inf]
+- [Vex:norm_max]
+- [Vex:norm_fro]
+
+- [Vex:length]
+- [Vex:length2]

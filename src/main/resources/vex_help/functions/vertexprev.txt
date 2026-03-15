@@ -1,0 +1,37 @@
+= vertexprev =
+
+#type: vex
+#context: all
+#tags: vertex
+#group: geo
+
+"""Returns the linear vertex number of the previous vertex sharing a point with a given vertex."""
+
+:usage: `int vertexprev(<geometry>, int linearvertex)`
+
+:include _common#geometry:
+
+:include _common#linearvertex:
+
+:returns:
+    The linear index of the previous vertex sharing the same point with the given vertex,
+    or `-1` if the vertex has no earlier shared vertices.
+    (To go in the other direction, use [Vex:vertexnext].)
+
+
+@examples
+
+{{{
+#!vex
+int	vtx;
+
+// Get the previous vertex of vertex 3
+vtx = vertexprev("defgeo.bgeo", 3);
+}}}
+
+
+@related
+
+- [Vex:pointvertex]
+- [Vex:vertexnext]
+- [Vex:vertexindex]

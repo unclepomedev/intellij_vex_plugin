@@ -1,0 +1,12 @@
+= ocio_activedisplays =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Returns the names of active displays supported in Open Color IO"""
+
+:usage: `string [] ocio_activedisplays()`
+
+Returns a list of names of the active displays supported by Open Color IO in Houdini.

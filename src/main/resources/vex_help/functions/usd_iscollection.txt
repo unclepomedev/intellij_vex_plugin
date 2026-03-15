@@ -1,0 +1,31 @@
+= usd_iscollection =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Checks if the collection exists."""
+
+:usage: `int usd_iscollection(<stage>; string collectionpath)`
+
+This function checks whether the given path points to an existing collection.
+
+:include _common#usd_stage:
+
+:include _common#usd_collectionpath:
+
+:returns:
+    `1` if the path points to an existing collection, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if cube has a collection "some_collection".
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+int is_collection_existing = usd_iscollection(0, collection_path);
+}}}
+
+@related
+- [Vex:usd_iscollectionpath]

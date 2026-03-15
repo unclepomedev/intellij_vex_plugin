@@ -1,0 +1,52 @@
+= area =
+
+#type: vex
+#context: all
+#tags: shading
+#group: shading
+
+"""Returns the area of the micropolygon containing a variable such as P."""
+
+:usage: `float area(vector p, ...)`
+
+This is a more accurate and convenient method to get the micropolygon area
+than multiplying the length of `Du(P)` by the length of `Dv(P)`.
+This function is typically used to get the shading area in pixels.
+
+NOTE:
+    This function works because VEX "knows" that the variable `P`
+    has derivatives (`dPdu` and `dPdv`). Passing a literal vector
+    instead of a special variables such as `P` will return `0` since
+    VEX will not be able to access the derivatives.
+
+:include _derive_variadic:
+
+
+@examples
+
+Return the area of the current micro-polygon in camera space:
+
+{{{
+#!vex
+area(P)
+}}}
+
+Return the area of the current micro-polygon in NDC space:
+
+{{{
+#!vex
+area(transform("ndc", P))
+}}}
+
+Returns `0`, since the argument is not a variable VEX knows the derivatives for:
+
+{{{
+#!vex
+area({0.1, 2.3, 4.5})
+}}}
+
+@related
+
+- [Vex:volume]
+- [Vex:Du]
+- [Vex:Dv]

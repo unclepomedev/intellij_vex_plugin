@@ -1,0 +1,37 @@
+= xnoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+#since: 17.0
+
+"""Simplex noise is very close to Perlin noise, except with the samples on a simplex mesh rather than a grid.  This results in less grid artifacts.  It also uses a higher order bspline to provide better derivatives. This is the periodic simplex noise"""
+
+:usage: `float|vector pxnoise(float x, int xp)`
+:usage: `float|vector pxnoise(float x, float y, int xp, int yp)`
+:usage: `float|vector pxnoise(vector xyz, int xp, int yp, int zp)`
+:usage: `float|vector pxnoise(vector4 xyzt, int xp, int yp, int zp, int wp)`
+
+Simplex noise is very close to Perlin noise, except with the samples on a
+simplex mesh rather than a grid.  This results in less grid artifacts.  It also
+uses a higher order `bspline` to provide better derivatives.
+
+The various functions return the noise value at a 4D (vector4 argument),
+3D (vector argument), 2D (two float arguments) or 1D (float argument)
+position. You can get a random float value or a vector of three random
+values.
+
+The noise is in the range 0-1 with a median of 0.5. The distribution of
+the noise depends on the dimension, with higher dimensions approaching a
+Gaussian distribution of noise values.
+
+The "p" int or vector arguments specify the range of periodicity, but
+this periodicity is not an integer. For non-periodic simplex noise, see
+[xnoise|Vex:xnoise]
+
+@related
+
+:include _common#noiselinks/:
+
+

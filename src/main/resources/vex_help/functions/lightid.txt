@@ -1,0 +1,18 @@
+= lightid =
+
+#type: vex
+#context: shading
+#tags: light
+#group: shading
+
+"""Returns the light id for a light struct."""
+
+:usage: `int lightid(light lp)`
+
+Returns the integer light identifier of the light struct passed in.  The function returns -1 if the argument is invalid.
+
+@related
+
+- [Vex:getlight]
+- [Vex:getlights]
+- [Vex:getlightname]

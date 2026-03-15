@@ -1,0 +1,14 @@
+= hsvtorgb =
+
+#type: vex
+#context: all
+#tags: color, convert
+#group: convert
+
+"""Convert HSV color space into RGB color space."""
+
+:usage: `vector hsvtorgb(vector hsv)`
+:usage: `vector hsvtorgb(float hue, float sat, float val)`
+
+Convert HSV color space into RGB color space. A vector representing the
+RGB triple is returned. The hue should be in the range 0 to 1.

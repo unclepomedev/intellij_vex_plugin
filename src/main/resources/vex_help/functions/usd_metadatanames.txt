@@ -1,0 +1,35 @@
+= usd_metadatanames =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata, usd_prim, usd_attrib
+#group: usd
+#since: 18.0
+
+"""Returns the names of the metadata available on the object."""
+
+:usage: `string[] usd_metadatanames(<stage>, string path)`
+
+This function returns the metadata names that are available on the given USD object.
+
+:include _common#usd_stage:
+
+:include _common#usd_path:
+
+:returns:
+    String array containing the names of the object's metadata.
+
+@examples 
+{{{
+#!vex
+// Get the metadata names from the primitive.
+string prim_metadata_names[] = usd_metadatanames(0, "/geo/sphere");
+
+// Get the metadata names from the attribute.
+string attrib_path = usd_makeattribpath(0, "/geo/sphere", "attrib_name");
+string attrib_metadata_names[] = usd_metadatanames(0, attrib_path);
+}}}
+
+@related
+- [Vex:usd_ismetadata]
+- [Vex:usd_isprim]

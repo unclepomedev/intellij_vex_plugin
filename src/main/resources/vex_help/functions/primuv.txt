@@ -1,0 +1,35 @@
+= primuv =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+
+"""Interpolates the value of an attribute at a certain parametric (uvw) position."""
+
+This function specifies the position using _intrinsic primitive UVs_. To use UVs stored in UV attribute, use [Vex:uvsample] instead.
+
+:usage: `<type> primuv( <geometry>; string attribute_name; int prim_num; vector uvw)`
+:usage: `<type>[] primuv( <geometry>; string attribute_name; int prim_num; vector uvw)`
+
+:include _common#geometry:
+
+:arg:attribute_name:
+    The name of the attribute to read. *For point and vertex attributes, the value at the given UV coordinates will be interpolated* from the surrounding points/vertices.
+
+:arg:prim_num:
+    The primitive number to read the attribute from.
+
+:arg:uvw:
+    The primitive UVW coordinates at which to read the attribute.
+
+* Returns the (possibly interpolated) value of the attribute at the given coordinates. If the attribute or primitive number doesn't exist, returns `0`.
+
+* If you need to test for errors, you can use [Vex:prim_attribute] instead.
+
+
+@related
+
+- [Vex:prim_attribute]
+- [Vex:uvsample]
+- [Vex:xyzdist]

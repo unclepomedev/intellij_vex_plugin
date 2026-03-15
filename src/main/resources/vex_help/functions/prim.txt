@@ -1,0 +1,23 @@
+= prim =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+#redirect: ../attrib_suite#prim
+
+"""Reads a primitive attribute value from a geometry."""
+
+:usage: `<type> prim(<geometry>, string attribute_name, int primnumber)`
+:usage: `<type>[] prim(<geometry>, string attribute_name, int primnumber)`
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:arg:primnumber:
+    The primitive number to read the attribute on.
+
+:returns:
+    The value of the given attribute on the given point number, or `0` if the attribute or point do not exist.
+

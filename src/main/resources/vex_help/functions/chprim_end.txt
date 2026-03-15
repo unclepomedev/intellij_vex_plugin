@@ -1,0 +1,22 @@
+= chprim_end =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Get the end time of a channel primitive."""
+
+:usage: `float chprim_end(<geometry>, int prim)`
+
+Returns the end time in seconds of a channel primitive.
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the channel primitive.
+
+
+@related
+- [Vex:chprim_start]
+- [Vex:chprim_length]

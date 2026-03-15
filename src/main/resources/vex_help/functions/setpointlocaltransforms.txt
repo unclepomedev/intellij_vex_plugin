@@ -1,0 +1,27 @@
+= setpointlocaltransforms =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#since: 18.5
+
+"""Sets an array of point local transforms at the given point indices."""
+
+:usage: `int setpointlocaltransforms(int geohandle, int pnts[], matrix transforms[])`
+
+Sets an array of local transforms associated with the point indices. This function set the `4@localtransform` attribute.
+
+:include _common#geohandle_arg:
+
+:arg:pnts:
+    The array of point indices to set.
+
+:arg:transforms:
+    The array of transforms to set.
+
+@related
+
+- [Vex:pointtransforms]
+- [Vex:pointlocaltransforms]
+- [Vex:setpointtransforms]

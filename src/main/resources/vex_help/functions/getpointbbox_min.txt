@@ -1,0 +1,15 @@
+= getpointbbox_min =
+
+#type: vex
+#context: all
+#tags: bbox, measure
+#group: measure
+
+"""Returns the minimum of the bounding box for the geometry."""
+
+:usage: `vector getpointbbox_min(<geometry>)`
+:usage: `vector getpointbbox_min(<geometry>, string pointgroup)`
+
+    This is the same as [Vex:getbbox_min] except it only computes the bounding box of the _points_. So if a primitive has extents that don't have points (for example, the boundary of a primitive sphere), they will not be included in the box.
+
+:include _common#geometry:

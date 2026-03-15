@@ -1,0 +1,21 @@
+= chprim_eval =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Evaluate a channel primitive at the given time."""
+
+:usage: `float chprim_eval(<geometry>, int prim, float time)`
+
+Returns the evaluated value of the channel primitive at the given time.
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the channel primitive to evaluate.
+
+:arg:time:
+    The time in seconds at which to evaluate.
+

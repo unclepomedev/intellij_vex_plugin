@@ -1,0 +1,39 @@
+= vertexnext =
+
+#type: vex
+#context: all
+#tags: vertex
+#group: geo
+
+"""Returns the linear vertex number of the next vertex sharing a point with a given vertex."""
+
+:usage: `int vertexnext(<geometry>, int linearvertex)`
+    
+:include _common#geometry:
+
+:include _common#linearvertex:
+
+:returns:
+    The linear index of the next vertex sharing the same point with the given vertex,
+    or `-1` if the vertex has no later shared vertices.
+    (To go in the other direction, use [Vex:vertexprev].)
+
+
+@examples
+
+{{{
+#!vex
+
+int	vtx;
+
+// Get the next vertex of vertex 3
+vtx = vertexnext("defgeo.bgeo", 3);
+
+}}}
+
+
+@related
+
+- [Vex:pointvertex]
+- [Vex:vertexprev]
+- [Vex:vertexindex]

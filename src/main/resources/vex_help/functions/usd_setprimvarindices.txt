@@ -1,0 +1,40 @@
+= usd_setprimvarindices =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Sets the indices for the given primvar."""
+
+:usage: `int usd_setprimvarindices(int stagehandle, string primpath, string name, int indices[])`
+
+This function sets the indices for a given primvar, thus making it an indexed primvar if it was not already.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:arg:indices:
+    The index array to set.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the primvar's value and indices.
+float values[]  = array(0, 100, 200, 300, 400, 500);
+int   indices[] = array(5,5,4,4,3,3,2,2,1,1,0,0);
+usd_setprimvar(0, "/geo/mesh", "primvar_name", values); 
+usd_setprimvarindices(0, "/geo/mesh", "primvar_name", indices);
+}}}
+
+@related
+- [Vex:usd_primvarindices]
+- [Vex:usd_flattenedprimvar]

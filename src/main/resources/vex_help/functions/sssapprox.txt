@@ -1,0 +1,33 @@
+= sssapprox =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+
+"""Creates an approximate SSS BSDF."""
+
+:usage: `bsdf sssapprox(vector albedo, float meanFreePath, float roughness, float scale, ...)`
+
+:arg:albedo:
+    Average surface reflectance.
+
+:arg:meanFreePath:
+    Average distance between scattering events.
+
+:arg:roughness:
+    A value from '0.0' to '1.0' blending to an ideal diffuse transmission reflectance profile.
+
+:arg:scale:
+    Physical scale of the material. Smaller scale values will make the material more transmissive.
+
+See [writing a PBR shader|/vex/pbr] for information on BSDFs.
+
+Models SSS illumination based on an approximate reflectance profile.
+
+
+@related
+
+- [Vex:diffuse]
+- [Vex:translucent]
+- [Writing a PBR shader|/vex/pbr]

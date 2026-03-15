@@ -1,0 +1,53 @@
+= usd_primvartimesamples =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Returns the time codes at which the primvar values are authored directly on
+the given primitive."""
+
+:usage: `float[] usd_primvartimesamples(<stage>; string primpath; string name)`
+
+This function returns an array of time codes at which the values are authored for a primvar found directly on the given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name.
+
+:returns:
+    The array of time codes at which the primvar values are authored, or an empty array if the primvar does not exist or has no time samples.
+
+@examples 
+{{{
+#!vex
+// Get the time codes of a foo primvar.
+float time_codes[] = usd_primvartimesamples(0, "/geo/cube", "foo");
+}}}
+
+{{{
+#!vex
+// Get primvar values at authored time samples on the given primitive.
+float[] usd_primvartimesamplevalues(const int input; const string primpath, primvarname)
+{
+    float result[];
+
+    float time_samples[] = usd_primvartimesamples( input, primpath, primvarname );
+    foreach( float time_code ; time_samples ) 
+    {
+	float value = usd_primvar( input, primpath, primvarname, time_code );
+	push( result, value );
+    }
+
+    return result;
+}
+}}}
+
+@related
+- [Vex:usd_iprimvartimesamples] 
+- [Vex:usd_primvar]

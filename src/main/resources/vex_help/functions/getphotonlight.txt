@@ -1,0 +1,20 @@
+= getphotonlight =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: light, pbr
+#group: shading
+
+"""Returns the integer ID of the light being used for photon shading."""
+
+:usage: `int getphotonlight()`
+
+Returns `-1` if the shader is not generating photons from a light.
+
+The return value is an integer identifying a light. You can get convert this
+integer ID to the light name with [Vex:getlightname]
+
+@related
+
+- [Vex:getlights]
+- [Vex:getlightname]

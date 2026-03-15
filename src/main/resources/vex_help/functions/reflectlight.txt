@@ -1,0 +1,58 @@
+= reflectlight =
+
+#type: vex
+#context: shading
+#tags: surface
+#group: shading
+
+"""Computes the amount of reflected light which hits the surface."""
+
+:usage: `vector reflectlight(float bias, float max_contrib, ...)`
+
+    <<bias>> is typically a small number (for example 0.005) used to help
+    eliminate self-reflection.  If <<bias>> is less than 0, the default
+    ray tracing bias specified with the `vm_raybias` setting will be used
+    instead.
+
+    <<max_contrib>> tells the renderer how much the reflected light will
+    contribute to the final color of the pixel. This is typically the
+    maximum of the reflection component of a lighting model. This has no
+    effect on the resultant color. This value should typically be less than
+    1.
+
+:usage: `vector reflectlight(vector P, vector D, float bias, float max_contrib, ...)`
+
+    A general form which takes a position <<P>> and a direction <<D>>.
+
+:usage: `vector reflectlight(vector P, vector N, vector I, float bias, float max_contrib, ...)`
+
+    A general form which takes a position <<P>>, direction <<D>>, and
+    incident angle <<I>> and returns the reflection vector.
+
+:include _lightmask_arg.txt:
+
+:include _area_variadic:
+
+:include _rayopts_variadic:
+
+:include _imagefilter_variadic:
+
+
+@examples
+
+{{{
+#!vex
+surface mirror(vector refl_color=1; float bias=.005)
+{
+    Cf = refl_color * reflectlight(bias, max(refl_color));
+}
+}}}
+
+
+@related
+
+- [Vex:refractlight]
+- [Vex:gather]
+- [Vex:trace]
+- [Vex:irradiance]
+

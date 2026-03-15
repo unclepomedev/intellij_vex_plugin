@@ -1,0 +1,48 @@
+= prim_attribute =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+
+"""Interpolates the value of an attribute at a certain parametric (u, v) position and copies it into a variable."""
+
+This function specifies the position using _intrinsic primitive UVs_. To use UVs stored in UV attribute, use [Vex:uvsample] instead.
+
+:usage: `int prim_attribute(<geometry>, <type> &value, string attribute_name, int prim_number, float u, float v)`
+:usage: `int prim_attribute(<geometry>, <type> &value[], string attribute_name, int prim_number, float u, float v)`
+
+    Samples the attribute value at the given UV coordinates on the primitive.
+
+:usage: `int prim_attribute(<geometry>, <type> &value, string attribute_name, int prim_number, vector uvw)`
+:usage: `int prim_attribute(<geometry>, <type> &value[], string attribute_name, int prim_number, vector uvw)`
+    
+    Specify the UVW coordinates using a vector instead of two floats.
+
+If you don't need to test for errors, you can use [Vex:primuv] instead.
+This function does not work with certain primitive types such as tetrahedra and polysoups.
+
+:include _common#geometry:
+
+:arg:value:
+    The function overwrites this variable with the interpolated value from the primitive.
+
+:arg:attribute_name:
+    The name of the attribute to read. *For point and vertex attributes, the value will at the given UV coordinates will be interpolated* from the surrounding points/vertices.
+
+:arg:prim_number:
+    The primitive number to read the attribute from.
+
+:arg:`u`, `v`:
+    The primitive UV coordinates at which to read the attribute.
+
+:returns:
+    Returns `1` on success or `0` on an error (for example, the attribute doesn't exist).
+
+    Returns `0` if the type of `value` is larger than the primitive type. For example, you can't read a vector attribute into a matrix variable.
+
+
+@related
+
+- [Vex:primuv]
+- [Vex:uvsample]

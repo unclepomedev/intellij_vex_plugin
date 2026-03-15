@@ -1,0 +1,28 @@
+= pcline =
+
+#type: vex
+#context: all
+#tags: ptcloud, proximity
+#group: ptcloud
+#since: 18.0
+
+"""Returns a list of closest points to an infinite line from a specified file"""
+
+:usage: `int[] pcline(<geometry>, string PChannel, vector P, vector dir, float max_distance, int maxpoints)`
+:usage: `int[] pcline(<geometry>, string ptgroup, string PChannel, vector P, vector dir, float max_distance, int maxpoints)`
+
+:include _common#geometry:
+
+These functions open a geometry file and return a list of points within <<max_distance>> of the line passing through <<P>> with direction <<dir>>. 
+
+The `ptgroup` is a point group that limits the points to search.  This is a SOP-style group pattern, so can be something like `0-10` or `@Cd.x>0.5`.  A blank string is treated as matching all points.
+
+@related
+
+- [Vex:nearpoint]
+- [Vex:nearpoints]
+- [Vex:pccone_radius]
+- [Vex:pcfind]
+- [Vex:pcfind_radius]
+- [Vex:pgfind]
+

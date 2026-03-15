@@ -1,0 +1,25 @@
+= idtoprim =
+
+#type: vex
+#context: all
+#tags: search, prim
+#group: attrib
+
+"""Finds a primitive by its id attribute."""
+
+:usage: `int idtoprim(<geometry>, int id)`
+
+Returns the number of the primitive with the given value in the `id` attribute. Returns `-1` if no primitive has the given ID.
+
+If the geometry doesn't have an `id` attribute, primitive numbers are used as ids.  In this case, the function will return the given `id` value, unless it is greater than the number of points in the source geometry, in which case the function will return `-1`.
+
+To look up a primitive by its `name` attribute value, use [Vex:nametoprim]. To look up a primitive by an arbitrary string or int attribute value, use [Vex:findattribval].
+
+:include _common#geometry:
+
+
+@related
+
+- [Vex:nametoprim]
+- [Vex:idtopoint]
+- [Vex:findattribval]

@@ -1,0 +1,17 @@
+= rgbtoxyz =
+
+#type: vex
+#context: all
+#tags: color, convert
+#group: convert
+
+"""Convert a linear sRGB triplet to CIE XYZ tristimulus values."""
+
+:usage: `vector rgbtoxyz(vector rgb)`
+
+Convert a linear sRGB (Rec. 709) triplet to CIE XYZ tristimulus values.
+XYZ can be thought of as a 'universal color space'.
+
+@related
+- [Vex:xyztorgb]
+- [Vex:blackbody]

@@ -1,0 +1,31 @@
+= dot =
+
+#type: vex
+#context: all
+#tags: math, vector
+#group: math
+
+"""Returns the dot product between the arguments."""
+
+:usage: `float dot(vector2 a, vector2 b)`
+:usage: `float dot(vector a, vector b)`
+:usage: `float dot(vector4 a, vector4 b)`
+:usage: `float dot(vector a, vector4 b)`
+:usage: `float dot(vector4 a, vector b)`
+:usage: `float dot(matrix2 a, matrix2 b)`
+:usage: `float dot(matrix3 a, matrix3 b)`
+:usage: `float dot(matrix a, matrix b)`
+
+    Returns the [dot product|Wp:Dot_product] of the arguments.
+
+    When dotting a `vector` with a `vector4`, only the first three
+    components are used.
+
+:usage: `float dot(<type> a[], <type> b[])`
+:usage: `int dot(int a[], int b[])`
+
+    Returns the sum of dot products i.e. `dot(a, b) = dot(a[0], b[0]) + ... + dot(a[n-1], b[n-1])` where `n = min(len(a), len(b))`.
+
+@related
+
+- [Vex:cross]

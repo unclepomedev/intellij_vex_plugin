@@ -1,0 +1,16 @@
+= ambient =
+
+#type: vex
+#context: displace, fog, surface
+#tags: surface, light
+#group: light
+
+"""Returns the color of ambient light in the scene."""
+
+:usage: `vector ambient( ... )`
+
+Returns the color of ambient light in the scene.
+
+:include _lightmask_variadic:
+
+

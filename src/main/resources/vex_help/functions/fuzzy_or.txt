@@ -1,0 +1,21 @@
+= fuzzy_or =
+
+#type: vex
+#context: all
+#tags: fuzzy
+#group: fuzzy
+
+:usage: `int fuzzy_or(int a, int b, ...)`
+:usage: `float fuzzy_or(float a, float b, ...)`
+
+    Returns the fuzzy "OR" (Zadeh OR) of the input fuzzy values.
+
+
+@related
+
+- [Vex:fuzzy_and]
+- [Vex:fuzzy_nand]
+- [Vex:fuzzy_not]
+- [Vex:fuzzy_nor]
+- [Vex:fuzzy_xor]
+- [Vex:fuzzy_nxor]

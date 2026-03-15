@@ -1,0 +1,27 @@
+= attribtypeinfo =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#redirect: ../attribtypeinfo_suite
+
+"""Returns the transformation metadata of a geometry attribute."""
+
+:usage:`string attribtypeinfo(<geometry>, string attribclass, string attribute_name)`
+
+    This general form lets you specify the attribute "class" at run-time. This can be useful for writing general code that can work on different classes.
+    If you know the attribute class ahead of time, using [Vex:detailattribtypeinfo], [Vex:primattribtypeinfo], [Vex:pointattribtypeinfo], or [Vex:vertexattribtypeinfo] may be faster.
+
+:include _common#geometry:
+
+:include _common#attribclass:
+
+:include _common#attribname:
+
+:returns:
+
+    A string indicating the metadata for a given geometry attribute, or the empty string (`""`) if the attribute does not exist.
+
+    :include _common#attrib_typeinfo_values:
+

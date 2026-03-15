@@ -1,0 +1,59 @@
+= agentclipsampleworld =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Samples an agent's animation clip at a specific time."""
+
+:usage: `matrix[] agentclipsampleworld(<geometry>, int prim, string clipname, float time)`
+:usage: `matrix[] agentclipsampleworld(<geometry>, int prim, int clipindex, float time)`
+:usage: `matrix   agentclipsampleworld(<geometry>, int prim, string clipname, float time, int transform)`
+:usage: `matrix   agentclipsampleworld(<geometry>, int prim, int clipindex, float time, int transform)`
+
+Evaluates the clip at the given time and returns the world transforms of the agent's rig.
+Returns an empty array if `clipname` is not one of the agent's [animation clips|Vex:agentclipcatalog],  `prim` is out of range, `prim` is not an agent primitive, or `transform` is [out of range|Vex:agenttransformcount].
+The `matrix` signature is more efficient than the `matrix[]` signature for sampling a single transform.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    The name of the animation clip.
+
+:include _common#agent_clipindex:
+
+:arg:time:
+    The time (in seconds) to evaluate the clip at. If this time is greater than the [clip's length|Vex:agentcliplength], it will be wrapped around.
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+
+@examples
+
+Sample the world transforms of the walk clip after 1.2 seconds.
+
+{{{
+#!vex
+matrix xforms[] = agentclipsampleworld(0, @primnum, "agent1_clip.walk", 1.2);
+}}}
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentclipnames]
+- [Vex:agentcliplayersamplelocal]
+- [Vex:agentcliplayersampleworld]
+- [Vex:agentcliplength]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:agentfindclip]
+- [Vex:agenttransformcount]
+- [Vex:agenttransformtoworld]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

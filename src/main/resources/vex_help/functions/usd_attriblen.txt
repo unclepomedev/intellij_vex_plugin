@@ -1,0 +1,40 @@
+= usd_attriblen =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 17.5
+
+"""Returns the length of the array attribute."""
+
+:usage: `int usd_attriblen(<stage>; string primpath; string name)`
+:usage: `int usd_attriblen(<stage>; string primpath; string name; float timecode)`
+
+This function returns the length of a given attribute.
+
+For array attributes it is the length of the array, and for non-array attributes the length is 1.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:include _common#usd_timecode:
+
+:returns:
+    The length of the array attribute, or 1 if the attribute is not an array. Use [Vex:usd_isarray] if you want to check whether the attribute is an array.
+
+@examples 
+{{{
+#!vex
+// Get the array length of an attribute on the cube primitive.
+int length = usd_attriblen(0, "/geo/cube", "attribute_name");
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_isarray]
+- [Vex:usd_attrib]

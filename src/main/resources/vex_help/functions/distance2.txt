@@ -1,0 +1,18 @@
+= distance2 =
+
+#type: vex
+#context: all
+#tags: measure, vector
+#group: measure
+
+"""Returns the squared distance between the two points."""
+
+:usage: `float distance2(vector2 a, vector2 b)`
+:usage: `float distance2(vector a, vector b)`
+:usage: `float distance2(vector4 a, vector4 b)`
+
+This returns the squared distance. To get the plain distance, use [Vex:distance].
+
+
+@related
+- [Vex:distance]

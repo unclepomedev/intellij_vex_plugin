@@ -1,0 +1,19 @@
+= cbrt =
+
+#type: vex
+#context: all
+#tags: math
+#group: math
+
+"""Returns the cube root of the argument."""
+
+:usage: `float cbrt(float n)`
+
+    Returns the cube-root of `n`.
+
+:usage: `vector2 cbrt(vector2 v)`
+:usage: `vector cbrt(vector v )`
+:usage: `vector4 cbrt(vector4 v )`
+
+    Returns a new vector where each component is the cube-root of the corresponding component in `v`.
+

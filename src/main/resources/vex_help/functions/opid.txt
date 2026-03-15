@@ -1,0 +1,35 @@
+= opid =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+#since: 17.5
+
+"""Resolves an operator path string and return its op_id."""
+
+:usage: `int opid(string op_path)`
+:usage: `int opid( int op_id )`
+
+    Resolves an operator path and returns its corresponding operator id.
+Return -1 on failure. The form that takes an operator id as an input returns 1
+if it is a valid operator id, otherwise it returns 0. This can be used to test
+if an operator id is valid.
+
+    The operator id can change when reloading the scene.
+
+
+@related
+
+- [Vex:ch]
+- [Vex:chf]
+- [Vex:chs]
+- [Vex:chi]
+- [Vex:chv]
+- [Vex:ch3]
+- [Vex:ch4]
+- [Vex:chramp]
+- [Vex:chrampderiv]
+- [Vex:chid]
+
+

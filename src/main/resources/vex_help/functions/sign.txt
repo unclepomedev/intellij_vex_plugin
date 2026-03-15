@@ -1,0 +1,25 @@
+= sign =
+
+#type: vex
+#context: all
+#tags: math
+#group: math
+
+"""Returns -1, 0, or 1 depending on the sign of the argument."""
+
+:usage: `int sign(int n)`
+:usage: `float sign(float n)`
+
+    For a scalar value, returns `-1` for a negative number, `0` for the number zero,
+    and `+1` for a positive number.
+    
+:usage: `vector2 sign(vector2 v)`
+:usage: `vector sign(vector v)`
+:usage: `vector4 sign(vector4 v)`
+
+    For vector values the sign of the individual components is returned as a vector.
+
+
+@related
+
+- [Vex:abs]

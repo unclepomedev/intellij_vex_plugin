@@ -1,0 +1,33 @@
+= usd_setactive =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Sets the primitive active state."""
+
+:usage: `int usd_setactive(int stagehandle, string primpath, int flag)`
+
+This function sets the primitive's active state.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:flag:
+    Non-zero to make the primitive active or 0 to make it inactive.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the sphere primitive as active.
+usd_setactive(0, "/geo/sphere", true);
+}}}
+
+@related
+- [Vex:usd_isactive]

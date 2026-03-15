@@ -1,0 +1,16 @@
+= tolower =
+
+#type: vex
+#context: all
+#group: string
+
+"""Converts all characters in string to lower case"""
+
+:usage: `string tolower(const string str)`
+
+Returns the string with A-Z replaced with a-z.
+
+@related
+
+- [Vex:toupper]
+- [Vex:titlecase]

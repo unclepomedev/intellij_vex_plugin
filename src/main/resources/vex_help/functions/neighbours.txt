@@ -1,0 +1,41 @@
+= neighbours =
+
+#type: vex
+#context: all
+#tags: point, proximity
+#group: geo
+
+"""Returns an array of the point numbers of the neighbours of a point."""
+
+:usage: `int[] neighbours(<geometry>, int ptnum)`
+
+:include _common#geometry:
+
+This is a simpler, array-based replacement for the combination of
+[Vex:neighbourcount] and [Vex:neighbour].  The array contains the numbers
+of all points that share an edge with `ptnum`.  The point numbers are in no particular order.
+
+
+@examples
+
+This is roughly equivalent to the following code:
+
+{{{
+#!vex
+int []
+neighbours(int opinput, int ptnum)
+{
+    int     i, n;
+    int     result[];
+    n = neighbourcount(input, ptnum);
+    resize(result, n);
+    for (i = 0; i < n; i++)
+        result[i] = neighbour(input, ptnum, i);
+}
+}}}
+
+
+@related
+
+- [Vex:neighbourcount]
+- [Vex:neighbour]

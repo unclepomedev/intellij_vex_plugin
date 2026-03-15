@@ -1,0 +1,28 @@
+= usd_isinstance =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 18.0
+
+"""Checks if the primitive is an instance."""
+
+:usage: `int usd_isinstance(<stage>, string primpath)`
+
+This function checks whether the given primitive is an instance.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    1 if the primitive is an instance, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere primitive is an instance.
+int is_instance = usd_isinstance(0, "/geometry/sphere");
+}}}
+

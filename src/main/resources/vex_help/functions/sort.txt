@@ -1,0 +1,39 @@
+= sort =
+
+#type: vex
+#context: all
+#group: array
+
+"""Returns the array sorted in increasing order."""
+
+:usage: `int[] sort(int values[])`
+:usage: `float[] sort(float values[])`
+:usage: `string[] sort(string values[])`
+
+Returns a version of the given array sorted in increasing order.
+
+:box:
+    #id: sort_properties
+    
+    * [Vex:argsort] and [Vex:sort] use a stable sort.
+    
+    * Use [Vex:reverse] to reverse the order of the sort.
+
+
+@examples
+
+:box:Sort an array of numbers in descending order
+    {{{
+    #!vex
+    int numbers[] = {5, 2, 90, 3, 1};
+    int descending_nums[] = reverse(sort(numbers));  // {90, 5, 3, 2, 1}
+    }}}
+
+
+@related
+
+- [/vex/arrays]
+- [Vex:argsort]
+- [Vex:reorder]
+- [Vex:reverse]
+

@@ -1,0 +1,27 @@
+= agenttransformcount =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns the number of transforms in an agent primitive's rig."""
+
+:usage: `int agenttransformcount(<geometry>, int prim)`
+
+Returns `-1` if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentlocaltransforms]
+- [Vex:agentrigchildren]
+- [Vex:agentrigfind]
+- [Vex:agentrigparent]
+- [Vex:agenttransformtolocal]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransforms]

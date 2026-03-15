@@ -1,0 +1,265 @@
+#type: include
+
+:arg:`<geometry>`:
+    #id: geometry
+    
+    When running in the context of a node (such as a wrangle SOP), this argument can be an integer representing the input number (starting at 0) to read the geometry from.
+    
+    Alternatively, the argument can be a string specifying a geometry file (for example, a `.bgeo`) to read from. When running inside Houdini, this can be an `op:/path/to/sop` reference.
+
+:arg:opinput:
+    #id: opinput_arg
+    
+    The input number to read from, starting from 0. For example, the first input is 0, the second input is 1, and so on.
+
+:arg:opinput:
+    #id: chop_opinput_arg
+    
+    The input number to read from, starting from 0. For example, the first input is 0, the second input is 1, and so on.
+    
+    If you specify `-1`, the function uses the current CHOP node or input `0` if it is connected.
+
+:arg:geometry:
+    #id: geometry_output
+    
+    A string specifying a geometry file (for example, a `.bgeo`) to read from. When running inside Houdini, this can be an `op:/path/to/sop` reference.
+
+:arg:geohandle:
+    #id: geohandle_arg
+    
+    A handle to the geometry to write to. Currently the only valid value is `0` or [Vex:geoself], which means the current geometry in a node. (This argument may be used in the future to allow writing to other geometries.)
+
+:arg:attribclass:
+    #id: attribclassnogroup
+    
+    One of `"detail"` (or `"global"`), `"point"`, `"prim"`, or `"vertex"`.
+
+:arg:attribclass:
+    #id: attribclass
+    
+    One of `"detail"` (or `"global"`), `"point"`, `"prim"`, or `"vertex"`.
+    
+    You can also use `"primgroup"`, `"pointgroup"` or `"vertexgroup"` to [read from groups|/vex/groups].
+
+:arg:attribute_name:
+    #id: attribnamenogroup
+    
+    The name of the attribute to read.
+
+:arg:attribute_name:
+    #id: attribname
+    
+    The name of the attribute (or intrinsic) to read.
+
+:arg:elemnum:
+    #id: elemnum
+    
+    The point/primitive/vertex number to read the attribute value from. For detail attributes, use `0` here (the argument is ignored for detail attributes).
+    
+    To get the linear vertex number given a primitive number and the vertex number on the primitive, use the [Vex:primvertex] function.
+
+:arg:intrinsic_name:
+    #id: intrinsicname
+    
+    The name of the intrinsic to read. For example, `"pointattributes"`, `"pointcount"`, or `"bounds"`.
+
+:null:
+    #id: attrib_typeinfo_values
+    
+    `"none"` |
+        Don't transform.
+    `"point"` |
+        Apply scales, rotations, and transformations.
+    `"hpoint"` |
+        Apply scales, rotations, and transformations to this vector4.
+    `"vector"` |
+        Apply scales and rotations, but not transformations.
+    `"normal"` |
+        Apply rotations, apply scales with inverse-transpose.
+    `"color"` |
+        Don't transform.
+    `"matrix"` |
+        Apply scales, rotations, and transformations to this matrix.
+    `"quaternion"` |
+        Apply rotations.
+    `"indexpair"` |
+        Don't transform.
+    `"integer"` |
+        Do not blend this value when points are averaged.
+    `"integer-blend"` |
+        Integer values that blend when points are averaged.
+    `"texturecoord"` |
+        Don't transform, and try to preserve seams when interpolating.
+        Attributes with this type will show up in the UV viewport menu.
+
+:null:
+    #id: set_attrib_info
+    
+    Returns the value of `geohandle` on success or `-1` on failure.
+    
+    NOTE:
+        If the attribute does not exist, this function *creates the attribute* with a default value of zero, empty string, or an empty array.
+        If you want to control the default value of a numeric attribute, use [Vex:addattrib] before setting the attribute.
+
+        If the attribute does not already exist, its type info is automatically set for attributes with [standard names|/vex/snippets#known] such as `Cd` and `orient`.
+        If you want to control the type info of a numeric attribute, use [Vex:setattribtypeinfo] before setting the attribute.
+
+:arg:mode:
+    #id: set_attrib_mode
+    
+    (Optional) if given, this controls how the function modifies any existing value in the attribute.
+
+    `"set"` |
+        Overwrite the attribute with the given value.
+    `"add"` |
+        Add to the attribute the value.
+    `"min"`, `"minimum"` |
+        Set the attribute to the minimum of itself and the value.
+    `"max"`, `"maximum"` |
+        Set the attribute to the maximum of itself and the value.
+    `"mult"`, `"multiply"` |
+        Multiply the attribute by the value.  For matrices, this will do matrix multiplication.  For vectors, component-wise.
+    `"toggle"` |
+        Toggles the attribute, independent of the source value.  Useful for toggling group membership.
+    `"append"` |
+        Valid for string, dict, and array attributes.  For strings and
+        arrays, appends the source value to the end of the original
+        value.  For dictionaries, updates the original dictionary with
+        the source dictionary, replacing any matching keys.
+
+:arg:linearvertex:
+    #id: linearvertex
+    
+    The linear index of a vertex.
+    If you have a point number and point vertex number, you can use [Vex:vertexindex] to convert them to a linear index.
+
+:arg:`<stage>`:
+    #id: usd_stage
+    
+    When running in the context of a node (such as a wrangle LOP), this argument can be an integer representing the input number (starting at 0) to read the stage from. The integer is equivalent to the string form referencing a particular input, e.g., "opinput:0".
+
+    You can also use this argument to refer to a USD file (e.g., "/path/to/file.usd"), or to another LOP node's cooked stage using the `op:` as the path prefix (e.g., "op:/stage/lop_node").
+
+
+:arg:stagehandle:
+    #id: usd_stagehandle
+    
+    A handle to the stage to write to. Currently the only valid value is `0`, which means the current stage in a node. (This argument may be used in the future to allow writing to other stages.)
+
+:arg:path:
+    #id: usd_path
+    
+    The path to the object. I.e, a primitive, an attribute, or a relationship.
+
+:arg:primpath:
+    #id: usd_primpath
+    
+    The path to the primitive.
+
+:arg:collectionpath:
+    #id: usd_collectionpath
+    
+    The path to the collection.
+
+:arg:name:
+    #id: usd_metadataname
+    
+    The metadata name.
+
+    The name can be namespaced to acces values inside (possibly nested) VtDictionaries, such as custom data dictionary, e.g., "customData:name" or "customData:name:subname". For non-namespaced names, the object schema needs to declare a given metadata for it to be accessible, e.g., "active" or "documentation".
+
+:arg:timecode:
+    #id: usd_timecode
+    
+    The USD time code at which to evaluate the attribute. A USD time code roughly corresponds to a frame in Houdini. If not given, the time code corresponding to the current frame is used.
+
+:arg:suffix:
+    #id: usd_xformopsuffix
+
+    The transform operation suffix.
+
+    USD primitives are transformed in space by a series of transform operations whose full names are sequentially listed in the `xformOpOrder` attribute.  Full names are namespaced, encode the operation transform type (e.g., translation or rotation), and can also contain a suffix. If primitive has a few operations of the same type, it's necessary to specify the suffix to differentiate between them. This parameter specifies such a suffix.
+
+:arg:scale_inherit_mode:
+    #id: scale_inherit_mode
+
+    Specifies how scale inheritance from the parent transform is applied to the result. It is one of the following defines from `math.h`:
+    - `SCALE_INHERIT_DEFAULT` (0) - simple inheritance:
+      {{{
+      world = local * parent_world
+      }}}
+    - `SCALE_INHERIT_OFFSET_ONLY` (1) - child doesn't scale with the parent local scales, but local translation is scaled:
+      {{{
+      world = local_scale_rotates * invert(parent_local_scales) * local_translates * parent_world
+      }}}
+    - `SCALE_INHERIT_OFFSET_AND_SCALE` (2) - local translation is scaled as before but parent local scaling is also reapplied by the child in local space:
+      {{{
+      world = parent_local_scales * local_scale_rotates * invert(parent_local_scales) * T * parent_world
+      }}}
+    - `SCALE_INHERIT_SCALE_ONLY` (3) - local translation is not scaled, but parent local scaling is reapplied by the child in local space:
+      {{{
+      world = parent_local_scales * local * invert(parent_local_scales) * parent_world
+      }}}
+    - `SCALE_INHERIT_IGNORE` (4) - child completely ignores any parent local scaling:
+      {{{
+      world = local * invert(parent_local_scales) * parent_world
+      }}}
+
+:null:
+    #id: noiselinks
+
+    - [/vex/random]
+    - [Vex:anoise]
+    - [Vex:curlnoise]
+    - [Vex:flownoise]
+    - [Vex:noise]
+    - [Vex:onoise]
+    - [Vex:pnoise]
+    - [Vex:snoise]
+    - [Vex:vnoise]
+    - [Vex:wnoise]
+    - [Vex:xnoise]
+
+:arg:clipindex:
+    #id: agent_clipindex
+
+    Index of a clip in the agent's definition.
+    A clip's index can be obtained via [Vex:agentfindclip].
+
+:arg:trs:
+    #id: trs
+    One of the transform order constants listed below, which can be imported from `$HFS/houdini/vex/include/math.h`.
+
+    Constant name ||
+        Transform Order ||
+    XFORM_SRT |
+        Scale, Rotate, Translate
+    XFORM_STR |
+        Scale, Translate, Rotate
+    XFORM_RST |
+        Rotate, Scale, Translate
+    XFORM_RTS |
+        Rotate, Translate, Scale
+    XFORM_TSR |
+        Translate, Scale, Rotate
+    XFORM_TRS |
+        Translate, Rotate, Scale
+
+:arg:xyz:
+    #id: xyz
+    One of the rotation order constants listed below, which can be imported from `$HFS/houdini/vex/include/math.h`.
+
+    Constant name ||
+        Rotation Order ||
+    XFORM_XYZ |
+        Rotate order X, Y, Z
+    XFORM_XZY |
+        Rotate order X, Z, Y
+    XFORM_YXZ |
+        Rotate order Y, X, Z
+    XFORM_YZX |
+        Rotate order Y, Z, X
+    XFORM_ZXY |
+        Rotate order Z, X, Y
+    XFORM_ZYX |
+        Rotate order Z, Y, X

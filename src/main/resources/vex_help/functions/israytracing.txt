@@ -1,0 +1,16 @@
+= israytracing =
+
+#type: vex
+#context: shading
+#tags: shading
+#group: shading
+
+"""Indicates whether a shader is being executed for ray tracing."""
+
+:usage: `int israytracing()`
+
+Returns true when the current shader is shading ray hits.  For micropolygon
+rendering, the return value will be false.  This function can be used to
+disambiguate shading styles for renders that use the vm_rayshade property -
+where only some objects are ray traced.
+

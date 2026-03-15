@@ -1,0 +1,35 @@
+= usd_variants =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim, usd_variant
+#group: usd
+#since: 17.5
+
+"""Returns the variants belonging to the given variant set on a primitive."""
+
+:usage: `string[] usd_variants(<stage>, string primpath, string variantset)`
+
+This function returns the variants available in the given variant set.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:variantset:
+    The variant set name.
+
+:returns:
+    The names of the variants available in a given variant set on a given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the variants in the variant set "shapes" on a "shape_shifter" primitive.
+string variants[] = usd_variants(0, "/geo/shape_shifter", "shapes");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_variantsets]
+- [Vex:usd_variantselection]

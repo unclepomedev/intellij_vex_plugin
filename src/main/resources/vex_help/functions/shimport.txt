@@ -1,0 +1,21 @@
+= shimport =
+
+#type: vex
+#context: fog, surface
+#tags: shadedata, surface, fog
+#group: shading
+
+"""Imports a variable from the shadow shader for the surface."""
+
+This function is only valid inside an [Vex:illuminance] loop.
+
+:usage: `int shimport(string variable_name, <type> &value)`
+
+:arg:variable_name:
+    The variable to import from the shadow shader.
+
+:arg:value:
+    If the variable is successfully read, the value is copied into this variable.
+
+:returns:
+    `1` if the variable is defined and exported, `0` otherwise.

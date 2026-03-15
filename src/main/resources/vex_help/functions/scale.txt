@@ -1,0 +1,24 @@
+= scale =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: transform
+
+"""Scales the given matrix in three directions simultaneously (X, Y, Z -
+given by the components of the scale_vector)."""
+
+:usage: `void scale(matrix2 &m, vector2 scale_vector)`
+:usage: `void scale(matrix &m, vector scale_vector)`
+:usage: `void scale(matrix3 &m, vector scale_vector)`
+
+    Scales the matrix in three directions simultaneously by the factors in the vector.
+    This modifies the matrix in-place, rather than returning a new matrix.
+
+@related
+
+- [Vex:pretranslate]
+- [Vex:prerotate]
+- [Vex:prescale]
+- [Vex:translate]
+- [Vex:rotate]

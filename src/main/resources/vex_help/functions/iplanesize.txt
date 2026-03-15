@@ -1,0 +1,16 @@
+= iplanesize =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the number of components in the plane named `planename` in
+the specified input."""
+
+:usage: `int iplanesize(int opinput, int planeindex)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The number of components in the plane named `planename` in the specified input.

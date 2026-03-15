@@ -1,0 +1,37 @@
+= ocio_transform =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Transform colors using Open Color IO"""
+
+:usage: `vector ocio_transform(string dest; vector clr)`
+:usage: `vector ocio_transform(string src, string dest; vector clr)`
+:usage: `vector ocio_transform(string src, string dest, string looks; vector clr)`
+
+    Transform a three-component color into a new color space.
+
+:usage: `vector4 ocio_transform(string dest; vector4 clr)`
+:usage: `vector4 ocio_transform(string src, string dest; vector4 clr)`
+:usage: `vector4 ocio_transform(string src, string dest, string looks; vector4 clr)`
+
+    Transform a four-component color into a new color space.
+
+:arg:src:
+    The name of the color space to transform from. If this is not given, the function assumes the space assigned to `"data"`.
+
+:arg:dest:
+    The name of the color space to transform to.
+
+:arg:looks:
+    A comma separated list of color gradings (also known as "looks").
+
+:arg:clr:
+    The color to transform.
+
+
+@related
+
+- [Vex:ocio_spaces]

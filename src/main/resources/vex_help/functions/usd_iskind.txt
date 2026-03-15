@@ -1,0 +1,35 @@
+= usd_iskind =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 18.0
+
+"""Checks if the primitive is of a given kind."""
+
+:usage: `int usd_iskind(<stage>, string primpath, string kind)`
+
+This function checks whether the given primitive is of a given kind, e.g., an
+assembly, component, etc.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:kind:
+    The name of a kind to check.
+
+:returns:
+    1 if the primitive is of a given kind, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere primitive is of an assembly kind.
+int is_assembly = usd_iskind(0, "/geometry/sphere", "assembly");
+}}}
+
+@related
+- [Vex:usd_kind]
+- [Vex:usd_setkind]

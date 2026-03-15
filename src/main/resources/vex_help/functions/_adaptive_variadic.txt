@@ -1,0 +1,10 @@
+#type: include
+
+== Sample adaptation options ==
+
+:varg:adaptive:
+    `1` or `0`. Turns on an automatic optimization that will reduce the
+    number of samples when there is little variation in occlusion
+    above the sample point. This can improve performance at the
+    expense of some possible flickering or additional noise.
+

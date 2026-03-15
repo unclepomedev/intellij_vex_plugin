@@ -1,0 +1,19 @@
+= primhedge =
+
+#type: vex
+#context: all
+#tags: prim, hedge
+#group: hedge
+
+"""Returns *one* of the half-edges contained in a primitive."""
+
+:usage: `int primhedge(<geometry>, int prim)`
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number in the geometry.  `0` is the first primitive.
+
+:returns:
+    The number of an arbitrary half-edge contained in `prim`.
+    Returns `-1` if the primitive number is not valid.

@@ -1,0 +1,13 @@
+= ow_vspace =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Transforms a direction vector from Object to World space."""
+
+:usage: `vector ow_vspace(vector v)`
+
+Transforms a direction vector from _Object_ to _World_ space.
+

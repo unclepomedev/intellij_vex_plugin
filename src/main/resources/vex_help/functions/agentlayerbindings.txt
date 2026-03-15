@@ -1,0 +1,54 @@
+= agentlayerbindings =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+
+"""Returns the transform that each shape in an agent's layer is bound to."""
+
+:usage: `int[] agentlayerbindings(<geometry>, int prim, string layername, string shapetype)`
+:usage: `int[] agentlayerbindings(<geometry>, int prim, int layerindex, string shapetype)`
+
+Returns an empty array if `layername` is not one of the agent's [layers|Vex:agentlayers], `shapetype` is invalid, `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:layername:
+    The name of one of the agent's layers.
+
+:arg:layerindex:
+    Index of a layer in the agent's definition.
+    A layer's index can be obtained via [Vex:agentfindlayer].
+
+:arg:shapetype:
+    Whether to inspect `"static"`, `"deforming"`, or `"all"` shapes from the specified layer.
+
+
+@examples
+
+Find the current world transform of each static shape in the collision layer.
+
+{{{
+#!vex
+string layer = agentcollisionlayer(0, @primnum);
+int[] bindings = agentlayerbindings(0, @primnum, layer, "static");
+matrix xforms[] = agentworldtransforms(0, @primnum);
+
+foreach (int idx; bindings) {
+matrix xform = xforms[idx];
+}
+}}}
+
+
+@related
+- [Vex:agentcollisionlayer]
+- [Vex:agentcurrentlayer]
+- [Vex:agentfindlayer]
+- [Vex:agentlayers]
+- [Vex:agentlayershapes]
+- [Vex:setagentcollisionlayer]
+- [Vex:setagentcurrentlayer]

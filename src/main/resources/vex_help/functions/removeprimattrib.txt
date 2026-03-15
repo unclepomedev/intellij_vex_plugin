@@ -1,0 +1,25 @@
+= removeprimattrib =
+
+#type: vex
+#context: all
+#tags: attrib, primitive, create
+#group: attrib
+
+"""Removes a primitive attribute from a geometry."""
+
+If you don't know the class of attribute until runtime, use [Vex:removeattrib].
+
+:usage: `int removeprimattrib(int geohandle, string name)`
+
+    Removes a primitive attribute from the given geometry.
+
+@related
+
+- [Vex:removeattrib]
+- [Vex:removedetailattrib]
+- [Vex:removepointattrib]
+- [Vex:removepointgroup]
+- [Vex:removevertexattrib]
+- [Vex:removevertexgroup]
+- [Vex:removeprimattrib]
+- [Vex:removeprimgroup]

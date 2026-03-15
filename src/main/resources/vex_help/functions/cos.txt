@@ -1,0 +1,29 @@
+= cos =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the cosine of the argument."""
+
+:usage: `float cos(float n)`
+
+    Returns the cosine of `n`, where `n` is in radians.
+
+:usage: `vector2 cos(vector2 n )`
+:usage: `vector cos(vector n )`
+:usage: `vector4 cos(vector4 n )`
+
+    Returns a new vector with `cos()` applied to each component.
+
+
+@related
+
+- [Vex:acos]
+- [Vex:cosh]
+- [Vex:sin]
+- [Vex:tan]
+- [Vex:sinpi]
+- [Vex:tanpi]
+- [Vex:cospi]

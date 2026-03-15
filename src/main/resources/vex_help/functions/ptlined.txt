@@ -1,0 +1,17 @@
+= ptlined =
+
+#type: vex
+#context: all
+#tags: proximity
+#group: math
+
+"""This function returns the closest distance between the point Q and a
+finite line segment between points P0 and P1."""
+
+:usage: `float ptlined(vector P0, vector P1, vector Q)`
+
+This function returns the closest distance between the point <<Q>> and a
+finite line segment between points <<P0>> and <<P1>>.
+
+This function is a synonym for the newer method [Vex:distance_pointsegment].
+

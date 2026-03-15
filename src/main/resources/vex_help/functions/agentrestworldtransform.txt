@@ -1,0 +1,34 @@
+= agentrestworldtransform =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns the world space rest transform for an agent primitive's joint."""
+
+:usage: `matrix agentrestworldtransform(<geometry>, int prim, int transform)`
+
+Returns an identity matrix if `transform` is [out of range|Vex:agenttransformcount], `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+
+@related
+- [Vex:agentlocaltransforms]
+- [Vex:agentlocaltransform]
+- [Vex:agentrestlocaltransform]
+- [Vex:agenttransformtolocal]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransform]
+- [Vex:agentworldtransforms]
+- [Vex:setagentlocaltransform]
+- [Vex:setagentlocaltransforms]
+- [Vex:setagentworldtransform]
+- [Vex:setagentworldtransforms]
