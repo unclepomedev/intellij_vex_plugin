@@ -28,27 +28,17 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
-        addStandardFunctions(parameters, result)
-        addLocalFunctions(parameters, result)
+        val localFunctionNames = addLocalFunctions(parameters, result)
+        addStandardFunctions(parameters, result, localFunctionNames)
     }
 
-    private fun addStandardFunctions(parameters: CompletionParameters, result: CompletionResultSet) {
-        val vexApiProvider = parameters.originalFile.project.getService(VexApiProvider::class.java) ?: return
-
-        vexApiProvider.functions.forEach { func ->
-            val lookupElement = LookupElementBuilder.create(func.name)
-                .withTypeText(func.returnType)
-                .withTailText("(${func.args.joinToString(", ")})", true)
-                .withIcon(AllIcons.Nodes.Function)
-                .withInsertHandler(FunctionInsertHandler(hasArgs = func.args.isNotEmpty()))
-
-            result.addElement(lookupElement)
-        }
-    }
-
-    private fun addLocalFunctions(parameters: CompletionParameters, result: CompletionResultSet) {
+    private fun addLocalFunctions(
+        parameters: CompletionParameters,
+        result: CompletionResultSet
+    ): Set<String> {
         val containingFile = parameters.originalFile
         val localFunctions = PsiTreeUtil.findChildrenOfType(containingFile, VexFunctionDef::class.java)
+        val addedNames = mutableSetOf<String>()
 
         localFunctions.forEach { localFunc ->
             val funcName = localFunc.identifier.text ?: return@forEach
@@ -60,6 +50,28 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
                 .withTailText(tailText, true)
                 .withIcon(AllIcons.Nodes.Method)
                 .withInsertHandler(FunctionInsertHandler(hasArgs = hasArgs))
+
+            result.addElement(lookupElement)
+            addedNames.add(funcName)
+        }
+        return addedNames
+    }
+
+    private fun addStandardFunctions(
+        parameters: CompletionParameters,
+        result: CompletionResultSet,
+        skipNames: Set<String>
+    ) {
+        val vexApiProvider = parameters.originalFile.project.getService(VexApiProvider::class.java) ?: return
+
+        vexApiProvider.functions.forEach { func ->
+            if (func.name in skipNames) return@forEach
+
+            val lookupElement = LookupElementBuilder.create(func.name)
+                .withTypeText(func.returnType)
+                .withTailText("(${func.args.joinToString(", ")})", true)
+                .withIcon(AllIcons.Nodes.Function)
+                .withInsertHandler(FunctionInsertHandler(hasArgs = func.args.isNotEmpty()))
 
             result.addElement(lookupElement)
         }
@@ -80,16 +92,16 @@ private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandle
         }
 
         val hasParen = offset < document.textLength && document.charsSequence[offset] == '('
+        val hasClosingParen = hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
 
         if (!hasParen) {
             document.insertString(offset, "()")
         }
 
         // Calculate cursor movement:
-        // If we just created new parentheses `()` AND the function has NO arguments,
-        // move the cursor outside the parentheses (+2).
-        // Otherwise (it already had `(` or it has arguments), safely move inside (+1).
-        val moveOffset = if (!hasParen && !hasArgs) offset + 2 else offset + 1
+        // Move outside (+2) ONLY IF the function has NO arguments AND it has cleanly closed empty parentheses `()`.
+        // Otherwise, move inside (+1).
+        val moveOffset = if (!hasArgs && (!hasParen || hasClosingParen)) offset + 2 else offset + 1
         editor.caretModel.moveToOffset(moveOffset)
     }
 }
