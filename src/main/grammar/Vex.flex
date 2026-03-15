@@ -19,7 +19,8 @@ import com.intellij.psi.TokenType;
 WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
 NUMBER=([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)
-STRING=(\"[^\r\n\"]*\"?)|(\'[^\r\n\']*\'?)
+STRING=(\"[^\r\n\"]*\")|(\'[^\r\n\']*\')
+UNCLOSED_STRING=(\"[^\r\n\"]*)|(\'[^\r\n\']*)
 ATTRIBUTE=[fiuvsp]?(\[\])?\@[a-zA-Z0-9_]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
 MACRO="#".*
@@ -31,6 +32,7 @@ MACRO="#".*
   {COMMENT}           { return VexTypes.COMMENT; }
   {NUMBER}            { return VexTypes.NUMBER; }
   {STRING}            { return VexTypes.STRING; }
+  {UNCLOSED_STRING}   { return VexTypes.UNCLOSED_STRING; }
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
   {MACRO}             { return VexTypes.MACRO; }
 
