@@ -21,10 +21,18 @@ class VexAnnotator : Annotator {
         }
     }
 
+    private fun findDeclarationScope(element: PsiElement): PsiElement? =
+        PsiTreeUtil.getParentOfType(
+            element,
+            VexBlock::class.java,
+            VexStructDef::class.java,
+            VexFile::class.java
+        )
+
     private fun annotateDeclarationItem(element: VexDeclarationItem, holder: AnnotationHolder) {
         val identifier = element.identifier
         val varName = identifier.text
-        val scope = PsiTreeUtil.getParentOfType(element, VexBlock::class.java, VexFile::class.java) ?: return
+        val scope = findDeclarationScope(element) ?: return
 
         if (checkScopeConflict(element, varName, scope, holder)) return
         checkParameterConflict(element, varName, scope, holder)
@@ -44,7 +52,7 @@ class VexAnnotator : Annotator {
             sibling != element &&
                     sibling.identifier.text == varName &&
                     sibling.textOffset < element.textOffset &&
-                    PsiTreeUtil.getParentOfType(sibling, VexBlock::class.java, VexFile::class.java) == scope
+                    findDeclarationScope(sibling) == scope
         }
 
         if (hasConflict) {
