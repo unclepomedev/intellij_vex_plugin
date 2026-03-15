@@ -16,5 +16,11 @@ class VexDocumentationProviderTest : VexTestBase() {
 
         assertNotNull("Documentation should not be null for 'distance'", doc)
         assertTrue("Documentation should contain the function name", doc!!.contains("distance"))
+
+        // Negative path: Variable declaration
+        myFixture.configureByText(VexFileType, "float dist<caret>ance = 0;")
+        val varElement = myFixture.file.findElementAt(myFixture.caretOffset)
+        val varDoc = provider.generateDoc(varElement!!, varElement)
+        assertNull("Documentation should be null for a non-call identifier", varDoc)
     }
 }

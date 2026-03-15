@@ -55,4 +55,20 @@ class VexDocFormatterTest {
         assertTrue("Should contain <pre><code>", html.contains("<pre><code>"))
         assertTrue("Should preserve code block structure", html.contains("if (abs(n) &gt; 1) {"))
     }
+
+    @Test
+    fun testFormat_FormatsCodeBlocksUnindented() {
+        val rawText = """
+            {{{
+            #!vex
+            if (abs(n) > 1) {
+            }
+            }}}
+        """.trimIndent()
+
+        val html = VexDocFormatter.format("abs", rawText)
+
+        assertTrue("Should contain <pre><code>", html.contains("<pre><code>"))
+        assertTrue("Should preserve code block structure", html.contains("if (abs(n) &gt; 1) {"))
+    }
 }
