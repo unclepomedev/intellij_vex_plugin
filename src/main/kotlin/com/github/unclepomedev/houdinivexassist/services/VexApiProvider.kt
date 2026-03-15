@@ -13,6 +13,7 @@ data class VexFunction(val name: String, val args: List<String>, val returnType:
 class VexApiProvider {
     private val logger = Logger.getInstance(VexApiProvider::class.java)
     val functions: List<VexFunction> by lazy { loadApiDump() }
+    private val functionNames: Set<String> by lazy { functions.map { it.name }.toSet() }
 
     private fun loadApiDump(): List<VexFunction> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
@@ -48,6 +49,6 @@ class VexApiProvider {
     }
 
     fun hasFunction(functionName: String): Boolean {
-        return functions.any { it.name == functionName }
+        return functionName in functionNames
     }
 }

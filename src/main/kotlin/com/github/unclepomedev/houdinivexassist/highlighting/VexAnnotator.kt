@@ -9,6 +9,8 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiTreeUtil
 
 class VexAnnotator : Annotator {
@@ -28,9 +30,14 @@ class VexAnnotator : Annotator {
         val isStandardFunction = apiProvider.hasFunction(functionName)
 
         val containingFile = element.containingFile
-        val localFunctions = PsiTreeUtil.findChildrenOfType(containingFile, VexFunctionDef::class.java)
+        val localFunctionNames = CachedValuesManager.getCachedValue(containingFile) {
+            val names = PsiTreeUtil.findChildrenOfType(containingFile, VexFunctionDef::class.java)
+                .mapNotNull { it.identifier.text }
+                .toSet()
+            CachedValueProvider.Result.create(names, containingFile)
+        }
 
-        val isLocalFunction = localFunctions.any { it.identifier.text == functionName }
+        val isLocalFunction = functionName in localFunctionNames
 
         if (isStandardFunction || isLocalFunction) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)

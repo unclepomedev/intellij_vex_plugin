@@ -52,12 +52,14 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
 
         localFunctions.forEach { localFunc ->
             val funcName = localFunc.identifier.text ?: return@forEach
+            val hasArgs = localFunc.parameterListDef != null
+            val tailText = if (hasArgs) "(...)" else "()"
 
             val lookupElement = LookupElementBuilder.create(funcName)
                 .withTypeText("local")
-                .withTailText("(...)", true)
+                .withTailText(tailText, true)
                 .withIcon(AllIcons.Nodes.Method)
-                .withInsertHandler(FunctionInsertHandler(hasArgs = true))
+                .withInsertHandler(FunctionInsertHandler(hasArgs = hasArgs))
 
             result.addElement(lookupElement)
         }
@@ -67,7 +69,7 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
 /**
  * Handler that inserts `()` and moves the cursor to the appropriate position immediately after completion is confirmed.
  */
-class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandler<LookupElement> {
+private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandler<LookupElement> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
         val editor = context.editor
         val document = context.document
@@ -80,9 +82,10 @@ class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandler<Lookup
         }
 
         // Calculate cursor movement:
-        // If the function already has `(` or has "arguments", go inside the parentheses (+1).
-        // If you create new parentheses without arguments, move outside the parentheses (+2).
-        val moveOffset = if (hasParen || hasArgs) offset + 1 else offset + 2
+        // If we just created new parentheses `()` AND the function has NO arguments,
+        // move the cursor outside the parentheses (+2).
+        // Otherwise (it already had `(` or it has arguments), safely move inside (+1).
+        val moveOffset = if (!hasParen && !hasArgs) offset + 2 else offset + 1
         editor.caretModel.moveToOffset(moveOffset)
     }
 }
