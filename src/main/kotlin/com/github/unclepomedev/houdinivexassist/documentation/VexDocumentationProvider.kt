@@ -31,13 +31,19 @@ class VexDocumentationProvider : AbstractDocumentationProvider() {
         val target = originalElement ?: element
         val name = extractName(target) ?: return null
 
-        return docCache.computeIfAbsent(name) {
-            val path = "vex_help/functions/$it.txt"
-            val stream = javaClass.classLoader.getResourceAsStream(path) ?: return@computeIfAbsent ""
+        val cachedDoc = docCache[name]
+        if (cachedDoc != null) {
+            return cachedDoc
+        }
 
-            val helpText = InputStreamReader(stream, StandardCharsets.UTF_8).use { reader -> reader.readText() }
-            VexDocFormatter.format(it, helpText)
-        }.takeIf { it.isNotEmpty() }
+        val path = "vex_help/functions/$name.txt"
+        val stream = javaClass.classLoader.getResourceAsStream(path) ?: return null
+
+        val helpText = InputStreamReader(stream, StandardCharsets.UTF_8).use { reader -> reader.readText() }
+        val formattedDoc = VexDocFormatter.format(name, helpText)
+
+        docCache[name] = formattedDoc
+        return formattedDoc
     }
 
     private fun extractName(element: PsiElement): String? {

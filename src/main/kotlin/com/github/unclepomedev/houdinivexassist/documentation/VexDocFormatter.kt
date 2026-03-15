@@ -44,8 +44,12 @@ object VexDocFormatter {
         .replace(Regex("(?m)^\\s*@([a-zA-Z]+)")) { "<br><b>${it.groupValues[1].uppercase()}</b><hr>" }
         .replace(Regex("(?m)^\\s*:box:(.*)")) { "<br><b>${it.groupValues[1].trim()}</b>" }
 
+    /**
+     * Expected block format: "{{{ #!vex ... }}}"
+     * Parsing strategy: split on the start token, take until the first "}}}" as code, then rejoin the remainder.
+     */
     private fun String.formatCodeBlocks(): String {
-        val parts = this.split(Regex("\\{\\{\\{\\s*#!vex"))
+        val parts = this.split(Regex("\\{\\{\\{\\s*#!vex", RegexOption.IGNORE_CASE))
         val builder = StringBuilder()
 
         for ((index, part) in parts.withIndex()) {

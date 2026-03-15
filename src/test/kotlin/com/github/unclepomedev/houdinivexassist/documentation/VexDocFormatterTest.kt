@@ -84,6 +84,10 @@ class VexDocFormatterTest {
         val html = VexDocFormatter.format("test", rawText)
 
         assertTrue("Should handle unclosed block", html.isNotEmpty())
+        assertFalse(
+            "Should not produce unclosed code tags",
+            html.contains("<pre><code>") && !html.contains("</code></pre>")
+        )
     }
 
     @Test
