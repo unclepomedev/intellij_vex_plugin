@@ -7,6 +7,14 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 
 class VexFormatterTest : VexTestBase() {
 
+    private fun reformatAndAssert(before: String, after: String) {
+        myFixture.configureByText(VexFileType, before)
+        WriteCommandAction.runWriteCommandAction(project) {
+            CodeStyleManager.getInstance(project).reformat(myFixture.file)
+        }
+        myFixture.checkResult(after)
+    }
+
     fun testBasicFormatting() {
         val before = """
             int   myFunc ( int a,int b ){
@@ -22,13 +30,7 @@ class VexFormatterTest : VexTestBase() {
             }
         """.trimIndent()
 
-        myFixture.configureByText(VexFileType, before)
-
-        WriteCommandAction.runWriteCommandAction(project) {
-            CodeStyleManager.getInstance(project).reformat(myFixture.file)
-        }
-
-        myFixture.checkResult(after)
+        reformatAndAssert(before, after)
     }
 
     fun testComprehensiveFormatting() {
@@ -74,13 +76,7 @@ class VexFormatterTest : VexTestBase() {
             }
         """.trimIndent()
 
-        myFixture.configureByText(VexFileType, before)
-
-        WriteCommandAction.runWriteCommandAction(project) {
-            CodeStyleManager.getInstance(project).reformat(myFixture.file)
-        }
-
-        myFixture.checkResult(after)
+        reformatAndAssert(before, after)
     }
 
     fun testAdvancedOperatorsAndMultilineLists() {
@@ -122,12 +118,6 @@ class VexFormatterTest : VexTestBase() {
             }
         """.trimIndent()
 
-        myFixture.configureByText(VexFileType, before)
-
-        WriteCommandAction.runWriteCommandAction(project) {
-            CodeStyleManager.getInstance(project).reformat(myFixture.file)
-        }
-
-        myFixture.checkResult(after)
+        reformatAndAssert(before, after)
     }
 }

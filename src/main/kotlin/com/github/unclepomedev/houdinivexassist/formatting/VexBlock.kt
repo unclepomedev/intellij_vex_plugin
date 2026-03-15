@@ -45,21 +45,11 @@ class VexBlock(
 
         return when (parentType) {
             VexTypes.STRUCT_DEF -> {
-                if (type == VexTypes.STRUCT || type == VexTypes.IDENTIFIER ||
-                    type == VexTypes.LBRACE || type == VexTypes.RBRACE
-                ) {
-                    Indent.getNoneIndent()
-                } else {
-                    Indent.getNormalIndent()
-                }
+                if (type in NO_INDENT_TOKENS_STRUCT_DEF) Indent.getNoneIndent() else Indent.getNormalIndent()
             }
 
             VexTypes.BLOCK -> {
-                if (type == VexTypes.LBRACE || type == VexTypes.RBRACE) {
-                    Indent.getNoneIndent()
-                } else {
-                    Indent.getNormalIndent()
-                }
+                if (type in NO_INDENT_TOKENS_BLOCK) Indent.getNoneIndent() else Indent.getNormalIndent()
             }
 
             VexTypes.PARAMETER_LIST_DEF, // function parameter
@@ -78,5 +68,14 @@ class VexBlock(
 
     override fun isLeaf(): Boolean {
         return myNode.firstChildNode == null
+    }
+
+    companion object {
+        private val NO_INDENT_TOKENS_STRUCT_DEF = setOf(
+            VexTypes.STRUCT, VexTypes.IDENTIFIER, VexTypes.LBRACE, VexTypes.RBRACE
+        )
+        private val NO_INDENT_TOKENS_BLOCK = setOf(
+            VexTypes.LBRACE, VexTypes.RBRACE
+        )
     }
 }
