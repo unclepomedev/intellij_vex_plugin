@@ -3,6 +3,7 @@ package com.github.unclepomedev.houdinivexassist.services
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.diagnostic.Logger
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
@@ -10,43 +11,39 @@ data class VexFunction(val name: String, val args: List<String>, val returnType:
 
 @Service(Service.Level.PROJECT)
 class VexApiProvider {
-
+    private val logger = Logger.getInstance(VexApiProvider::class.java)
     val functions: List<VexFunction> by lazy { loadApiDump() }
 
     private fun loadApiDump(): List<VexFunction> {
-        val resultList = mutableListOf<VexFunction>()
-        val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json") ?: return resultList
-        try {
+        val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
+            ?: return emptyList()
+
+        return try {
             InputStreamReader(resourceStream, StandardCharsets.UTF_8).use { reader ->
-                val gson = Gson()
-                val jsonObject = gson.fromJson(reader, JsonObject::class.java)
+                val jsonObject = Gson().fromJson(reader, JsonObject::class.java)
 
-                val vexObj = jsonObject.getAsJsonObject("Vex")
-                val cvexObj = vexObj?.getAsJsonObject("cvex")
-                val funcsObj = cvexObj?.getAsJsonObject("functions")
+                val funcsObj = jsonObject.getAsJsonObject("Vex")
+                    ?.getAsJsonObject("cvex")
+                    ?.getAsJsonObject("functions")
+                    ?: return emptyList()
 
-                funcsObj?.entrySet()?.forEach { entry ->
-                    val funcName = entry.key
-                    val funcArray = entry.value.asJsonArray
-                    if (funcArray.size() > 0) {
-                        val firstOverload = funcArray[0].asJsonObject
-                        val returnType =
-                            if (firstOverload.has("return")) firstOverload.get("return").asString else ""
+                funcsObj.entrySet().mapNotNull { (funcName, element) ->
+                    val funcArray = element.takeIf { it.isJsonArray }?.asJsonArray
+                    val firstOverload = funcArray?.firstOrNull()?.takeIf { it.isJsonObject }?.asJsonObject
+                        ?: return@mapNotNull null
 
-                        val argsList = mutableListOf<String>()
-                        if (firstOverload.has("args")) {
-                            firstOverload.getAsJsonArray("args").forEach { arg ->
-                                argsList.add(arg.asString)
-                            }
-                        }
+                    val returnType = firstOverload.get("return")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
 
-                        resultList.add(VexFunction(funcName, argsList, returnType))
-                    }
+                    val argsList = firstOverload.get("args")?.takeIf { it.isJsonArray }?.asJsonArray
+                        ?.mapNotNull { it.takeIf { arg -> arg.isJsonPrimitive }?.asString }
+                        ?: emptyList()
+
+                    VexFunction(funcName, argsList, returnType)
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.warn("Failed to load VEX API dump", e)
+            emptyList()
         }
-        return resultList
     }
 }

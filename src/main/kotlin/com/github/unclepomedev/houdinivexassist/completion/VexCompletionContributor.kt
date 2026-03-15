@@ -21,8 +21,7 @@ class VexCompletionContributor : CompletionContributor() {
                     result: CompletionResultSet
                 ) {
                     val project = parameters.originalFile.project
-                    val vexApiProvider = project.getService(VexApiProvider::class.java)
-
+                    val vexApiProvider = project.getService(VexApiProvider::class.java) ?: return
                     val functions = vexApiProvider.functions
                     for (func in functions) {
                         val lookupElement = LookupElementBuilder.create(func.name)

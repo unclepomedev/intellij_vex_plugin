@@ -6,6 +6,7 @@ class VexApiProviderTest : VexTestBase() {
 
     fun testApiProviderLoadsFunctions() {
         val provider = project.getService(VexApiProvider::class.java)
+        assertNotNull("VexApiProvider service should be registered", provider)
         val functions = provider.functions
 
         assertNotNull("Functions list should not be null", functions)

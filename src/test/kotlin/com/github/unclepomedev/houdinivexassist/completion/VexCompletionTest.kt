@@ -13,7 +13,7 @@ class VexCompletionTest : VexTestBase() {
         myFixture.configureByText(VexFileType, code)
         val lookups = myFixture.completeBasic()
         assertNotNull("Completion list should not be null", lookups)
-        val lookupStrings = lookups.map { it.lookupString }
+        val lookupStrings = lookups!!.map { it.lookupString }
         assertTrue("Completion should contain 'distance'", lookupStrings.contains("distance"))
     }
 }
