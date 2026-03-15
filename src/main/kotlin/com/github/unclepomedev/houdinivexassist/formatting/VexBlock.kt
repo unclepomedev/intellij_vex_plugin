@@ -25,12 +25,31 @@ class VexBlock(
         return blocks
     }
 
+    override fun getChildAttributes(newChildIndex: Int): ChildAttributes {
+        val type = myNode.elementType
+
+        if (type == VexTypes.BLOCK || type == VexTypes.STRUCT_DEF) {
+            return ChildAttributes(Indent.getNormalIndent(), null)
+        }
+
+        return ChildAttributes(Indent.getNoneIndent(), null)
+    }
+
     override fun getIndent(): Indent? {
         val elementType = myNode.elementType
         val parentType = myNode.treeParent?.elementType
 
-        if (parentType == VexTypes.BLOCK || parentType == VexTypes.STRUCT_DEF) {
-            if (elementType != VexTypes.LBRACE && elementType != VexTypes.RBRACE) {
+        // indent on a new line within:
+        if (parentType == VexTypes.BLOCK ||
+            parentType == VexTypes.STRUCT_DEF ||
+            parentType == VexTypes.PARAMETER_LIST_DEF ||  // function parameter
+            parentType == VexTypes.PARAMETER_LIST_SIG ||  // struct method signature
+            parentType == VexTypes.ARGUMENT_LIST  // function argument
+        ) {
+            // except parentheses itself
+            if (elementType != VexTypes.LBRACE && elementType != VexTypes.RBRACE &&
+                elementType != VexTypes.LPAREN && elementType != VexTypes.RPAREN
+            ) {
                 return Indent.getNormalIndent()
             }
         }
