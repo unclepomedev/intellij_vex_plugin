@@ -104,6 +104,6 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 }
