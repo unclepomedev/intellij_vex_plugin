@@ -15,12 +15,11 @@ class VexApiProviderTest : VexTestBase() {
             functions.isNotEmpty()
         )
 
-        val distanceFunc = functions.find { it.name == "distance" }
-        assertNotNull("Should contain 'distance' function", distanceFunc)
-
-        if (distanceFunc != null) {
-            assertTrue("distance function should have arguments", distanceFunc.args.isNotEmpty())
-            assertTrue("distance function should have a return type", distanceFunc.returnType.isNotEmpty())
+        val distanceFunc = requireNotNull(functions.find { it.name == "distance" }) {
+            "Should contain 'distance' function"
         }
+
+        assertTrue("distance function should have arguments", distanceFunc.args.isNotEmpty())
+        assertTrue("distance function should have a return type", distanceFunc.returnType.isNotEmpty())
     }
 }

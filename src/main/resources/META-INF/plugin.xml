@@ -19,5 +19,6 @@
         <lang.braceMatcher language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexBraceMatcher"/>
         <lang.quoteHandler language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexQuoteHandler"/>
         <completion.contributor language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.completion.VexCompletionContributor"/>
+        <lang.documentationProvider language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.documentation.VexDocumentationProvider"/>
     </extensions>
 </idea-plugin>
