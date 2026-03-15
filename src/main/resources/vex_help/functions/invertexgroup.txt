@@ -1,0 +1,24 @@
+= invertexgroup =
+
+#type: vex
+#context: all
+#tags: vertex, groups
+#group: groups
+
+"""Returns 1 if the vertex specified by the vertex number is in the group specified by the string."""
+
+:usage: `int invertexgroup(string filename, string groupname, int vertexnum)`
+:usage: `int invertexgroup(int opinput, string groupname, int vertexnum)`
+
+:include _common#geometry:
+
+:arg:vertexnum:
+    The linear vertex number of the vertex to test.
+    
+    To convert a primitive number and vertex number within that primitive to a linear vertex number for the `vertexnum` parameter, use the [Vex:vertexindex] function.
+
+:returns:
+    `1` if the group exists and the vertex is in the group, or `0` otherwise.
+
+This can use ad-hoc groups, like `42p0-2`.  It matches the SOP group naming
+convention, in particular that an empty string means all vertices.

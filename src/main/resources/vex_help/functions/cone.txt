@@ -1,0 +1,33 @@
+= cone =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+
+"""Returns a cone reflection BSDF."""
+
+
+:usage: `bsdf cone(vector normal, vector dir, float angle, ...)`
+
+    Returns a `bsdf` representing a cone reflection along a given direction vector. This BSDF is constant within the given <<angle>>, producing a similar result to the [Vex:gather] or [Vex:irradiance] loops.
+
+:usage: `bsdf cone(vector dir, float angle, ...)`
+
+    In shading contexts, fills in the current surface normal automatically.
+
+[Image:/images/rendering/cone.png]
+
+:arg:normal:
+    The surface normal direction.
+
+:arg:dir:
+    The direction of specularity.
+
+:arg:angle:
+    Cone angle *in radians*.
+
+
+@related
+
+- [Writing a PBR shader|/vex/pbr]

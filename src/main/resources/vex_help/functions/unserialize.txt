@@ -1,0 +1,31 @@
+= unserialize =
+
+#type: vex
+#context: all
+#group: convert
+
+"""Turns a flat array of floats into an array of vectors or matrices."""
+
+:usage: `<vector>[]  unserialize(float values[])`
+:usage: `<matrix>[] unserialize(float values[])`
+
+    The inverse operation to [Vex:serialize]. This operation takes an array of float values
+    and creates a new array of vectors or floats by taking each float and assigning it to the
+    next component of the vector or matrix in the output array. For example:
+
+
+@examples
+
+{{{
+#!vex
+vector v[]
+float  f[] = { 1, 2, 3,  7, 8, 9 };
+
+v = vector(unserialize(f));
+// Now v has a length of 2 and contains { {1,2,3}, {7,8,9} }
+}}}
+
+
+@related
+
+- [Vex:serialize]

@@ -1,0 +1,19 @@
+= volumeindex =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Gets the value of a specific voxel."""
+
+:usage: `float volumeindex(<geometry>, int primnum, vector voxel)`
+:usage: `float volumeindex(<geometry>, string volumename, vector voxel)`
+
+:include _common#geometry:
+
+:returnss:
+    The value of a specific voxel in a volume primitive.
+    
+    Returns 0 if `primnum` is out of range, the geometry is invalid, or the given primitive is not a volume primitive.
+

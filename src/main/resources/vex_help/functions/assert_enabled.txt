@@ -1,0 +1,27 @@
+= assert_enabled =
+
+#type: vex
+#context: all
+#tags: utility
+#group: utility
+
+"""Returns 1 if the VEX assertions are enabled (see HOUDINI_VEX_ASSERT) or 0 if assertions are disabled. Used the implement the assert macro."""
+
+:usage: `int assert_enabled()`
+
+    Returns 1 if the environment variable `HOUDINI_VEX_ASSERT` is set or 0 if the variable isn't set.
+
+The `assert()` macro uses this function to only execute assertions when `HOUDINI_VEX_ASSERT` is set:
+
+{{{
+#!vex
+#define assert(EXPR)    \
+    if (assert_enabled()) { \
+        if (!(EXPR)) print_once(sprintf('VEX Assertion Failed %s:%d - (%s)\n', \
+                __FILE__, __LINE__, #EXPR)); \
+    }
+}}}
+
+You could use this function to write your own assert macro (for example, you might write a macro that used your studio's logging infrastructure).
+
+See [using assertions in VEX|/vex/assertions] for more information.

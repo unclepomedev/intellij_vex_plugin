@@ -1,0 +1,36 @@
+= usd_addtranslate =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Applies a translation to the primitive""" 
+
+:usage: `int usd_addtranslate(int stagehandle; string primpath; string suffix; vector amount)`
+
+This function applies a translation to the primitive. It creates and sets a value of a transform operation attribute that defines the translation, and appends it to the primitive's transform order.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:include _common#usd_xformopsuffix:
+
+:arg:amount:
+    The the distance to move along each of the principle axes.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Translate the cube
+usd_addtranslate(0, "/geo/cube", "my_translation", {10, 0, -2.5});
+}}}
+
+@related
+- [Vex:usd_transformorder]
+

@@ -1,0 +1,33 @@
+= usd_localtransform =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 17.5
+
+"""Obtains the primitive's local transform"""
+
+:usage: `matrix usd_localtransform(<stage>, string primpath)`
+:usage: `matrix usd_localtransform(<stage>, string primpath, float timecode)`
+
+This function returns primitive's local transform.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:include _common#usd_timecode:
+
+:returns:
+    The primitive's local transform.
+
+@examples 
+{{{
+#!vex
+// Get the cube's local transform.
+matrix cube_local_xform = usd_localtransform(0, "/src/cube");
+}}}
+
+@related
+- [Vex:usd_worldtransform]

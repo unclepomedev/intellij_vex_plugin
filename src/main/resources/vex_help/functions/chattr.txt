@@ -1,0 +1,113 @@
+= chattr =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Reads from a CHOP attribute."""
+
+:usage: `<type> chattr( string attrname; int &success )`
+:usage: `<type> chattr( int opinput; string attrname; int &success )`
+
+    Get the value of a clip-level attribute.
+    The version without `opinput` assumes the first input (0).
+
+:usage: `<type> chattr( string attrname; int channel; int &success )`
+:usage: `<type> chattr( int opinput; string attrname; int channel; int &success )`
+
+    Get the value of a channel-level attribute.
+    The version without `opinput` assumes the first input (0).
+
+:usage: `<type> chattr( string attrname; int channel; int sample; int &success )`
+:usage: `<type> chattr( int opinput; string attrname; int channel; int sample; int &success )`
+
+    Get the value of an attribute.
+    The function guesses the attribute class from the other arguments.
+    The version without `opinput` assumes the first input (0).
+
+:usage: `<type> chattr( string attrclass; string attrname; int channel; int sample; int &success )`
+:usage: `<type> chattr( int opinput, string attribclass, string attrname, int channel, int sample, int &success)`
+
+    Get the value of an attribute of a specific class.
+    The version without `opinput` assumes the first input (0).
+
+:box:
+    #id: about_chop_attrs
+    
+    CHOP attributes store metadata on clips, channels, samples, or channel/sample pairs.
+
+This function reads the value of a CHOP attribute. Use [Vex:chsetattr] to set CHOP attributes.
+
+:include _common#opinput_arg:
+
+:arg:attribclass:
+    #id: attribclass_arg
+
+    The "level" of the attribute:
+    
+    `"clip"`:
+        An attribute on a whole clip.
+    
+    `"channel"`:
+        An attribute on a whole channel.
+    
+    `"sample"`:
+        An attribute on a sample (across all channels).
+    
+    `"channelsample"`:
+        An attribute on a specific channel/sample pair.
+    
+    `""`:
+        Pass an empty string to have the function figure out the class based on the other arguments.
+    
+    Signatures that don't have this parameter act the same as if you passed the empty string.
+
+:arg:attrname:
+    The name of the attribute to read.
+
+:arg:channel:
+    #id: channel_arg
+    
+    When reading a `channel` or `channelsample` attribute, this is the index of the channel.
+    If you are reading a `clip` or `sample` attribute, use `-1` here.
+
+:arg:sample:
+    #id: sample_arg
+    
+    When reading a `sample` or `channelsample` attribute, this is the sample number.
+    If you are reading a `clip` or `channel` attribute, use `-1` here.
+
+:arg:success:
+    If the given attribute exists and can be read, the function sets this variable to `1`. Otherwise, it sets this variable to `0`.
+
+:returns:
+    The value of the attribute.
+
+
+@examples
+
+:box:Read the "export" attribute on a channel
+    {{{
+    #!vex
+    int success = 0
+    int input = 0;
+    string attrname = "export";
+    string attrclass = "channel";
+    int channel = 0; // Or use C global variable for current channel index.
+    int sample = -1; // Or use I global variable for current sample index.
+    string s = chattr(input, attrname, attrclass, channel, sample, success )
+    if (success) {
+        // Do something with s
+        printf("s=%s\n", s);
+    } else {
+        // Couldn't read attribute, usually because an attribute with that
+        // name doesn't exist
+    }
+    }}}
+
+
+@related
+
+- [Vex:chsetattr]
+- [Vex:chattrnames]

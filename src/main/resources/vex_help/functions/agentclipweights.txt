@@ -1,0 +1,29 @@
+= agentclipweights =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Returns the blend weights for an agent primitive's animation clips."""
+
+:usage: `float[] agentclipweights(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentcliplength]
+- [Vex:agentclipnames]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsampleworld]
+- [Vex:agentcliptimes]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

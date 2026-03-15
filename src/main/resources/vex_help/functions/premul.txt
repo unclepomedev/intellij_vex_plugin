@@ -1,0 +1,19 @@
+= premul =
+ 
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+#since: 18.0
+
+"""Pre multiply matrices."""
+
+:usage: `void premul(matrix2 &a, matrix2 b)`
+:usage: `void premul(matrix &a, matrix b)`
+:usage: `void premul(matrix3 &a, matrix3 b)`
+
+:usage: `void premul(matrix2 &m, matrix2 a, matrix2 b)`
+:usage: `void premul(matrix &m, matrix a, matrix b)`
+:usage: `void premul(matrix3 &m, matrix3 a, matrix3 b)`
+
+Multiplies two matrices and returns modify the first matrix.

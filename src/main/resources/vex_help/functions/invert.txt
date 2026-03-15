@@ -1,0 +1,18 @@
+= invert =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Inverts a matrix."""
+
+:usage: `<matrix> invert(<matrix> m)`
+
+:arg:
+    The matrix to [invert|Wp:Invertible_matrix].
+
+    Returns the inverted matrix if the matrix is invertible. Otherwise, the return value is undefined.
+
+@related
+ - [VEX:pinvert]

@@ -1,0 +1,11 @@
+= bumpmapR =
+
+#type: vex
+#context: all
+#tags: color, map, file
+#index: no
+#status: deprecated
+
+WARNING:
+    This function is deprecated. Use `Du(texture()), Dv(texture())` instead.
+    See [Vex:Du], [Vex:Dv] and [Vex:texture].

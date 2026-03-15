@@ -1,0 +1,14 @@
+= issamples =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns 1 if the Vex CHOP's Unit Menu is currently set to 'samples',
+0 otherwise."""
+
+:usage: `int issamples()`
+
+Returns 1 if the Vex CHOP's Unit Menu is currently set to 'samples', 0
+otherwise.

@@ -1,0 +1,24 @@
+= asin =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the inverse sine of the argument."""
+
+:usage: `float asin(float n)`
+    The inverse sine of `n`, where `n` is in radians. The return value is in the range -&pi;/2 to &pi;/2.
+
+:usage: `vector2 asin(vector2 n)`
+:usage: `vector asin(vector n)`
+:usage: `vector4 asin(vector4 n)`
+
+     Returns a new vector with `asin()` applied to all components.
+
+
+@related
+
+- [Vex:sin]
+- [Vex:cos]
+- [Vex:tan]

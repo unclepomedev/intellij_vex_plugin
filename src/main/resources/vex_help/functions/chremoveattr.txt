@@ -1,0 +1,33 @@
+= chremoveattr =
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Removes a CHOP attribute."""
+
+:usage: `int chremoveattr(string attrclass, string attrname)`
+:usage: `int chremoveattr(string attrclass, string attrnames[])`
+:usage: `int chremoveattr(string attrname)`
+:usage: `int chremoveattr(string attrnames[])`
+
+:include chattr#about_chop_attrs:
+
+This function removes CHOP attribute.
+
+:include chattr#attribclass_arg:
+
+:arg:`attrname`:
+    The name of the attribute to remove.
+
+:arg:`attrnames`:
+    The names of the attributes to remove.
+
+:returns:
+    Returns `1` if the operation succeeded, or `0` otherwise.
+
+
+@related
+
+- [Vex:chattr]
+

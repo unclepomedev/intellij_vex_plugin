@@ -1,0 +1,26 @@
+= pointtransform =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#since: 18.5
+
+"""Returns a point transform from a point index."""
+
+:usage: `matrix pointtransform(<geometry>, int pnt)`
+
+Computes a transform for the point, using the [standard instancing point attributes|/copy/instanceattrs].
+
+:include _common#geometry:
+
+:arg:pnt:
+    The point index to query.
+
+@related
+
+- [Vex:pointtransforms]
+- [Vex:pointtransformrigid]
+- [Vex:pointtransformsrigid]
+- [Vex:pointlocaltransforms]
+- [Vex:setpointtransforms]

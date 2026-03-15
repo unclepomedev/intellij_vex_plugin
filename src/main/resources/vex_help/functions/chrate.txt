@@ -1,0 +1,18 @@
+= chrate =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the sample rate of the input specified."""
+
+:usage: `float chrate()`
+
+    Uses `-1` as the `opinput`.
+
+:usage: `float chrate(int opinput)`
+
+    Returns the sample rate of the given input.
+
+:include _common#chop_opinput_arg:

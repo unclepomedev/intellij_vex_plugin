@@ -1,0 +1,40 @@
+= usd_primvarinterpolation =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Returns the element size of the primvar directly on the USD primitive."""
+
+:usage: `string usd_primvarinterpolation(<stage>; string primpath; string name)`
+
+This function returns the interpolation style of the primvar found directly on the given primitive. E.g.  "constant", "varying", etc.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:returns:
+    The primvar's interpolation. The standard interpolation styles are:
+    * "constant" - same value over the entire surface (i.e., detail)
+    * "uniform" - one value for each uv patch or a face (i.e., primitive)
+    * "vertex" - values interpolated between each vertex using surface's basis function (i.e., point)
+    * "varying" - four values interpolated over uv patch or a face (i.e., vertex)
+    * "faceVarying" - for polygons and subdivision surfaces, four values are interpolated over each face of the mesh (i.e., vertext)
+
+@examples 
+{{{
+#!vex
+// Get the interpolation style of the primvar on the cube.
+string interpolation = usd_primvarinterpolation(0, "/geo/cube", "primvar_name");
+}}}
+
+@related
+- [Vex:usd_iprimvarinterpolation] 
+- [Vex:usd_isprimvar]
+- [Vex:usd_setprimvarinterpolation]

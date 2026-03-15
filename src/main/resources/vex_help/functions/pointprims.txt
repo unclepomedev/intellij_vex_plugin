@@ -1,0 +1,26 @@
+= pointprims =
+
+#type: vex
+#context: all
+#tags: point, prim
+#group: geo
+
+"""Returns the list of primitives containing a point."""
+
+:usage: `int [] pointprims(<geometry>, int ptnum)`
+
+:include _common#geometry:
+
+:arg:ptnum:
+    The point number to get a primitive from.
+
+:returns:
+    An array of primitive numbers.  These will be in ascending order
+    and not contain duplicates.
+    
+    If no primitives own the given point the array will be empty.
+
+
+
+
+

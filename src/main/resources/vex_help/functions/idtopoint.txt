@@ -1,0 +1,26 @@
+= idtopoint =
+
+#type: vex
+#context: all
+#tags: search, point
+#group: attrib
+
+"""Finds a point by its id attribute."""
+
+:usage: `int idtopoint(<geometry>, int id)`
+
+Returns the number of the point with the given value in the `id` attribute. Returns `-1` if no point has the given ID.
+
+If the geometry doesn't have an `id` attribute, point numbers are used as ids.  In this case, the function will return the given `id` value, unless it is greater than the number of points in the source geometry, in which case the function will return `-1`.
+
+To look up a point by its `name` attribute value, use [Vex:nametopoint]. To look up a point by an arbitrary string or int attribute value, use [Vex:findattribval].
+
+:include _common#geometry:
+
+
+@related
+
+- [Vex:nametopoint]
+- [Vex:idtoprim]
+- [Vex:findattribval]
+

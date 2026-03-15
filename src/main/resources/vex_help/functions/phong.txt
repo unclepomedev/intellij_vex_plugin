@@ -1,0 +1,31 @@
+= phong =
+
+#type: vex
+#context: shading
+#tags: shading, pbr, bsdf, phong
+#group: bsdf
+
+"""Returns a Phong BSDF or computes Phong shading."""
+
+[Image:/images/rendering/phong.png]
+
+:usage: `bsdf phong(float exponent, ...)`
+:usage: `bsdf phong(vector nml, float exponent, ...)`
+
+    See [writing a PBR shader|/vex/pbr] for information on BSDFs.
+
+:usage: `vector phong(vector nml, vector V, float shinyness, ...)`
+
+    <<V>> represents the normalized vector from the surface to the eye
+    (-normalize(I)). <<shinyness>> is the Phong exponent (typically around
+    20 or higher). <<roughness>> represents the surface roughness (typically
+    0 to 1).
+
+:include _lightmask_variadic:
+
+
+@related
+
+- [Vex:ashikhmin]
+- [Vex:phonglobe]
+- [Writing a PBR shader|/vex/pbr]

@@ -1,0 +1,36 @@
+= rayhittest =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading
+#group: shading
+
+"""Sends a ray from the position P along the direction D."""
+
+:usage: `float rayhittest( vector P; vector D; float bias; ... )`
+:usage: `float rayhittest( vector P; vector D; vector &pHit; vector &nHit; float bias; ... )`
+
+Sends a ray from the position <<P>> along the direction <<D>>. The
+length of the <<D>> vector represents the farthest distance considered
+when check for occlusion.
+
+Returns the distance to the object intersected. If no object is hit,
+returns less than 0.
+
+If you specify <<pHit>> and <<nHit>>, they get the position and normal
+of the hit surface.
+
+In many cases, the area sampling features will not produce usable
+results with the `rayhittest()` function.
+
+TIP:
+    When hit testing polygons you can get lots of rays missing.
+    In these cases triangulating the geometry can improves hits.
+
+:include _area_variadic:
+
+:include _rayopts_variadic:
+
+@related
+
+- [Vex:trace]

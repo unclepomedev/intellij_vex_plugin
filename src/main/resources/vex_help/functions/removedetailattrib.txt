@@ -1,0 +1,25 @@
+= removedetailattrib =
+
+#type: vex
+#context: all
+#tags: attrib, detail, create
+#group: attrib
+
+"""Removes a detail attribute from a geometry."""
+
+If you don't know the class of attribute until runtime, use [Vex:removeattrib].
+
+:usage: `int removedetailattrib(int geohandle, string name)`
+
+    Removes a detail attribute from the given geometry.
+
+@related
+
+- [Vex:removeattrib]
+- [Vex:removedetailattrib]
+- [Vex:removepointattrib]
+- [Vex:removepointgroup]
+- [Vex:removevertexattrib]
+- [Vex:removevertexgroup]
+- [Vex:removeprimattrib]
+- [Vex:removeprimgroup]

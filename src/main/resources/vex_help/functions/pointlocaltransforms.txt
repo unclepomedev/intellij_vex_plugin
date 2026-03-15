@@ -1,0 +1,25 @@
+= pointlocaltransforms =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#since: 18.5
+
+"""Returns an array of point localtransforms from an array of point indices."""
+
+:usage: `matrix[] pointlocaltransforms(<geometry>, int pnts[])`
+
+Returns an array of local transforms associated with the point indices. This function queries the `4@localtransform` attribute.
+
+:include _common#geometry:
+
+:arg:pnts:
+    The array of point indices to query.
+
+@related
+
+- [Vex:pointtransforms]
+- [Vex:setpointtransforms]
+
+

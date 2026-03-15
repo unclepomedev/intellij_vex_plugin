@@ -1,0 +1,10 @@
+= fuzzy_defuzz_centroid =
+
+#type: vex
+#context: all
+#tags: fuzzy
+#group: fuzzy
+
+:usage: `float fuzzy_defuzz_centroid(const float aggregated_membership[]; const float min_value; const float max_value)`
+
+Returns a crisp value given a range for the crisp value, and an aggregated membership function for the output variable.

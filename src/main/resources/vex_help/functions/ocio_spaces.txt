@@ -1,0 +1,12 @@
+= ocio_spaces =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Returns the names of color spaces supported in Open Color IO."""
+
+:usage: `string[] ocio_spaces()`
+
+

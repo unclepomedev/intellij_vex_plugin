@@ -1,0 +1,50 @@
+= vertexprimindex =
+
+#type: vex
+#context: all
+#tags: vertex, prim
+#group: geo
+
+"""Converts a linear vertex index into a primitive vertex number."""
+
+:usage: `int vertexprimindex(<geometry>, int linearindex)`
+
+NOTE:
+    To convert the linear index into a primitive number and primitive vertex number,
+    use [Vex:vertexprim] and [Vex:vertexprimindex].
+
+:include _common#geometry:
+
+:arg:linearindex:
+    The linear index of a vertex
+
+:returns:
+    The vertex's number within the primitive that contains it, or
+    `-1` if the vertex has no primitive.
+    
+    To get the primitive number of the containing primitive, use [Vex:vertexprim].
+
+NOTE:
+    Due to the nature of the geometry structure, the first time this is run on
+    a geometry it has to run over all primitives to find the look up table.
+    This will be amortized out if most vertices are invoking this function.
+
+
+@examples
+
+{{{
+#!vex
+
+int prim, vtx;
+
+// Find the primitive and vertex offset of the linear vertex 6.
+prim = vertexprim("defgeo.bgeo", 6);
+vtx = vertexprimindex("defgeo.bgeo", 6);
+
+}}}
+
+
+@related
+
+- [Vex:vertexprim]
+- [Vex:vertexindex]

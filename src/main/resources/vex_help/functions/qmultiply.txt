@@ -1,0 +1,13 @@
+= qmultiply =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: math
+
+"""Multiplies two quaternions and returns the result."""
+
+:usage: `vector4 qmultiply(vector4 q1, vector4 q2)`
+
+Multiplies two quaternions and returns the result.
+

@@ -1,0 +1,12 @@
+= chreadbuf =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the value of CHOP context temporary buffer at the specified index."""
+
+:usage: `float chreadbuf(int index)`
+
+Returns the value of a CHOP context temporary buffer at the specified index.

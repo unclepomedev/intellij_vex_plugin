@@ -1,0 +1,34 @@
+= usd_setkind =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Sets the primitive's kind."""
+
+:usage: `int usd_setkind(int stagehandle, string primpath, string kind)`
+
+This function sets the primitive's kind.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:kind:
+    The kind to set the primitive to.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the sphere primitive to be an assembly.
+usd_setkind(0, "/geo/sphere", "assembly");
+}}}
+
+@related
+- [Vex:usd_kind]
+- [Vex:usd_iskind]

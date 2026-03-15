@@ -1,0 +1,19 @@
+= getlocalcurvature =
+
+#type: vex
+#context: shading
+#tags: shading raytracing
+#group: shading
+
+"""Evaluates local curvature of primitive grid, using the same curvature evaluation method as Measure SOPs."""
+
+:usage: `vector getlocalcurvature(float s, float t)`
+
+Returns 0 vector if the object does not have subdivision enabled, or has no displacement shader assigned.
+Otherwise, the measured convexity and concavity will be returned in `x` and `y` components respectively.
+
+:arg:s:
+    Parametric S shading value. This should be passed from the `s` global variable.
+
+:arg:t:
+    Parametric <type> shading value. This should be passed from the `t` global variable.

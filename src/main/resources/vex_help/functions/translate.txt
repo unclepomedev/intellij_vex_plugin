@@ -1,0 +1,20 @@
+= translate =
+
+#type: vex
+#context: all
+#tags: matrix, vector
+#group: transform
+
+"""Translates a matrix by a vector."""
+
+:usage: `void translate(matrix &m, vector amount)`
+:usage: `void translate(matrix &m, vector4 amount)`
+
+
+@related
+
+- [Vex:pretranslate]
+- [Vex:prerotate]
+- [Vex:prescale]
+- [Vex:rotate]
+- [Vex:scale]

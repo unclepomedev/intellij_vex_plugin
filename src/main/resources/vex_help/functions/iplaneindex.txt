@@ -1,0 +1,15 @@
+= iplaneindex =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the index of the plane named 'planename' in the specified input."""
+
+:usage: `int iplaneindex(int opinput, string planename)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The index of the plane named 'planename' in the specified input.

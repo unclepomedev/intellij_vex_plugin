@@ -1,0 +1,44 @@
+= warning =
+
+#type: vex
+#context: all
+#tags: string, utility, print
+#group: utility
+
+"""Reports a custom runtime VEX warning."""
+
+:usage: `void warning(string format, ...)`
+
+Reports a custom runtime VEX warning.  This uses the same format string syntax as [Vex:printf].
+
+If something is so problematic that there is no acceptable fallback behavior, it may be worth reporting an [Vex:error], instead of a warning. 
+
+NOTE:
+    It's quite easy to accidentally report thousands of different warnings.
+
+
+@examples
+
+{{{
+#!vex
+if (primintrinsic(0,"typeid",@primnum) != 1) {
+    warning("Primitives that aren't polygons are being ignored.");
+    return;
+}
+if (primintrinsic(0,"closed",@primnum) == 0 || @numvtx < 3) {
+    warning("Open or degenerate polygons are being ignored.");
+    return;
+}
+float minimumValue = chf("min");
+float maximumValue = chf("max");
+if (minimumValue > maximumValue) {
+    warning("Minimum (%f) can't be greater than maximum (%f); replacing minimum with maximum.", minimumValue, maximumValue);
+    minimumValue = maximumValue;
+}
+}}}
+
+
+@related
+
+- [Vex:error]
+- [Vex:printf]

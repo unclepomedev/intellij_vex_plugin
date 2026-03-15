@@ -1,0 +1,45 @@
+= setpackedtransform =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+#since: 17.0
+
+"""Sets the transform of a packed primitive."""
+
+:usage: `void setpackedtransform(int input, int primnum, matrix transform)`
+
+Sets the transform of a packed primitive. This modifies the `P` attribute of
+the primitive's point as well as its intrinsic `transform`.
+
+WARNING:
+    This function replaces _only_ the `P` (position) attribute and the `transform` intrinsic attribute. It ignores various details that the `packedfulltransform` intrinsic attribute includes:
+
+    * The packed primitive's `pivot` intrinsic attribute.
+    * Instancing attributes such as `orient` (when the `pointinstancetransform` intrinsic attribute is on, as with crowd agents).
+    * The `packedlocaltransform` intrinsic attribute (Alembic primitives).
+
+    So this function will not apply the expected transform in several different cases.
+
+    The [Vex:getpackedtransform] function has the same issues since it returns a transform _only_ based on `P` and `transform`.
+
+
+@examples
+
+{{{
+#!vex
+// matrix to transform by
+matrix tf = ident();
+rotate(tf, radians(45), {0,1,0});
+translate(tf, {0,1,0});
+
+matrix transform = getpackedtransform(0, @primnum);
+setpackedtransform(0, @primnum, transform * tf);
+}}}
+
+
+@related
+- [Vex:getpackedtransform]
+- [Vex:packedtransform]
+

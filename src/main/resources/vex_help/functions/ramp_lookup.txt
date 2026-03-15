@@ -1,0 +1,23 @@
+= ramp_lookup =
+
+#type: vex
+#context: all
+#tags: ramp
+#group: utility
+#since: 18.5
+
+"""Evaluates a Houdini-style ramp at a specific location."""
+
+:usage: `float ramp_lookup(float pos, string ramp)`
+:usage: `vector ramp_lookup(float pos, string ramp)`
+:usage: `float ramp_lookup(float pos, string basis[], float key[], float val[])`
+:usage: `vector ramp_lookup(float pos, string basis[], float key[], vector val[])`
+
+Evaluates a provided ramp at the given position.  The ramp can be an encoded string or a triple of basis, key, and value arrays.
+
+@related
+
+- [Vex:spline]
+- [Vex:ramp_pack]
+- [Vex:ramp_unpack]
+

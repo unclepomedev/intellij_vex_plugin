@@ -1,0 +1,45 @@
+= usd_attribsize =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 17.5
+
+"""Returns the tuple size of the attribute."""
+
+:usage: `int usd_attribsize(<stage>; string primpath; string name)`
+
+This function returns the tuple size of a given attribute. If the attribute is an array, it returns the tuple size of the array element. E.g., for vector types,this is the number of components.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:returns:
+    The tuple size of the attribute. 
+
+    * For a vector type, this is the number of components.
+
+    * For an integer, float, or string, this returns `1`.
+
+    * For an array attribute, this returns the tuple size of the elements.
+
+    If the attribute does not exist, returns `0`.
+
+    Use [Vex:usd_attriblen] if you want to obtain the array attribute length.
+
+@examples 
+{{{
+#!vex
+// Get the tuple size of an attribute on the cube primitive.
+int tuple_size = usd_attribsize(0, "/geo/cube", "attribute_name");
+}}}
+
+@related
+- [Vex:usd_attriblen]
+- [Vex:usd_isattrib]
+- [Vex:usd_attrib]

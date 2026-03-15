@@ -1,0 +1,38 @@
+= usd_getbbox_size =
+
+#type: vex
+#context: all
+#tags: usd, usd_bbox
+#group: usd
+#since: 18.0
+
+"""Returns the size of the bounding box for the primitive."""
+
+:usage: `vector usd_getbbox_size(<stage>, string primpath, string purpose)`
+
+Computes the size of the bounding box for the geometry.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:purpose:
+    The primitive's purpose for which to return the bounding box size (e.g., "render").
+
+:returns:
+    The size of the primitive's bounding box.
+
+@examples 
+{{{
+#!vex
+// Get the sphere's bounding box.
+vector size = usd_getbbox_size(0, "/src/sphere", "render");
+}}}
+
+@related
+- [Vex:usd_getbounds]
+- [Vex:usd_getbbox]
+- [Vex:usd_getbbox_center]
+- [Vex:usd_getbbox_min]
+- [Vex:usd_getbbox_max]
+- [Vex:usd_relbox]

@@ -1,0 +1,34 @@
+= random_sobol =
+
+#type: vex
+#context: all
+#tags: random_sobol
+#group: noise
+
+"""Generate a uniformly distributed random number."""
+
+:usage: `float random_sobol( float seed; int offset)`
+:usage: `float random_sobol( int seed; int offset)`
+:usage: `float random_sobol( vector4 seed; int offset)`
+:usage: `float random_sobol( vector seed; int offset)`
+:usage: `vector4 random_sobol( float seed; int offset)`
+:usage: `vector4 random_sobol( int seed; int offset)`
+:usage: `vector4 random_sobol( vector4 seed; int offset)`
+:usage: `vector4 random_sobol( vector seed; int offset)`
+:usage: `vector random_sobol( float seed; int offset)`
+:usage: `vector random_sobol( int seed; int offset)`
+:usage: `vector random_sobol( vector4 seed; int offset)`
+:usage: `vector random_sobol( vector seed; int offset)`
+
+When generating a sequence of random numbers you will notice that it tends to
+clump.  Sometimes you want a bunch of samples that are better distributed,
+however.  A sobol sequence is a series of random numbers which are relatively
+evenly distributed.
+
+The seed allows you to select different sobol sequences.  If it is a floating
+point seed, note very small differences will select very different sequences.
+
+The offset is which entry in the sequence to extract.  This should be an
+integer sequence, like `ptnum`, in order for the distribution property to work.
+
+Each number is in the `[0..1)` range.

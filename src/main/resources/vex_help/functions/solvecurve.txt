@@ -1,0 +1,91 @@
+= solvecurve =
+
+#type: vex
+#context: all
+#tags: transform, solve
+#group: transform
+#since: 17.5
+
+"""Applies a curve inverse kinematics algorithm to a skeleton."""
+
+:usage: `vector[] solvecurve(float lengths[], int closed, int orienttonormal, vector tangent, vector points[], vector normals[])`
+:usage: `matrix3[] solvecurve(float lengths[], int closed, int orienttonormal, vector tangent, vector points[], vector normals[])`
+
+
+:usage: `vector[] solvecurve(float &outlength, vector &outpos, float lengths[], int closed, int orienttonormal, int normalmode, vector tangent, vector points[], vector normals[])`
+:usage: `matrix3[] solvecurve(float &outlength, vector &outpos, float lengths[], int closed, int orienttonormal, int normalmode, vector tangent, vector points[], vector normals[])`
+
+:usage: `vector[] solvecurve(float &outlength, vector &outpos, float lengths[], int closed, int orienttonormal, int normalmode, vector tangent, vector points[], vector normals[], float twists[], float initialtwists[], int fmt, int order, float lod)`
+:usage: `matrix3[] solvecurve(float &outlength, vector &outpos, float lengths[], int closed, int orienttonormal, int normalmode, vector tangent, vector points[], vector normals[], float twists[], float initialtwists[], int fmt, int order, float lod)`
+
+:usage: `vector[] solvecurve(string op, float lengths[], int closed, int orienttonormal, vector tangent, int normalcalcmethod, matrix relmat)`
+:usage: `matrix3[] solvecurve(string op, float lengths[], int closed, int orienttonormal, vector tangent, int normalcalcmethod, matrix relmat)`
+
+:usage: `vector[] solvecurve(string op, float lengths[], int closed, int orienttonormal, vector tangent, int normalcalcmethod, matrix relmat, int primnum, float lod)`
+:usage: `matrix3[] solvecurve(string op, float lengths[], int closed, int orienttonormal, vector tangent, int normalcalcmethod, matrix relmat, int primnum, float lod)`
+
+
+Returns a array of vectors or matrix3 representing local bone rotations. Angles are in degrees.
+
+:arg:op:
+    The SOP path to a curve to evaluate.
+
+:arg:outlength:
+    Return the length of the curve where the solution ends. This is different than the sum of all lengths array.
+
+:arg:outpos:
+    Return the computed position of the last joint.
+
+:arg:lengths:
+    The lengths of all the bones to solve.
+
+:arg:closed:
+    Close the curve.
+
+:arg:orienttonormal:
+    Use the normals from the curve to orient the bones.
+
+:arg:normalmode:
+    Define how the normals/twists are computed from the control points.
+
+    Use the constants defined in `$HH/vex/include/math.h`.
+        SOLVECURVE_NORMALMODE_DEFAULT, default.
+        SOLVECURVE_NORMALMODE_NONE, no normals are computed>
+        SOLVECURVE_NORMALMODE_QUAT, interpolating with quaternions.
+        SOLVECURVE_NORMALMODE_TWIST_SHORT, interpolating with twist angles in 0..180 range.
+        SOLVECURVE_NORMALMODE_TWIST_FULL, interpolating with twist angles in any range.
+
+:arg:tangent:
+    A tangent vector to orient the end tip of the curve.
+
+:arg:points:
+    An array of vectors to use as points to define the curve.
+
+:arg:normals:
+    An array of vectors to use as normals to define the curve.
+
+:arg:twists:
+    An optional array of floats to use as twist angles in degree to define the curve.
+
+:arg:initialtwists:
+    An optional array of floats to use as initial twist angles in degree define the curve.
+
+:arg:normalcalcmethod:
+    A normal calculation method when evaluating using a SOP. (0 default, 1 none, 2 interpolate with quaternions, 3 interpolate with twist angles in 0,180 range, 4 interpolate with twist angles in any range.)
+
+:arg:relmat:
+    A relative matrix used to transform the points, normals and tangent relative to the origin.
+    This is normally the invert matrix of the root of the chain.
+
+:arg:fmt:
+    The curve type to create. 
+    Use constants defined in `$HH/vex/include/math.h`, or 0 to create a polygon curve, 1 to create a bezier curve or 2 to create a NURBS curve.
+
+:arg:order:
+    The curve order for NURBS or Bezier curves. This is ignored for polygon curves.
+
+@related
+- [Vex:solvefbik]
+- [Vex:solveconstraint]
+- [Vex:solveik]
+

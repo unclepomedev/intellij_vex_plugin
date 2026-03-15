@@ -1,0 +1,156 @@
+= illuminance =
+
+#type: vexstatement
+#context: displace, fog, surface
+#group: shading
+
+"""Loops through all light sources in the scene, calling the light shader for each light source to set the `Cl` and `L` global variables."""
+
+== Overview ==
+
+    // Need to indent this so the include below doesn't go under this heading
+
+    {{{
+    #!vex
+    illuminance(position, [axis], [angle], [light_typemask], [lightmask])
+    {
+        // Here, Cl and L will be set to the value/direction for the
+        // current light source.
+        // To force the shadow shader to be called, use:
+        // shadow(Cl);
+    }
+    }}}
+
+    The shadow shader is not called unless you explicitly call it. However, once the shadow shader has been called, the value of `Cl` will be changed for the duration of the surface shader. The shadow shader is automatically called when using any of the built-in lighting calls (e.g. [Vex:diffuse], [Vex:specular], [Vex:ambient]).
+
+    The default value for the axis is the surface normal. The default value for the angle is PI/2. The default value for the light mask is LIGHT_DIFFUSE|LIGHT_SPECULAR (please see shading.h for the light definitions).
+
+    The `illuminance` statement loops through all light sources for which `dot(L, axis) > cos(angle)`.
+
+
+:include _lightmask_variadic:
+
+
+== Sending information to the light's shader ==
+
+You can give additional pairs of string/value arguments to `illuminance` to pass named values to each light's shader. For example, to pass the value of the `N` variable as `orgN`:
+
+{{{
+#!vex
+illuminance (P, nf, M_PI/2, "orgN", N) {
+...
+}
+}}}
+
+In the light's shader, you can receive the value from the illuminance loop with the [Vex:simport] function.
+
+{{{
+#!vex
+vector orgN;
+simport("orgN", orgN);
+}}}
+
+The `simport` function returns 1 if the import succeeds and 0 otherwise, so you can use it as the condition in an `if` statement.
+
+Here's a full example:
+
+{{{
+#!vex
+surface
+exporter()
+{
+vector nf = frontface(normalize(N), I);
+Cf = 0;
+illuminance(P, nf, M_PI/2, "orgN", N)
+{
+Cf += Cl;
+}
+
+light
+importer()
+{
+vector orgN;
+if (!simport("orgN", orgN))
+orgN = N;
+// Use original N
+Cl = orgN;
+}
+}}}
+
+
+== Message passing ==
+
+Within the illuminance loop, you can retrieve values from the light shader
+with the [Vex:limport] function.
+
+The light shader can retrieve any "keyword" arguments passed to the illuminance
+statement with the [Vex:simport] function.
+
+For example, to send down the vector variable `uv` to the light shader...
+
+{{{
+#!vex
+vector      uv = set(s, t, 0);
+illuminance(P, dir, "uv", uv) { ... }
+}}}
+
+The light shader would be able to read this using...
+
+{{{
+#!vex
+vector      uv;
+if (simport("uv", uv))
+printf("Imported: %g from surface\n", uv);
+}}}
+
+
+== lightexport keyword argument ==
+
+You can supply the extra string argument `"lightexport"` followed by
+a string argument containing the name(s) of the exported variables to
+assign within the loop.
+
+In some shaders, multiple illuminance loops are used to define different
+light contributions. The `lightexport` argument is useful in these cases
+to specify which variables should be exported from the different
+loops.
+
+The `lightexport` value can be a space-separated list of wildcard
+patterns. For example, `illuminance(pos, dir, "lightexport", "Front*")`
+exports variables whose names start with `Front`.
+
+{{{
+#!vex
+
+surface
+light_export_test(export vector diff=0;
+export vector spec=0)
+{
+vector     nn = normalize(frontface(N, I));
+vector     vv = -normalize(I);
+vector     clr;
+
+Cf = 0;
+// This illuminance loop only exports to the "diff" variable
+illuminance(P, nn, "lightexport", "diff")
+{
+clr = Cl * diffuseBRDF(normalize(L), nn);
+Cf += clr;
+diff = clr;
+}
+// This illuminance loop only exports to the "spec" variable
+illuminance(P, nn, "lightexport", "spec")
+{
+clr = Cl * specularBRDF(normalize(L), nn, vv, 0.1);
+Cf += clr;
+spec = clr;
+}
+}}}
+
+
+@related
+
+- [Vex:simport]
+- [Vex:limport]
+- [Vex:gather]
+

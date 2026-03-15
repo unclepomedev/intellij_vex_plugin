@@ -1,0 +1,31 @@
+= dimport =
+
+#type: vex
+#context: fog, light, shadow, surface
+#tags: displace
+#group: displace
+
+"""Reads a variable from the displacement shader for the surface."""
+
+:usage: `int dimport(string name, <type> &out)`
+
+Reads a variable from the displacement shader for the surface.
+
+Mantra runs the shaders for a surface in a fixed order:
+
+# Displacement
+# Surface (possibly calling light shaders in `illuminance` loops)
+# Fog (possibly calling light shaders in `illuminance` loops)
+
+Once the displacement shader has run, you can use `dimport`
+to retrieve exported variables from it. Once the surface shader
+has run, you can use [Vex:simport] to retrieve exported variables
+from it.
+
+If the shader variable named by the first argument is defined and
+exported, the function returns 1 and puts the value in the second
+argument. Otherwise, it returns 0.
+
+@related
+
+- [Vex:simport]

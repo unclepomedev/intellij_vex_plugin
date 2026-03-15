@@ -1,0 +1,55 @@
+= solid_angle =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf, sampling
+#group: bsdf
+
+"""Computes the solid angle (in steradians) a BSDF function subtends."""
+
+:usage: `float solid_angle(bsdf b, int mask)`
+
+:arg:b:
+    BSDF to sample.
+
+:arg:mask:
+    A bitmask indicating which types of bounces to evaluate.
+    
+    :include pbr_mask_h:
+
+
+@examples
+
+{{{
+#!vex
+// Split BSDF into component lobes
+bsdf lobes[] = split_bsdf(hitF);
+
+// Get solid angle of lobes
+float angles[];
+resize(angles, len(lobes));
+for (int i = 0; i < len(lobes); i++)
+{
+    angles[i] = solid_angle(lobes[i], PBR_ALL_MASK);
+}
+
+// Compute PDF from angles
+float pdf[] = compute_pdf(angles);
+
+// Compute CDF from PDF
+float cdf[] = compute_cdf(pdf);
+
+// Randomly select a BSDF based on albedo distribution
+int id = sample_cdf(cdf, sx);
+
+// Do something with the selected BSDF
+// lobes[id] ...
+}}}
+
+
+@related
+
+- [Vex:split_bsdf]
+- [Vex:sample_bsdf]
+- [Vex:eval_bsdf]
+- [Vex:albedo]

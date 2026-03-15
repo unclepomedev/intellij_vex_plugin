@@ -1,0 +1,22 @@
+= computenormal =
+
+#type: vex
+#context: all
+#tags: normals, shading
+#group: normals
+
+"""In shading contexts, computes a normal. In the SOP contexts, sets how/whether to recompute normals."""
+
+:usage: `vector computenormal(vector P, ...)`
+    In shading contexts, computes the normal for position P using the cross product of the derivatives of P.
+
+:usage: `vector computenormal(vector P, vector N, vector Ng, ...)`
+
+    In shading contexts, computes the normal for position P using the cross product of the derivatives of P.
+    <<N>> is the original surface normal and <<Ng>> is the geometric normal.
+    This version "adjusts" the computed normal so interpolated normals will be relatively correct.
+
+:usage: `void computenormal(int i)`
+    (Obsolete) In SOP context, sets the hint for whether normals should be recomputed when `P` or `N` change (0=never, 1=automatic, 2=always).
+
+:include _derive_variadic:

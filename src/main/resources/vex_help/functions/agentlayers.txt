@@ -1,0 +1,26 @@
+= agentlayers =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+
+"""Returns all of the layers that have been loaded for an agent primitive."""
+
+:usage: `string[] agentlayers(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentcollisionlayer]
+- [Vex:agentcurrentlayer]
+- [Vex:agentlayerbindings]
+- [Vex:agentlayershapes]
+- [Vex:setagentcollisionlayer]
+- [Vex:setagentcurrentlayer]

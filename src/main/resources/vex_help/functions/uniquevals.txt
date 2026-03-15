@@ -1,0 +1,28 @@
+= uniquevals =
+
+#type: vex
+#context: all
+#tags: search, attrib
+#group: attrib
+#since: 17.0
+
+"""Returns the set of unique values across all values for an int or string attribute."""
+
+:usage: `int[] uniquevals( <geometry>, string attribclass, string attribute_name)`
+:usage: `string[] uniquevals( <geometry>, string attribclass, string attribute_name)`
+
+If any points/primitives/vertices in the geometry have the same value for the given attribute, the set of _unique_ values will be smaller than the total number of points/primitives/vertices. This function lets you acquire the set of unique values.
+
+This function only works with string and integer attributes.
+
+:include _common#geometry:
+
+:include _common#attribclassnogroup:
+
+:include _common#attribnamenogroup:
+
+@related
+
+- [Vex:uniqueval]
+- [Vex:nuniqueval]
+

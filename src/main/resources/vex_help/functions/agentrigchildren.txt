@@ -1,0 +1,50 @@
+= agentrigchildren =
+
+#type: vex
+#context: all
+#tags: crowds, rig
+#group: crowd
+
+"""Returns the child transforms of a transform in an agent primitive's rig."""
+
+:usage: `int[] agentrigchildren(<geometry>, int prim, int transform)`
+
+Returns a list of the direct children of the given transform.
+
+Returns an empty array if `transform` is [out of range|Vex:agenttransformcount], `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+
+@examples
+
+Visit all of the children of a given transform.
+
+{{{
+#!vex
+int[] queue = { transform };
+
+while (len(queue) > 0) {
+int i = removeindex(queue, 0);
+printf("%d\n", i);
+
+foreach (int child; agentrigchildren(0, @primnum, i))
+push(queue, child);
+}
+}}}
+
+
+@related
+- [Vex:agentlocaltransforms]
+- [Vex:agentrigfind]
+- [Vex:agentrigparent]
+- [Vex:agenttransformcount]
+- [Vex:agenttransformtolocal]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransforms]

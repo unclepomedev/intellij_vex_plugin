@@ -1,0 +1,17 @@
+= getbounces =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf, labels
+#group: bsdf
+
+:usage: `int getbounces(bsdf b)`
+
+Returns the bounce mask for the specified `bsdf`.
+
+:include pbr_mask_h:
+
+
+@related
+
+- [Vex:nbouncetypes]

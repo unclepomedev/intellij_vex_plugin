@@ -1,0 +1,88 @@
+= osd_limit =
+
+#type: vex
+#context: all
+#tags: subd
+#group: subd
+
+"""Evaluates a point attribute at the subdivision limit surface using Open Subdiv, 
+and also evaluates all first and second partial derivatives with respect to the given 
+attribute."""
+
+`osd_limit` evaluates the point attribute in the geometry specified as a
+subdivision surface along with all first and second partial derivatives.
+
+:usage: `int osd_limit(<geometry>, string attrib_name, int patch_id, float u, float v, <type> &result, <type> &result_du, <type> &result_dv, <type> &result_duu, <type> &result_duv, <type> &result_dvv)`
+:usage: `int osd_limit(<geometry>, string attrib_name, int patch_id, float u, float v, float &result[], float &result_du[], float &result_dv[], float &result_duu[], float &result_duv[], float &result_dvv[])`
+
+:include _common#geometry:
+
+:arg:&result:
+    The computed attribute values are stored in the variables you pass to this argument.
+    The type of all the output variables should match the type of the attribute 
+    you are reading.
+
+:arg:&result_du:
+    The first partial derivative in the U-parametric direction of the 
+    computed attribute values.
+    
+:arg:&result_dv:
+    The first partial derivative in the V-parametric direction of the 
+    computed attribute values.
+    
+:arg:&result_duu:
+    The second partial derivative in the U-parametric direction of the 
+    computed attribute values.
+    
+:arg:&result_duv:
+    The second mixed-partial derivative of the 
+    computed attribute values.
+    
+:arg:&result_dvv:
+    The second partial derivative in the V-parametric direction of the 
+    computed attribute values.
+    
+:returns:
+    `1` if computing the attribute was successful, `0` if it failed.
+
+    Possible reasons for failure are:
+
+    * The geometry contains no polygons or the topology can't be converted using Open Subdiv
+
+    * The attribute doesn't exist on the input geometry.
+
+    * The attribute size/type doesn't match the VEX type of the `result` arguments.
+
+
+@examples
+
+:box:Generate a point cloud on the limit surface of a subdivision mesh and set 
+vector attributes for all partial derivatives.
+    {{{
+    #!vex
+    int npatches = osd_patchcount(file);
+    for (int patch = 0; patch < npatches; patch++)
+    {
+        for (int v = 0; v < 100; v++)
+        {
+            vector P, du, dv, duu, duv, dvv;
+            if (osd_limit(file, "P", patch, nrandom(), nrandom(), P, du, dv, duu, duv, dvv))
+            {
+                int ptid = addpoint(geohandle, P);
+                setpointattrib(0, "du", ptid, du);
+                setpointattrib(0, "dv", ptid, dv);
+                setpointattrib(0, "duu", ptid, duu);
+                setpointattrib(0, "duv", ptid, duv);
+                setpointattrib(0, "dvv", ptid, dvv);
+            }
+        }
+    }
+    }}}
+
+
+@related
+
+- [Vex:pointprimuv]
+- [Vex:osd_patchcount]
+- [Vex:osd_limitsurface]
+

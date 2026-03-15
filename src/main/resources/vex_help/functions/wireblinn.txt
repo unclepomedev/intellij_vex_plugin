@@ -1,0 +1,20 @@
+= wireblinn =
+
+#type: vex
+#context: all
+#tags: shading, pbr
+#group: shading
+
+:usage: `bsdf wireblinn(vector tangent, float exponent, ...)`
+
+[Image:/images/rendering/wireblinn.png]
+
+Blinn function defined around a tangent vector. You can use this to produce the average specular illumination for thin wire-like primitives such as hair.
+
+* `tangent` -- tangent vector along the hair.
+* `exponent` -- blinn exponent.
+
+@related
+
+- [Vex:wirediffuse]
+- [Writing a PBR shader|/vex/pbr]

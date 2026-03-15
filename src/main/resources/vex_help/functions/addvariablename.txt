@@ -1,0 +1,25 @@
+= addvariablename =
+
+#type: vex
+#context: all
+#tags: node
+#group: nodes
+
+"""Adds a mapping for an attribute to a local variable."""
+
+:usage: `void addvariablename(string aname, string vname)`
+
+    In contexts with current geometry, this adds a mapping to the geometry.
+
+:usage: `int addvariablename(int geohandle, string aname, string vname)`
+
+    Adds the mapping to the given geometry. Returns the `geohandle` on success.
+
+    :include _common#geohandle_arg:
+
+Adds the mapping of the attribute `aname` to the local variable `vname`. In
+SOPs that support this, you will then have the
+local variable `$<<vname>>` referencing the attribute <<aname>>. This
+emulates the behavior of the [AttribCreate SOP|Node:sop/attribcreate].
+
+

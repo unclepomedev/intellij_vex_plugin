@@ -1,0 +1,12 @@
+= itoa =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Converts an integer to a string."""
+
+:usage: `string itoa(int number)`
+
+Converts an integer to a string.

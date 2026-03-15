@@ -1,0 +1,29 @@
+= onoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""These functions are similar to wnoise and vnoise."""
+
+:usage: `float onoise(vector pos)`
+:usage: `vector onoise(vector pos)`
+:usage: `float onoise(vector pos, int turbulence, float rough, float atten)`
+:usage: `vector onoise(vector pos, int turbulence, float rough, float atten)`
+:usage: `float onoise(vector pos, int periodX, int periodY, int periodZ)`
+:usage: `vector onoise(vector pos, int periodX, int periodY, int periodZ)`
+:usage: `float onoise(vector pos, int periodX, int periodY, int periodZ, int turbulence, float rough, float atten)`
+:usage: `vector onoise(vector pos, int periodX, int periodY, int periodZ, int turbulence, float rough, float atten)`
+
+These functions are similar to [wnoise|Vex:wnoise] and
+[vnoise|Vex:vnoise]. However, they are marginally less efficient in
+computation and don't have the same characteristics. The bounds on the
+noise are roughly (-1, 1). Only 3D noise is supported. However, this
+noise has the ability to compute turbulence with roughness and
+attenuation on the noise.
+
+
+@related
+
+:include _common#noiselinks/:

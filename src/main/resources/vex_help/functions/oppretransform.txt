@@ -1,0 +1,24 @@
+= oppretransform =
+
+#type: vex
+#context: all
+#tags: transform
+#group: nodes
+
+"""Returns the pretransform associated with an OP."""
+
+:usage: `matrix oppretransform(string path)`
+:usage: `matrix oppretransform(string path, float time)`
+:usage: `matrix oppretransform(int opid)`
+:usage: `matrix oppretransform(int opid, float time)`
+
+Returns the transform associated with an OP. If the OP specified has no
+transform associated with it (for example a COP), then an identity
+matrix is returned. It is possible to specify the time to evaluate the
+transform at (in seconds, not frames).
+
+NOTE:
+    The op: syntax can be used to simulate this behavior using the standard transform functions.
+
+@related
+- [ntransform|Vex:optransform]

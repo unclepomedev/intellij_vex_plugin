@@ -1,0 +1,38 @@
+= vertexpoint =
+
+#type: vex
+#context: all
+#tags: vertex, point
+#group: geo
+
+"""Returns the point number of linear vertex in a geometry."""
+
+:usage: `int vertexpoint(<geometry>, int linearvertex)`
+
+:include _common#geometry:
+
+:arg:linearvertex:
+    The linear vertex number.  The `vertexindex` function can be used
+    to compute a linear vertex from a primitive number and vertex
+    number pair.
+
+:returns:
+    The point number associated with the vertex, or `-1` if the vertex has no point.
+
+
+@examples
+
+{{{
+#!vex
+
+int	pt;
+
+// Get the point of vertex 3
+pt = vertexpoint("defgeo.bgeo", 3);
+
+}}}
+
+
+@related
+
+- [Vex:pointvertex]

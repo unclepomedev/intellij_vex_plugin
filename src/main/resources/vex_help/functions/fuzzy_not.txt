@@ -1,0 +1,21 @@
+= fuzzy_not =
+
+#type: vex
+#context: all
+#tags: fuzzy
+#group: fuzzy
+
+:usage: `int fuzzy_not(int n)`
+:usage: `float fuzzy_not(float n)`
+
+    Returns the fuzzy "NOT" (Zadeh NOT) of the input fuzzy value.
+
+
+@related
+
+- [Vex:fuzzy_and]
+- [Vex:fuzzy_nand]
+- [Vex:fuzzy_or]
+- [Vex:fuzzy_nor]
+- [Vex:fuzzy_xor]
+- [Vex:fuzzy_nxor]

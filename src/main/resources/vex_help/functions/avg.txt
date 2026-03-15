@@ -1,0 +1,34 @@
+= avg =
+
+#type: vex
+#context: all
+#tags: math, vector
+#group: math
+
+"""Returns the average value of the input(s)"""
+
+:usage: `int avg(int a)`
+:usage: `float avg(float a)`
+
+    Returns `a`.
+
+:usage: `float avg(float a, float b, ...)`
+
+    Returns the average of the arguments.
+
+:usage: `float avg(vector2 v)`
+:usage: `float avg(vector v)`
+:usage: `float avg(vector4 v)`
+
+    Returns the average of the values in the components of `v`.
+
+:usage: `vector2 avg(vector2 a, vector2 b, ...)`
+:usage: `vector avg(vector a, vector b, ...)`
+:usage: `vector4 avg(vector4 a, vector4 b, ...)`
+
+    Returns a new vector where each component is the average of the corresponding components in the arguments.
+
+:usage: `<type> avg(<type> arr[])`
+
+    Returns the average of the values in the array.
+

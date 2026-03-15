@@ -1,0 +1,20 @@
+= getspace =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Returns a transform from one space to another."""
+
+:usage: `matrix getspace(string fromspace, string tospace)`
+
+See [Vex:ptransform] for a list of possible space names.
+
+
+@related
+
+- [Vex:vtransform]
+- [Vex:ntransform]
+- [Vex:ptransform]
+

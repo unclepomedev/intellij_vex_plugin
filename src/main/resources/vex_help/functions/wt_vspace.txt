@@ -1,0 +1,12 @@
+= wt_vspace =
+
+#type: vex
+#context: all
+#tags: map, transform
+#group: transform
+
+"""Transforms a direction vector from World to Texture space."""
+
+:usage: `vector wt_vspace(vector v)`
+
+Transforms a direction vector from _World_ to _Texture_ space.

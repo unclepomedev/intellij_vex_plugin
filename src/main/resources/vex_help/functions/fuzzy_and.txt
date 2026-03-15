@@ -1,0 +1,21 @@
+= fuzzy_and =
+
+#type: vex
+#context: all
+#tags: fuzzy
+#group: fuzzy
+
+:usage: `int fuzzy_and(int a, int b, ...)`
+:usage: `float fuzzy_and(float a, float b, ...)`
+
+    Returns the fuzzy "AND" (Zadeh AND) of the input fuzzy values.
+
+
+@related
+
+- [Vex:fuzzy_nand]
+- [Vex:fuzzy_not]
+- [Vex:fuzzy_or]
+- [Vex:fuzzy_nor]
+- [Vex:fuzzy_xor]
+- [Vex:fuzzy_nxor]

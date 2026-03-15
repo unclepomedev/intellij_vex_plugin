@@ -1,0 +1,15 @@
+= setcurrentlight =
+
+#type: vex
+#context: displace, fog, surface
+#tags: light
+#group: shading
+
+"""Sets the current light"""
+
+:usage: `int setcurrentlight(int lightid)`
+
+Sets the current light, and returns true when the light exists and was successfully set. The lightid should be in the set of the values returned by [Vex:getlights]. The current light is used by the following shading functions:
+- [Vex:renderstate]
+- [Vex:getlightname]
+

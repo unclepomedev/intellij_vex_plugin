@@ -1,0 +1,45 @@
+= volume =
+
+#type: vex
+#context: all
+#tags: shading, volume
+#group: volume
+
+"""Returns the volume of the microvoxel containing a variable such as P."""
+
+:usage: `float volume(vector pos, ...)`
+
+NOTE:
+    This function relies on the fact that VEX "knows" that `pos` has
+    derivatives (`dPdu`, `dPdv`, and `dPdz`).
+    Passing a literal vector instead of a special variables such as `P`
+    will return `0` since VEX will not be able to access the derivatives.
+
+:include _derive_variadic:
+
+
+@examples
+
+Return the volume of the current micro-voxel in camera space:
+
+{{{
+#!vex
+volume(P)
+}}}
+
+Returns `0`, since the argument is not a variable VEX knows the derivatives for:
+
+{{{
+#!vex
+volume({0.1, 2.3, 4.5})
+}}}
+
+
+@related
+
+- [Vex:area]
+- [Vex:gradient]
+- [Vex:Du]
+- [Vex:Dv]
+- [Vex:Dw]
+

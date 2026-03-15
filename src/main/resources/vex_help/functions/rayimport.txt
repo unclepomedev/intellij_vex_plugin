@@ -1,0 +1,58 @@
+= rayimport =
+
+#type: vex
+#context: fog, light, shadow, surface
+#tags: shading
+#group: shading
+
+"""Imports a value sent by a shader in a gather loop."""
+
+:usage: `int rayimport(string name, <type> &value)`
+:usage: `int rayimport(string name, <type>[] &value)`
+
+    Extracts information any passed when the surface is hit by a ray fired by the [Vex:gather].
+    
+:arg:name:
+    The variable name, as passed using a `"send:<<name>>", value` argument pair in [Vex:gather] (without the `send:` prefix).
+    
+:arg:value:
+    If the function can import the named variable, it overwrites this variable with the value.
+
+:returns:
+    `1` if a value by the given name was successfully imported, or `0` otherwise.
+
+
+== Built-in queryable names ==
+#labels: v3
+
+You can pass the following values to `name` to query built-in ray information (not sent from `gather()`).
+
+`ray:P` (`vector`):
+    The origin of the ray.
+
+`ray:D` (`vector`):
+    The direction vector of the ray.
+
+`ray:time` (`float`):
+    The shutter time associated with the ray.
+
+`ray:hitstack` (`int[]`):
+    The hit-stack provided by the intersector.
+
+`ray:element` (`int`):
+    The element provided by the intersector.
+
+`ray:hituv` (`vector`):
+    The parametric coordinates provided by the intersector.
+
+`ray:Ng` (`vector`):
+    The geometric normal from the intersector.
+
+NOTE:
+    Data provided by the Mantra 3 intersector is raw data and may not be meaningful, or may be different across platforms or versions.
+
+
+@related
+
+- [Vex:gather]
+- [Vex:simport]

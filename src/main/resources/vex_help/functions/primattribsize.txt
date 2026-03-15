@@ -1,0 +1,16 @@
+= primattribsize =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+
+"""Returns the size of a geometry prim attribute."""
+
+:usage: `int primattribsize(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+See [Vex:attribsize] for more information.
+
+Returns `0` if the attribute cannot be found.

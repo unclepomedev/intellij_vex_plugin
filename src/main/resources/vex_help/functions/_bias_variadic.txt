@@ -1,0 +1,5 @@
+:varg:bias:
+    #type: float
+    #default: 0.001
+    
+    Ray-tracing bias. Gives control over self-intersection.

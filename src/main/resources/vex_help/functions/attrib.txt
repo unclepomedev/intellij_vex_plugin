@@ -1,0 +1,30 @@
+= attrib =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#redirect: ../attrib_suite#attrib
+
+"""Reads the value of an attribute from geometry."""
+
+:usage: `<type> attrib(<geometry>, string attribclass, string name, int elemnum)`
+:usage: `<type>[] attrib(<geometry>, string attribclass, string name, int elemnum)`
+
+    This general form lets you specify the attribute "class" at run-time. This can be useful for writing general code that can work on different classes.
+    If you know the class of attribute you want to read ahead of time, using [Vex:detail], [Vex:prim], [Vex:point], or [Vex:vertex] may be faster.
+
+:include _common#geometry:
+
+:include _common#attribclass:
+
+:arg:name:
+    The name of the attribute, group, or intrinsic to read from.
+
+:arg:elemnum:
+    Which element (e.g. point number, primitive number, vertex number) to read from. Ignored for detail attributes.  You can use [Vex:vertexindex] to convert a primitive/point pair into a vertex number.
+
+:returns:
+    Zero/empty value if the attribute does not exist. Use [Vex:getattrib] if you want to check whether the attribute existed.
+
+

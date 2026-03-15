@@ -1,0 +1,18 @@
+= shrz =
+
+#type: vex
+#context: all
+#tags: math, integer
+#group: math
+
+"""Bit-shifts an integer right."""
+
+:usage: `int shrz(int a, int bits)`
+
+Bit-shifts `a` to the right by `bits`.  This is a zero-extend shift, so
+new bits are always zero.  Thus, `shrz(-1, 2)` is a very large number, not -1.
+
+@related
+
+- [Vex:shl]
+- [Vex:shr]

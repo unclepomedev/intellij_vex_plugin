@@ -1,0 +1,28 @@
+= specular =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: BSDFs
+
+"""Returns a specular BSDF or computes specular shading."""
+
+[Image:/images/rendering/specular.png]
+
+:usage: `bsdf specular(vector dir, ...)`
+
+    Returns a specular BSDF where <<dir>> is the direction of specularity.
+    See [writing a PBR shader|/vex/pbr] for information on BSDFs.
+
+:usage: `vector specular(vector nml, vector V, float roughness, ...)`
+
+    Computes specular shading.
+
+:include _lightmask_variadic:
+
+
+@related
+
+- [Vex:matchvex_specular]
+- [Vex:phong]
+- [Writing a PBR shader|/vex/pbr]

@@ -1,0 +1,16 @@
+= relativepath =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Computes the relative path for two full paths."""
+
+:usage: `string relativepath(string src, string dest)`
+
+Computes the relative path required to get from the `src` path to the `dest` path.
+
+@examples
+
+* `relativepath("/obj/geo1/box", "/obj/ropnet1/mantra1")` - returns `../../ropnet1/mantra1`

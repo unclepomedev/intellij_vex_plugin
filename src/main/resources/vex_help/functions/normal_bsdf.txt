@@ -1,0 +1,17 @@
+= normal_bsdf =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf
+#group: bsdf
+
+"""Returns the normal for the diffuse component of a BSDF."""
+
+:usage: `vector normal_bsdf(bsdf b)`
+
+
+@related
+
+- [Vex:albedo]
+- [Vex:eval_bsdf]
+- [Vex:sample_bsdf]

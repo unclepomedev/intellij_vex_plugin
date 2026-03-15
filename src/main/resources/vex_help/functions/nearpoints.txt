@@ -1,0 +1,46 @@
+= nearpoints =
+
+#type: vex
+#context: all
+#tags: point, proximity
+#group: geo
+
+"""Finds the all the closest point in a geometry."""
+
+:usage: `int[] nearpoints(<geometry>, vector pt, float maxdist)`
+:usage: `int[] nearpoints(<geometry>, vector pt, float maxdist, int maxpts)`
+:usage: `int[] nearpoints(<geometry>, string ptgroup, vector pt, float maxdist)`
+:usage: `int[] nearpoints(<geometry>, string ptgroup, vector pt, float maxdist, int maxpts)`
+
+:arg:opinput:
+    The number of the input to the current node, starting with `0` being the first input.
+
+:arg:geometry:
+    The name of the geometry file to reference.  Inside Houdini,
+    this may be "op:full_path_to_sop" to reference a SOP.
+
+:arg:ptgroup:
+    A point group pattern to limit the search to.  Can be a SOP-style group
+    pattern such as `0-10` or `@Cd.x>0.5`.  An empty string will match
+    all points.
+
+:arg:pt:
+    The position in space to find the closest point on the geometry to.
+
+:arg:maxdist:
+    The maximum distance to search.
+
+:arg:maxpts:
+    The maximum number of points to find.
+
+:returns:
+    An array of point numbers
+    This will only search against points, not the surface locations of the geometry.
+    Use [Vex:xyzdist] to find the closest point on surfaces or curves.
+
+
+@related
+- [Vex:nearpoint]
+- [Vex:pcfind]
+- [Vex:pcfind_radius]
+- [Vex:pgfind]

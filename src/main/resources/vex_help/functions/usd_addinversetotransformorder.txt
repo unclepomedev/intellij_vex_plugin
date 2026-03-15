@@ -1,0 +1,49 @@
+= usd_addinversetotransformorder =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Appends an inversed transform operation to the primitive's transform order"""
+
+:usage: `int usd_addinversetotransformorder(int stagehandle, string primpath, string name)`
+
+This function appends an inversed transformation to the primitive's transform order.  Transform order is a sequence of transform operations, whose full names are stored in `xformOpOrder` attribute as a string array.  Thus, this function appends a new operation name to that attribute.
+
+Inverse transforms are used primary for rotating (or scaling) around a pivot that does not coincide with the origin. The usual practice is to apply a translation to the pivot point, then perform rotation, and finally apply an inverse of the original translation. This function is used for applying the inverse of the original translation.
+
+NOTE: unlike most VEX functions that deal with primitive transforms and take an operation suffix as a parameter, this function takes the full operation name.  Use [Vex:usd_transformname] to obtain the full name if you know the suffix.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    The full name of the transform operation. Use [Vex:usd_transformname] to obtain the full name from the operation suffix.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Note, the USD_XFORM_TRANSLATE and USD_AXIS_Z constants used below 
+// are defined in "usd.h" VEX header, so include it.
+#include <usd.h>
+
+// Construct the pivot translation operation suffix and name. 
+string pivot_xform_suffix = "some_pivot";
+string pivot_xform_name   = usd_transformname(USD_XFORM_TRANSLATE, pivot_xform_suffix);
+
+// Rotate about z-axis that goes thru pivot (1,0,0).
+usd_addtranslate(0, "/geo/cone", pivot_xform_suffix, {1, 0, 0});
+usd_addrotate(0, "/geo/cone", "some_rotation", USD_AXIS_Z, -90);
+usd_addinversetotransformorder(0, "/geo/cone", pivot_xform_name);
+}}}
+
+@related
+- [Vex:usd_transformorder]
+- [Vex:usd_addtotransformorder]
+

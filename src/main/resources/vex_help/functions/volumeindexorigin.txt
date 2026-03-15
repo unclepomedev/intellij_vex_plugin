@@ -1,0 +1,19 @@
+= volumeindexorigin =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Gets the index of the bottom left of a volume primitive."""
+
+:usage: `vector volumeindexorigin(<geometry>, int primnum)`
+:usage: `vector volumeindexorigin(<geometry>, string volumename)`
+
+:returns:
+    The index of the bottom left of a volume primitive.
+    For Volume primitives, this is always zero.  However, for VDB primitives,
+    this represents the bottom left of their active bounding box of voxels.
+    
+    Returns 0 if `primnum` is out of range, the geometry is invalid, or the given primitive is not a volume primitive.
+

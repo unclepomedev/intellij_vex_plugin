@@ -1,0 +1,24 @@
+= agentchannelcount =
+
+#type: vex
+#context: all
+#tags: crowds
+#group: crowd
+
+"""Returns the number of channels in an agent primitive's rig."""
+
+:usage: `int agentchannelcount(<geometry>, int prim)`
+
+Returns `-1` if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentchannelvalue]
+- [Vex:agentchannelvalues]
+- [Vex:agentrigfindchannel]
+- [Vex:agenttransformcount]

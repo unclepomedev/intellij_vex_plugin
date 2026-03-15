@@ -1,0 +1,17 @@
+= cross =
+
+#type: vex
+#context: all
+#tags: math, vector
+#group: math
+
+"""Returns the cross product between the two vectors."""
+
+:usage: `vector cross(vector a, vector b)`
+
+Returns the [cross product|Wp:Cross_product] between the two vectors.
+
+
+@related
+
+- [Vex:dot]

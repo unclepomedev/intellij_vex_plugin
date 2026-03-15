@@ -1,0 +1,28 @@
+= anoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Generates "alligator" noise."""
+
+:usage: `float anoise(vector pos)`
+:usage: `vector anoise(vector pos)`
+:usage: `float anoise(vector pos, int turbulence, float rough, float atten)`
+:usage: `vector anoise(vector pos, int turbulence, float rough, float atten)`
+:usage: `float anoise(vector pos, int periodX, int periodY, int periodZ)`
+:usage: `vector anoise(vector pos, int periodX, int periodY, int periodZ)`
+:usage: `float anoise(vector pos, int periodX, int periodY, int periodZ, int turbulence, float rough, float atten)`
+:usage: `vector anoise(vector pos, int periodX, int periodY, int periodZ, int turbulence, float rough, float atten)`
+
+These functions generate "alligator" noise, a type of cellular noise similar to
+Worley noise ([Vex:wnoise]). It is currently not possible to simulate alligator noise
+using the Worley functions, but it's possible to get a very similar "look".
+
+The bounds on the noise are roughly (0, 1). This function only supports 3D noise.
+
+
+@related
+
+:include _common#noiselinks/:

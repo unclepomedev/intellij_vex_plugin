@@ -1,0 +1,37 @@
+= agentclipsamplerate =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Returns the sample rate of an agent's animation clip."""
+
+:usage: `float agentclipsamplerate(<geometry>, int prim, string clipname)`
+:usage: `float agentclipsamplerate(<geometry>, int prim, int clipindex)`
+
+Returns `0` if `prim` is out of range or is not an agent primitive, or if `clipname` is not one of the agent's [animation clips|Vex:agentclipcatalog].
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    The name of the animation clip.
+
+:include _common#agent_clipindex:
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentcliplength]
+- [Vex:agentclipnames]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsampleworld]
+- [Vex:agentclipstarttime]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:agentfindclip]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

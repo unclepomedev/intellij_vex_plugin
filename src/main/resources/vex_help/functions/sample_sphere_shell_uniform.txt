@@ -1,0 +1,35 @@
+= sample_sphere_shell_uniform =
+
+#type: vex
+#context: all
+#group: sampling
+#since: 17.0
+
+"""Generates a uniform vector with alpha < length < 1, where 0 < alpha < 1, given a vector of uniform numbers between 0 and 1."""
+
+:usage: `vector sample_sphere_shell_uniform(vector u, float alpha)`
+
+:arg:u:
+    Three numbers between 0 and 1.
+
+:arg:alpha:
+    The inner radius to be bounded by. A number between 0 and 1.
+
+Returns a vector of length < 1, based on `u`.
+Given uniform random `u` vectors of three values in `[0,1)`, and a number in `[0,1]`, the returned vectors will be
+uniform random and continuous with respect to `u` inside the unit sphere shell with the inner raidus alpha.
+
+@related
+
+- [Vex:sample_circle_edge_uniform]
+- [Vex:sample_direction_uniform]
+- [Vex:sample_orientation_uniform]
+- [Vex:sample_circle_uniform]
+- [Vex:sample_hypersphere_uniform]
+- [Vex:sample_circle_arc]
+- [Vex:sample_direction_cone]
+- [Vex:sample_orientation_cone]
+- [Vex:sample_circle_slice]
+- [Vex:sample_sphere_cone]
+- [Vex:sample_sphere_uniform]
+- [Vex:sample_hypersphere_cone]

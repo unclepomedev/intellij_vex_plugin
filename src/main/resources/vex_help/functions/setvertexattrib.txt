@@ -1,0 +1,44 @@
+= setvertexattrib =
+
+#type: vex
+#context: all
+#tags: vertex, attrib
+#group: attrib
+
+"""Sets a vertex attribute in a geometry."""
+
+:usage: `int setvertexattrib(int geohandle, string name, int prim_num, int vertex_num, <type> value, string mode="set")`
+:usage: `int setvertexattrib(int geohandle, string name, int prim_num, int vertex_num, <type> value[], string mode="set")`
+
+*To use a linear vertex index*, set the `prim_num` to the *linear
+vertex number* and set `vertex_num` to `-1`. You can also instead set
+the `prim_num` to `-1` and the `vertex_num` to the linear vertex
+number.
+
+:include _common#set_attrib_info:
+
+:include _common#geohandle_arg:
+
+:arg:name:
+    The name of the group to modify.
+
+:arg:prim_num:
+    The number of the primitive containing the vertex you want to add/remove.
+
+:arg:vertex_num:
+    The vertex offset on the primitive of the vertex you want to add/remove.
+
+:arg:value:
+    The value to set the attribute to.
+
+    Note that within a VEX program only one type may be written to a single attribute.  Ie, you cannot mix writes of float an integer.  This can be surprising as a literal like `1` will be an integer write so be ignored if floats were previously written.
+
+:include _common#set_attrib_mode:
+
+
+@related
+- [Vex:setattrib]
+- [Vex:setpointattrib]
+- [Vex:setprimattrib]
+- [Vex:setdetailattrib]
+- [Vex:vertex]

@@ -1,0 +1,44 @@
+= lkspline =
+
+#type: vex
+#context: all
+#tags: spline, interp
+#group: interp
+
+"""Samples a polyline between the key points."""
+
+:usage: `float lkspline( float sample_pos; float value1; float key_pos1; ... )`
+    
+    Samples a polyline defined by a series of value/position pairs.
+    This is useful for specifying a 1D data ramp.
+
+:usage: `vector lkspline( float sample_pos; vector value1; float key_pos1; ... )`
+:usage: `vector4 lkspline( float sample_pos; vector4 value1; float key_pos1; ... )`
+
+    Samples a polyline defined by a series of vector value/position pairs.
+    This is useful for specifying a color ramp.
+
+If you just want linearly spaced keys, use [Vex:lspline] instead.
+
+:arg:sample_pos:
+    The position along the curve at which to sample.
+
+:arg:`value<<n>>`, `key_pos<<n>>`:
+    #id: valpos
+    
+    To define the shape of the curve, you pass a number of value/position pairs specifying the key points through which the curve passes.
+
+    You must specify key positions in ascending order or the results will be unpredictable.
+
+:returns:
+    The value of the curve at the sampled position.
+
+TIP:
+    The [Vex:spline] function is a more flexible superset of this function.
+
+
+@related
+
+- [Vex:spline]
+- [Vex:kspline]
+

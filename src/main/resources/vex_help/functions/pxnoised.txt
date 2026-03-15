@@ -1,0 +1,31 @@
+= pxnoised =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+#since: 17.0
+
+"""Periodic derivatives of Simplex Noise."""
+
+:usage: `void pxnoised(float x, int px, float &v, float &dvdx)`
+:usage: `void pxnoised(float x, int px, vector &v, vector &dvdx)`
+:usage: `void pxnoised(float x, float y, int px, int py, float &v, float &dvdx, float &dvdy)`
+:usage: `void pxnoised(float x, float y, int px, int py, vector &v, vector &dvdx, vector &dvdy)`
+:usage: `void pxnoised(vector xyz, int px, int py, int pz, float &v, float &dvdx, float &dvdy, float &dvdz)`
+:usage: `void pxnoised(vector xyz, int px, int py, int pz, vector &v, vector &dvdx, vector &dvdy, vector &dvdz)`
+:usage: `void pxnoised(vector4 xyzw, int px, int py, int pz, int pw, float &v, float &dvdx, float &dvdy, float &dvdz, float &dvdw)`
+:usage: `void pxnoised(vector4 xyzw, int px, int py, int pz, int pw, vector &v, vector &dvdx, vector &dvdy, vector &dvdz, vector &dvdw)`
+
+This computes both the simplex noise value, and the derivatives of the
+noise along each axis. This can be performed quite efficiently as
+there are analytic derivatives available. 
+
+See [xnoise|Vex:xnoise] and [pxnoise|Vex:pxnoise] for other versions of xnoise.
+
+See [noise and randomness|/vex/random]  in the VEX language
+guide for more information.
+
+@related
+- [xnoised|Vex:xnoised]
+

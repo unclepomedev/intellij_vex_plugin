@@ -1,0 +1,55 @@
+= agentrigparent =
+
+#type: vex
+#context: all
+#tags: crowds, rig
+#group: crowd
+
+"""Returns the parent transform of a transform in an agent primitive's rig."""
+
+:usage: `int agentrigparent(<geometry>, int prim, int transform)`
+
+Returns `-1` if `transform` is a root of the transform hierarchy, `transform` is [out of range|Vex:agenttransformcount], `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+
+@examples
+
+Find the world transform of the rig's root, beginning from a given bone.
+
+{{{
+#!vex
+int root;
+while (true) {
+int parent = agentrigparent(0, @primnum, transform);
+
+if (parent < 0)
+{
+root = transform;
+break;
+}
+else
+transform = parent;
+}
+
+matrix root_xform = agentworldtransform(0, @primnum, root);
+}}}
+
+
+@related
+- [Vex:agentlocaltransform]
+- [Vex:agentlocaltransforms]
+- [Vex:agentrigchildren]
+- [Vex:agentrigfind]
+- [Vex:agenttransformcount]
+- [Vex:agenttransformtolocal]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransform]
+- [Vex:agentworldtransforms]

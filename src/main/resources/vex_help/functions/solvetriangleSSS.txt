@@ -1,0 +1,15 @@
+= solvetriangleSSS =
+
+#type: vex
+#context: all
+#tags: math, solve
+#group: math
+#since: 18.0
+
+"""Finds the angles of a triangle from its sides."""
+
+:usage: `vector solvetriangleSSS(vector sides)`
+:usage: `vector solvetriangleSSS(float a, float b, float c)`
+
+:returns:
+    The 3 angles of a triangle in radians given the value of its 3 sides using the Law of Cosines.

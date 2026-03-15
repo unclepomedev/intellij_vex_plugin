@@ -1,0 +1,19 @@
+= chendf =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the frame corresponding to the last sample of the input specified."""
+
+:usage: `float chendf(int opinput=0)`
+
+    Returns the frame number corresponding to the last sample of the given CHOP input.
+
+To get the end sample number, use [Vex:chend]. To get the end time in seconds, use [Vex:chendt].
+
+@related
+
+- [Vex:chend]
+- [Vex:chendt]

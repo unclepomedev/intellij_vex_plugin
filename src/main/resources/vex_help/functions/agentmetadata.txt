@@ -1,0 +1,25 @@
+= agentmetadata =
+
+#type: vex
+#context: all
+#tags: crowds
+#group: crowd
+#since: 18.5
+
+"""Returns the agent definition's metadata dictionary."""
+
+:usage: `dict agentmetadata(<geometry>, int prim)`
+
+Returns the shared [metadata dictionary|/crowds/agents#metadata] from the agent's definition.
+Returns an empty dictionary if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentrigchildren]
+- [Vex:agentrigfind]
+- [Vex:agentrigparent]

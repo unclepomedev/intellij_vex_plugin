@@ -1,0 +1,15 @@
+= istart =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the starting frame of the specified input."""
+
+:usage: `int istart(int opinput)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The starting frame of the specified input.

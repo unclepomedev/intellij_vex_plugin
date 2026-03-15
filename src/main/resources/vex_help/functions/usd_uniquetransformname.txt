@@ -1,0 +1,35 @@
+= usd_uniquetransformname =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Constructs a unique full name of a transform operation"""
+
+:usage: `string usd_uniquetransformname(<stage>, string primpath, int transformtype, string suffix)`
+
+This function returns a unique full name for a transform operation, given its type and suffix, that is different from any name that currently exists on the given primitive. It can be useful to ensure that the suffix used for the operation name does not stomp on any existing one.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:transformtype:
+    The numerical code for the transformation type. See the VEX "usd.h" header for defines, such as `USD_XFORM_TRANSLATE`, `USD_XFORM_TRANSFORM`, or `USD_XFORM_ROTATE_XYZ`.
+
+:include _common#usd_xformopsuffix:
+
+:returns:
+    A unique full name of transform operation.
+
+@examples 
+{{{
+#!vex
+// Construct a unique full name for a translation operation with suffix "cone_pivot"
+string unique_xform_name  = usd_uniquetransformname(0, "/geo/cone", USD_XFORM_TRANSLATE, "cone_pivot");
+}}}
+
+@related
+- [Vex:usd_transformname]

@@ -1,0 +1,15 @@
+= mdensity =
+
+#type: vex
+#context: image3d
+#tags: ptcloud, measure
+#group: ptcloud
+
+"""Returns the density of the metaball field if metaball geometry is
+specified to i3dgen."""
+
+:usage: `float mdensity(vector P)`
+
+Returns the density of the metaball field if metaball geometry is
+specified to i3dgen.
+

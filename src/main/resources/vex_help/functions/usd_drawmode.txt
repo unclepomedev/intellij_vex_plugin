@@ -1,0 +1,30 @@
+= usd_drawmode =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Returns the primitive's draw mode."""
+
+:usage: `string usd_drawmode(<stage>, string primpath)`
+
+This function returns the given primitive's draw mode, eg, "default", "origin", "bounds", etc.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The draw mode of the given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the cube's draw mode, eg, "default", "bounds", etc.
+string draw_mode = usd_drawmode(0, "/geo/cube");
+}}}
+
+@related
+- [Vex:usd_setdrawmode]

@@ -1,0 +1,39 @@
+= hedge_isprimary =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Determines whether a half-edge number corresponds to a primary half-edge."""
+
+:usage: `int hedge_isprimary(string geometry, int hedge)`
+:usage: `int hedge_isprimary(int opinput, int hendge)`
+
+:arg:geometry:
+    The name of the geometry file to reference.  Inside Houdini, this may be `op:full_path_to_sop` to reference a SOP.
+
+:arg:hedge:
+    The integer representing a half-edge.
+
+:returns:
+    `1` if `hedge` represents a primary half-edge in the referenced geometry, or `0` otherwise.
+
+
+@examples
+
+{{{
+#!vex
+
+int numedges;
+
+// Count the number of edges
+
+if (hedge_isprimary("defgeo.bgeo", 3))
+numedges++;
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

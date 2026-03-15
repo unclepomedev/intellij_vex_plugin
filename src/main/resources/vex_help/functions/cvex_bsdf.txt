@@ -1,0 +1,298 @@
+= cvex_bsdf =
+
+"""Creates a bsdf object from two CVEX shader strings."""
+
+#type: vex
+#context: all
+#tags: shading, bsdf, experimental
+#group: bsdf
+
+:usage: `bsdf cvex_bsdf(string eval_cvex_shader, string sampler_cvex_shader, ...)`
+
+This function lets you define a BSDF reflectance function through a pair of `cvex` shaders:
+One to [evaluate the reflectance function|#eval_fn] and another to [sample|#sample_fn] it.
+
+You pass the shaders as VEX source strings in the first two arguments.
+You can then use variadic arguments to define arbitrary data that will be passed to the shaders when they are invoked.
+
+WARNING:
+    This interface is subject to change in future versions of Houdini,
+    though any potential changes will likely not require fundamental
+    changes to the structure of your shaders.
+
+
+== Evaluation Function == (eval_fn)
+
+The evaluation function must accept the following arguments:
+
+{{{
+#!vex
+(vector u, vector v, int bounces, int reverse, vector &refl, vector &eval, float &pdf)
+}}}
+
+:arg:u:
+    Outgoing light direction, from the surface to the viewer.
+
+:arg:v:
+    Incoming light direction, from the surface to the light.
+
+:arg:bounces:
+    A mask specifying the type of reflections that should be evaluated.
+
+:arg:reverse:
+    Whether evaluating from the camera (`0`) or the light source (`1`).
+
+:arg:refl:
+    The function must overwrite this variable with the reflectivity (albedo) of the BSDF.
+    
+    This should not be dependent on the `v` vector, since it is used as an average reflectivity over all lighting directions.  This is the value that the [Vex:albedo] function will return.
+
+:arg:eval:
+    The function must overwrite this variable with the evaluated reflectance for the given directions.
+    
+    Set this to `0` to indicates to mantra whether the BSDF is a delta function. Delta functions reflect light in specific directions or lines, and are handled as a special case in the lighting algorithm to produce less noisy results.  The behavior of a delta BSDF is determined by the sampling function (below).
+
+:arg:pdf:
+    The function must overwrite this variable with the sampling pdf for the given directions.  The integral of this value over the sphere should be equal to `luminance(refl)*2*PI`.  For perfect importance sampling, `pdf == luminance(eval)`.
+
+
+== Sampling Function == (sample_fn)
+
+The sampling function is responsible for selecting a random reflection direction that is importance sampled from the distribution defined by the evaluation function (above).
+
+The sampling function must accept the following arguments:
+
+{{{
+#!vex
+(vector u, float sx, float sy, int bounces, vector &refl, vector &v, int &bouncetype, float &pdf)
+}}}
+
+If the evaluation function is a delta function (indicated by the evaluation function setting `eval` to `0`), you are free to choose the sampling directions in any way you want.  Otherwise, you should choose directions from a distribution that either matches the evaluation function or is close to it.  The `sx` and `sy` inputs are available to help produce high quality sample distributions. These values are initialized directly from mantra's pixel sampling patterns.
+
+:arg:u:
+    Outgoing light direction, from the surface to the viewer.
+
+:arg:sx:
+    Uniform random value between 0 and 1, correlated with sy in a 2D sampling pattern.
+
+:arg:sy:
+    Uniform random value between 0 and 1, correlated with sx in a 2D sampling pattern.
+
+:arg:bounces:
+    A mask specifying the type of reflections that should be evaluated.
+
+:arg:refl:
+    The reflectivity (albedo) of the BSDF, tinted by the color of the light in the sampled direction.  The luminance of this value should match `refl` from the evaluation function. If the sampling distribution does not match the evaluation function exactly, this value should be scaled by the ratio of the evaluation distribution to the sampling distribution.
+
+:arg:v:
+    Sampled light direction, from the surface to the light.
+
+:arg:bouncetype:
+    The specific component type selected by sampling.
+
+:arg:pdf:
+    The sampling pdf.  The integral of this value over the sphere should be a constant `2*PI`. Note that this differs from the `pdf` produced by the evaluation function by a factor of `luminance(refl)`.
+
+Since Houdini 13, it is not necessary for the sampling function to directly sample from the evaluation function's distribution.  To use a different sampling function, adjust the `pdf` outputs from both the evaluation and sampling shaders so that they reflect the distribution being sampled.
+
+
+== Component mask implicit argument ==
+
+If you add an `int mybounces` output argument to your evaluation or sample shader, it will be filled in with the component mask for the BSDF. You can check this against an extra `"label"` variadic argument passed to the `cvex_bsdf()` function to see if it should apply. This allows you to use the same CVEX shader source code for different component types.
+
+:include pbr_mask_h:
+
+
+== Custom variadic arguments ==
+
+Any extra `"key", value` pairs passed to the `cvex_bsdf()` after the shader strings define custom arguments that will be passed to the shaders when they are invoked.
+
+{{{
+#!vex
+F = cvex_bsdf("...", "...", "label", "diffuse", "N", N);
+}}}
+
+In particular, you should provide a "label" keyword argument to specify the type of component for the new BSDF (for example, `"diffuse"` or `"reflect"`). You can specify multiple labels in a space-separated list (for example, `"label", "reflect refract"`).
+
+
+== Validation ==
+
+There are 2 main approaches available to verify whether you have implemented the `cvex_bsdf` evaluation and sampling functions correctly.
+
+* You can use mantra's multiple importance sampling algorithm to
+ensure that renders match in brightness apart from noise for different
+sampling techniques. To do this, create an environment light (with a
+map assigned) and render with different values of the __MIS Bias__
+parameter.  You will need to add the __MIS Bias__ parameter from the
+rendering properties dialog, since it is not available on the light by
+default. A value of -1 means to sample only from the BSDF while a value
+of 1 means to sample only from light source.  To verify the `refl` value
+in the sampling function, set the environment light rendering mode to
+__Ray Tracing Background__.  If the rendered results are the same
+(apart from noise) with values of -1, 0, 1, and for ray tracing
+background, your shader is bias-free.
+
+* Second, the [Verify BSDF|Node:obj/verifybsdf] object can be used to
+verify that the albedo, pdf, and sampling function all align correctly
+and that they integrate to the correct values. This approach uses
+point-based random sampling in SOPs and additionally will show the
+shape of the BSDF visually as a polar point cloud.
+
+
+@examples
+
+== Example: Diffuse ==
+
+Creation:
+
+{{{
+#!vex
+F = cvex_bsdf("diffuse_eval", "diffuse_sample", "label", "diffuse", "N", N);
+}}}
+
+Evaluation shader:
+
+{{{
+#!vex
+#include "pbr.h"
+
+cvex diffuse_eval(
+    vector u = 0;
+    vector v = 0;
+    int bounces = 0;
+    int reverse = 0;
+    export vector refl = 0;
+    export vector eval = 0;
+    export float pdf = 0;
+
+    int mybounces = 0;
+    vector N = 0)
+{
+    if (bounces & mybounces)
+    {
+        // If evaluating reversed, the incoming light direction is needed for
+        // evaluation rather than the outgoing direction.  The select statement
+        // swaps based on the value of the "reverse" toggle.
+        vector vvec = select(reverse, u, v);
+        pdf = max(dot(vvec, normalize(N)), 0);
+        eval = pdf;
+        refl = 0.5;
+    }
+}
+}}}
+
+Sample shader:
+
+{{{
+#!vex
+#include "math.h"
+#include "pbr.h"
+
+cvex diffuse_sample(
+    vector u = 0;
+    float sx = 0;
+    float sy = 0;
+    int bounces = 0;
+
+    export vector refl = 0;
+    export vector v = 0;
+    export int bouncetype = 0;
+    export float pdf = 0;
+
+    int mybounces = 0;
+    vector N = 0)
+{
+    if (bounces & mybounces)
+    {
+        vector nml = normalize(N);
+
+        v = set(cos(sx*PI*2), sin(sx*PI*2), 0);
+        v *= sqrt(sy);
+        v.z = sqrt(1-sy);
+
+        pdf = 2*v.z;
+
+        // Transform v into the reference frame for nml
+        vector framex = normalize(cross(nml, u));
+        vector framey = cross(nml, framex);
+
+        v = framex * v.x + framey * v.y + nml*v.z;
+
+        bouncetype = mybounces;
+        refl = 0.5; // Luminance needs to match albedo
+    }
+}
+}}}
+
+
+== Example: Specular ==
+
+Creation:
+
+{{{
+#!vex
+F = cvex_bsdf("specular_eval", "specular_sample", "label", "reflect", "dir", reflect(I, N));
+}}}
+
+Evaluation shader:
+
+{{{
+#!vex
+#include "pbr.h"
+
+cvex specular_eval(
+    vector u = 0;
+    vector v = 0;
+    int bounces = 0;
+    int reverse = 1;
+    export vector refl = 0;
+    export vector eval = 0; // Delta bsdf
+
+    int mybounces = 0;
+    vector dir = 0)
+{
+    if (bounces & mybounces)
+        refl = 1;
+}
+}}}
+
+Sample shader:
+
+{{{
+#!vex
+#include "math.h"
+#include "pbr.h"
+
+cvex specular_sample(
+    vector u = 0;
+    float sx = 0;
+    float sy = 0;
+    int bounces = 0;
+
+    export vector refl = 0;
+    export vector v = 0;
+    export int bouncetype = 0;
+    export float pdf = 0;
+
+    int mybounces = 0;
+    vector dir = 0)
+{
+    if (bounces & mybounces)
+    {
+        pdf = 1e6F;
+        v = dir;
+        bouncetype = mybounces;
+        refl = 1; // Needs to match albedo
+    }
+}
+}}}
+
+
+@related
+
+- [Vex:diffuse]
+- [Vex:specular]
+- [Writing a PBR shader|/vex/pbr]
+- [Node:sop/verify_bsdf]
+
+

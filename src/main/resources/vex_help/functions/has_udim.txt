@@ -1,0 +1,16 @@
+= has_udim =
+
+#type: vex
+#context: all
+#tags: utility, texture, string, udim
+#group: texture
+#since: 17.5
+
+"""Test string for UDIM or UVTILE patterns."""
+
+:usage: `int has_udim(string path)`
+
+    Scans the input path for special conversion characters to perform either UDIM or UVTILE style filename expansion.  If the string has any UDIM/UVTILE expansion patterns, the function returns 1, otherwise the function returns 0.
+
+@related
+- [Vex:expand_udim]

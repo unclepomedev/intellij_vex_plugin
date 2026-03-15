@@ -1,0 +1,33 @@
+= choplocalt =
+
+#type: vex
+#context: all
+#tags: chop
+#group: CHOP
+#since: 17.5
+
+"""Returns the value of a CHOP local transform channel at the specified sample and evaluation time."""
+
+:usage: `matrix choplocalt(string filename, int|string channel, int|float sample, float time)`
+
+    Read a sample from the local transform channel at the given index.
+
+:arg:filename:
+    The CHOP node path to query using the op: syntax.
+    Doesn't support reading directly from CHOP files yet.
+
+:arg:channel:
+    The channel index or channel name to query.
+
+:arg:sample:
+    If this is fractional, the value is linearly interpolated from the
+    two nearest points.
+
+:arg:time:
+    Time in seconds when the CHOP node needs to be evaluated.
+
+:returns:
+    The value of a channel at the specified sample in a CHOP node.
+
+
+

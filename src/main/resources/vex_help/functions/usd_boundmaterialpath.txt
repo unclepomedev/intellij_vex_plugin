@@ -1,0 +1,29 @@
+= usd_boundmaterialpath =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim, usd_material
+#group: usd
+#since: 18.0
+
+"""Returns the material path bound to a given primitive."""
+
+:usage: `string usd_boundmaterialpath(<stage>, string primpath)`
+
+This function returns the material path for the given primitive. May return an
+empty string if no material is bound.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The material bound to the given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the sphere primitive's material.
+string matpath = usd_boundmaterialpath(0, "/geo/sphere");
+}}}
+

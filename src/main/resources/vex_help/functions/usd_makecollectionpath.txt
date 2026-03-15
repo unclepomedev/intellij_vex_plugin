@@ -1,0 +1,33 @@
+= usd_makecollectionpath =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Constructs a collection path from a primitive path and a collection name."""
+
+:usage: `string usd_makecollectionpath(<stage>; string primpath; string name)`
+
+This function returns the full path of a given collection.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Collection name.
+
+:returns:
+    The full path of a given collection.
+
+@examples 
+{{{
+#!vex
+// Obtain the full path to the collection "some_collection" on the cube primitive.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+}}}
+
+@related
+- [Vex:usd_iscollection]

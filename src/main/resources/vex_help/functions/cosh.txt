@@ -1,0 +1,26 @@
+= cosh =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the hyperbolic cosine of the argument."""
+
+:usage: `float cosh(float n)`
+
+    Returns the hyperbolic cosine of the argument.
+
+:usage: `vector2 cosh(vector2 v)`
+:usage: `vector cosh(vector v)`
+:usage: `vector4 cosh(vector4 v)`
+
+    Returns a new vector with `cosh()` applied to each component.
+
+
+@related
+
+- [Vex:cos]
+- [Vex:sinh]
+- [Vex:tanh]
+

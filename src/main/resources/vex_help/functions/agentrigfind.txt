@@ -1,0 +1,41 @@
+= agentrigfind =
+
+#type: vex
+#context: all
+#tags: crowds, rig
+#group: crowd
+
+"""Finds the index of a transform in an agent primitive's rig."""
+
+:usage: `int agentrigfind(<geometry>, int prim, string transformname)`
+
+Returns `-1` if `transformname` was not found in the rig, `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transformname:
+    The name of a transform in the agent's rig.
+
+
+@examples
+
+Find the current local transform of a given bone.
+
+{{{
+#!vex
+int idx = agentrigfind(0, @primnum, "Hips");
+if (idx >= 0) {
+matrix local_xforms[] = agentlocaltransforms(0, @primnum);
+matrix xform = local_xforms[idx];
+}
+}}}
+
+
+@related
+- [Vex:agentrigchildren]
+- [Vex:agentrigparent]
+- [Vex:agenttransformcount]
+- [Vex:agenttransformnames]

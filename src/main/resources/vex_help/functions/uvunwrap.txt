@@ -1,0 +1,42 @@
+= uvunwrap =
+
+#type: vex
+#context: all
+#tags: shading, raytracing
+#group: shading
+
+"""Computes the position and normal at given (u, v) coordinates, for use in a lens shader."""
+
+:usage: `int uvunwrap( string object_path; float u; float v; float time; vector &P; vector &I )`
+:usage: `int uvunwrap( string object_path; float u; float v; float time; vector &P; vector &I; vector &mikkelsenUtan; vector &mikkelsenVtan )`
+
+This function *only makes sense in a Mantra context*, for use in *texture baking* or in a *lens shader*. The function unfortunately must be "context-less" so it's available to the CVEX lens shader, but in any other context it will fail and return `0`.
+
+For any other kind of texture sampling, use the superior [Vex:uvsample] or [Vex:uvintersect] functions instead of this.
+
+:arg:object_path:
+    The object being unwrapped.
+
+:arg:`u`, `v`:
+    The UV coordinates specifying where on the surface to get the position and normal.
+
+:arg:time:
+    The time along the timeline at which to measure the geometry, in seconds.
+
+:arg:&P:
+    If it succeeds, the function overwrites this variable with the world space position of the given point.
+
+:arg:&I:
+    If it succeeds, the function overwrites this variable with the normal at the given point.
+
+:arg:`&mikkelsenUtan`, `&mikkelsenVtan`:
+    The function overwrites these variables with the Mikkelsen tangent vectors.
+
+:returns:
+    `1` if the UV coordinates specified a valid point on the surface, or `0` otherwise.
+
+
+@related
+
+::[Vex:uvsample]
+::[Vex:uvintersect]

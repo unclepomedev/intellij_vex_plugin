@@ -1,0 +1,28 @@
+= medulla_henyeygreenstein =
+
+#type: vex
+#context: all
+#tags: shading, bsdf, volumes
+#group: bsdf
+
+"""Returns an anisotropic volumetric BSDF, which can scatter light forward or backward."""
+
+:usage: `bsdf medulla_henyeygreenstein(float anisotropic_bias, ...)`
+
+    This BSDF is specifically for the curve medulla shading. It contributes a forward scattering component to a diffuse transmission diffuse LPE `C<TD>.*[LO]`, and backward scattering to a reflection diffuse LPE `C<RD>.*[LO]`.
+
+    The Henyey-Greenstein function scatters light either forward or in reverse, depending on the `anisotropic_bias` argument. `anisotropic_bias` must be a floating point value between `-1` and `1`. A value of `0` will cause isotropic scattering (identical to the `isotropic()` BSDF). Positive values produce forward scattering and negative values produce reverse scattering. The extrema of `-1` and `1` cause all light to be scattered in a single direction. With
+
+    * `-1`, the light is scattered backwards in the direction of the light source
+    * `1`, there's no change in scatter direction.
+
+    NOTE:
+        You don't need a normal vector to construct a Henyey-Greenstein BSDF, because it doesn't have any direction. The default albedo for the BSDF is `1`, which means it scatters 100% of the incoming light.
+
+@related
+
+- [Vex:henyeygreenstein]
+- [Vex:isotropic]
+- [Vex:specular]
+- [Vex:phong]
+- [Writing a PBR shader|/vex/pbr]

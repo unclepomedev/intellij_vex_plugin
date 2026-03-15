@@ -1,0 +1,37 @@
+= hedge_postdstpoint =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the point into which the vertex following the destination vertex of a half-edge in its primitive is wired."""
+
+:usage: `int hedge_postdstpoint(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The point number of the point into which the vertex that comes after the destination vertex of the
+    half-edge `hedge` in the primitive that contains `hedge` is wired.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int postdstpt;
+
+// Get the destination vertex half-edge number 3.
+postdstpt = hedge_postdstpoint("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

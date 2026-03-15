@@ -1,0 +1,14 @@
+= bouncelabel =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf
+#group: shading
+
+:usage: `string bouncelabel(int mask)`
+
+Returns the label associated with the given bounce mask.
+
+@related
+
+- [Vex:bouncemask]

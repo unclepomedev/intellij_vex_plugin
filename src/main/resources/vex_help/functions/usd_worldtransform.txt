@@ -1,0 +1,33 @@
+= usd_worldtransform =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 17.5
+
+"""Obtains the primitive's world transform"""
+
+:usage: `matrix usd_worldtransform(<stage>, string primpath)`
+:usage: `matrix usd_worldtransform(<stage>, string primpath, float timecode)`
+
+This function returns primitive's world transform.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:include _common#usd_timecode:
+
+:returns:
+    The primitive's world transform.
+
+@examples 
+{{{
+#!vex
+// Get the cube's world transform.
+matrix cube_world_xform = usd_worldtransform(0, "/src/cube");
+}}}
+
+@related
+- [Vex:usd_localtransform]

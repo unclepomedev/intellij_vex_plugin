@@ -1,0 +1,24 @@
+= diffuseBRDF =
+
+#type: vex
+#context: all
+#tags: shading, brdf
+#group: shading
+
+:usage: `float diffuseBRDF(vector L, vector N)`
+
+Equivalent to clamp(dot(L, N), 0, 1).
+
+:usage: `float diffuseBRDF(vector L, vector N, vector V, float rough)`
+
+[Vex:specularBRDF], [Vex:phongBRDF], [Vex:blinnBRDF],
+and `diffuseBRDF` return the computed BRDF for the
+different lighting models used in VEX shading. You can use them in
+custom [Vex:illuminance] loops to replicate the lighting models of the
+corresponding VEX lighting functions.
+
+See [Vex:specularBRDF] for some example code.
+
+@related
+
+- [Vex:specularBRDF]

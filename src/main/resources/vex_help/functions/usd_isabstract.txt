@@ -1,0 +1,30 @@
+= usd_isabstract =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 19.0
+
+"""Checks if the primitive is abstract."""
+
+:usage: `int usd_isabstract(<stage>, string primpath)`
+
+This function checks whether the given primitive is abstract or defined.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    1 if the primitive is abstract, and 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the sphere primitive is abstract.
+int is_abstract = usd_isabstract(0, "/geometry/sphere");
+}}}
+
+@related
+- [Vex:usd_specifier]

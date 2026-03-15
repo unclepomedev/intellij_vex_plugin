@@ -1,0 +1,33 @@
+= usd_primvarattribname =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Returns the namespaced attribute name for the given primvar."""
+
+:usage: `string usd_primvarattribname(<stage>; string name)`
+
+This function returns the namespaced attribute name corresponding to the given primvar name.
+
+:include _common#usd_stage:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:returns:
+    The namespaced name of an attribute corresponding to the given primvar name.
+
+@examples 
+{{{
+#!vex
+// Get the attribute name for the given primvar.
+string attrib_name  = usd_primvarattribname(0, "some_primvar");
+int is_attrib = usd_isattrib(0, "/geo/sphere", attrib_name);
+}}}
+
+@related
+- [Vex:usd_isprimvar]
+- [Vex:usd_isattrib]

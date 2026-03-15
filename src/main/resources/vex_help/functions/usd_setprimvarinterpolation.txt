@@ -1,0 +1,43 @@
+= usd_setprimvarinterpolation =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Sets the interpolation of a primvar."""
+
+:usage: `int usd_setprimvarinterpolation(int stagehandle, string primpath, string name, string interpolation)`
+
+This function sets the interpolation style of the given primvar.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:arg:interpolation:
+    The new interpolation style for the primvar.
+
+    The standard interpolation styles are:
+	* "constant" - same value over the entire surface (i.e., detail)
+	* "uniform" - one value for each uv patch or a face (i.e., primitive)
+	* "vertex" - values interpolated between each vertex using surface's basis function (i.e., point)
+	* "varying" - four values interpolated over uv patch or a face (i.e., vertex)
+	* "faceVarying" - for polygons and subdivision surfaces, four values are interpolated over each face of the mesh (i.e., vertex)
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the primvar's interpolation style.
+usd_setprimvarinterpolation(0, "/geo/mesh", "primvar_name", "faceVarying");
+}}}
+
+@related
+- [Vex:usd_primvarinterpolation]

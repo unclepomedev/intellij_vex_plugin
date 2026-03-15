@@ -1,0 +1,17 @@
+= erfc =
+
+#type: vex
+#context: all
+#tags: math, gauss
+#group: math
+
+"""Gauss error function's complement."""
+
+:usage: `float erfc(float v)`
+
+Equal to `1 - erf(v)`.
+
+@related
+
+- [Vex:erf]
+- [Vex:erf_inv]

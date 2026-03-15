@@ -1,0 +1,74 @@
+= ggx =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+#since: 18.0
+
+"""Returns a ggx BSDF."""
+
+:usage: `bsdf ggx(vector ng, vector nn, vector xg, vector yg, vector F0, vector F90, float alphax, float alphay, int masking, int fresblend, float eta, float reflect, float refract, int reflectmask, int refractmask, float dispersion, ...)`
+:usage: `bsdf ggx(vector ng, vector nn, vector xg, vector yg, vector F0, vector F82, vector F90, float alphax, float alphay, int masking, int fresblend, float eta, float reflect, float refract, int reflectmask, int refractmask, float dispersion, ...)`
+
+	Creates a BSDF for computation of the GGX microfacet model, used 
+	for rough specular reflection and refraction.  
+	
+    See [writing a PBR shader|/vex/pbr] for information on BSDFs.
+	
+:arg:ng:
+	Normalized geometry normal
+	
+:arg:nn:
+	Normalized bumped/shading normal
+	
+:arg:xg:
+	Normalized x tangent vector
+	
+:arg:yg:
+	Normalized y tangent vector
+	
+:arg:F0:
+	Color tint at oblique angles
+
+:arg:F82:
+        A multiplier on the reflectivity per color component at 82 degrees, useful for capturing the "dip" in the reflectance curve of metallic surfaces. Set to 1 (white) to disable.
+	
+:arg:F90:
+	Color tint at grazing angles
+	
+:arg:alphax:
+	Roughness along the x tangent vector
+	
+:arg:alphay:
+	Roughness along the y tangent vector (use the same value as alphax for isotropic)
+	
+:arg:masking:
+	Enable/Disable microfacet masking
+	
+:arg:fresblend
+	0 = disable fresnel, 1 = enable fresnel, 2 = use critical angle to select between reflection and refraction.
+	
+:arg:eta
+	Index of refraction
+	
+:arg:reflect
+	Explicit scalar on reflection (0->1).  Or -1 to let the function decide itself on the appriate value based on geometric information.
+	
+:arg:refract
+	Explicit scalar on refraction (0->1).  Or -1 to let the function decide itself on the appriate value based on geometric information.
+	
+:arg:reflectmask
+	Bitmask representing the desired reflection behaviour.  Simply passing in `bouncemask(reflectlabel)` will suffice	
+
+:arg:refractmask
+	Bitmask representing the desired refraction behaviour.  Simply passing in `bouncemask(refractlabel)` will suffice	
+	
+:arg:dispersion
+	Amount of dispersion
+
+:include _lightmask_variadic:
+
+@related
+
+- [Writing a PBR shader|/vex/pbr]

@@ -1,0 +1,37 @@
+= getbbox =
+
+#type: vex
+#context: all
+#tags: bbox, measure
+#group: measure
+
+"""Sets two vectors to the minimum and maximum corners of the bounding box for the geometry."""
+
+:usage: `void getbbox(<geometry>, vector &min, vector &max)`
+
+    Sets the vectors to the minimum and maximum corners of the bounding box
+    for the geometry.  This outputs the primitive bounding box, which includes
+    the extents of spheres and volumes.
+
+:usage: `void getbbox(<geometry>, string primgroup, vector &min, vector &max)`
+
+    Outputs the bounding box of the primitive in the given group.
+    An empty <<primgroup>> string will include all primitives.
+    The string supports Ad-hoc patterns like `0-10` and `@Cd.x>0`.
+
+:usage: `void getbbox(vector &min, vector &max)`
+
+    WARNING:
+        This form of `getbbox` is deprecated and may be removed in the future. 
+        Use the other forms as needed.
+
+:include _common#geometry:
+
+
+@related
+
+- [Vex:getbbox_center]
+- [Vex:getbbox_max]
+- [Vex:getbbox_min]
+- [Vex:getbbox_size]
+- [Vex:getpointbbox]

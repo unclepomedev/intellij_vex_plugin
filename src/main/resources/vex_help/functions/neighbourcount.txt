@@ -1,0 +1,23 @@
+= neighbourcount =
+
+#type: vex
+#context: all
+#tags: point, proximity
+#group: geo
+
+"""Returns the number of points that are connected to the specified point."""
+
+:usage: `int neighbourcount(<geometry>, int point_num)`
+
+:include _common#geometry:
+
+:arg:point_num:
+    The number of the point whose neighbours you want to count.
+
+:returns:
+    The number of points that are connected to the specified point.
+    A point is connected if it is adjacent in some polygon, is one of the
+    four surrounding points in a grid or NURBs surface, or in some other
+    manner directly shares an edge with `point_num`. Returns 0 if there
+    is no input, or if the point number is out of range.
+

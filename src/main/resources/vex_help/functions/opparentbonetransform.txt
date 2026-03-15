@@ -1,0 +1,29 @@
+= opparentbonetransform =
+
+#type: vex
+#context: all
+#tags: transform
+#group: nodes
+
+"""Returns the parent bone transform associated with an OP."""
+
+:usage: `matrix opparentbonetransform(string path)`
+:usage: `matrix opparentbonetransform(string path, float time)`
+:usage: `matrix opparentbonetransform(int opid)`
+:usage: `matrix opparentbonetransform(int opid, float time)`
+
+Returns the parent bone transform associated with an OP. If the specified OP has no
+transform associated with it (such as a COP), then an identity matrix is returned. It is possible to specify the time at which to evaluate the transform (in seconds, not frames). Returns the transform at the root of the parent bone or the parent transform otherwise.
+
+NOTE:
+    The op: syntax can be used to simulate this behavior using the standard transform functions.
+
+@related
+- [ntransform|Vex:ntransform]
+- [ptransform|Vex:ptransform]
+- [getspace|Vex:getspace]
+- [optransform|Vex:optransform]
+- [oppreconstrainttransform|Vex:oppreconstrainttransform]
+- [opparmtransform|Vex:opparmtransform]
+- [opparenttransform|Vex:opparenttransform]
+

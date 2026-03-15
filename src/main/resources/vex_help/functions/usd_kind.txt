@@ -1,0 +1,31 @@
+= usd_kind =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Returns the primitive's kind."""
+
+:usage: `string usd_kind(<stage>, string primpath)`
+
+This function returns the given primitive's kind, e.g., an assembly, component, etc.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The kind of the given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the sphere primitive's kind.
+string kind = usd_kind(0, "/geo/sphere");
+}}}
+
+@related
+- [Vex:usd_kind]
+- [Vex:usd_setkind]

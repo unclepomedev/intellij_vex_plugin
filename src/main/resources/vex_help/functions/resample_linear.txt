@@ -1,0 +1,13 @@
+= resample_linear =
+
+#type: vex
+#context: all
+#tags: math
+#group: math
+
+:usage: `float[] resample_linear(const float input[], int new_length)`
+:usage: `vector[] resample_linear(const vector input[], int new_length)`
+:usage: `vector2[] resample_linear(const vector2 input[], int new_length)`
+:usage: `vector4[] resample_linear(const vector4 input[], int new_length)`
+
+Returns a new array of size new_length, uniformly sampled from the input array. Array elements are linearly interpolated from the input array.

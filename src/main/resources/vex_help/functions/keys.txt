@@ -1,0 +1,14 @@
+= keys =
+
+#type: vex
+#context: all
+#group: dict
+#since: 18.5
+
+"""Returns all the keys in a dictionary."""
+
+:usage: `string [] keys(dict d)`
+
+Returns all the keys in the dictionary.  Returns an empty string array
+if the dictionary is empty.  The returned keys are always sorted
+alphabetically.

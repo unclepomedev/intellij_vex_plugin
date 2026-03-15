@@ -1,0 +1,13 @@
+= normalize =
+
+#type: vex
+#context: all
+#tags: vector
+#group: math
+
+"""Returns a normalized vector."""
+
+:usage: `<vector> normalize(<vector> v)`
+
+Returns the [normalized|Wp:Unit_vector] version of `v`.
+

@@ -1,0 +1,38 @@
+= agentclipstarttime =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+#since: 18.0
+
+"""Returns the start time (in seconds) of an agent's animation clip."""
+
+:usage: `float agentclipstarttime(<geometry>, int prim, string clipname)`
+:usage: `float agentclipstarttime(<geometry>, int prim, int clipindex)`
+
+Returns `0` if `prim` is out of range or is not an agent primitive, or if `clipname` is not one of the agent's [animation clips|Vex:agentclipcatalog].
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    The name of the animation clip.
+
+:include _common#agent_clipindex:
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentcliplength]
+- [Vex:agentclipnames]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsamplerate]
+- [Vex:agentclipsampleworld]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:agentfindclip]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

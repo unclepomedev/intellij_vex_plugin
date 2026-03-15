@@ -1,0 +1,34 @@
+= usd_blockrelationship =
+
+#type: vex
+#context: all
+#tags: usd, usd_relationship
+#group: usd
+#since: 18.0
+
+"""Blocks the primitive's relationship."""
+
+:usage: `int usd_blockrelationship(int stagehandle; string primpath; string name)`
+
+This function blocks the primitive's relationship, i.e., clears the targets from the relationship.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    The relationship name.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Clear the cube's relationship.
+usd_blockrelationship(0, "/geo/cube", "relationship_name");
+}}}
+
+@related
+- [Vex:usd_isrelationship]
+

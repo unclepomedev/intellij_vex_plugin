@@ -1,0 +1,25 @@
+= agenttransformgroups =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns the names of the transform groups in an agent's definition."""
+
+See [Transform Groups|/crowds/agents#xformgroups] for more information.
+
+:usage: `string[] agenttransformgroups(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+@related
+- [Vex:agentcliptransformgroups]
+- [Vex:agentfindtransformgroup]
+- [Vex:agenttransformgroupmember]
+- [Hom:hou.AgentTransformGroup]

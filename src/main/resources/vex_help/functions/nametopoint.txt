@@ -1,0 +1,24 @@
+= nametopoint =
+
+#type: vex
+#context: all
+#tags: search, point
+#group: attrib
+
+"""Finds a point by its name attribute."""
+
+:usage: `int nametopoint(<geometry>, string name)`
+
+:include _common#geometry:
+
+:returns:
+    The number of the point with the given value in the `name` attribute. Returns `-1` if no primitive has the given ID, or if the geometry has no `name` attribute.
+
+To look up a primitive by its `id` attribute value, use [Vex:idtoprim]. To look up a point by an arbitrary string or int attribute value, use [Vex:findattribval].
+
+
+@related
+
+- [Vex:idtoprim]
+- [Vex:nametopoint]
+- [Vex:findattribval]

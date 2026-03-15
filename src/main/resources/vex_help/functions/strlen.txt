@@ -1,0 +1,12 @@
+= strlen =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Returns the length of the string."""
+
+:usage: `int strlen(string string)`
+
+Returns the length of the string in bytes.

@@ -1,0 +1,37 @@
+= pointvertex =
+
+#type: vex
+#context: all
+#tags: point, vertex
+#group: geo
+
+"""Returns a linear vertex number of a point in a geometry."""
+
+:usage: `int pointvertex(<geometry>, int point_num)`
+
+    Use this to find linear vertex number of the first vertex to share this point.
+    Then you can use [Vex:vertexnext] to iterate over the other vertices in the point.
+
+:include _common#geometry:
+
+:returns:
+    Returns the linear vertex number of the first vertex to share this point.
+    Returns `-1`if no vertices share this point.
+
+
+@examples
+
+{{{
+#!vex
+
+int	vtx;
+
+// Get the linear vertex  of point 3
+vtx = pointvertex("defgeo.bgeo", 3);
+
+}}}
+
+
+@related
+
+- [Vex:vertexpoint]

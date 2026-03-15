@@ -1,0 +1,36 @@
+= usd_findtransformname =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Retrurns primitive's transform operation full name for given the transform operation suffix"""
+
+:usage: `string usd_findtransformname(<stage>, string primpath, string suffix)`
+
+This function returns the full name of a transform operation given the suffix, if such an operation attribute exists on the given primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:include _common#usd_xformopsuffix:
+
+:returns:
+    The full name of the primitive's transform operation that has the given suffix, or an empty string if no such operation is found.
+
+    There may be a few transform operations with the same suffix (eg, a translation an a rotation), so the first encountered one will be returned.
+
+@examples 
+{{{
+#!vex
+// Find the transform operation name for the pivot translation, and add an iverse of it.
+string xform_name = usd_findtransformname(0, "/geo/cone", "cone_pivot");
+usd_addinversetotransformorder(0, "/geo/cone", xform_name);
+}}}
+
+@related
+- [Vex:usd_transformorder]
+- [Vex:usd_addinversetotransformorder]

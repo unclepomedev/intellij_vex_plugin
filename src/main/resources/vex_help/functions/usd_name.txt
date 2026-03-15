@@ -1,0 +1,34 @@
+= usd_name =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Returns the name of the primitive."""
+
+:usage: `string usd_name(<stage>, string primpath)`
+
+This function returns the name of the given primitive. 
+
+Note, while this function takes the stage as an argument for consistency, it does not access the stage, but rather it extracts the name from the path.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The name of the primitive.
+
+@examples 
+{{{
+#!vex
+// Get the primitive name, ie "cube".
+string name = usd_name(0, "/geo/cube");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_parentpath]
+- [Vex:usd_typename]

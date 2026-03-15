@@ -1,0 +1,39 @@
+= hedge_prev =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the half-edge that precedes a given half-edge in its polygon."""
+
+:usage: `int hedge_prev(<geometry>, int hedge)`
+
+Returns `-1` if `hedge` is invalid. Otherwise, returns the number of the half-edge
+that precedes (its destination is the source of) `hedge` in the polygon that contains it.
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The number of the half-edge that precedes (its destination is the source of) `hedge` in the polygon that contains it.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int prev;
+
+// Get the previous half-edge of half-edge number 3.
+prevhedge = hedge_prev("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

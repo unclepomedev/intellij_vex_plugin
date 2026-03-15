@@ -1,0 +1,32 @@
+= nuniqueval =
+
+#type: vex
+#context: all
+#tags: search, attrib
+#group: attrib
+
+"""Returns the number of unique values from an integer or string attribute."""
+
+:usage: `int nuniqueval( <geometry>, string attribclass, string attribute_name)`
+
+Returns the number of _unique_ values across all values of an attribute.
+You can use [Vex:uniqueval] to iterate though the set of unique values.
+
+:include _common#geometry:
+
+:include _common#attribclassnogroup:
+
+
+@examples
+
+:box:Test if all values of the point attribute `foo` are unique
+    {{{
+    #!vex
+    int test = nuniqueval(0, "point", "foo") == npoints(0)
+    }}}
+
+
+@related
+
+- [Vex:uniqueval]
+- [Vex:uniquevals]

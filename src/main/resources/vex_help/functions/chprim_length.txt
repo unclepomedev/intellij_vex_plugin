@@ -1,0 +1,22 @@
+= chprim_length =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Get the length of a channel primitive."""
+
+:usage: `float chprim_length(<geometry>, int prim)`
+
+Returns the length in seconds of a channel primitive.
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the channel primitive.
+
+
+@related
+- [Vex:chprim_start]
+- [Vex:chprim_end]

@@ -1,0 +1,42 @@
+= blinn =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf, blinn
+#group: bsdf
+
+"""Returns a Blinn BSDF or computes Blinn shading."""
+
+:usage: `bsdf blinn(float exponent, ...)`
+:usage: `bsdf blinn(vector nml, float exponent, ...)`
+
+    Returns a Blinn BSDF.
+    
+    See [writing a PBR shader|/vex/pbr] for information on BSDFs.
+
+:usage: `vector blinn(vector nml, vector V, float roughness, ...)`
+
+    Computes Blinn shading.
+
+:arg:nml:
+    The normal of the surface to use for evaluate.
+
+:arg:V:
+    The incidence vector.
+
+:arg:exponent:
+    The exponent value. The higher the value, the tighter the specular lobe.
+
+Each of the functions can also take an optional light mask.
+
+:include /vex/contexts/shading_contexts#lightmask:
+
+[Image:/images/rendering/blinn.png]
+
+
+@related
+
+- [Vex:phong]
+- [Vex:wireblinn]
+- [Vex:matchvex_blinn]
+- [Writing a PBR shader|/vex/pbr]

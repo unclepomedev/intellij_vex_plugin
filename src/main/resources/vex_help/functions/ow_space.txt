@@ -1,0 +1,15 @@
+= ow_space =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Transforms a position value from Object to World space."""
+
+:usage: `matrix ow_space()`
+:usage: `vector ow_space(vector v)`
+:usage: `vector4 ow_space(vector4 v)`
+
+Transforms a position value from _Object_ to _World_ space.
+

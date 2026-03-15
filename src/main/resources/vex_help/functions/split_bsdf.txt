@@ -1,0 +1,84 @@
+= split_bsdf =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf, sampling
+#group: bsdf
+
+"""Splits a bsdf into its component lobes."""
+
+:usage: `void split_bsdf(bsdf &lobes[], bsdf source, float &weights[])`
+:usage: `void split_bsdf(bsdf &lobes[]; bsdf source; float &weights[]; int mask)`
+:usage: `void split_bsdf(bsdf &lobes[], bsdf source, float &weights[], int mask, int type)`
+:usage: `void split_bsdf(bsdf &lobes[], bsdf source, float &weights[], int mask, int type, float u)`
+:usage: `void split_bsdf(bsdf &lobes[], bsdf source, float &weights[], int mask, int type, float u, float cdf[])`
+
+:arg:&lobes:
+    The function overwrites this array with the BSDFs for the component lobes.
+
+:arg:source:
+    The BSDF to split.
+
+:arg:weights:
+    The function fills this array with the weights for the split lobes (same length as the returned `bsdf` array). When you sample Illumination using the returned lobes you must scale it by these weights.
+
+:arg:mask:
+    A bitmask indicating which types of bounces to evaluate.
+    
+    :include pbr_mask_h:
+
+:arg:type:
+    How to split the lobes. You can `#import "pbr.h"` to get constant values representing the different split types:
+    
+    * `PBR_SPLIT_FULL = 0`
+    * `PBR_SPLIT_RANDOM = 1`
+    * `PBR_SPLIT_ALBEDO = 2`
+    * `PBR_SPLIT_COMPONENT = 3`
+    * `PBR_SPLIT_DEFAULT = PBR_SPLIT_ALBEDO`
+
+:arg:u:
+    Random value to sample the CDF at.
+
+:arg:cdf:
+    CDF used to control sampling among components of the BSDF.
+    
+:returns:
+    An array of `bsdf` objects representing the lobes.
+
+
+@examples
+
+{{{
+#!vex
+// Split BSDF into component lobes
+float weights[];
+bsdf lobes[];
+split_bsdf(lobes, hitF, weights);
+
+// Get albedos of lobes
+float albedos[];
+resize(albedos, len(lobes));
+for (int i = 0; i < len(lobes); i++)
+{
+    albedos[i] = luminance(albedo(lobes[i], -hitnI)) * weights[i];
+}
+
+// Compute CDF
+float cdf[] = compute_cdf(albedos);
+
+// Randomly select a BSDF based on albedo distribution
+int index = 0;
+sample_cdf(cdf, s.x, index);
+
+// Do something with the selected BSDF
+// lobes[index] ...
+}}}
+
+
+@related
+
+- [Vex:sample_bsdf]
+- [Vex:eval_bsdf]
+- [Vex:albedo]
+- [Vex:create_cdf]
+- [Vex:sample_cdf]

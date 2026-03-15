@@ -1,0 +1,26 @@
+= vertex =
+
+#type: vex
+#context: all
+#tags: vertex, attrib
+#group: attrib
+#redirect: ../attrib_suite#vertex
+
+"""Reads a vertex attribute value from a geometry."""
+
+:usage: `<type> vertex(<geometry>, string attribute_name, int linear_vertex_index)`
+:usage: `<type>[] vertex(<geometry>, string attribute_name, int linear_vertex_index)`
+
+    Specifies the vertex using the linear index into the list of all vertices.
+
+:usage: `<type> vertex(<geometry>, string attribute_name, int prim_num, int vertex_num)`
+:usage: `<type>[] vertex(<geometry>, string attribute_name, int prim_num, int vertex_num)`
+
+    Specifies the vertex as a primitive number and then an offset into the list of vertices on that primitive.
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:returns:
+    The value of the given attribute on the given vertex, or `0` if the attribute or vertex do not exist.

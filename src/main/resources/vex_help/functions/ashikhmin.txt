@@ -1,0 +1,35 @@
+= ashikhmin =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+
+"""Returns a specular BSDF using the Ashikhmin shading model."""
+
+:usage: `bsdf ashikhmin(float exponentx, float exponenty, vector framex, vector framey, ...)`
+:usage: `bsdf ashikhmin(vector nml, float exponentx, float exponenty, vector framex, vector framey, ...)`
+
+[Image:/images/rendering/ashikhmin1.png]
+[Image:/images/rendering/ashikhmin2.png]
+
+An anisotropic `bsdf` similar to `phong()` but with independent controls for the highlight size along 2 tangent vectors.
+
+:arg:exponentx:
+    Phong exponent along the `framex` vector.
+
+:arg:exponenty:
+    Phong exponent along the `framey` vector.
+
+:arg:framex:
+    Highlight X direction.
+
+:arg:framey:
+    Highlight Y direction.
+
+
+@related
+
+- [Vex:phong]
+- [Vex:phonglobe]
+- [Writing a PBR shader|/vex/pbr]

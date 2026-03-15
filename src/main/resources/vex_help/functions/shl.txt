@@ -1,0 +1,17 @@
+= shl =
+
+#type: vex
+#context: all
+#tags: math, integer
+#group: math
+
+"""Bit-shifts an integer left."""
+
+:usage: `int shl(int a, int bits)`
+
+Bit-shifts `a` to the left by `bits`.
+
+@related
+
+- [Vex:shr]
+- [Vex:shrz]

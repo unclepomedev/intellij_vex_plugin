@@ -1,0 +1,15 @@
+= vertexattribtypeinfo =
+
+#type: vex
+#context: all
+#tags: vertex, attrib
+#group: attrib
+#redirect: ../attribtypeinfo_suite
+
+"""Returns the type info of a geometry attribute."""
+
+:usage: `string vertexattribtypeinfo(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+See [Vex:attribtypeinfo] for more information.

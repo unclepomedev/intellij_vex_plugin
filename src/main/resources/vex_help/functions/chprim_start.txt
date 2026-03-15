@@ -1,0 +1,22 @@
+= chprim_start =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Get the start time of a channel primitive."""
+
+:usage: `float chprim_start(<geometry>, int prim)`
+
+Returns the start time in seconds of a channel primitive.
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the channel primitive.
+
+
+@related
+- [Vex:chprim_end]
+- [Vex:chprim_length]

@@ -1,0 +1,17 @@
+= frontface =
+
+#type: vex
+#context: all
+#tags: shading
+#group: shading
+
+"""If dot(I, Nref) is less than zero, N will be negated."""
+
+:usage: `vector frontface(vector N, vector I)`
+
+This form (which doesn't take a reference vector) is only available in
+the shading contexts, where the <<Ng>> variable is used.
+
+:usage: `vector frontface(vector N, vector I, vector Nref)`
+
+If [dot|Vex:dot](I, Nref) is less than zero, N will be negated.

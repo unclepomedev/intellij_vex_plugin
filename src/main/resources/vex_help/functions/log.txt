@@ -1,0 +1,18 @@
+= log =
+
+#type: vex
+#context: all
+#tags: math, number
+#group: math
+
+"""Returns the natural logarithm of the argument."""
+
+:usage: `float log(float n)`
+:usage: `<vector> log(<vector> v)`
+
+    Returns the natural logarithm of `n`. For vectors, this is done per-component.
+
+
+@related
+
+- [Vex:log10]

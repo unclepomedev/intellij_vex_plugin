@@ -1,0 +1,19 @@
+= pretranslate =
+
+#type: vex
+#context: all
+#tags: matrix, vector
+#group: transform
+#since: 17.5
+
+"""Pretranslates a matrix by a vector."""
+
+:usage: `void pretranslate(matrix &m, vector amount)`
+
+@related
+
+- [Vex:prerotate]
+- [Vex:prescale]
+- [Vex:translate]
+- [Vex:rotate]
+- [Vex:scale]

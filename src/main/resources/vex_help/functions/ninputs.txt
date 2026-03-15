@@ -1,0 +1,13 @@
+= ninputs =
+
+#type: vex
+#context: chop
+#tags: utility
+#group: CHOP
+
+"""Returns the number of inputs."""
+
+:usage: `int ninputs()`
+
+Returns the number of inputs on the current node.
+

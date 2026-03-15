@@ -1,0 +1,12 @@
+= weightarrayfromname =
+
+#type: vex
+#context: all
+#group: weightarray
+
+"""Initializes an index array and weight array pair with a single named entry."""
+
+The weight of the entry is initialized to 1.0.
+
+:usage: `void weightarrayfromname(string &names[]; float &weights[]; string name)`
+    Sets `names` to `{name}` and `weights` to `{1.0}`.

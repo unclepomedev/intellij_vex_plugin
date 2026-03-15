@@ -1,0 +1,19 @@
+= chend =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the sample number of the last sample in a given CHOP input."""
+
+:usage: `int chend(int opinput=0)`
+    Returns the index of the last sample in the channel data in the given CHOP input.
+
+To get the end frame, use [Vex:chendf]. To get the end time in seconds, use [Vex:chendt].
+
+
+@related
+
+- [Vex:chendf]
+- [Vex:chendt]

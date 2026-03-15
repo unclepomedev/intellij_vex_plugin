@@ -1,0 +1,33 @@
+= vertexhedge =
+
+#type: vex
+#context: all
+#tags: vertex, hedge
+#group: hedge
+
+"""Returns the half-edge which has a vertex as source."""
+
+:usage: `int vertexhedge(<geometry>, int vertex)`
+
+:include _common#geometry:
+
+:arg:vertex:
+    The linear vertex number in the geometry.  `0` is the first vertex.
+
+:returns:
+    The number for the half-edge that has `vertex` as source and the vertex following `vertex` in the primitive of `vertex` as destination.
+    Returns `-1` if failed to find the corresponding vertex.
+
+
+@examples
+
+{{{
+#!vex
+
+int vtxhedge;
+
+// Get the hedge out of vertex vertex number 2.
+vtxhedge = vertexhedge("defgeo.bgeo", 2);
+
+}}}
+

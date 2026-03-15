@@ -1,0 +1,33 @@
+= setpointgroup =
+
+#type: vex
+#context: all
+#tags: point, groups
+#group: groups
+
+"""Adds or removes a point to/from a group in a geometry."""
+
+:usage: `int setpointgroup(int geohandle, string name, int point_num, int value, string mode="set")`
+
+:include _common#geohandle_arg:
+
+:arg:name:
+    The name of the group to modify.
+
+:arg:point_num:
+    The point number to add or remove from the group.
+
+:arg:value:
+    `1` to put the point in the group, `0` to remove the point from the group.
+    This is ignored if `mode` is `"toggle"`.
+
+:arg:mode:
+    Use `"set"` to set the point's membership according to the `value`.
+    Use `"toggle"` to toggle the point's membership, regardless of the `value`.
+
+
+@related
+
+- [/vex/groups]
+- [Vex:setprimgroup]
+- [Vex:setvertexgroup]

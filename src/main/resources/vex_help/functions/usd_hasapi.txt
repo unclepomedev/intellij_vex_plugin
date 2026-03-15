@@ -1,0 +1,36 @@
+= usd_hasapi =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 18.0
+
+"""Checks if the primitive adheres to the given API."""
+
+:usage: `int usd_hasapi(<stage>, string primpath, string api)`
+
+This function checks whether the given primitive adheres to the given API. I.e., whether that API has been applied to this primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:api:
+    The name or an alias of the API schema to check.
+
+:returns:
+    1 if the primitive has the given API, or 0 otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the primitive has a USD Geometry Model API applied.
+int has_geom_model_api_by_name  = usd_hasapi(0, "/geo/sphere", "UsdGeomModelAPI");
+int has_geom_model_api_by_alias = usd_hasapi(0, "/geo/sphere", "GeomModelAPI");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_typename]
+- [Vex:usd_name]

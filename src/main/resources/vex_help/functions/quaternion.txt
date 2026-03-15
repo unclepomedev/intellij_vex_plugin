@@ -1,0 +1,32 @@
+= quaternion =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: math
+
+"""Creates a vector4 representing a quaternion."""
+
+[Unit quaternions are used to represent rotations|Wp:Quaternions_and_spatial_rotation]. This VEX function creates a unit quaternion that represents a rotation.
+
+:usage: `vector4 quaternion(matrix3 rotations)`
+
+Creates a vector4 representing a unit quaternion from a 3x3 rotational matrix.
+
+:usage: `vector4 quaternion(float angle, vector axis)`
+
+Creates a vector4 representing a unit quaternion from an <<angle>> and a normalized <<axis>>. The <<angle>> is specified in radians.
+
+:usage: `vector4 quaternion(vector angleaxis)`
+
+Creates a vector4 representing a unit quaternion from a combined angle/axis. This is the normalized rotation axis multiplied by the rotation angle in radians.
+
+There used to be a fourth form that took a rotation vector.  It has been renamed to `eulertoquaternion` and now takes radians.
+
+For more information, see [Data types|/vex/lang#data-types] and [Dot operator|/vex/lang#dot-operator].
+
+@related
+- [Vex:dihedral]
+- [Vex:qconvert]
+- [Vex:eulertoquaternion]
+

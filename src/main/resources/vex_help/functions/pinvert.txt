@@ -1,0 +1,18 @@
+= pinvert =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Computes the pseudo-inverse of a matrix."""
+
+:usage: `matrix3 pinvert(matrix3 m)`
+
+:arg:
+    The matrix to compute [pseudo-inverse|Wp:Moore–Penrose_inverse] of.
+
+    Returns the pseudo-inverse matrix.
+
+@related
+ - [VEX:invert]

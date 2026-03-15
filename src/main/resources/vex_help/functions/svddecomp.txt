@@ -1,0 +1,25 @@
+= svddecomp =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+#since: 18.0
+
+"""Computes the singular value decomposition of a given matrix."""
+
+:usage: `void svddecomp(matrix2 input_M, matrix2 &output_U, vector2 &output_S, matrix2 &output_V)`
+:usage: `void svddecomp(matrix3 input_M, matrix3 &output_U, vector &output_S, matrix3 &output_V)`
+:usage: `void svddecomp(matrix input_M, matrix &output_U, vector4 &output_S, matrix &output_V)`
+
+Computes the [singular value decomposition|Wp:Singular_value_decomposition] of a
+given matrix. More precisely, computes `U`, `S`, `V` such that
+`M = U*T*transpose(V)`, where `T` is the diagonal matrix constructed from `S`,
+the vector of singular values.
+
+:usage: `vector2 svddecomp(matrix2 input_M)`
+:usage: `vector svddecomp(matrix3 input_M)`
+:usage: `vector4 svddecomp(matrix input_M)`
+
+The second form of this function simply returns the vector of singular values.
+

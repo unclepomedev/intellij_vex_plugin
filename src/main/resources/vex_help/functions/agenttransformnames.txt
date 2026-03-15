@@ -1,0 +1,22 @@
+= agenttransformnames =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns the name of each transform in an agent primitive's rig."""
+
+:usage: `string[] agenttransformnames(<geometry>, int prim)`
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentrigfind]
+- [Vex:agenttransformcount]

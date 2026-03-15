@@ -1,0 +1,29 @@
+= agentchannelvalues =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+#since: 18.0
+
+"""Returns the current values of an agent primitive's channels."""
+
+:usage: `float[] agentchannelvalues(<geometry>, int prim)`
+
+If only a single channel value is needed, using [Vex:agentchannelvalue] instead can be significantly faster.
+
+Returns an empty array if `prim` is out of range or is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+
+@related
+- [Vex:agentclipchannel]
+- [Vex:agentchannelnames]
+- [Vex:agentchannelvalue]
+- [Vex:agentrigfindchannel]
+- [Vex:setagentchannelvalue]
+- [Vex:setagentchannelvalues]

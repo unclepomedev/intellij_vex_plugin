@@ -1,0 +1,25 @@
+= chstartf =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the frame corresponding to the first sample of the input
+specified."""
+
+:usage: `float chstartf()`
+
+    Uses `-1` as the `opinput`.
+
+:usage: `float chstartf(int opinput)`
+
+    Returns the frame corresponding to the first sample of the given CHOP input.
+
+To get the first sample number, use [Vex:chstart]. To get the start time in seconds, use [Vex:chstartt].
+
+
+@related
+
+- [Vex:chstart]
+- [Vex:chstartt]

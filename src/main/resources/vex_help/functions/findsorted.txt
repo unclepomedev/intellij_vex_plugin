@@ -1,0 +1,29 @@
+= findsorted =
+
+#type: vex
+#context: all
+#tags: array
+#group: array
+
+
+"""Finds an item in a sorted array."""
+
+:usage: `int findsorted(<type> array[]; <type> target)`
+:usage: `int findsorted(<type> array[]; <type> target; int start)`
+:usage: `int findsorted(<type> array[]; <type> target; int start; int end)`
+
+    Returns the position of the first occurrence of the `target` value within the `array`. You can limit the result to the first occurrence at or after a `start` position, and at or before an `end` position.
+
+    This function is faster than [find(array, target)|Vex:find] when the array is sorted, but will not return the correct result on unsorted arrays.
+
+    Returns a negative number if the target is not found.
+
+
+@related
+
+- [Vex:find]
+- [Vex:findlowerbound]
+- [Vex:findlowerboundsorted]
+- [Vex:sort]
+- [Arrays|/vex/arrays]
+

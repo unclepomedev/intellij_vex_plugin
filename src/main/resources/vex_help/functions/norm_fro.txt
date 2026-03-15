@@ -1,0 +1,24 @@
+= norm_fro =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns the Frobenius norm of a matrix."""
+
+:usage: `float norm_fro(<matrix> m)`
+
+    Returns the [Frobenius norm|Wp:Matrix_norm#Frobenius_norm] of matrix <<m>>.
+
+@related
+
+- [Vex:norm_1]
+- [Vex:norm_inf]
+- [Vex:norm_max]
+- [Vex:norm_spectral]
+
+- [Vex:length]
+- [Vex:length2]
+
+

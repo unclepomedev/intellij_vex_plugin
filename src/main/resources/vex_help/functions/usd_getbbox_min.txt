@@ -1,0 +1,38 @@
+= usd_getbbox_min =
+
+#type: vex
+#context: all
+#tags: usd, usd_bbox
+#group: usd
+#since: 18.0
+
+"""Returns the minimum of the bounding box for the primitive."""
+
+:usage: `vector usd_getbbox_min(<stage>, string primpath, string purpose)`
+
+Computes the minimum of the bounding box for the geometry.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:purpose:
+    The primitive's purpose for which to return the bounding box (e.g., "render").
+
+:returns:
+    The minimum point of the primitive's bounding box.
+
+@examples 
+{{{
+#!vex
+// Get the sphere's bounding box.
+vector min = usd_getbbox_min(0, "/src/sphere", "render");
+}}}
+
+@related
+- [Vex:usd_getbounds]
+- [Vex:usd_getbbox]
+- [Vex:usd_getbbox_center]
+- [Vex:usd_getbbox_size]
+- [Vex:usd_getbbox_max]
+- [Vex:usd_relbox]

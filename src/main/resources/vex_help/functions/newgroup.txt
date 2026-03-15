@@ -1,0 +1,10 @@
+= newgroup =
+
+#type: vex
+#context: sop
+#index: no
+#status: deprecated
+
+WARNING:
+    This function has been deprecated. Use [Vex:addattrib] instead.
+

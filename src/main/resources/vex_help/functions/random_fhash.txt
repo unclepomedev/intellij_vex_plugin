@@ -1,0 +1,17 @@
+= random_fhash =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""Hashes floating point numbers to integers."""
+
+:usage: `int random_fhash(float seed)`
+:usage: `int random_fhash(float seed, float seed2)`
+:usage: `int random_fhash(vector seed)`
+:usage: `int random_fhash(vector4 seed)`
+:usage: `int random_fhash(vector2 seed)`
+
+Hashes the given number into an integer value.  The hash may vary
+for even the smallest differences in inputs.

@@ -1,0 +1,22 @@
+= create_pdf =
+
+#type: vex
+#context: all
+#tags: pbr, bsdf, sampling
+#group: sampling
+
+"""Creates a probability density function from an array of input values."""
+
+
+:usage: `float[] create_pdf(float values[])`
+
+Create a PDF for the input `values` array and return it as a float array.
+
+:arg:values:
+    Array of values to create the PDF for.
+
+
+@related
+
+- [Vex:spline_cdf]
+- [Vex:sample_cdf]

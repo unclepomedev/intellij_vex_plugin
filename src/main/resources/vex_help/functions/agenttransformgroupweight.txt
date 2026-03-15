@@ -1,0 +1,35 @@
+= agenttransformgroupweight =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Returns the weight of a member of the specified transform group."""
+
+See [Transform Groups|/crowds/agents#xformgroups] for more information.
+
+:usage: `float agenttransformgroupweight(<geometry>, int prim, int transformgroup, int transform)`
+
+Returns the transform's weight if it is a member of the specified transform group, and zero otherwise.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transformgroup:
+    Index of a transform group in the agent's definition.
+    A transform group's index can be obtained via [Vex:agentfindtransformgroup].
+
+:arg:transform:
+    Index of a transform in the agent's rig.
+
+@related
+- [Vex:agentcliptransformgroups]
+- [Vex:agentfindtransformgroup]
+- [Vex:agentrigfind]
+- [Vex:agenttransformgroups]
+- [Hom:hou.AgentTransformGroup]
+
+

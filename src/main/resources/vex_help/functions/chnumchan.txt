@@ -1,0 +1,19 @@
+= chnumchan =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns the number of channels in the input specified."""
+
+:usage: `int chnumchan()`
+
+    Uses `-1` for `opinput`
+
+:usage: `int chnumchan(int opinput)`
+
+    Returns the number of channels in the input specified.
+
+:include _common#chop_opinput_arg:
+

@@ -1,0 +1,36 @@
+= usd_pointinstancetransform =
+
+#type: vex
+#context: all
+#tags: usd, usd_pointinstance
+#group: usd
+#since: 18.0
+
+"""Obtains the transform for the given point instance"""
+
+:usage: `matrix usd_pointinstancetransform(<stage>, string primpath, int index)`
+:usage: `matrix usd_pointinstancetransform(<stage>, string primpath, int index, float timecode)`
+
+This function returns point instance transform.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:index:
+    The index of the instance within the point instancer.
+
+:include _common#usd_timecode:
+
+:returns:
+    The transform of the point instance.
+
+@examples 
+{{{
+#!vex
+// Get the transform of the third instance.
+matrix xform = usd_pointinstancetransform(0, "/src/instanced_cubes", 2);
+}}}
+
+@related
+- [Vex:usd_worldtransform]

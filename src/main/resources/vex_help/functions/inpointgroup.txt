@@ -1,0 +1,18 @@
+= inpointgroup =
+
+#type: vex
+#context: all
+#tags: point, groups
+#group: groups
+
+"""Returns 1 if the point specified by the point number is in the group specified by the string."""
+
+:usage: `int inpointgroup(<geometry>, string groupname, int pointnum)`
+
+:include _common#geometry:
+
+:returns:
+    `1` if the group exists and the point is in the group, or `0` otherwise.
+
+This can use ad-hoc groups, like `0-3` or `@Cd.x>0.5`.  It matches the SOP
+group naming convention, in particular that an empty string means all points.

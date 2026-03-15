@@ -1,0 +1,27 @@
+= vertexattrib =
+
+#type: vex
+#context: all
+#tags: vertex, attrib
+#group: attrib
+#redirect: ../attrib_suite#vertexattrib
+
+"""Reads a vertex attribute value from a geometry."""
+
+:usage: `<type> vertexattrib(<geometry>, string attribute_name, int linear_vertex_index, int &success)`
+:usage: `<type>[] vertexattrib(<geometry>, string attribute_name, int linear_vertex_index, int &success)`
+
+    Unlike [Vex:vertex], this function does not have a version that takes a primitive number and primitive vertex number. If you have a primitive number and primitive vertex number, you can convert them into a linear index using [Vex:vertexindex].
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:arg:linear_vertex_index:
+    A linear index into the list of all vertices. If you have a primitive number and primitive vertex number, you can convert them into a linear index using [Vex:vertexindex].
+
+:arg:success:
+    The function overwrites this variable with `1` if the attribute exists and was read successfully, or `0` otherwise.
+
+:returns:
+    The value of the given attribute on the given point number. 

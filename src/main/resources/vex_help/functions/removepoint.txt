@@ -1,0 +1,26 @@
+= removepoint =
+
+#type: vex
+#context: all
+#tags: point, delete
+#group: geo
+
+"""Removes a point from the geometry."""
+
+:usage: `int removepoint(int geohandle, int point_number)`
+:usage: `int removepoint(int geohandle, int point_number, int and_prims)`
+
+:include _common#geohandle_arg:
+
+:arg:point_number:
+    If this is `-1`, the function has no effect.
+
+:arg:and_prims: 
+    If this is `1`, the function deletes any _degenerate_ primitives that referred to the removed point (for example, closed polygons with fewer than 3 vertices or open polygons with fewer than 2 vertices).
+    
+    If this is `0`, the function only deletes primitives that become invalid because of the removed point (for example, tetrahedra with fewer than 4 vertices, or volumes with zero vertices).
+
+
+@related
+
+- [Vex:addpoint]

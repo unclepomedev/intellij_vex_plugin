@@ -1,0 +1,32 @@
+= usd_collectionexcludes =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Obtains the object paths that are in the collection's exclude list"""
+
+:usage: `string[] usd_collectionexcludes(<stage>, string collectionpath)`
+
+This function returns the collection's exclude list. 
+
+:include _common#usd_stage:
+
+:include _common#usd_collectionpath:
+
+:returns:
+    The collection's exclude list. 
+
+@examples 
+{{{
+#!vex
+// Get collection's exclude list.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+string exclude_list[]  = usd_collectionexcludes(0, collection_path);
+}}}
+
+@related
+- [Vex:usd_iscollection]
+- [Vex:usd_collectionincludes]

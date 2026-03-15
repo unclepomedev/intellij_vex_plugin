@@ -1,0 +1,60 @@
+= attribtype =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Returns the type of a geometry attribute."""
+
+If you know the attribute class ahead of time, using [Vex:detailattribtype], [Vex:primattribtype], [Vex:pointattribtype], or [Vex:vertexattribtype] may be faster.
+
+:usage: `int attribtype(<geometry>, string attribclass, string attribute_name)`
+
+:include _common#geometry:
+
+:include _common#attribclass:
+
+:returns:
+    A numeric code indicating the attribute type:
+
+    `-1` |
+        Attribute not found, or unknown type.
+
+    `0` |
+        Integer
+    `1` |
+        Float or vector
+    `2` |
+        String
+    `3` |
+        Array of integers (or integer tuples)
+    `4` |
+        Array of floats (or float tuples)
+    `5` |
+        Array of strings.
+    `6` |
+        Dictionary
+    `7` |
+        Array of Dictionaries
+
+
+@examples
+
+{{{
+#!vex
+
+// Get the type of the position attribute of "defgeo.bgeo"
+int type = attribtype("defgeo.bgeo", "point", "P");
+
+}}}
+
+
+@related
+
+@related
+
+- [Vex:addattrib]
+- [Vex:attrib]
+- [Vex:getattrib]
+- [Vex:attribsize]

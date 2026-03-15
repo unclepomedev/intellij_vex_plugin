@@ -1,0 +1,31 @@
+= usd_transformtype =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Infers the transform operation type from the full name"""
+
+:usage: `int usd_transformtype(string name)`
+
+This function returns the transform operation type implied by the full name.
+
+:arg:name:
+    The full name of the transform operation, which includes the standard namespace, encodes transformation type, and optionally contains the suffix.
+
+:returns:
+    The the numerical code for the inferred transform operation type implied by the transform operation name.  See the VEX "usd.h" header for defines, such as `USD_XFORM_TRANSLATE`, `USD_XFORM_TRANSFORM`, or `USD_XFORM_ROTATE_XYZ`.
+
+@examples 
+{{{
+#!vex
+// Get the type of the first transform operation on the cube
+string cube_xform_ops[] = usd_transformorder(0, "/geo/cube");
+int type = usd_transformtype(cube_xform_ops[0]);
+}}}
+
+@related
+- [Vex:usd_transformname]
+- [Vex:usd_transformsuffix]

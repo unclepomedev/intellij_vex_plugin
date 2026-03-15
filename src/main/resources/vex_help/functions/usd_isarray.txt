@@ -1,0 +1,34 @@
+= usd_isarray =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 17.5
+
+"""Checks if the attribute is an array."""
+
+:usage: `int usd_isarray(<stage>; string primpath; string name)`
+
+This function checks whether the given attribute is an array.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:returns:
+    `1` if the attribute exists and is an array, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if attribute "some_attribute" is an array.
+int is_array = usd_isarray(0, "/geometry/sphere", "some_attribute");
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_attriblen]

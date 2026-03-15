@@ -1,0 +1,13 @@
+= nprimitives =
+
+#type: vex
+#context: all
+#tags: prim, count
+#group: geo
+
+"""Returns the number of primitives in the input or geometry file."""
+
+:usage: `int nprimitives(<geometry>)`
+
+:include _common#geometry:
+

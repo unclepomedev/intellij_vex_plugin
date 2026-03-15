@@ -1,0 +1,23 @@
+= __uniform_premul =
+ 
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+#since: 18.0
+
+"""Pre multiply matrices."""
+
+:usage: `void __uniform_premul(matrix2 &a, matrix2 b)`
+:usage: `void __uniform_premul(matrix3 &a, matrix3 b)`
+:usage: `void __uniform_premul(matrix &a, matrix b)`
+
+:usage: `void __uniform_premul(matrix2 &m, matrix2 a, matrix2 b)`
+:usage: `void __uniform_premul(matrix3 &m, matrix3 a, matrix3 b)`
+:usage: `void __uniform_premul(matrix &m, matrix a, matrix b)`
+
+Multiplies two matrices and returns modify the first matrix.
+
+This version of premul can be faster when running over a single
+processor, like for detail attributes or doing matrix multiplication
+for CHOP constraints.

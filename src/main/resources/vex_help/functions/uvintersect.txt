@@ -1,0 +1,32 @@
+= uvintersect =
+
+#type: vex
+#context: all
+#tags: ray, intersect
+#group: geo
+
+"""This function computes the intersection of the specified ray with the geometry in uv space."""
+
+:usage: `int uvintersect(<geometry>, string uvname, vector orig, vector dir, vector &pos, vector &primuv)`
+:usage: `int uvintersect(<geometry>, string primgroup, string uvname, vector orig, vector dir, vector &pos, vector &primuv)`
+
+:include _common#geometry:
+
+:arg:primgroup:
+    The name of a primitive group or a pattern to generate a primitive
+    group.  Uses the same semantics as a SOP group, so empty strings
+    will match all primitives.  Attribute groups like `@Cd.x>0` can
+    also be used, but note that the `@` may need to be escaped with
+    a backslash in a [Snippet VOP|Node:vop/snippet].
+
+This function computes the intersection of the specified ray with the geometry in uv space. The primitive number is returned, or -1 if there is an error or no intersection found.
+
+The position in uvspace of the intersection location is stored in <<p>>. The corresponding parametric location of the intersection is stored in <<primuv>>. In the case of multiple intersections, the intersection closest to the ray origin is used.
+
+This function does not expect a normalized direction vector. Instead, it uses the length of the vector as the maximum distance. The integer result is the primitive hit.
+
+NOTE:
+    It can be hard to visualize a 3D intersection of a ray in a 3D UV space. One trick that can be used is to unwrap the geometry in SOP to get better visualization of the space. This can be done by using a [Split Vertex SOP|Node:sop/splitvertex] followed by a [Attribute Copy SOP|Node:sop/attribcopy]. This will disconnect the faces at uv boundaries and stamp the uvw values on top of the `P` attribute.
+
+NOTE:
+    When intersections are performed against metaball geometry, it is impossible to determine the primitive number of the metaball which was hit. In this case, the function returns the number of primitives in the intersection geometry.

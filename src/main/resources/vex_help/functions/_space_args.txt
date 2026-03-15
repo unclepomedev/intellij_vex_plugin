@@ -1,0 +1,33 @@
+#type: include
+
+The possible values for the space arguments are:
+
+An object path |
+    Use the object space of an object specified by a path string.
+
+    TIP:
+        In some cases, such as point instancing, mantra may
+        automatically mangle object paths. You can generate an `.ifd`
+        file and look inside to try to find what mantra is calling
+        the object you want.
+
+`"space:object"` |
+    Object space of the _current_ object.
+
+`"space:light"` |
+    Object space of the _current_ light when executing a shadow or light shader.
+
+`"space:world"` |
+    Houdini world space.
+
+`"space:camera"` |
+    mantra camera space.
+
+`"space:ndc"` |
+    Normal Device Coordinate space.
+
+`"space:lightndc"` |
+    Normal Device Coordinate space for the _current_ light when executing a shadow or light shader.
+
+`"space:current"` |
+    The current space the vector is in.

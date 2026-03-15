@@ -1,0 +1,31 @@
+= reverse =
+
+#type: vex
+#context: all
+#group: array
+
+"""Returns an array or string in reverse order."""
+
+:usage: `string reverse(string str)`
+
+    Returns a UTF-8 encoded string with the reversed _characters_ (not bytes) from `str`. This is different from what `str[::-1]` returns.
+
+:usage: `<type>[] reverse(<type> values[])`
+
+    Returns a reversed copy of the given array.
+
+
+@examples
+
+{{{
+#!vex
+reverse("hello") == "olleh";
+reverse({1,2,3,4}) == {4, 3, 2, 1};
+}}}
+
+
+@related
+
+- [/vex/arrays]
+- [Vex:reorder]
+- [Vex:sort]

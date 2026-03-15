@@ -1,0 +1,21 @@
+= pointvertices =
+
+#type: vex
+#context: all
+#tags: point, vertex
+#group: geo
+
+"""Returns the list of vertices connected to a point."""
+
+:usage: `int [] pointvertices(<geometry>, int ptnum)`
+
+:include _common#geometry:
+
+:arg:ptnum:
+    The point number to get a vertex from.
+
+:returns:
+    An array of linear vertices that are wired to the given point. You should not rely on the numbers being in a particular order.
+    
+    If the given point contains no vertices, the array will be empty.
+

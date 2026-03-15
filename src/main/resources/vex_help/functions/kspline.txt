@@ -1,0 +1,46 @@
+= kspline =
+
+#type: vex
+#context: all
+#tags: spline
+#group: math
+
+"""Returns an interpolated value along a curve defined by a basis and key/position pairs."""
+
+:usage: `float kspline(string basis; float sample_pos; float value1, float key_pos1, ...)`
+
+    Samples a curve defined by a series of value/position pairs.
+    This is useful for specifying a 1D data ramp.
+
+:usage: `vector kspline(string basis; float sample_pos; vector value1, float key_pos1, ...)`
+:usage: `vector4 kspline(string basis; float sample_pos; vector4 value1, float key_pos1, ...)`
+
+    Samples a curve defined by a series of vector value/position pairs.
+    This is useful for specifying a color ramp.
+    
+If you just want linearly spaced keys, or if you need to vary the basis, use [Vex:spline] instead.
+
+:include spline#basis:
+
+:include spline#sample_pos:
+
+:include lkspline#valpos:
+
+TIP:
+    The [Vex:spline] function is a more flexible superset of this function.
+
+This function is the equivalent of:
+
+{{{
+#!vex
+type kspline(basis, t, v0, k0, v1, k1, v2, k2...)
+{
+    float tk = spline("linearsolve", t, k0, k1, k2, ...);
+    return spline(basis, tk, v0, v1, v2, ...);
+}
+}}}
+
+
+@related
+
+- [Vex:spline]

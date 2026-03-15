@@ -1,0 +1,16 @@
+= volumepostoindex =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Converts a position into a volume voxel index."""
+
+:usage: `vector volumepostoindex(<geometry>, int primnum, vector position)`
+:usage: `vector volumepostoindex(<geometry>, string volumename, vector position)`
+
+:returns:
+    The index of a voxel at the given position.
+    
+    Returns 0 if `primnum` or `inputnum` is out of range, the geometry is invalid, or the given primitive is not a vector volume primitive.

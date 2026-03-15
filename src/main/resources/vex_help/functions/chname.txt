@@ -1,0 +1,31 @@
+= chname =
+
+#type: vex
+#context: cop2, chop
+#tags: output_plane, chop
+#group: image
+#minitoc: hide
+
+"""Returns the name of a numbered channel."""
+
+
+== COPs ==
+
+:usage: `string chname(int plane_index, int chindex)`
+
+    Returns the name of the channel on the plane (for example, `"r"`, or `"x"`).
+
+
+== CHOPs ==
+
+:usage: `string chname(int channel_index)`
+:usage: `string chname(int opinput, int channel_index)`
+    #status: ignore
+    
+    Returns the name of the channel, for example `"tx"`.
+    To get a list of all channel names, use [Vex:chnames].
+
+:include _common#chop_opinput_arg:
+
+
+

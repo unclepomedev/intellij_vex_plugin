@@ -1,0 +1,45 @@
+= usd_flattenediprimvarelement =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 19.0
+
+"""Reads an element value of a flattened array primvar directly from the USD primitive or from its ancestor."""
+
+:usage: `<type> usd_flattenediprimvarelement(<stage>; string primpath; string name; int index)`
+:usage: `<type> usd_flattenediprimvarelement(<stage>; string primpath; string name; int index; float timecode)`
+
+This function returns a value of an element of a flattened array primvar on a given primitive or inherited from primitive's ancestor.
+
+Some primvars can be indexed, where the primvar is a compacted array of unique values, and there is an index array to map an entity to the value element. This function expands the compacted array by using the index array, and returns element value from the expanded array at a given index.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:arg:index:
+    The index into the expanded array. 
+
+:include _common#usd_timecode:
+
+:returns:
+    The element of a flattened value array of an existing primvar, or zero/empty value if the primvar does not exist. Use [Vex:usd_isiprimvar] if you want to check whether the primvar exists.
+
+@examples 
+{{{
+#!vex
+// Get the value of a flattened primvar on the cube primitive or cube's ancestor.
+float flat_value    = usd_flattenediprimvarelement(0, "/geo/cube", "primvar_name", 3);
+
+f@flat_primvar_element_10_at_current_frame = usd_flattenediprimvarelement(0, "/geo/sphere", "bar", 10);
+f@flat_primvar_element_10_at_frame_7       = usd_flattenediprimvarelement(0, "/geo/sphere", "bar", 10, 7.0);
+}}}
+
+@related
+- [Vex:usd_flattenediprimvar]
+- [Vex:usd_flattenedprimvarelement]

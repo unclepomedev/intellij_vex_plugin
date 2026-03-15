@@ -1,0 +1,17 @@
+= chsop =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+#since: 18.0
+
+"""Evaluates an operator path parameter and return the path to the operator."""
+
+:usage: `string chsop(string channel)`
+:usage: `string chsop(string channel, float time)`
+
+Evaluates an operator path parameter and return the path to the operator.
+
+The time is specified in seconds, not in frames.
+

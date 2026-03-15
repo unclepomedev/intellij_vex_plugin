@@ -1,0 +1,33 @@
+= texture =
+
+#type: vex
+#context: all
+#tags: shading, map, file
+#group: texture
+
+"""Computes a filtered sample of the texture map specified."""
+
+:usage: `vector|vector4 texture(string map, ...)`
+
+    Samples the texture at the global S and T coordinates from the shading context. These signatures are only available in [shading contexts|/vex/contexts/shading_contexts].
+
+:usage: `vector|vector4 texture(string map, float ss, float tt, ...)`
+
+    Samples the texture at the given S and T coordinates, using a filter width based on the derivatives of S and T at that point. If you use this function outside a [shading context|/vex/contexts/shading_contexts], the filter width will be 0.
+
+:usage: `vector|vector4 texture(string map, float s0, float t0, float s1, float t1, float s2, float t2, float s3, float t3, ...)`
+
+    Takes an explicit sampling quadrilateral with corners (s0, t0), (s1, t1), (s2, t2), and (s3, t3).
+
+:returns:
+    A sampled color value from the texture.
+    
+    If you call the function with a `vector4` return type, the function includes the texture alpha in the fourth component.
+
+:include _imagefilter_variadic:
+
+
+@related
+
+- [Vex:colormap]
+

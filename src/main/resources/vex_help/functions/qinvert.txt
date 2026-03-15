@@ -1,0 +1,14 @@
+= qinvert =
+
+#type: vex
+#context: all
+#tags: quaternion, transform
+#group: math
+
+"""Inverts a quaternion rotation."""
+
+:usage: `vector4 qinvert(vector4 quaternion)`
+
+Creates the inverse quaternion to the supplied one.  This will rotate points
+in the opposite direction.
+

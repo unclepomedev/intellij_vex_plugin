@@ -1,0 +1,32 @@
+= primduv =
+
+#type: vex
+#context: all
+#tags: prim, deriv
+#group: attrib
+
+"""Returns position derivative on a primitive at a certain parametric (u, v) position."""
+
+:usage: `vector primduv(<geometry>; int prim_number; vector2 uv; int du; int dv)`
+
+:include _common#geometry:
+
+:arg:prim_number:
+    The number of the primitive on which to measure the derivative.
+
+:arg:uv:
+    The parametric coordinates on the primitive at which to measure the derivative.
+
+`du`, `dv`:
+    Represent the derivative order to query.
+    
+    On a curve, the curve direction is given by `du==1` and the curvature is given by `du==2`.
+
+    `dv` is used for parametric surfaces.
+
+
+@related
+
+- [Vex:getderiv]
+- [Vex:Du]
+- [Vex:Dv]

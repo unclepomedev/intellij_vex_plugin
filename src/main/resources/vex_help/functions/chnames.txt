@@ -1,0 +1,23 @@
+= chnames =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Returns all the CHOP channel names of a given CHOP input."""
+
+:usage: `string[] chnames()`
+
+    Uses `-1` as the `opinput`.
+
+:usage: `string[] chnames(int opinput)`
+
+    Returns an array of channel names in the given input.
+
+:include _common#chop_opinput_arg:
+
+
+@related
+
+- [Vex:chname]

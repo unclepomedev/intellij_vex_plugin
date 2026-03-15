@@ -1,0 +1,58 @@
+= agentaddclip =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Add a clip into an agent's definition."""
+
+WARNING:
+    This function has been deprecated. Use [Hom:hou.AgentDefinition#addClip] and [Hom:hou.crowds#replaceAgentDefinitions] instead to edit agent definitions.
+
+:usage: `int agentaddclip(int geohandle, int prim, string clipname, string clippath, int keepref)`
+    #status: deprecated
+
+This function adds a `.clip` or `.bclip` file saved from a CHOP (or generated
+by an [Node:out/agent] ROP) to the definition of the given agent primitive.
+Clips in an agent definition contains transform animation for driving the
+agent's skeleton.
+
+The channels within the clip should of the form `transform_name:channel_name`
+where _transform_name_ is a string matching the values returned by
+[Vex:agenttransformnames] and _channel_name_ is one of `tx`, `ty`, `tz`, `rx`,
+`ry`, `rz`, `sx`, `sy`, or `sz`. The channels starting with `t` denote
+translation, `r` denote rotation, and `s` denote scale. The resulting
+transforms will be treated as _local_ transforms, such as those returned by
+[Vex:agentlocaltransform] (ie. they are relative to the corresponding parent
+transform in the agent's skeleton).
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the agent primitive whose definition is to be
+    modified.
+
+:arg:clipname:
+    The name to identify the clip. All clips in an agent definition must have
+    unique names.
+
+:arg:clippath:
+    The filename of the `.clip` or `.bclip` file saved from a CHOP or generated
+    by the [Node:out/agent] ROP. Use `op:full_path_to_chop` to directly refer
+    to a CHOP in the scene.
+
+:arg:keepref:
+    When `clippath` refers to a filename on disk, this boolean flag indicates
+    whether the external reference should be maintained when the geometry will
+    be saved. If the reference is maintained, then the original source of the
+    clip needs to be available when the saved geometry is used. Otherwise, a
+    copy of the clip will be inlined when saving out the geometry so that the
+    original clip is no longer needed.
+
+
+@related
+- [Vex:agentlocaltransform]
+- [Vex:agentlocaltransforms]
+- [Vex:agentrigparent]
+- [Vex:agenttransformnames]

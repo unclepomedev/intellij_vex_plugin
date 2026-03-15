@@ -1,0 +1,32 @@
+= agentclipchannelnames =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Returns the names of the channels in an agent's animation clip."""
+
+:usage: `string[] agentclipchannelnames(<geometry>, int prim, string clipname)`
+:usage: `string[] agentclipchannelnames(<geometry>, int prim, int clipindex)`
+
+Returns an empty array if `clipname` is not one of the agent's [animation clips|Vex:agentclipcatalog],  `prim` is out of range, or `prim` is not an agent primitive.
+
+For a list of the agent's transforms, use [Vex:agenttransformnames].
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    The name of the animation clip.
+
+:include _common#agent_clipindex:
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentclipchannel]
+- [Vex:agentclipsample]
+- [Vex:agentfindclip]
+- [Vex:agenttransformnames]

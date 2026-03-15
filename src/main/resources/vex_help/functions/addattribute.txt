@@ -1,0 +1,11 @@
+= addattribute =
+
+#type: vex
+#context: sop
+#tags: attrib
+#index: no
+#status: deprecated
+
+WARNING:
+    This function has been deprecated. Use [Vex:addattrib] or [Vex:setattrib] instead.
+

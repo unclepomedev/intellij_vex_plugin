@@ -1,0 +1,13 @@
+= chresizebuf =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Resize the CHOP context temporary buffer"""
+
+:usage: `int chresizebuf(int size)`
+
+Resizes the CHOP context temporary buffer.
+Return 1 if the resize succeeded, 0 otherwise.

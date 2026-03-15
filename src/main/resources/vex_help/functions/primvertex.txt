@@ -1,0 +1,36 @@
+= primvertex =
+
+#type: vex
+#context: all
+#tags: prim, vertex
+#group: geo
+
+"""Converts a primitive/vertex pair into a linear vertex."""
+
+:usage: `int primvertex(<geometry>, int primnum, int vertex)`
+
+:include _common#geometry:
+
+:arg:primnum:
+    The primitive number to get a vertex from.
+
+:arg:vertex:
+    The vertex number inside the primitive.  0 is the first vertex.
+
+:returns:
+    The linear vertex index corresponding to the given primitive vertex.
+    Returns `-1` if the function cannot find the linear vertex index.
+
+
+@examples
+
+{{{
+#!vex
+
+int linearvtx;
+
+// Get the linear vertex value of vertex 2 of primitive 3.
+linearvtx = primvertex("defgeo.bgeo", 3, 2);
+
+}}}
+

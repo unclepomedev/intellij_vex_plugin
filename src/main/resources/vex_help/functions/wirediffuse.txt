@@ -1,0 +1,20 @@
+= wirediffuse =
+
+#type: vex
+#context: all
+#tags: shading, pbr
+#group: shading
+
+:usage: `bsdf wirediffuse(vector tangent, ...)`
+
+[Image:/images/rendering/wirediffuse.png]
+
+Diffuse function defined around a tangent vector. This can be used to produce the average diffuse illumination for thin wire-like primitives such as hair.
+
+:arg:tangent:
+    tangent vector along the hair.
+
+@related
+
+- [Vex:wireblinn]
+- [Writing a PBR shader|/vex/pbr]

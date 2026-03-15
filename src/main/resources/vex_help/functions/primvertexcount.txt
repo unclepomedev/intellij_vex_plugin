@@ -1,0 +1,34 @@
+= primvertexcount =
+
+#type: vex
+#context: all
+#tags: prim, vertex, count
+#group: geo
+
+"""Returns number of vertices in a primitive in a geometry."""
+
+:usage: `int primvertexcount(<geometry>, int prim_num)`
+
+:include _common#geometry:
+
+:arg:prim_num:
+    The primitive number of the primitive to count vertices on.
+
+:returns:
+    The number of vertices in the given primitive, or `-1` if the primitive does not exist.
+
+
+@examples
+
+{{{
+#!vex
+int	nvtx;
+
+// Get the number of vertices of primitive 3
+nvtx = primvertexcount("defgeo.bgeo", 3);
+}}}
+
+
+@related
+
+- [Vex:vertexindex]

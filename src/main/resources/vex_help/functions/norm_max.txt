@@ -1,0 +1,23 @@
+= norm_max =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns the matrix max-norm."""
+
+:usage: `float norm_max(<matrix> m)`
+
+    Returns the max-norm of matrix <<m>>, which is the maximum absolute entry.
+
+@related
+
+- [Vex:norm_1]
+- [Vex:norm_inf]
+- [Vex:norm_fro]
+- [Vex:norm_spectral]
+
+- [Vex:length]
+- [Vex:length2]
+

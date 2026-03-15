@@ -1,0 +1,21 @@
+= chprim_keyvalues =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Get the key values of a channel primitive."""
+
+:usage: `float[] chprim_keyvalues(<geometry>, int prim)`
+
+Returns an array of the values of each key in the channel primitive.
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the channel primitive.
+
+
+@related
+- [Vex:chprim_keytimes]

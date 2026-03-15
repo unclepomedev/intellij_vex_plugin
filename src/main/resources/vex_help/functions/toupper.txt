@@ -1,0 +1,16 @@
+= toupper =
+
+#type: vex
+#context: all
+#group: string
+
+"""Converts all characters in string to upper case"""
+
+:usage: `string toupper(const string str)`
+
+Returns the string with a-z replaced with A-Z.
+
+@related
+
+- [Vex:tolower]
+- [Vex:titlecase]

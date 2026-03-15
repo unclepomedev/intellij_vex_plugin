@@ -1,0 +1,31 @@
+= usd_childnames =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim 
+#group: usd
+#since: 19.5
+
+"""Returns the names of the primitive's children."""
+
+:usage: `string[] usd_childnames(<stage>, string primpath)`
+
+This function returns the names of the children authored directly in the namespace of the given parent primitive.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The names of the children of the given primitive.
+
+@examples 
+{{{
+#!vex
+// Get the children of the "mother" primitive.
+string children[] = usd_child(0, "/geo/mother");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_attributenames]

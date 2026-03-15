@@ -1,0 +1,15 @@
+= texture3dBox =
+
+#type: vex
+#context: all
+#tags: ptcloud, bbox
+#group: ptcloud
+
+"""This function queries the 3D texture map specified and returns the
+bounding box information of the file."""
+
+:usage: `void texture3dBox(string filename, string channel; vector &min, vector &max, ...)`
+
+    Writes the minimum and maximum coordinates of the 3D texture into the vector variables `min` and `max`.
+
+

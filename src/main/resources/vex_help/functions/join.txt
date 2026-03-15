@@ -1,0 +1,13 @@
+= join =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Concatenate all the strings of an array inserting a common spacer."""
+
+:usage: `string join(const string s[]; const string spacer)`
+
+Concatenate all the strings in the array to form a single string.
+The spacer will be placed between each pair of strings.

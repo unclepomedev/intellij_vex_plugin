@@ -1,0 +1,64 @@
+= pointprimuv =
+
+#type: vex
+#context: all
+#tags: point, prim
+#group: geo
+
+"""Returns the intrinsic uv location of the point in the primitive."""
+
+:usage: `int pointprimuv(<geometry>, int ptnum, int primnum, float &u, float &v)`
+:usage: `int pointprimuv(<geometry>, int ptnum, int primnum, vector &uvw)`
+
+:include _common#geometry:
+
+:arg:ptnum:
+    The point number of the intrinsic uv location.
+
+:arg:primnum:
+    The primitive number of the intrinsic uv location.  Note, the given 
+    primitive should contain the point.
+
+:returns:
+    Success or failure.  Failure means the given point does not have a corresponding uv location in the given primitive.
+
+
+@examples
+
+:box: Evaluate the subdivision surface limit position and partial derivatives at
+each point on the poly cage and set the evaluation data as attributes at the given point number.
+    {{{
+    #!vex
+    int prims[] = pointprims(file, ptnum);
+    if (len(prims))
+    {
+        int primnum = prims[0];
+        float prim_u, prim_v;
+        if (pointprimuv(file, ptnum, primnum, prim_u, prim_v))
+        {
+            int patch_id;
+            float patch_u, patch_v;
+            osd_lookuppatch(file, primnum, prim_u, prim_v, patch_id, patch_u, patch_v);
+            vector P, du, dv, duu, duv, dvv;
+            if (osd_limit(file, "P", patch_id, patch_u, patch_v, P, du, dv, duu, duv, dvv))
+            {
+                setpointattrib(file, "P", ptnum, P);
+                setpointattrib(file, "du", ptnum, du);
+                setpointattrib(file, "dv", ptnum, dv);
+                setpointattrib(file, "duu", ptnum, duu);
+                setpointattrib(file, "duv", ptnum, duv);
+                setpointattrib(file, "dvv", ptnum, dvv);
+            }
+        }
+    }
+    }}}
+
+@related
+
+- [Vex:osd_lookuppatch]
+- [Vex:osd_limit]
+- [Vex:osd_limitsurface]
+
+
+
+

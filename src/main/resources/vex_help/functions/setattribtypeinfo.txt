@@ -1,0 +1,24 @@
+= setattribtypeinfo =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+#redirect: ../attribtypeinfo_suite
+
+"""Sets the meaning of an attribute in geometry."""
+
+:usage: `int setattribtypeinfo(int geohandle, string attribclass, string name, string typeinfo)`
+
+:include _common#geohandle_arg:
+
+:include _common#attribclass:
+
+:arg:name:
+    The name of the attribute for which to change the transformation info.
+
+:arg:typeinfo:
+    The meaning of the attribute, which is used by transform nodes to determine how to modify the attribute. It is one of:
+
+    :include _common#attrib_typeinfo_values:
+

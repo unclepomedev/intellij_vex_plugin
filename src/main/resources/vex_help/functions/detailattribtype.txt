@@ -1,0 +1,13 @@
+= detailattribtype =
+
+#type: vex
+#context: all
+#tags: attrib, detail
+#group: attrib
+
+"""Returns the type of a geometry detail attribute."""
+
+:usage: `int detailattribtype(<geometry>, string attribute_name)`
+
+See [Vex:attribtype] for more information.
+

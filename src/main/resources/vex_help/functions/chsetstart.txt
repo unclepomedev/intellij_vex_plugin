@@ -1,0 +1,13 @@
+= chsetstart =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Sets the CHOP start sample in the channel data."""
+
+:usage: `int chsetstart(int start)`
+:usage: `int chsetstart(float start)`
+    Sets the index of the first sample in the channel data.
+

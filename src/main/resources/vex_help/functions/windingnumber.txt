@@ -1,0 +1,41 @@
+= windingnumber =
+
+#type: vex
+#context: all
+#tags: measure
+#group: measure
+
+"""Computes the winding number of a mesh around a point."""
+
+Computes the winding number.  The winding number indicates how many times a
+geometry "wraps around" a point. Useful for inside/outside test, the
+winding number is approximately one inside of the mesh and
+approximately zero outside.   A point that is half covered by an open
+surface will have a winding number approximately equal to `0.5`, so
+this gives a robust way of defining "inside" as having a winding
+number of `0.5` or greater.  Reversed surfaces will have negative
+winding numbers inside.
+
+:usage: `float windingnumber(<geometry>, vector origin)`
+:usage: `float windingnumber(<geometry>, vector origin, float accuracy)`
+
+    Computes the winding number of <<geometry>> around the point <<origin>>. 
+
+:usage: `float windingnumber(<geometry>, string primgroup, vector origin)`
+:usage: `float windingnumber(<geometry>, string primgroup, vector origin, float accuracy)`
+
+    Computes the winding number of primitive group <<primgroup>> around the point <<origin>>.
+
+:include _common#geometry:
+
+:arg:primgroup:
+    Optionally compute winding number only for a subset of a mesh specified by a primitive group.   
+
+:arg:origin:
+    The position in space to compute winding number.
+
+:arg:accuracy:
+    The winding number is computed only approximately. The default value 2.0 is sufficient in most situations, setting <<accuracy>> to 12.0 should yield result accurate up to floating point precision.
+    
+:returns:
+    The winding number of geometry at a point.

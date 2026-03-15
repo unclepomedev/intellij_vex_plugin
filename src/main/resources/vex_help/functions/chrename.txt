@@ -1,0 +1,31 @@
+= chrename =
+
+#type: vex
+#context: chop
+#tags: chop
+#group: CHOP
+
+"""Renames a CHOP channel."""
+
+:usage: `int chrename(int channel_index, string new_name)`
+:usage: `int chrename(string channel_name, string new_name)`
+
+This function renames a CHOP channel . It works only when iterating over Clip, Channel or Samples, not when iterating over ChannelSample.
+
+Returns 1 if channel was renamed or 0 otherwise.
+
+:arg:`channel_index`:
+    #id: channel_index_arg
+
+    The channel index to rename.
+
+:arg:`channel_name`:
+    #id: channel_name_arg
+
+    The channel to rename.
+
+:arg:`new_name`:
+    #id: new_name_arg
+
+    The new name.
+

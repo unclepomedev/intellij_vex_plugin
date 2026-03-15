@@ -1,0 +1,33 @@
+= usd_transformname =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Constructs a full name of a transform operation"""
+
+:usage: `string usd_transformname(int transformtype, string suffix)`
+
+This function returns the full name of a transform operation for the given type and suffix.
+
+:arg:transformtype:
+    The numerical code for the transformation type. See the VEX "usd.h" header for defines, such as `USD_XFORM_TRANSLATE`, `USD_XFORM_TRANSFORM`, or `USD_XFORM_ROTATE_XYZ`.
+
+:include _common#usd_xformopsuffix:
+
+:returns:
+    The full name of transform operation.
+
+@examples 
+{{{
+#!vex
+// Construct a full name for a translation operation with suffix "cone_pivot"
+string pivot_xform_name = usd_transformname(USD_XFORM_TRANSLATE, "cone_pivot");
+}}}
+
+@related
+- [Vex:usd_uniquetransformname]
+- [Vex:usd_transformtype]
+- [Vex:usd_transformsuffix]

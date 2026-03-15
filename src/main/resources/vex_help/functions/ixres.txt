@@ -1,0 +1,15 @@
+= ixres =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the X resolution of the specified input."""
+
+:usage: `int ixres(int opinput)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The X resolution of the specified input.

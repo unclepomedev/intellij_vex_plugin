@@ -1,0 +1,33 @@
+= usd_parentpath =
+
+#type: vex
+#context: all
+#tags: usd, usd_prim
+#group: usd
+#since: 17.5
+
+"""Returns the path of the primitive's parent."""
+
+:usage: `string usd_parentpath(<stage>, string primpath)`
+
+This function returns the path of the given primitive's parent.
+
+Note, while this function takes the stage as an argument for consistency, it does not access the stage, but rather it extracts the parent from the path.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:returns:
+    The path of the primitive's parent.
+
+@examples 
+{{{
+#!vex
+// Get the path of the primitive's parent, ie "/geo".
+string path = usd_parentpath(0, "/geo/cube");
+}}}
+
+@related
+- [Vex:usd_isprim]
+- [Vex:usd_name]

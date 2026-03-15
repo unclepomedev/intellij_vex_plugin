@@ -1,0 +1,60 @@
+= pcexport =
+
+#type: vex
+#context: all
+#tags: ptcloud, file
+#group: ptcloud
+
+"""Writes data to a point cloud inside a `pciterate` or a `pcunshaded` loop."""
+
+:usage: `int pcexport(int handle, string channel_name, <type> value, ...)`
+:usage: `int pcexport(int handle, string channel_name, vector value, float radius, ...)`
+
+Returns 1 if the export succeeded or 0 if the export failed.
+The export will fail if <<channel_name>> is not read-write or if (in the
+version of pcexport taking a radius) the point being exported is at a
+distance less than the specified radius from a point that is already in the
+point cloud.
+
+This function writes to the channels of points opened with [Vex:pcopen] or
+[Vex:pcgenerate]. The second version of this function takes a radius parameter and uses it to accept or reject the point being exported according to its distance to the points that are already in the point cloud.  It must be separated from all other points by at least the specified radius.  To write new point data into a point cloud file, use [Vex:pcwrite].
+
+
+== Storage type ==
+
+If you add the `"storage"` optional keyword, the next argument specifies a storage type for the data.
+Storage types are the standard tile based format data types:
+
+`int8, uint8` |
+    8 bit signed/unsigned integers
+
+`int16, uint16` |
+    16 bit signed/unsigned integers
+
+`int32, uint32` |
+    32 bit signed/unsigned integers
+
+`int64, uint64` |
+    64 bit signed/unsigned integers
+
+`real16` |
+    16 bit floating point values
+
+`real32` |
+    32 bit floating point values
+
+`real64` |
+    64 bit floating point values
+
+`int`, `uint`, `real` |
+    Default precision integer/floating point values
+
+
+@related
+
+- [Vex:pcwrite]
+- [Vex:pcopen]
+- [Vex:pciterate]
+- [Vex:pcunshaded]
+- [Vex:pcimport]
+

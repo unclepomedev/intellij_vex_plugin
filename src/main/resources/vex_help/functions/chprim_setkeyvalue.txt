@@ -1,0 +1,38 @@
+= chprim_setkeyvalue =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Set the value of a channel primitive key."""
+
+:usage: `int chprim_setkeyvalue(int geohandle, int prim, float time, float value)`
+:usage: `int chprim_setkeyvalue(int geohandle, int prim, float time, float value, int half)`
+
+This function sets the value of an existing channel primitive key.
+
+:arg:geohandle:
+    Handle to the geometry to write to. `geoself()` can be used to get a handle to the current geometry.
+
+:arg:prim:
+    The primitive number of the channel primitive to be modified.
+
+:arg:time:
+    The time in seconds of the key to modify.
+
+:arg:value:
+    The new value to apply to the key.
+
+:arg:half:
+    Which half of the key to set, one of `CHPRIM_KEY_IN`, `CHPRIM_KEY_OUT`, or `CHPRIM_KEY_INOUT`. Defaults to `CHPRIM_KEY_INOUT`.
+    These values are defined in the `chprim_utils.h` header.
+    Note that setting this to anything other than `CHPRIM_KEY_INOUT` will create a discontinuity at the key.
+
+
+@related
+- [Vex:chprim_insertkey]
+- [Vex:chprim_destroykey]
+- [Vex:chprim_setkeyslope]
+- [Vex:chprim_setkeyaccel]
+- [Vex:chprim_clear]

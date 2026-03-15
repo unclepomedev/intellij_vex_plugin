@@ -1,0 +1,15 @@
+= determinant =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Computes the determinant of the matrix."""
+
+:usage: `float determinant(matrix2 m)`
+:usage: `float determinant(matrix3 m)`
+:usage: `float determinant(matrix m)`
+
+See [matrix determinant|Wp:Determinant].
+

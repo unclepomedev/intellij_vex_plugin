@@ -1,0 +1,12 @@
+= chsraw =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Returns the raw string channel (or parameter)."""
+
+:usage: `string chsraw(string channel)`
+
+Returns the raw expression value of the channel without actually evaluating the contents of the channel.

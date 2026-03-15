@@ -1,0 +1,30 @@
+= getbbox_max =
+
+#type: vex
+#context: all
+#tags: bbox, measure
+#group: measure
+
+"""Returns the maximum of the bounding box for the geometry."""
+
+:usage: `vector getbbox_max(<geometry>)`
+
+    Computes the maximum of the bounding box for the geometry.
+
+:usage: `vector getbbox_max(<geometry>, string primgroup)`
+
+    Computes the maximum of the bounding box of the primitives in the given group.
+
+:include _common#geometry:
+
+
+@related
+
+- [Vex:getbbox]
+- [Vex:getbbox_center]
+- [Vex:getbbox_size]
+- [Vex:getbbox_min]
+- [Vex:getbbox_max]
+- [Vex:getpointbbox]
+
+

@@ -1,0 +1,30 @@
+= setagentchannelvalues =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+#since: 18.0
+
+"""Overrides the values of an agent primitive's channels."""
+
+:usage: `void setagentchannelvalues(int geohandle, int prim, float values[])`
+
+When modifying a single channel, using [Vex:setagentchannelvalue] instead can be significantly faster.
+
+:arg:geohandle:
+    Handle to the geometry to write to. `geoself()` can be used to get a handle to the current geometry.
+
+:arg:prim:
+    The primitive number.
+
+:arg:values:
+    The new value of each channel in the agent's rig.
+
+@related
+- [Vex:agentclipchannel]
+- [Vex:agentchannelnames]
+- [Vex:agentchannelvalue]
+- [Vex:agentchannelvalues]
+- [Vex:agentrigfindchannel]
+- [Vex:setagentchannelvalue]

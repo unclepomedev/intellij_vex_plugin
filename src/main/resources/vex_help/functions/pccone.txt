@@ -1,0 +1,28 @@
+= pccone =
+
+#type: vex
+#context: all
+#tags: ptcloud, proximity
+#group: ptcloud
+#since: 18.0
+
+"""Returns a list of closest points from a file within a specified cone."""
+
+:usage: `int[] pccone(<geometry>, string PChannel, vector P, vector dir, float angle, float max_distance, int maxpoints)`
+:usage: `int[] pccone(<geometry>, string ptgroup, string PChannel, vector P, vector dir, float angle, float max_distance, int maxpoints)`
+
+:include _common#geometry:
+
+These functions open a geometry file and return a list of points within the cone whose apex is <<P>>, opens in the vector direction <<dir>>, and with angle <<angle>> to <<dir>>. Additionally, it only returns the closest <<maxpoints>> points within distance <<max_distance>> of <<P>>.
+
+The `ptgroup` is a point group that limits the points to search.  This is a SOP-style group pattern, so can be something like `0-10` or `@Cd.x>0.5`.  A blank string is treated as matching all points.
+
+@related
+
+- [Vex:nearpoint]
+- [Vex:nearpoints]
+- [Vex:pccone_radius]
+- [Vex:pcfind]
+- [Vex:pcfind_radius]
+- [Vex:pgfind]
+

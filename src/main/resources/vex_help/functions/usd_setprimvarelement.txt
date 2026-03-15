@@ -1,0 +1,37 @@
+= usd_setprimvarelement =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 18.0
+
+"""Sets the value of an element in an array primvar."""
+
+:usage: `int usd_setprimvarelement(int stagehandle, string primpath, string name, int index, <type> value)`
+
+This function sets the element value in a array primvar.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:arg:index:
+    An index of an element in the array primvar.
+
+:returns:
+    The value of `stagehandle` on success, or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the value of an element at index 2 in the array primvar.
+usd_setprimvarelement(0, "/geo/sphere", "float_arr_primvar", 2, 0.25);
+}}}
+
+@related
+- [Vex:usd_primvar]
+- [Vex:usd_primvarelement]

@@ -1,0 +1,21 @@
+= primvertices =
+
+#type: vex
+#context: all
+#tags: prim, vertex
+#group: geo
+
+"""Returns the list of vertices on a primitive."""
+
+:usage: `int [] primvertices(<geometry>, int primnum)`
+
+:include _common#geometry:
+
+:arg:primnum:
+    The primitive number to get a vertex from.
+
+:returns:
+    An array of linear vertex indices, in the same order as stored on the primitive itself.
+    If the primitive number is not valid, the array will be empty.
+
+

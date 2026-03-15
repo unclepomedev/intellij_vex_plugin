@@ -1,0 +1,63 @@
+= mx_voronoi =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""MaterialX compatible Voronoi noise"""
+
+    Generates 2D noise.
+
+:usage:  `void mx_voronoi( vector2 position, float jitter, int metric, float &d1, float &d2, float &d3, vector2 &p1, vector2 &p2, vector2 &p3)`
+:usage:  `void mx_voronoi( vector2 position, float jitter, int metric, float &d1, float &d2, vector2 &p1, vector2 &p2)`
+:usage:  `void mx_voronoi( vector2 position, float jitter, int metric, float &d1, vector2 &p1)`
+
+:usage:  `void mx_voronoi( vector2 position, float jitter, int metric, float &d1, float &d2, float &d3, vector2 &p1, vector2 &p2, vector2 &p3, int periodx, int periody)`
+:usage:  `void mx_voronoi( vector2 position, float jitter, int metric, float &d1, float &d2, vector2 &p1, vector2 &p2, int periodx, int periody)`
+:usage:  `void mx_voronoi( vector2 position, float jitter, int metric, float &d1, vector2 &p1, int periodx, int periody)`
+
+    Generates 3D noise.
+
+:usage:  `void mx_voronoi( vector position, float jitter, int metric, float &d1, float &d2, float &d3, vector &p1, vector &p2, vector &p3)`
+:usage:  `void mx_voronoi( vector position, float jitter, int metric, float &d1, float &d2, vector &p1, vector &p2)`
+:usage:  `void mx_voronoi( vector position, float jitter, int metric, float &d1, vector &p1)`
+
+:usage:  `void mx_voronoi( vector position, float jitter, int metric, float &d1, float &d2, float &d3, vector &p1, vector &p2, vector &p3, int periodx, int periody, int periodz)`
+:usage:  `void mx_voronoi( vector position, float jitter, int metric, float &d1, float &d2, vector &p1, vector &p2, int periodx, int periody, int periodz)`
+:usage:  `void mx_voronoi( vector position, float jitter, int metric, float &d1, vector &p1, int periodx, int periody, int periodz)`
+
+
+    Returns a Voronoi Noise values of distances which are similar to Worley noise, but has additional outputs of cells positions.
+    There is no analogue of this noise in the standard MaterialX library yet.
+
+:arg:position:
+    #id: position_arg
+
+    The position at which to sample the noise.
+
+:arg:jitter:
+    #id: jitter_arg
+
+    The jitter should normally be clamped between 0 and 1.
+
+    
+:arg:metric:
+    #id: metric_arg
+
+    The metric is an integer representing how the distance is measured for Worley noise:
+        * 0 - Euclidean Distance
+        * 1 - Distance Squared
+        * 2 - Manhattan Distance
+        * 3 - Chebyshev Distance
+
+:arg:`d1`, `d2`, `d3`:
+    #id: d_args
+
+    These variables are overwritten with the distances to the nearest cell points, in order of closeness.
+
+
+:arg:`p1`, `p2`, `p3`:
+    #id: p_args
+
+    These variables are overwritten with the cell positions, in order of closeness to the input position.

@@ -1,0 +1,30 @@
+= getlight =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: light, pbr
+#group: shading
+
+"""Returns a light struct for the specified light identifier."""
+
+:usage: `light getlight(int lid)`
+
+Given a integer light identifier (lid), you can get a reference to a light
+object representing the light (see details on the [mantra specific type|/vex/lang#mantratypes])
+
+{{{
+#!vex
+int[] lights = getlights();
+int nlights = len(lights);
+for (int i = 0; i < nlights; i++)
+{
+light lp = getlight(i);
+lp->illuminate(...);
+}
+}}}
+
+@related
+- [Vex:getlights]
+- [Vex:getlightname]
+- [Vex:lightid]
+- [Vex:lightbounces]

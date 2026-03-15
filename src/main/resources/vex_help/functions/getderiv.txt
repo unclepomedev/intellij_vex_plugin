@@ -1,0 +1,53 @@
+= getderiv =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading, math
+#group: shading
+
+"""Evaluates surface derivatives of an attribute."""
+
+:usage: `void getderiv(float attr, string attrName, int isVertexAttr, float s, float t, float &du, float &dv, ...)`
+:usage: `void getderiv(<vector> attr, string attrName, int isVertexAttr, float s, float t, <vector> &du, <vector> &dv, ...)`
+
+NOTE:
+    If derivatives are queried for a polygonal mesh it is interally sampled as a Subdivision Surface.
+
+:arg:attr:
+    Attribute value.
+
+:arg:attrName:
+    Name of attribute to evaluate.
+
+:arg:isVertexAttr:
+    Set to `1` to indicate the attribute is a vertex type.
+
+:arg:s:
+    Parametric S shading value. This should be passed from the `s` global variable.
+
+:arg:t:
+    Parametric <type> shading value. This should be passed from the `t` global variable.
+
+:arg:du:
+    Derivative of attribute in U direction.
+
+:arg:dv:
+    Derivative of attribute in V direction.
+
+:include _derive_variadic:
+
+
+@examples
+
+{{{
+#!vex
+// Get derivatives of point attribute 'N'
+vector dNdu, dNdv;
+getderiv(N, "N", 0, s, t, dNdu, dNdv);
+}}}
+
+
+@related
+
+- [Vex:Du]
+- [Vex:Dv]

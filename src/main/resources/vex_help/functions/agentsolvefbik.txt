@@ -1,0 +1,104 @@
+= agentsolvefbik =
+
+#type: vex
+#context: all
+#tags: crowds, transform, solve
+#group: crowd
+#since: 17.0
+
+"""Applies a full-body inverse kinematics algorithm to an agent's skeleton."""
+
+:usage: `int agentsolvefbik(<geometry>, int outgeo, int prim, int targets[], matrix targetxforms[], int xformgroup, int iters)`
+:usage: `int agentsolvefbik(<geometry>, int outgeo, int prim, int targets[], matrix targetxforms[], int xformgroup, int iters, float tolerance, int pinroot)`
+:usage: `int agentsolvefbik(<geometry>, int outgeo, int prim, int targets[], matrix targetxforms[], int xformgroup, int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[])`
+:usage: `int agentsolvefbik(<geometry>, int outgeo, int prim, int targets[], matrix targetxforms[], int xformgroup, int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[], int targettypes[], matrix targetoffsets[])`
+:usage: `int agentsolvefbik(<geometry>, int outgeo, int prim, int targets[], matrix targetxforms[], int xformgroup, int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[], string goalxformattrib, string constrainedxformattrib, string jointlimitsattrib)`
+:usage: `int agentsolvefbik(<geometry>, int outgeo, int prim, int targets[], matrix targetxforms[], int xformgroup, int iters, float tolerance, int pinroot, float targetweights[], int targetpriorities[], int targetdepths[], int targettypes[], matrix targetoffsets[], string goalxformattrib, string constrainedxformattrib, string jointlimitsattrib)`
+
+Returns `-1` if `prim` is out of range or is not an agent primitive, or targets and targetxforms are not the same length.
+
+If "agent_jointgoalxforms", "agent_jointconstrainedxforms", and "agent_jointlimits" attributes are present on the agent, as produced by the [Agent Configure Joints SOP|/nodes/sop/agentconfigurejoints], then they will be interpreted as joint limits to use while solving.
+
+:include _common#geometry:
+
+:arg:outgeo:
+    Handle to the geometry to write to. `geoself()` can be used to get a handle to the current geometry.
+
+:arg:prim:
+    The primitive number of the agent primitive.
+
+:arg:targets:
+    A list of the transform indexes of the end effectors in the agent.
+
+:arg:targetxforms:
+    #id: targetxforms
+    A list of the target world transforms for the end effectors, in the same order as `targets`.
+
+:arg:xformgroup:
+    The index of a transform group, which specifies the joints to be used for the IK solver (all transforms not in the transform group will be ignored).
+    [Vex:agentfindtransformgroup] can be used to look up a transform group by name, and a value of -1 indicates that all the transforms in the agent should be included.
+    It's recommended to use a transform group that includes only transforms that correspond to the agent's bone structure.
+
+:arg:iters:
+    #id: iters
+    The maximum number of iterations to perform.
+    The solver may terminate early if the `tolerance` parameter is used.
+
+:arg:tolerance:
+    #id: tolerance
+    The tolerance to use when checking for convergence, defaults to 1e-5.
+    If positions converge to within this tolerance, the algorithm will stop.
+    If 0, the solver will always perform exactly `iters` iterations.
+
+:arg:pinroot:
+    #id: pinroot
+    Whether to pin the root to its start position, instead of allowing it to translate.
+    This can be useful when, for example, solving a subset of an agent's skeleton.
+    Defaults to 0 (off).
+
+:arg:targetweights:
+    #id: targetweights
+    A list containing the weight of each end effector, in the same order as `targets`.
+    For joints with multiple children, the normalized weights will be used to determine their position - this means that a target with a higher weight than other targets will be more likely to be reached.
+    The default weight is 1.0.
+
+:arg:targetpriorities:
+    #id: targetpriorities
+    A list containing the priority level of each end effector, in the same order as `targets`.
+    Targets from a lower priority level will not influence targets with higher priority.
+    For example, priority levels can be used to ensure that the targets for the feet are always satisfied, while still controlling the relative weights of the upper body targets.
+    The default priority is 0 (i.e. all targets are equal priority).
+
+:arg:targetdepths:
+    #id: targetdepths
+    For each end effector, specifies how many joints above it in the chain can be adjusted to achieve the target transform.
+    A negative depth can be used to specify that all joints above the target are affected.
+    The default depth is -1.
+
+:arg:targettypes:
+    #id: targettypes
+    A list containing the target type for each end effector, in the same order as `targets`.
+    The target type can be used to specify how the end effector matches the position or orientation of its target transform (from `targetxforms`).
+    A value of `0` indicates a position-only target, `1` indicates an orientation-only target, and `2` matches both position and orientation (default).
+
+:arg:targetoffsets:
+    #id: targetoffsets
+    A list containing an additional local space transform for each end effector, in the same order as `targets`.
+    This transform is combined with the end effector's joint transform to produce the transform that the solver attempts to align with the target transform.
+    This can be used to place the target at an offset from the joint (for example, at the end of a bone).
+
+:arg:goalxformattrib:
+    An optional parameter specifying an alternative attribute to use instead of "agent_jointgoalxforms".
+
+:arg:constraintedxformattrib:
+    An optional parameter specifying an alternative attribute to use instead of "agent_jointconstrainedxforms".
+
+:arg:jointlimitsattrib:
+    An optional parameter specifying an alternative attribute to use instead of "agent_jointlimits".
+
+@related
+- [Vex:solvefbik]
+- [Vex:agentworldtransform]
+- [Vex:agentworldtransforms]
+- [Vex:agentrigfind]
+- [Vex:agentrigparent]

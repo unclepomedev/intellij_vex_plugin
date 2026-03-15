@@ -1,0 +1,16 @@
+= inumplanes =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the number of planes in the given input."""
+
+:usage: `int inumplanes(int opinput)`
+
+
+:include _common#opinput_arg:
+
+:returns:
+    The number of planes in the given input.

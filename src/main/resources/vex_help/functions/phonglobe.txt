@@ -1,0 +1,45 @@
+= phonglobe =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf, phong
+#group: bsdf
+
+:usage: `bsdf phonglobe(vector dir, float exponent, ...)`
+:usage: `bsdf phonglobe(vector nml, vector dir, float exponent, ...)`
+:usage: `bsdf phonglobe(vector dir, float exponentx, float exponenty, vector framex, vector framey, ...)`
+:usage: `bsdf phonglobe(vector nml, vector dir, float exponentx, float exponenty, vector framex, vector framey, ...)`
+
+[Image:/images/rendering/phonglobe.png]
+
+A phong (blurred) reflection along a given direction vector. This will produce the same result as `phong()` when the direction vector is the reflection vector, but with this function you can also gather illumination from other directions (such as transmission).
+
+It is possible to create anisotropic phong lobes by providing x and y exponents and tangent vectors.
+
+:arg:dir:
+    the direction of specularity.
+    
+:arg:nml: 
+    optional normal to specify the hemisphere for reflection directions.
+
+:arg:exponent:
+    phong exponent.
+
+:arg:exponentx:
+    phong exponent along the `framex` vector.
+    
+:arg:exponenty:
+    phong exponent along the `framey` vector.
+
+:arg:framex:
+    highlight X direction
+
+:arg:framey:
+    highlight Y direction
+
+
+@related
+
+- [Vex:phong]
+- [Vex:ashikhmin]
+- [Writing a PBR shader|/vex/pbr]

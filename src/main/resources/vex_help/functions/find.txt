@@ -1,0 +1,62 @@
+= find =
+
+#type: vex
+#context: all
+#tags: string, array
+#group: string
+
+"""Finds an item in an array or string."""
+
+:usage: `int find(string haystack; string needle)`
+:usage: `int find(string haystack; string needle; int start)`
+:usage: `int find(string haystack; string needle; int start; int end)`
+
+    Returns the position of the first occurrence of the `needle` string within the `haystack` string. You can limit the result to the first substring that starts at or after a `start` position, and at or before an `end` position.
+    
+    You can find each occurrence in a loop by setting `start` at each iteration to the end of the previous match.
+    
+    Returns a negative number if the substring is not found.
+
+:usage: `int [] find(string haystack; string needle)`
+:usage: `int [] find(string haystack; string needle; int start)`
+:usage: `int [] find(string haystack; string needle; int start; int end)`
+
+    Returns a list of positions of occurrences of the `needle` string within the `haystack` string. You can limit the results to substrings that start at or after a `start` position, and before an `end` position.
+    
+    Returns an empty array if the substring is not found.
+
+:usage: `int find(<type> array[]; <type> target)`
+:usage: `int find(<type> array[]; <type> target; int start)`
+:usage: `int find(<type> array[]; <type> target; int start; int end)`
+
+    Returns the position of the first occurrence of the `target` value within the `array`. You can limit the result to the first occurrence at or after a `start` position, and at or before an `end` position.
+    
+    You can find each occurrence in a loop by setting `start` at each iteration to the next position after the previous match.
+    
+    Returns a negative number if the target is not found.
+
+:usage: `int [] find(<type> array[]; <type> target)`
+:usage: `int [] find(<type> array[]; <type> target; int start)`
+:usage: `int [] find(<type> array[]; <type> target; int start; int end)`
+
+    Returns a list of positions of occurrences of the `target` value within the `array`. You can limit the results to occurrences at or after a `start` position, and before an `end` position.
+
+* When you specify an `end` position, it means the matching substring must _start_ before the `end`.
+
+* The scalar versions return `-len(haystack)-1` to indicate no matches. This value is intended to cause an error if you try to use it as an index into the string/array.
+
+* Searching for the empty string always fails. This differs from Python.
+
+* You cannot use negative indices for the `start` and `end` arguments.
+
+
+@related
+
+- [Vex:len]
+- [Vex:push]
+- [Vex:append]
+- [Vex:resize]
+- [Vex:findsorted]
+- [Vex:findlowerboundsorted]
+- [Vex:findlowerbound]
+- [Arrays|/vex/arrays]

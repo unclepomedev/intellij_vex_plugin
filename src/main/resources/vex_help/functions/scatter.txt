@@ -1,0 +1,64 @@
+= scatter =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading raytracing
+#group: shading
+
+"""Evaluates a scattering event through the domain of a geometric object."""
+
+:usage: `int scatter(vector ipoint, vector inormal, vector idirection, vector idistribution, float time, float maxdist, vector &opoint, vector &onormal, vector &odirection)`
+
+Evaluates a single scattering event through geometry. A return value of 1 means the scattering was successful.
+
+:arg:ipoint:
+    Entry point of scattering.
+
+:arg:inormal:
+    Surface normal at the entry point (surfaces only). Required to orient the scattering plane.
+
+:arg:idirection:
+    Primary scattering direction at the entry point. Required to orient the scattering plane.
+
+:arg:idistribution:
+    Initial scatter distribution at the entry point. If a zero-valued vector is passed a random scatter distribution will be used.
+
+:arg:maxdist:
+    Maximum distance to scatter.
+
+:arg:opoint:
+    Exit point of scattering.
+
+:arg:onormal:
+    Normal at the scattering exit point (surfaces only).
+
+:arg:odirection:
+    Outgoing direction at the scattering exit point (surfaces only).
+
+{{{
+#!vex
+// Trace for intersection with scene
+vector hitP = 0;
+vector hitN = 0;
+int hit = trace(P, I, Time, "P", hitP, "N", hitN);
+
+// Scatter a random distance from the intersection
+vector idistribution = 0;
+int sid = israytrace ? SID : newsampler();
+vector s;
+nextsample(sid, s.x, s.y, "mode", "nextpixel");
+float maxdist = 2.0 * s.x;
+vector opoint = 0;
+vector onormal = 0;
+vector odirection = 0;
+hit = scatter(hitP, hitN, I, idistribution, Time, maxdist, opoint, onormal, odirection);
+
+// Trace again from the exit point of the scattering
+hit = trace(opoint, odirection, Time, "P", hitP, "N", hitN);
+}}}
+
+@related
+
+- [Vex:sample_geometry]
+- [Vex:trace]
+- [Vex:gather]

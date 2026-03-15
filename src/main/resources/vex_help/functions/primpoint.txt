@@ -1,0 +1,23 @@
+= primpoint =
+
+#type: vex
+#context: all
+#tags: prim, point
+#group: geo
+
+"""Converts a primitive/vertex pair into a point number."""
+
+:usage: `int primpoint(<geometry>, int primnum, int vertex)`
+
+:include _common#geometry:
+
+:arg:primnum:
+    The primitive number to get a vertex from.
+
+:arg:vertex:
+    The vertex number inside of a primitive.  0 is the first vertex.
+
+:returns:
+    The point number the vertex is wired to.
+    Returns `-1` if failed to find the corresponding point.
+

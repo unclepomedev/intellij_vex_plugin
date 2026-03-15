@@ -1,0 +1,50 @@
+= setattrib =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Writes an attribute value to geometry."""
+
+If you know the attribute class ahead of time, using [Vex:setdetailattrib], [Vex:setprimattrib], [Vex:setpointattrib], or [Vex:setvertexattrib] may be faster.
+
+:usage: `int setattrib(int geohandle; string attribclass; string attribute_name; int element_num, int vertex_num, <type> value, string mode="set")`
+:usage: `int setattrib(int geohandle; string attribclass; string attribute_name; int element_num, int vertex_num, <type> value[], string mode="set")`
+
+:include _common#set_attrib_info:
+
+:include _common#geohandle_arg:
+
+:include _common#attribclass:
+
+:arg:attribute_name:
+    The name of the attribute to change.
+
+:arg:element_num:
+    The point or primitive number on which to change the attribute.
+    
+    For detail attributes, set this to `0` (the argument is ignored for detail attributes).
+    
+    For vertex attributes, set this to the primitive number of the primitive containing the vertex.
+
+:arg:vertex_num:
+    For vertex attributes, this is the number of the vertex on the primitive specified in `element_num`.
+    
+    To use a linear vertex index, set `element_num` to `-1` and use the linear vertex index here.
+    
+    For other detail, primitive, or point attributes, set this to `0` (the argument is ignored in these cases).
+
+:arg:value:
+    The value to set. If the type of this argument is not compatible with the attribute type, the set will fail and the function will return `-1`.
+
+    Note that within a VEX program only one type may be written to a single attribute.  Ie, you cannot mix writes of float and an integer.  This can be surprising as a literal like `1` will be an integer write so be ignored if floats were previously written.
+
+:include _common#set_attrib_mode:
+
+
+@related
+- [Vex:setattrib]
+- [Vex:setpointattrib]
+- [Vex:setvertexattrib]
+- [Vex:setprimattrib]

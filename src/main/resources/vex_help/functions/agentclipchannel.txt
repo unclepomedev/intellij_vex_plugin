@@ -1,0 +1,35 @@
+= agentclipchannel =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Finds the index of a channel in an agent's animation clip."""
+
+:usage: `int agentclipchannel(<geometry>, int prim, string clipname, string channel)`
+:usage: `int agentclipchannel(<geometry>, int prim, int clipindex, string channel)`
+
+Returns the index of a channel in the specified animation clip.
+Returns -1 if `clipname` is not one of the agent's [animation clips|Vex:agentclipcatalog],  `prim` is out of range, `prim` is not an agent primitive, or `channel` does not exist.
+
+For sampling the clip's transform channels, use [Vex:agentrigfind] and either [Vex:agentclipsamplelocal] or [Vex:agentclipsampleworld].
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:clipname:
+    The name of the animation clip.
+
+:include _common#agent_clipindex:
+
+:arg:channel:
+    Name of a channel in the animation clip.
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentclipnames]
+- [Vex:agentclipsample]
+- [Vex:agentfindclip]

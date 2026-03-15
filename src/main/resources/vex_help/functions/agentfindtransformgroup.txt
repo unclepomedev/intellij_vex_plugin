@@ -1,0 +1,26 @@
+= agentfindtransformgroup =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Finds the index of a transform group in an agent's definition."""
+
+:usage: `int agentfindtransformgroup(<geometry>, int prim, string transformgroup)`
+
+Returns the index of a transform group in the agent's definition.
+Returns -1 if `prim` is out of range, `prim` is not an agent primitive, or the transform group does not exist.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transformgroup:
+    Name of a transform group in the agent's definition.
+
+@related
+- [Vex:agenttransformgroupmember]
+- [Vex:agenttransformgroups]
+

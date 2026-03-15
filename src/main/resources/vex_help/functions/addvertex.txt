@@ -1,0 +1,27 @@
+= addvertex =
+
+#type: vex
+#context: all
+#tags: vertex, create
+#group: geo
+
+"""Adds a vertex to a primitive in a geometry."""
+
+:usage: `int addvertex(int geohandle, int prim_num, int point_num)`
+
+:include _common#geohandle_arg:
+
+:arg:prim_num:
+    The primitive number to add the vertex to.
+
+:arg:point_num:
+    The point number to wire the new vertex to.
+
+:returns:
+    Returns a _linear_ vertex index, or `-1` if the vertex could not be added. You can use this number with [Vex:setvertexattrib] to set attributes on the new vertex, however this number may not be the final vertex index.
+
+
+@related
+
+- [Vex:addprim]
+- [Vex:addpoint]

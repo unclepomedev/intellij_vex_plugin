@@ -1,0 +1,15 @@
+= getglobalraylevel =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: shading
+#group: shading
+
+"""Returns the depth of the ray tree for computing global
+illumination."""
+
+:usage: `int getglobalraylevel()`
+
+Returns the depth of the ray tree for computing global illumination. If
+this function returns a non-zero value, the shader is being called for
+the purpose of evaluating global illumination.

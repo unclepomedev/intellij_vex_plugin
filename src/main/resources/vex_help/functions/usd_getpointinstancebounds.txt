@@ -1,0 +1,44 @@
+= usd_getpointinstancebounds =
+
+#type: vex
+#context: all
+#tags: usd, usd_pointinstance
+#group: usd
+#since: 18.0
+
+"""Obtains the primitive's bounds"""
+
+:usage: `int usd_getpointinstancebounds( <stage>, string primpath, int instance_index, string purpose, vector &min, vector &max )`
+:usage: `int usd_getpointinstancebounds( <stage>, string primpath, int instance_index, string[] purpose, vector &min, vector &max )`
+:usage: `int usd_getpointinstancebounds( <stage>, string primpath, int instance_index, string purpose, float timecode, vector &min, vector &max )`
+:usage: `int usd_getpointinstancebounds( <stage>, string primpath, int instance_index, string[] purpose, float timecode, vector &min, vector &max )`
+
+
+This function returns primitive's axis-aligned bounding box of a particular instance in a point instancer primitive. The point corresponding to the minimum corner of the bounding box will be returned in min, while the maximum will be in max. Always returns 1. 
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:instance_index:
+    The index of the instance whose bounding box to return.
+
+:arg:purpose:
+    The primitive's purpose for which to return the bounding box (e.g., "default", "render").
+
+:include _common#usd_timecode:
+
+:returns:
+    Always 1.
+
+@examples 
+{{{
+#!vex
+// Get the second sphere's bounding box.
+vector min, max;
+usd_getpointinstancebounds(0, "/src/instanced_spheres", 1, "render", min, max);
+}}}
+
+@related
+- [Vex:usd_getbounds]
+- [Vex:usd_pointinstancetransform]

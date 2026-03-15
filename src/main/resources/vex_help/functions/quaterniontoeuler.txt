@@ -1,0 +1,26 @@
+= quaterniontoeuler =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: convert
+#since: 17.0
+
+"""Creates a euler angle representing a quaternion."""
+
+:usage: `vector quaterniontoeuler(vector4 orient, int order)`
+
+Creates a vector representing euler angles from a vector4 representing a quaternion.
+
+The angles are in radians.  Use the `degrees()` function to convert radians into degrees.
+
+For more information, see [Data types|/vex/lang#data-types] and [Dot operator|/vex/lang#dot-operator].
+
+:arg:order:
+    :include _common#xyz/:
+
+@related
+- [dihedral|Vex:dihedral]
+- [qconvert|Vex:qconvert]
+- [quaternion|Vex:quaternion]
+- [quaternion|Vex:eulertoquaternion]

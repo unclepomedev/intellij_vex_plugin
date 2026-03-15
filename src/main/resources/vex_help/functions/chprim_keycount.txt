@@ -1,0 +1,17 @@
+= chprim_keycount =
+
+#type: vex
+#context: all
+#tags: channelprim
+#group: chprim
+
+"""Get the number of keys in a channel primitive."""
+
+:usage: `int chprim_keycount(<geometry>, int prim)`
+
+Returns the number of keys in a channel primitive.
+
+:include _common#geohandle_arg:
+
+:arg:prim:
+    The primitive number of the channel primitive.

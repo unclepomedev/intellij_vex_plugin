@@ -1,0 +1,13 @@
+= ow_nspace =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Transforms a normal vector from Object to World space."""
+
+:usage: `vector ow_nspace(vector v)`
+
+Transforms a normal vector from _Object_ to _World_ space.
+

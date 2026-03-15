@@ -1,0 +1,25 @@
+= hscript_noise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Generates noise matching the output of the Hscript noise() expression function."""
+
+:usage: `float hscript_noise(vector pos)`
+
+Matches the output of [Exp:noise]. This function can be useful if you convert a workflow to VEX, or have VEX work in tandem with Hscript expressions, and need the noise to look the same as in an expression.
+
+:arg:pos:
+    Position at which to sample the noise.
+
+
+@related
+
+- [Vex:hscript_snoise]
+- [Vex:hscript_rand]
+- [Vex:hscript_turb]
+- [Vex:hscript_sturb]
+
+

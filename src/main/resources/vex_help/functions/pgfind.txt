@@ -1,0 +1,31 @@
+= pgfind =
+
+#type: vex
+#context: all
+#tags: ptcloud, proximity
+#group: ptcloud
+
+"""Returns a list of closest points from a file."""
+
+:usage: `int [] pgfind(<geometry>, vector P, float radius, int maxpoints, float divsize)`
+:usage: `int [] pgfind(<geometry>, string ptgroup, vector P, float radius, int maxpoints, float divsize)`
+
+:include _common#geometry:
+
+These functions are very similar to the `pcfind` functions.  The difference is that they use a grid-based acceleration structure.  This can provide faster initialization and lookups, provided the right grid size tuning parameter is used.
+
+If you are searching a point cloud using an near-constant search radius, that radius can be used as the division size.
+
+NOTE:
+  The division size must be not vary per point.
+
+NOTE:
+  The division size is clamped above 3.0x10<sup>5</sup>.
+
+The `ptgroup` is a point group that limits the points to search.  This is a SOP-style group pattern, so can be something like `0-10` or `@Cd.x>0.5`.  A blank string is treated as matching all points.
+
+
+@related
+
+- [Vex:pcfind]
+- [Vex:pcfind_radius]

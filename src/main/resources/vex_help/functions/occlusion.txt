@@ -1,0 +1,37 @@
+= occlusion =
+
+#type: vex
+#context: shading
+#tags: surface, light
+#group: shading
+
+"""Computes ambient occlusion."""
+
+:usage: `vector occlusion(vector P, vector N, ...)`
+
+    Computes ambient occlusion at the point P with the normal N. Just as
+    in the [irradiance|Vex:irradiance] function, the hemisphere is
+    sampled. However, unlike irradiance, surfaces intersected during the
+    hemisphere sampling are not shaded. For this function to work
+    properly, either a constant background color or an environment map
+    must be specified in the
+    [optional scope parameters|/vex/contexts/shading_contexts#scope].
+
+:usage: `void occlusion(float &coverage, vector &missed_direction, vector P, vector N, ...)`
+
+    Instead of computing color information from ambient occlusion, this
+    form computes the coverage (the percentage of occlusion) and the
+    average direction of empty space. The average direction can be used to
+    look up the color in a pre-blurred environment map.
+
+:include _adaptive_variadic:
+
+:include _bias_variadic:
+
+:include _rayopts_variadic:
+
+
+@related
+
+- [Vex:irradiance]
+- [Vex:pathtrace]

@@ -1,0 +1,31 @@
+= usd_collectioncomputedpaths =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Obtains the list of all objects that belong to the collection"""
+
+:usage: `string[] usd_collectioncomputedpaths(<stage>, string collectionpath)`
+
+This function returns the list of all objects that belong to the given collection.
+
+:include _common#usd_stage:
+
+:include _common#usd_collectionpath:
+
+:returns:
+    The list of all objects that belong to the given collection.
+
+@examples 
+{{{
+#!vex
+// Get all objects in cube's collection.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+string members[] = usd_collectioncomputedpaths(0, collection_path);
+}}}
+
+@related
+- [Vex:usd_iscollection]

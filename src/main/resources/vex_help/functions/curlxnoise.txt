@@ -1,0 +1,19 @@
+= curlxnoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Computes divergence free noise based on Simplex noise."""
+
+:usage: `vector curlxnoise(vector xyz)`
+:usage: `vector curlxnoise(vector4 xyzt)`
+
+Computes a divergence free vector field based on the cross product of the derivatives of two simplex noise functions.
+
+See [noise and randomness|/vex/random]  in the VEX language
+guide for more information.
+
+@related
+- [pnoise|Vex:curlnoise]

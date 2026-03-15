@@ -1,0 +1,22 @@
+= sprintf =
+
+#type: vex
+#context: all
+#tags: utility, print, string
+#group: string
+
+"""Formats a string like printf but returns the result as a string
+instead of printing it."""
+
+:usage: `string sprintf(string format, ...)`
+
+    Formats a string like [printf|Vex:printf] but returns the result as a
+    string instead of printing it.
+
+TIP:
+    You can use this function pad a number (such as the frame number in a filename) with zeros (similarly to the [Exp:padzero] expression function) using a format such as `sprintf("texture%04d.exr", @Frame)`.
+
+
+@related
+
+- [printf|Vex:printf]

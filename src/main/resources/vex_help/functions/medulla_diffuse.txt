@@ -1,0 +1,25 @@
+= medulla_diffuse =
+
+#type: vex
+#context: all
+#tags: shading, pbr, bsdf
+#group: bsdf
+
+"""Returns a diffuse BSDF or computes diffuse shading."""
+
+
+:usage: `bsdf medulla_diffuse(vector nml, ...)`
+:usage: `bsdf medulla_diffuse(vector nml, vector geo_normal, ...)`
+
+    A diffuse BSDF designed specifically for the curve medulla shading, to avoid hard
+    surface optimizations which would cause different artifacts, like edge darkening.
+
+:include _lightmask_variadic:
+
+
+@related
+
+- [Vex:diffuse]
+- [Vex:wirediffuse]
+- [Vex:translucent]
+- [Writing PBR shaders in VEX|/vex/pbr]

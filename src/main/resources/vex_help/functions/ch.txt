@@ -1,0 +1,55 @@
+= ch =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel (or parameter) and return its value."""
+
+:usage: `float ch(string channel)`
+:usage: `float ch(string channel, float time_in_sec)`
+:usage: `string ch(string channel)`
+:usage: `string ch(string channel, float time_in_sec)`
+:usage: `string ch(string channel, float time_in_sec)`
+
+:usage: `float ch(int op_id, int parm_index, int vector_index)`
+:usage: `float ch(int op_id, int parm_index, int vector_index, float time_in_sec)`
+
+:box:
+    #id: ch_functions
+    
+    Evaluates a channel (or parameter) and return its value. The time is specified in _seconds_, not in frames. If you don't specify the time, the function returns the value at the current time.
+
+    Houdini includes several functions to evaluate channels/parameters of different types.
+    
+    * To get a float or string without needing to know the parameter type, use [Vex:ch].
+    * To get a float, use [Vex:chf].
+    * To get a string, use [Vex:chs].
+    * For integer parameters, use [Vex:chi]
+    * For matrix type parameters, use [Vex:ch3] or [Vex:ch4].
+    * For a ramp parameter, use [Vex:chramp] or [Vex:chrampderiv].
+    * Use [Vex:chid] to get an `op_id`, `parm_index` and `vector_index` to evaluate the channel without having to do string resolution.
+
+
+@examples
+
+{{{
+#!vex
+// Get the X transform of the box1 SOP at 1.5s into the animation
+float tx = ch("/obj/geo1/box1/tx", 1.5)
+}}}
+
+
+@related
+
+- [Vex:attrib]
+- [Vex:chf]
+- [Vex:chs]
+- [Vex:chi]
+- [Vex:chv]
+- [Vex:ch3]
+- [Vex:ch4]
+- [Vex:chramp]
+- [Vex:chid]
+- [Vex:opid]

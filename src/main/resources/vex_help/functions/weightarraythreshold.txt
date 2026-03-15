@@ -1,0 +1,9 @@
+= weightarraythreshold =
+
+#type: vex
+#context: all
+#group: weightarray
+
+"""Discards any weights below a threshold from an name/weight array pair."""
+
+:usage: `void weightarraythreshold(string &names[]; float &weights[]; float threshold)`

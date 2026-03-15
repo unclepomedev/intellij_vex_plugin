@@ -1,0 +1,13 @@
+= atten =
+
+#type: vex
+#context: all
+#tags: math, shading, light
+#group: light
+
+"""Computes attenuated falloff."""
+
+:usage: `float atten(float attenuation, float distance)`
+
+Computes attenuated falloff. This is equivalent to ` <<attenuation>> /
+(<<attenuation>> + <<distance>>)`.

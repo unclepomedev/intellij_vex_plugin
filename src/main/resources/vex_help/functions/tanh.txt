@@ -1,0 +1,29 @@
+= tanh =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the hyperbolic tangent of the argument"""
+
+:usage: `float tanh(float n)`
+
+    Returns the hyperbolic tangent of `n`.
+
+:usage: `vector2 tanh(vector2 n)`
+:usage: `vector tanh(vector n)`
+:usage: `vector4 tanh(vector4 n)`
+
+    Returns a new vector with `tanh()` applied to each component.
+
+
+@related
+
+- [Vex:tan]
+- [Vex:sinh]
+- [Vex:cosh]
+- [Vex:sin]
+- [Vex:cos]
+
+

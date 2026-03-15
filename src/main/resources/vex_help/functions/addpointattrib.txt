@@ -1,0 +1,31 @@
+= addpointattrib =
+
+#type: vex
+#context: all
+#tags: attrib, point, create
+#group: attrib
+
+"""Adds a point attribute to a geometry."""
+
+If you don't know the class of attribute until runtime, use [Vex:addattrib].
+
+:usage: `int addpointattrib(int geohandle, string name, <type> defvalue)`
+:usage: `int addpointattrib(int geohandle, string name, <type> defvalue[])`
+
+    Adds a point attribute to the given geometry.
+
+:usage: `int addpointattrib(int geohandle, string name, <type> defvalue, string typeinfo)`
+:usage: `int addpointattrib(int geohandle, string name, <type> defvalue[], string typeinfo)`
+
+    Adds a point attribute with the given transformation info. See [Vex:attribtypeinfo] for more details.
+
+:include adddetailattrib#info:
+
+
+@related
+
+- [Vex:addattrib]
+- [Vex:adddetailattrib]
+- [Vex:addprimattrib]
+- [Vex:addvertexattrib]
+

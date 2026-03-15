@@ -1,0 +1,38 @@
+= length =
+
+#type: vex
+#context: all
+#tags: vector, measure
+#group: math
+
+"""Returns the magnitude of a vector."""
+
+To get the length of a string, or number of items in an array, use [Vex:len].
+
+
+:usage: `float length(float f)`
+
+    Simply returns the given number.
+
+:usage: `float length(vector2 v)`
+:usage: `float length(vector v)`
+:usage: `float length(vector4 v)`
+
+    Returns the distance of the vector or vector4 from the origin.
+    
+    If you want the squared length, using [Vex:length2] is faster than squaring the result of this function.
+
+
+@examples
+
+{{{
+#!vex
+length({1.0, 0, 0}) == 1.0;
+length({1.0, 1.0, 0}) == 1.41421;
+}}}
+
+
+@related
+
+- [Vex:length2]
+

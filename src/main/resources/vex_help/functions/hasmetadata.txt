@@ -1,0 +1,21 @@
+= hasmetadata =
+
+#type: vex
+#context: cop2
+#tags: cop2
+#group: image
+
+"""Queries if metadata exists on a composite operator."""
+
+:usage: `int hasmetadata(int opinput, string name)`
+
+This function checks if metadata named `name` exists on the COP attached to
+the VEX COP's input `opinput`. If it exists then 1 is returned, otherwise 0.
+
+:include _common#opinput_arg:
+
+:arg:name:
+   The name of the metadata to check.
+
+@related:
+- [Vex:metadata]

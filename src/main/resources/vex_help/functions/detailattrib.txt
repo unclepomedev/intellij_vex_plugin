@@ -1,0 +1,26 @@
+= detailattrib =
+
+#type: vex
+#context: all
+#tags: attrib, detail
+#group: attrib
+#redirect: ../attrib_suite#detailattrib
+
+"""Reads a detail attribute value from a geometry."""
+
+:usage: `<type> detailattrib(<geometry>, string attribute_name, int ignored, int &success)`
+:usage: `<type>[] detailattrib(<geometry>, string attribute_name, int ignored, int &success)`
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:arg:ignored:
+    Pass `0` for this argument.
+
+:arg:success:
+    The function sets this variable to `1` if the attribute was successfully read, or `0` otherwise.
+
+:returns:
+    `0` if importing the attribute failed, the value of the attribute on success.
+

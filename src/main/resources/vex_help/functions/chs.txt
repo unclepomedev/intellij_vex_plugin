@@ -1,0 +1,15 @@
+= chs =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel (or parameter) and return its value."""
+
+:usage: `string chs(string channel)`
+:usage: `string chs(string channel, float time)`
+
+Evaluates a channel (or parameter) and return its value.
+
+The time is specified in seconds, not in frames.

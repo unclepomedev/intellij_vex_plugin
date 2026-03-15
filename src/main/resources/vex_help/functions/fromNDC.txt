@@ -1,0 +1,20 @@
+= fromNDC =
+
+#type: vex
+#context: all
+#tags: transform
+#group: transform
+
+"""Transforms a position from normal device coordinates to the
+coordinates in the appropriate space."""
+
+:usage: `vector fromNDC(vector v)`
+
+    Transforms the vector from NDC space to the current space.
+
+:usage: `vector fromNDC(string space, vector v)`
+
+    Transforms the vector from NDC space to the named space.
+
+:arg:space:
+    :include _space_args:

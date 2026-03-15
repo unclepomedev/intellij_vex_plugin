@@ -1,0 +1,28 @@
+= xnoised =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Derivatives of Simplex Noise."""
+
+:usage: `void xnoised(float x, float &v, float &dvdx)`
+:usage: `void xnoised(float x, vector &v, vector &dvdx)`
+:usage: `void xnoised(float x, float y, float &v, float &dvdx, float &dvdy)`
+:usage: `void xnoised(float x, float y, vector &v, vector &dvdx, vector &dvdy)`
+:usage: `void xnoised(vector xyz, float &v, float &dvdx, float &dvdy, float &dvdz)`
+:usage: `void xnoised(vector xyz, vector &v, vector &dvdx, vector &dvdy, vector &dvdz)`
+:usage: `void xnoised(vector4 xyzw, float &v, float &dvdx, float &dvdy, float &dvdz, float &dvdw)`
+:usage: `void xnoised(vector4 xyzw, vector &v, vector &dvdx, vector &dvdy, vector &dvdz, vector &dvdw)`
+
+This computes both the simplex noise value, and the derivatives of the
+noise along each axis.  This can be performed quite efficiently as
+there are analytic derivatives available.
+
+See [noise and randomness|/vex/random]  in the VEX language
+guide for more information.
+
+@related
+- [xnoise|Vex:xnoise]
+

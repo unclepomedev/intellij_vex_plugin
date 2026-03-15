@@ -1,0 +1,31 @@
+= agentrigfindchannel =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+#since: 18.0
+
+"""Finds the index of a channel in an agent primitive's rig."""
+
+:usage: `int agentrigfindchannel(<geometry>, int prim, string channelname)`
+
+Returns `-1` if `channelname` was not found in the rig, `prim` is out of range, or `prim` is not an agent primitive.
+This index can be used to access an agent's current channel value using [Vex:agentchannelvalue] and [Vex:setagentchannelvalue], or to sample the channel value from any clip using [Vex:agentclipsample].
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:channelname:
+    The name of a channel in the agent's rig.
+
+
+@related
+- [Vex:agentclipchannel]
+- [Vex:agentchannelnames]
+- [Vex:agentchannelvalue]
+- [Vex:agentchannelvalues]
+- [Vex:setagentchannelvalue]
+- [Vex:setagentchannelvalues]

@@ -1,0 +1,22 @@
+= hasprimattrib =
+
+#type: vex
+#context: all
+#tags: attrib, prim
+#group: attrib
+
+"""Returns if a geometry prim attribute exists."""
+
+:usage: `int hasprimattrib(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+Returns `1` if the attribute exists, or `0` otherwise.
+
+@examples
+
+{{{
+#!vex
+// Determine if the P attribute exists.
+int exists = hasprimattrib("defgeo.bgeo", "P");
+}}}

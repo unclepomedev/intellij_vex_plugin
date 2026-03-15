@@ -1,0 +1,36 @@
+= cinput =
+
+#type: vex
+#context: cop2
+#tags: cop2, pixel, sample
+#group: image
+
+"""Samples the exact (unfiltered) pixel color at the given coordinates."""
+
+:usage: `vector cinput(int u, int v, ...)`
+:usage: `vector4 cinput(int u, int v, ...)`
+:usage: `vector cinput(float u, float v, ...)`
+:usage: `vector4 cinput(float u, float v, ...)`
+:usage: `float cinput(int component, int u, int v, ...)`
+:usage: `float cinput(int component, float u, float v, ...)`
+:usage: `vector cinput(int opinput, int planeindex, int u, int v, ...)`
+:usage: `vector4 cinput(int opinput, int planeindex, int u, int v, ...)`
+:usage: `vector cinput(int opinput, int planeindex, float u, float v, ...)`
+:usage: `vector4 cinput(int opinput, int planeindex, float u, float v, ...)`
+:usage: `float cinput(int opinput, int planeindex, int component, int u, int v, ...)`
+:usage: `float cinput(int opinput, int planeindex, int component, float u, float v, ...)`
+:usage: `vector cinput(int opinput, int planeindex, int arrayindex, int u, int v, int frame, ...)`
+:usage: `vector4 cinput(int opinput, int planeindex, int arrayindex, int u, int v, int frame, ...)`
+:usage: `vector cinput(int opinput, int planeindex, int arrayindex, float u, float v, int frame, ...)`
+:usage: `vector4 cinput(int opinput, int planeindex, int arrayindex, float u, float v, int frame, ...)`
+:usage: `float cinput(int opinput, int planeindex, int arrayindex, int component, int u, int v, int frame, ...)`
+:usage: `float cinput(int opinput, int planeindex, int arrayindex, int component, float u, float v, int frame, ...)`
+
+See [COP pixel sampling functions|/vex/cop2_sample_suite] for more information.
+
+
+@related
+- [/vex/cop2_sample_suite]
+- [Vex:binput]
+- [Vex:finput]
+- [Vex:ninput]

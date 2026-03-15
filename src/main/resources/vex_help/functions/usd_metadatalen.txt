@@ -1,0 +1,35 @@
+= usd_metadatalen =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Returns the length of the array metadata."""
+
+:usage: `int usd_metadatalen(<stage>; string path; string name)`
+
+This function returns the length of a given metadata.
+
+For array metadata it is the length of the array, and for non-array metadata the length is 1.
+
+:include _common#usd_stage:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:returns:
+    The length of the array metadata, or 1 if the metadata is not an array. Use [Vex:usd_isarraymetadata] if you want to check whether the metadata is an array.
+
+@examples 
+{{{
+#!vex
+// Get the array length of metadata on the cube primitive.
+int length = usd_metadatalen(0, "/geo/cube", "customData:name");
+}}}
+
+@related
+- [Vex:usd_ismetadata]
+- [Vex:usd_metadata]

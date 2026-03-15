@@ -1,0 +1,14 @@
+= sensor_save =
+
+#type: vex
+#context: all
+#group: sensor
+
+"""Sensor function to save a rendered GL scene."""
+
+:usage: `int sensor_save(int handle, string colorfile, string depthfile)`
+
+This will save to disk the image maps corresponding to the color and depth
+information recorded in the given sensor handle.
+
+Returns 1 if successfully saved, otherwise 0.

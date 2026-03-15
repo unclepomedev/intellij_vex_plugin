@@ -1,0 +1,22 @@
+= combinelocaltransform =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+#since: 18.0
+
+"""Combines Local and Parent Transforms with Scale Inheritance."""
+
+:usage: `matrix combinelocaltransform(matrix local, matrix parent_world, matrix parent_local, int scale_inherit_mode)`
+
+Returns a new world transform given its local and parent world transforms.
+
+:usage: `matrix combinelocaltransform(matrix local, matrix parent_world, matrix parent_local, int scale_inherit_mode, matrix &effective_local_transform)`
+
+Returns a new world transform given its local and parent world transforms. The local transform including any inherited scales is stored in the effective_local_transform matrix - this value will differ from the local matrix when the mode is set to SCALE_INHERIT_OFFSET_AND_SCALE or SCALE_INHERIT_SCALE_ONLY where we pass a parent's local scales onto its children as part of their own local transforms.
+
+:include _common#scale_inherit_mode:
+
+@related
+- [Vex:extractlocaltransform]

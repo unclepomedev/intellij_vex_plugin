@@ -1,0 +1,31 @@
+= max =
+
+#type: vex
+#context: all
+#tags: math
+#group: math
+
+:usage: `int max(int value1, int value2, ...)`
+:usage: `float max(float value1, float value2, ...)`
+
+    Returns the maximum value of the arguments.
+
+:usage: `<vector> max(<vector> value1, <vector> value2, ...)`
+
+    Returns a vector where each component is the maximum of the corresponding components in the arguments.
+
+:usage: `<type> max(<type> values[])`
+
+    Returns the maximum value in the array.
+
+:usage: `float max(<vector> values)`
+
+    Returns the maximum of the vector's components.
+
+:usage: `<type> max(<type> value)`:
+    Returns the argument.
+
+
+@related
+
+- [Vex:min]

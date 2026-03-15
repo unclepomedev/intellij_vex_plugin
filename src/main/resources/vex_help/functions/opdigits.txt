@@ -1,0 +1,31 @@
+= opdigits =
+
+#type: vex
+#context: all
+#group: string
+
+"""Returns the integer value of the last sequence of digits of a string"""
+
+:usage: `int opdigits(const string str)`
+:usage: `int opdigits()`
+
+Returns the integer value of the last sequence of digits in the input string.
+
+If no argument is passed, the code is equivalent to
+{{{
+#!vex
+string dir, name;
+splitpath(opfullpath("."), dir, name);
+return opdigits(name);
+}}}
+
+@examples
+
+* `opdigits("/obj/geo34/box21")` - returns 21
+* `opdigits("/obj/geo34/box")` - returns 34
+* `opdigits("/obj/geo34/box2.1")` - returns 1 ("." is not a digit)
+
+@related
+
+- [Vex:isdigit]
+- [Vex:atoi]

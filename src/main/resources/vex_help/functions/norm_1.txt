@@ -1,0 +1,22 @@
+= norm_1 =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns the induced matrix 1-norm."""
+
+:usage: `float norm_1(<matrix> m)`
+
+    Returns the induced 1-norm of matrix <<m>>, assuming a row vector convention, which is the maximum absolute row sum.
+
+@related
+
+- [Vex:norm_inf]
+- [Vex:norm_max]
+- [Vex:norm_fro]
+- [Vex:norm_spectral]
+
+- [Vex:length]
+- [Vex:length2]

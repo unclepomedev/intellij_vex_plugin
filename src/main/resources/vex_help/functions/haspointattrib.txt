@@ -1,0 +1,24 @@
+= haspointattrib =
+
+#type: vex
+#context: all
+#tags: attrib, point
+#group: attrib
+
+"""Returns if a geometry point attribute exists."""
+
+:usage: `int haspointattrib(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+:returns:
+    `1` if the attribute exists, or `0` otherwise.
+
+
+@examples
+
+{{{
+#!vex
+// Determine if the P attribute exists.
+int exists = haspointattrib("defgeo.bgeo", "P");
+}}}

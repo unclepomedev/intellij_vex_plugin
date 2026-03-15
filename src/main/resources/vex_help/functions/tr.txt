@@ -1,0 +1,17 @@
+= tr =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: math
+
+"""Returns the trace of the given matrix."""
+
+:usage: `float tr(<matrix> m)`
+
+Returns the [trace|Wp:Trace_(linear_algebra)] of the given matrix.
+
+@related
+
+- [Vex:trace]
+

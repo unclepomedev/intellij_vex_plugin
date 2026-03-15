@@ -1,0 +1,19 @@
+= volumegradient =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Calculates the volume primitive's gradient."""
+
+:usage: `vector volumegradient(<geometry>, int primnum, vector pos)`
+:usage: `vector volumegradient(<geometry>, string volumename, vector pos)`
+
+:include _common#geometry:
+
+:returns:
+    The volume primitive's gradient. The gradient is a vector pointing in the direction of increasing value.
+    
+    Returns 0 if `primnum` is out of range, the geometry is invalid, or the given primitive is not a volume primitive.
+

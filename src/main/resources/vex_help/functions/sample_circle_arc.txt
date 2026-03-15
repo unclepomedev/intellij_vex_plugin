@@ -1,0 +1,38 @@
+= sample_circle_arc =
+
+#type: vex
+#context: all
+#group: sampling
+
+"""Generates a uniform unit vector2, within maxangle of center, given a uniform number between 0 and 1."""
+
+:usage: `vector2 sample_circle_arc(vector2 center, float maxangle, float u)`
+
+:arg:center:
+    Direction in the center of the arc.  This does not need to be normalized.
+
+:arg:maxangle:
+    Maximum angle, in radians, away from `center` that any sample of the arc
+    will be, so long as `u` is between 0 and 1.
+
+:arg:u:
+    Number between 0 and 1.
+
+Returns a unit vector2, i.e. a vector2 of length 1, based on `u`.
+Given uniform random `u` values in `[0,1)`, the returned unit vectors will be
+uniform random and continuous with respect to `u` on the edge of the unit circle,
+in the arc within `maxangle` of the direction indicated by `center`.
+
+@related
+
+- [Vex:sample_circle_edge_uniform]
+- [Vex:sample_direction_uniform]
+- [Vex:sample_orientation_uniform]
+- [Vex:sample_circle_uniform]
+- [Vex:sample_sphere_uniform]
+- [Vex:sample_hypersphere_uniform]
+- [Vex:sample_direction_cone]
+- [Vex:sample_orientation_cone]
+- [Vex:sample_circle_slice]
+- [Vex:sample_sphere_cone]
+- [Vex:sample_hypersphere_cone]

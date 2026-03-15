@@ -1,0 +1,52 @@
+= getlights =
+
+#type: vex
+#context: displace, fog, light, shadow, surface
+#tags: light, pbr
+#group: shading
+
+"""Returns an array of light identifiers for the currently shaded surface."""
+
+:usage: `int[] getlights(...)`
+:usage: `int[] getlights(vector P, ...)`
+
+    :include _lightmask_variadic#type=varg:
+
+:usage: `int[] getlights(material mat; vector P; ...)`
+
+    With this signature, the light mask is determined solely by the material (the
+    `lightmask` and `categories` keyword parameters are ignored).
+    
+    This version
+    also accepts PBR keyword arguments to limit lights based on their Light
+    Contribution parameter.
+
+    :varg:label:
+        #type: string
+    
+        A specific label.  This keyword argument may be specified multiple times.
+
+    :varg:direct:
+        #type: int
+    
+        0 = limit lights to indirect contributions, 1 = limit lights to direct contributions.
+
+
+@examples
+
+{{{
+#!vex
+getlights("lightmask", "light*,^light2");
+getlights("categories", "shadow|occlusion");
+getlights(material(), P, "direct", 0);
+}}}
+
+
+@related
+
+- [Vex:getphotonlight]
+- [Vex:importance_light]
+- [Vex:sample_light]
+- [Vex:intersect_lights]
+- [Vex:getlightname]
+- [Vex:haslight]

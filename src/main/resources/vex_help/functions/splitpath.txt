@@ -1,0 +1,12 @@
+= splitpath =
+
+#type: vex
+#context: all
+#tags: string
+#group: string
+
+"""Splits a file path into the directory and name parts."""
+
+:usage: `void splitpath(string fullpath, string &dir, string &name)`
+
+Splits a string representing a path into the `directory` and `name` components.

@@ -1,0 +1,24 @@
+= point =
+
+#type: vex
+#context: all
+#tags: point, attrib
+#group: attrib
+#redirect: ../attrib_suite#point
+
+"""Reads a point attribute value from a geometry."""
+
+:usage: `<type> point(<geometry>; string attribute_name; int pointnumber)`
+:usage: `<type>[] point(<geometry>; string attribute_name; int pointnumber)`
+
+:include _common#geometry:
+
+:include _common#attribname:
+
+:arg:pointnumber:
+    The point number to read the attribute on.
+
+:returns:
+    The value of the given attribute on the given point number, or `0` if the attribute or point do not exist.
+
+

@@ -1,0 +1,33 @@
+= usd_makerelationshippath =
+
+#type: vex
+#context: all
+#tags: usd, usd_relationship
+#group: usd
+#since: 18.0
+
+"""Constructs an relationship path from a primitive path and a relationship name."""
+
+:usage: `string usd_makerelationshippath(<stage>; string primpath; string name)`
+
+This function returns the full path of a given relationship.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Relationship name.
+
+:returns:
+    The full path of a given relationship.
+
+@examples 
+{{{
+#!vex
+// Obtain the full path to the relationship "relationship_name" on the cube primitive.
+string relationship_path = usd_makerelationshippath(0, "/geo/cube", "relationship_name");
+}}}
+
+@related
+- [Vex:usd_isrelationship]

@@ -1,0 +1,37 @@
+= finput =
+
+#type: vex
+#context: cop2
+#tags: cop2, pixel, sample
+#group: image
+
+"""Returns fully filtered pixel input."""
+
+:usage: `vector finput(int u, int v, ...)`
+:usage: `vector4 finput(int u, int v, ...)`
+:usage: `vector finput(float u, float v, ...)`
+:usage: `vector4 finput(float u, float v, ...)`
+:usage: `float finput(int component, int u, int v, ...)`
+:usage: `float finput(int component, float u, float v, ...)`
+:usage: `vector finput(int opinput, int planeindex, int u, int v, ...)`
+:usage: `vector4 finput(int opinput, int planeindex, int u, int v, ...)`
+:usage: `vector finput(int opinput, int planeindex, float u, float v, ...)`
+:usage: `vector4 finput(int opinput, int planeindex, float u, float v, ...)`
+:usage: `float finput(int opinput, int planeindex, int component, int u, int v, ...)`
+:usage: `float finput(int opinput, int planeindex, int component, float u, float v, ...)`
+:usage: `vector finput(int opinput, int planeindex, int arrayindex, int u, int v, int frame, ...)`
+:usage: `vector4 finput(int opinput, int planeindex, int arrayindex, int u, int v, int frame, ...)`
+:usage: `vector finput(int opinput, int planeindex, int arrayindex, float u, float v, int frame, ...)`
+:usage: `vector4 finput(int opinput, int planeindex, int arrayindex, float u, float v, int frame, ...)`
+:usage: `float finput(int opinput, int planeindex, int arrayindex, int component, int u, int v, int frame, ...)`
+:usage: `float finput(int opinput, int planeindex, int arrayindex, int component, float u, float v, int frame, ...)`
+
+See [COP pixel sampling functions|/vex/cop2_sample_suite] for more information.
+
+
+@related
+- [/vex/cop2_sample_suite]
+- [Vex:binput]
+- [Vex:cinput]
+- [Vex:ninput]
+

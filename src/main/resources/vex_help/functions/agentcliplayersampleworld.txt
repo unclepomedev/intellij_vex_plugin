@@ -1,0 +1,74 @@
+= agentcliplayersampleworld =
+
+#type: vex
+#context: all
+#tags: crowds, clip
+#group: crowd
+
+"""Samples and blends an agent's layered animation clips."""
+
+:usage: `matrix[] agentcliplayersampleworld(<geometry>, int prim, string clip_names[], float clip_times[], float clip_weights[], string clip_transform_groups[], int clip_layer_ids[], int layer_blend_modes[], float layer_weights[], int layer_parent_ids[])`
+:usage: `matrix[] agentcliplayersampleworld(<geometry>, int prim, int clip_ids[], float clip_times[], float clip_weights[], int clip_transform_group_ids[], int clip_layer_ids[], int layer_blend_modes[], float layer_weights[], int layer_parent_ids[])`
+:usage: `matrix agentcliplayersampleworld(<geometry>, int prim, int transform, string clip_names[], float clip_times[], float clip_weights[], string clip_transform_groups[], int clip_layer_ids[], int layer_blend_modes[], float layer_weights[], int layer_parent_ids[])`
+:usage: `matrix agentcliplayersampleworld(<geometry>, int prim, int transform, int clip_ids[], float clip_times[], float clip_weights[], int clip_transform_group_ids[], int clip_layer_ids[], int layer_blend_modes[], float layer_weights[], int layer_parent_ids[])`
+
+Evaluates a set of [layered animation clips|/crowds/agents#currentclips] and returns the blended world transforms.
+Returns an empty array if  `prim` is out of range, `prim` is not an agent primitive, or the layered animation clips describe an invalid hierarchy.
+The `matrix` signature is more efficient than the `matrix[]` signature for sampling a single transform.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transform:
+    Index of a transform in the agent's rig to sample.
+
+:arg:clip_names:
+    A list of animation clip names.
+
+:arg:clip_ids:
+    A list of animation clip indices in the agent definition.
+    A clip's index can be obtained via [Vex:agentfindclip].
+
+:arg:clip_times:
+    A list of times that the clips should be sampled at.
+
+:arg:clip_weights:
+    A list of blend weights for the animation clips.
+
+:arg:clip_transform_groups:
+    A list of transform groups, which specify the joints that each clip should be applied to.
+
+:arg:clip_transform_group_ids:
+    A list of transform group indices in the agent definition.
+    A transform group's index can be obtained via [Vex:agentfindtransformgroup].
+
+:arg:clip_layer_ids:
+    A list containing the layer that each animation clip is an input for.
+
+:arg:layer_blend_modes:
+    A list of blend modes for each layer. The available blend modes are defined in `$HH/vex/include/crowd_cliplayers.h`.
+
+:arg:layer_weights:
+    A list of blend weights for each layer. The blend weight is not used for the topmost layer.
+
+:arg:layer_parent_ids:
+    A list containing the parent layer for each layer (or -1 for the topmost layer). This specifies a tree of animation layers.
+
+
+@related
+- [Vex:agentclipcatalog]
+- [Vex:agentclipnames]
+- [Vex:agentcliplayersamplelocal]
+- [Vex:agentcliplength]
+- [Vex:agentclipsamplelocal]
+- [Vex:agentclipsampleworld]
+- [Vex:agentcliptimes]
+- [Vex:agentclipweights]
+- [Vex:agentfindclip]
+- [Vex:agenttransformcount]
+- [Vex:agenttransformtoworld]
+- [Vex:setagentclipnames]
+- [Vex:setagentcliptimes]
+- [Vex:setagentclipweights]

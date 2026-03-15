@@ -1,0 +1,23 @@
+= volumeres =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Gets the resolution of a volume primitive."""
+
+:usage: `vector volumeres(<geometry>, int primnum)`
+:usage: `vector volumeres(<geometry>, string volumename)`
+
+:include _common#geometry:
+
+:returns:
+    The resolution of the volume primitive.
+    
+    For VDBs, the valid range of indices is not `0..res-1`, but
+    `volumeindexorigin..volumeindexorigin+res-1`
+    
+    Returns 0 if `primnum` or `inputnum` is out of range, the geometry is invalid, or the given primitive is not a vector volume primitive.
+
+

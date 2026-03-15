@@ -1,0 +1,36 @@
+= hedge_srcpoint =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the source point of a half-edge."""
+
+:usage: `int hedge_srcpoint(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The point number of the source point of the `hedge`.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int srcpt;
+
+// Get the source point of half-edge number 3.
+srcpt = hedge_srcpoint("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

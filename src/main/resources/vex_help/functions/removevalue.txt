@@ -1,0 +1,30 @@
+= removevalue =
+
+#type: vex
+#context: all
+#group: array
+
+"""Removes an item from an array."""
+
+:usage: `int removevalue(<type> &array[]; <type> value)`
+
+    Removes the first instance of `value` found from the array. Returns `1` if an item was removed, or `0` otherwise.
+
+@examples
+
+{{{
+#!vex
+float nums[] = {0, 1, 2, 3, 1, 2, 3};
+removevalue(nums, 2);  // == 1
+// nums == {0, 1, 3, 1, 2, 3}
+}}}
+
+
+@related
+
+- [/vex/arrays]
+- [Vex:push]
+- [Vex:find]
+- [Vex:append]
+- [Vex:resize]
+

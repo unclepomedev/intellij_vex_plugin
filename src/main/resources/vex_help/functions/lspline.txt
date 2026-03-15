@@ -1,0 +1,34 @@
+= lspline =
+
+#type: vex
+#context: all
+#tags: spline, interp
+#group: interp
+
+"""Samples a polyline defined by linearly spaced values."""
+
+:usage: `float lspline(float sample_pos, float value1, ...)`
+
+    Samples a polyline defined by a series of (linearly spaced) values.
+    This is useful for specifying a 1D data ramp.
+    
+:usage: `vector lspline(float sample_pos, vector value1, ...)`
+:usage: `vector4 lspline(float sample_pos, vector4 value1, ...)`
+
+    Samples a polyline defined by a series of (linearly spaced) vector values.
+    This is useful for specifying a color ramp.
+
+If you need variably-spaced keys, use [Vex:lkspline] instead.
+
+:include spline#sample_pos:
+
+:arg:value<<n>>:
+    To define the shape of the curve, you pass a number of values specifying the key points through which the curve passes. The function automatically spaces the keys evenly.
+
+TIP:
+    The [Vex:spline] function is a more flexible superset of this function.
+
+
+@related
+
+- [Vex:spline]

@@ -1,0 +1,48 @@
+= usd_addtotransformorder =
+
+#type: vex
+#context: all
+#tags: usd, usd_transform
+#group: usd
+#since: 18.0
+
+"""Appends a transform operation to the primitive's transform order"""
+
+:usage: `int usd_addtotransformorder(int stagehandle, string primpath, string name)`
+
+This function appends a transformation to the primitive's transform order.  Transform order is a sequence of transform operations, whose full names are stored in `xformOpOrder` attribute as a string array.  Thus, this function appends a new operation name to that attribute.
+
+NOTE: unlike most VEX functions that deal with primitive transforms and take an operation suffix as a parameter, this function takes the full operation name.  Use [Vex:usd_transformname] to obtain the full name if you know the suffix.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    The full name of the transform operation. Use [Vex:usd_transformname] to obtain the full name from the operation suffix.
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Note, the USD_XFORM_TRANSLATE and USD_AXIS_Z constants used below 
+// are defined in "usd.h" VEX header, so include it.
+#include <usd.h>
+
+// Make the first step (i.e., translate)
+string step_suffix = "step";
+usd_addtranslate(0, "/geo/cone", step_suffix, {1, 0, 0});
+
+// Now repeat the same step translation by adding it to the transform order
+string step_name   = usd_transformname(USD_XFORM_TRANSLATE, step_suffix);
+usd_addrotate(0, "/geo/cone", "first_rotation", USD_AXIS_Z, -30);
+usd_addtotransformorder(0, "/geo/cone", step_name);
+usd_addrotate(0, "/geo/cone", "second_rotation", USD_AXIS_Z, 45);
+usd_addtotransformorder(0, "/geo/cone", step_name);
+}}}
+
+@related
+- [Vex:usd_transformorder]
+- [Vex:usd_addinversetotransformorder]

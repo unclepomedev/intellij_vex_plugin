@@ -1,0 +1,20 @@
+= osd_facecount =
+
+#type: vex
+#context: all
+#tags: count, subd
+#group: subd
+
+:usage: `int osd_facecount(<geometry>)`
+
+Returns the number of coarse faces in the subdivision hull.  This is different that the number of patches in the subdivision surface.
+
+:include _common#geometry:
+
+
+@related
+
+- [Vex:osd_facecount]
+- [Vex:osd_firstpatch]
+- [Vex:osd_limitsurface]
+- [Vex:osd_patchcount]

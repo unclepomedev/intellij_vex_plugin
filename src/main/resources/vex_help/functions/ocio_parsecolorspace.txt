@@ -1,0 +1,21 @@
+= ocio_parsecolorspace =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+#since: 18.0
+
+"""Parse the color space from a string"""
+
+:usage: `string ocio_parsecolorspace(string input)`
+
+    Use OCIO to detect the color space in an input string.  The input string is typically a filename.
+
+:arg:input:
+    The string to scan for a color space string.  This is typically an image filename that has the color space encoded in the name.
+
+@related
+
+- [Vex:ocio_spaces]
+- [Vex:ocio_transform]

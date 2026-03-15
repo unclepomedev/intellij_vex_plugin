@@ -1,0 +1,18 @@
+= curlgxnoise2d =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""Computes divergence free noise in the plane based on simplex noise."""
+
+:usage: `vector curlgxnoise2d(vector2 xy)`
+:usage: `vector curlgxnoise2d(float x, float y)`
+:usage: `vector curlgxnoise2d(vector xyz)`
+:usage: `vector curlgxnoise2d(vector4 xyzt)`
+
+Evaluates a divergence free vector field by computing curl of one-dimensional
+simplex noise (see [gxnoise|Vex:gxnoise]). The first two components of the
+output vector contain the divergence free noise, and its final component is 0.
+

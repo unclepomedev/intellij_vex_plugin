@@ -1,0 +1,28 @@
+= agenttransformtolocal =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+
+"""Converts transforms from world space to local space for an agent primitive."""
+
+:usage: `int agenttransformtolocal(<geometry>, int prim, matrix &transforms[])`
+
+Returns `-1` if `len(transforms)` does not match the number of transforms in the agent's rig, `prim` is out of range, or `prim` is not an agent primitive.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transforms:
+    The transforms to convert from world space to local space.
+
+
+@related
+- [Vex:agentlocaltransforms]
+- [Vex:agenttransformtoworld]
+- [Vex:agentworldtransforms]
+- [Vex:setagentlocaltransforms]
+- [Vex:setagentworldtransforms]

@@ -1,0 +1,15 @@
+= rgbtohsv =
+
+#type: vex
+#context: all
+#tags: color, convert
+#group: convert
+
+"""Convert RGB color space to HSV color space."""
+
+:usage: `vector rgbtohsv(vector rgb)`
+:usage: `vector rgbtohsv(float r, float g, float b)`
+
+Convert RGB color space to HSV color space. A vector representing the
+HSV color is returned. The hue will be in the range 0 to 1.
+

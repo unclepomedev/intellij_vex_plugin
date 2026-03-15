@@ -1,0 +1,29 @@
+= setprimintrinsic =
+
+#type: vex
+#context: all
+#tags: prim, intrinsic
+#group: attrib
+
+"""Sets the value of a writeable primitive intrinsic attribute."""
+
+:usage: `int setprimintrinsic(int geohandle, string name, int prim_num, <type> value, string mode="set")`
+:usage: `int setprimintrinsic(int geohandle, string name, int prim_num, <type> value[], string mode="set")`
+
+Despite the name, some "intrinsic" attributes on primitives are writeable.
+
+:include _common#geohandle_arg:
+
+:arg:name:
+    The name of the intrinsic to set.
+
+:arg:prim_num:
+    The number of the primitive to change the value on.
+
+:include _common#set_attrib_mode:
+
+
+@related
+
+- [Vex:setattrib]
+- [Vex:setprimattrib]

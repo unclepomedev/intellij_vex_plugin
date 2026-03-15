@@ -1,0 +1,29 @@
+= ch3 =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel (or parameter) and return its value."""
+
+:usage: `matrix3 ch3(string channel)`
+:usage: `matrix3 ch3(string channel, float time)`
+
+If the node parameter referenced by `channel` is a matrix type, the base parameter name
+can be used to return the all components as a matrix.
+
+:include ch#ch_functions:
+
+
+@related
+
+- [Vex:ch]
+- [Vex:chf]
+- [Vex:chs]
+- [Vex:chi]
+- [Vex:chu]
+- [Vex:chv]
+- [Vex:ch4]
+- [Vex:chramp]
+- [Vex:chrampderiv]

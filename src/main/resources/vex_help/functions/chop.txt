@@ -1,0 +1,32 @@
+= chop =
+
+#type: vex
+#context: all
+#tags: chop
+#group: CHOP
+#since: 17.0
+
+"""Returns the value of a CHOP channel at the specified sample."""
+
+:usage: `float chop(string filename, int|string channel, int|float sample)`
+:usage: `vector2 chop(string filename, int|string channel, int|float sample)`
+:usage: `vector chop(string filename, int|string channel, int|float sample)`
+:usage: `vector4 chop(string filename, int|string channel, int|float sample)`
+:usage: `matrix chop(string filename, int|string channel, int|float sample)`
+
+    Read a sample from the channel at the given index.
+
+:arg:filename:
+    The CHOP node path to query using the op: syntax.
+    Doesn't support reading directly from CHOP files yet.
+
+:arg:channel:
+    The channel index or channel name to query.
+
+:arg:sample:
+    If this is fractional, the value is linearly interpolated from the
+    two nearest points.
+
+:returns:
+    The value of a channel at the specified sample in a CHOP node. 
+

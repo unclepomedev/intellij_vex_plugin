@@ -1,0 +1,12 @@
+= getprimid =
+
+#type: vex
+#context: shading
+#tags: shading
+#group: shading
+
+"""Returns the number of the current primitive."""
+
+:usage: `int getprimid()`
+
+Returns the primitive number for the current geometric primitive being shaded.

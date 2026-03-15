@@ -1,0 +1,25 @@
+= chi =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel (or parameter) and return its value."""
+
+:usage: `int chi(string channel)`
+:usage: `int chi(string channel, float time)`
+
+:include ch#ch_functions:
+
+
+@related
+
+- [Vex:ch]
+- [Vex:chf]
+- [Vex:chv]
+- [Vex:chs]
+- [Vex:ch3]
+- [Vex:ch4]
+- [Vex:chramp]
+- [Vex:chrampderiv]

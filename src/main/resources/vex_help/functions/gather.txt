@@ -1,0 +1,107 @@
+= gather =
+
+#type: vexstatement
+#context: displace, fog, light, shadow, surface
+#tags: shading, rays, light
+#group: shading
+
+"""Sends rays into the scene and returns information from the shaders of
+surfaces hit by the rays."""
+
+You can use VEX's `gather` loop statement to send rays into the scene and gather the resulting information.
+
+{{{
+#!vex
+gather(vector origin, vector direction, ...)
+{
+    // Statements for rays that hit other surfaces
+} else {
+    // Statements for rays which didn't hit any surface
+}
+}}}
+
+After the <<origin>> and <<direction>> arguments, any additional arguments are interpreted as keyword/value pairs.
+
+{{{
+#!vex
+gather(origin, dir, "samples", 100) {
+    ...
+}
+}}}
+
+NOTE:
+    If you specify 0 samples, it will still take at least 1 sample.
+
+:include _lightmask_variadic:
+
+:include _rayopts_variadic:
+
+:include _gather_variadic:
+
+
+@examples
+
+Here are two shaders which communicate through `gather`.
+
+This shader sends rays into the scene. It sends `1.234` in a message labeled `exportvalue`. Since the surface hit by the rays may not have an exported parameter called `amp`, it's important to initialize this variable before the gather loop.
+
+{{{
+#!vex
+surface
+sendray(vector background=0; int nsamples=16)
+{
+    float   amp;
+
+    amp = 0;
+    Cf = 0;
+
+    gather(P, N,
+        "bias", 0.01,
+        "angle", radians(15),
+        "samples", nsamples,
+        "samplebase", 1,
+        "distribution", "cosine",
+        "send:exportvalue", 0.8,
+        "amp", amp)
+    {
+        Cf += amp;
+        amp = 0;
+    }
+    else
+    {
+        Cf += background;
+    }
+
+    Cf *= 1.0 / nsamples;
+    Of = 1;
+}
+}}}
+
+The following shader imports values which were sent to it by the gather loop. The exported parameter can be imported by the gather loop.
+
+{{{
+#!vex
+surface
+hitsurf(export float amp=1)
+{
+    float   sendvalue = 0;
+
+    if (!rayimport("exportvalue", sendvalue))
+        printf("Error importing the send:exportvalue\n");
+
+    amp = sendvalue;
+
+    Cf = 1;
+    Of = 1;
+}
+}}}
+
+
+@related
+
+- [Vex:rayimport]
+- [Vex:illuminance]
+- [Vex:reflectlight]
+- [Vex:refractlight]
+- [Vex:trace]
+- [Vex:irradiance]

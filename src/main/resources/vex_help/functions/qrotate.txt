@@ -1,0 +1,13 @@
+= qrotate =
+
+#type: vex
+#context: all
+#tags: quaternion, transform
+#group: math
+
+"""Rotates a vector by a quaternion."""
+
+:usage: `vector qrotate(vector4 quaternion, vector v)`
+
+Returns the vector `v` rotated by the given [quaternion|Wp:Quaternion].
+

@@ -1,0 +1,21 @@
+= chexprf =
+
+#type: vex
+#context: all
+#tags: utility
+#group: nodes
+
+"""Evaluates a channel with a new segment expression at a given frame."""
+
+:usage: `float chexprf(string channel, string new_expr_function, float frame)`
+
+
+Evaluates a channel with a new segment expression at a given frame and return its value.
+
+    This can be used to extract in and out segment values, slopes and acceleration using channel expression local variables like $IT, $OT, $IV, $OV.
+
+@related
+
+- [Vex:chexpr]
+- [Vex:chexprt]
+

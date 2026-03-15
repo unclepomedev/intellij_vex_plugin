@@ -1,0 +1,18 @@
+= curlnoise =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Computes divergence free noise based on Perlin noise."""
+
+:usage: `vector curlnoise(vector xyz)`
+:usage: `vector curlnoise(vector4 xyzt)`
+
+Computes a divergence free vector field based on the cross product of the derivatives of two Perlin noise functions.
+
+
+@related
+
+:include _common#noiselinks/:

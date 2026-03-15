@@ -1,0 +1,36 @@
+= usd_makeattribpath =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib
+#group: usd
+#since: 18.0
+
+"""Constructs an attribute path from a primitive path and an attribute name."""
+
+:usage: `string usd_makeattribpath(<stage>; string primpath; string name)`
+
+This function returns the full path of a given attribute.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Attribute name.
+
+:returns:
+    The full path of a given attribute.
+
+@examples 
+{{{
+#!vex
+// Obtain the full path to the attribute "attrib_name" on the cube primitive.
+string attrib_path = usd_makeattribpath(0, "/geo/cube", "attrib_name");
+}}}
+
+@related
+- [Vex:usd_isattrib]
+- [Vex:usd_makecollectionpath]
+- [Vex:usd_makerelationshippath]
+- [Vex:usd_makepropertypath]

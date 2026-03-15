@@ -1,0 +1,37 @@
+= agenttransformgroupmemberchannel =
+
+#type: vex
+#context: all
+#tags: crowds, transform
+#group: crowd
+#since: 18.0
+
+"""Returns whether a channel is a member of the specified transform group."""
+
+See [Transform Groups|/crowds/agents#xformgroups] for more information.
+
+:usage: `int agenttransformgroupmemberchannel(<geometry>, int prim, int transformgroupidx, int channel)`
+
+Returns a non-zero value if the channel is a member of the specified transform group, and zero otherwise.
+
+:include _common#geometry:
+
+:arg:prim:
+    The primitive number.
+
+:arg:transformgroupidx:
+    Index of a transform group in the agent's definition.
+    A transform group's index can be obtained via [Vex:agentfindtransformgroup].
+
+:arg:channel:
+    Index of a channel in the agent's rig.
+
+@related
+- [Vex:agentcliptransformgroups]
+- [Vex:agentfindtransformgroup]
+- [Vex:agentrigfind]
+- [Vex:agenttransformgroups]
+- [Vex:agenttransformgroupmember]
+- [Hom:hou.AgentTransformGroup]
+
+

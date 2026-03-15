@@ -1,0 +1,36 @@
+= addattrib =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Adds an attribute to a geometry."""
+
+If you know the class of attribute you want to add ahead of time, using [Vex:adddetailattrib], [Vex:addprimattrib], [Vex:addpointattrib], or [Vex:addvertexattrib] may be faster.
+
+:usage: `int addattrib(int geohandle, string attribclass, string name, <type> defvalue)`
+:usage: `int addattrib(int geohandle, string attribclass, string name, <type> defvalue[])`
+
+:include _common#geohandle_arg:
+
+:include _common#attribclass:
+
+:arg:name:
+    The name of the attribute to create.
+
+:arg:defvalue:
+    The default value for the attribute and determines the type of attribute to create.  String and array attributes cannot have defaults, so only the type is used in those cases.
+
+:returns:
+    `geohandle` on success, or `-1` on failure.
+
+* If an attribute of the same name already exists, the function will try to convert it to the new type.
+
+
+@related
+
+- [Vex:adddetailattrib]
+- [Vex:addprimattrib]
+- [Vex:addpointattrib]
+- [Vex:addvertexattrib]

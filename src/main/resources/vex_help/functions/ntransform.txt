@@ -1,0 +1,21 @@
+= ntransform =
+
+#type: vex
+#context: all
+#tags: transform, normals
+#group: transform
+
+"""Transforms a normal vector."""
+
+:usage: `vector ntransform(vector v, matrix transform)`
+:usage: `vector ntransform(string tospace, vector v)`
+:usage: `vector ntransform(string fromspace, string tospace, vector v)`
+
+Transforms a vector representing a normal. See [Vex:ptransform] for more information.
+
+
+@related
+- [Vex:vtransform]
+- [Vex:ptransform]
+- [Vex:getspace]
+

@@ -1,0 +1,40 @@
+= usd_setcollectionexpansionrule =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Sets the expansion rule on the collection"""
+
+:usage: `int usd_setcollectionexpansionrule(int stagehandle, string collectionpath, string rule)`
+
+This function sets the expansion rule on the collection.
+
+:include _common#usd_stagehandle:
+
+:include _common#usd_collectionpath:
+
+:arg:rule:
+    The expansion rule to set on the collection.
+
+    USD supports a few standard expansion rules:
+	* `explicitOnly` - only paths in the include list and not in the exclude list belong to the collection
+	* `expandPrims` - all the primitives at or below the includes (but not excludes) belong to the collection
+	* `expanPrimsAndProperties` - like `expandPrims` but also includes properties of matched primitives
+
+:returns:
+    The value of `stagehandle` on success or `-1` on failure.
+
+@examples 
+{{{
+#!vex
+// Set the expansion rule on the cube's collection.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+usd_setcollectionexpansionrule(0, collection_foo, "explicitOnly");
+}}}
+
+@related
+- [Vex:usd_iscollection]
+- [Vex:usd_collectionexpansionrule]

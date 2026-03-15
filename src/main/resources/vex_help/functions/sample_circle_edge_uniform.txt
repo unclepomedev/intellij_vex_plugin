@@ -1,0 +1,31 @@
+= sample_circle_edge_uniform =
+
+#type: vex
+#context: all
+#group: sampling
+
+"""Generates a uniform unit vector2, given a uniform number between 0 and 1."""
+
+:usage: `vector2 sample_circle_edge_uniform(float u)`
+
+:arg:u:
+    Number between 0 and 1.
+
+Returns a unit vector2, i.e. a vector2 of length 1, based on `u`.
+Given uniform random `u` values in `[0,1)`, the returned unit vectors will be
+uniform random and continuous with respect to `u` on the edge of the unit circle.
+Specifically, it returns `(cos(angle),sin(angle))`, where `angle` is `2*pi*u`.
+
+@related
+
+- [Vex:sample_direction_uniform]
+- [Vex:sample_orientation_uniform]
+- [Vex:sample_circle_uniform]
+- [Vex:sample_sphere_uniform]
+- [Vex:sample_hypersphere_uniform]
+- [Vex:sample_circle_arc]
+- [Vex:sample_direction_cone]
+- [Vex:sample_orientation_cone]
+- [Vex:sample_circle_slice]
+- [Vex:sample_sphere_cone]
+- [Vex:sample_hypersphere_cone]

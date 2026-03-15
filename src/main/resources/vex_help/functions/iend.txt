@@ -1,0 +1,14 @@
+= iend =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the last frame of the specified input."""
+
+:usage: `int iend(int opinput)`
+
+Returns the last frame of the specified input.
+
+:include _common#opinput_arg:

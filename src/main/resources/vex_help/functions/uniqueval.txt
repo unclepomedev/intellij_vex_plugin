@@ -1,0 +1,44 @@
+= uniqueval =
+
+#type: vex
+#context: all
+#tags: search, attrib
+#group: attrib
+
+"""Returns one of the set of unique values across all values for an int or string attribute."""
+
+:usage: `int|string uniqueval( <geometry>, string attribclass, string attribute_name, int which)`
+
+If any points/primitives/vertices in the geometry have the same value for the given attribute, the set of _unique_ values will be smaller than the total number of points/primitives/vertices. This function lets you iterate through the set of unique values.
+
+This function only works with string and integer attributes.
+
+:include _common#geometry:
+
+:include _common#attribclassnogroup:
+
+:include _common#attribnamenogroup:
+
+:arg:which:
+    Which one of the unique values to return.
+    Use [Vex:nuniqueval] to get how many unique values the attribute has.
+
+
+@examples
+
+:box:Iterate through the unique values of the `@foo` point string attribute
+    {{{
+    #!vex
+    int count = nuniqueval(0, "point", "foo");
+    for (int i = 0; i < count; i++) {
+        string val = uniqueval(0, "point", "foo", i);
+        // ...do something with the value...
+    }
+    }}}
+
+
+@related
+
+- [Vex:uniquevals]
+- [Vex:nuniqueval]
+

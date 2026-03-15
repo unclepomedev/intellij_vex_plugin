@@ -1,0 +1,32 @@
+= setagentcurrentlayers =
+
+#type: vex
+#context: all
+#tags: crowds, layer
+#group: crowd
+#since: 19.0
+
+"""Sets the current display layers of an agent primitive."""
+
+:usage: `int setagentcurrentlayers(int geohandle, int prim, string layernames[])`
+:usage: `int setagentcurrentlayers(int geohandle, int prim, int layer_ids[])`
+
+:arg:geohandle:
+    Handle to the geometry to write to. `geoself()` can be used to get a handle to the current geometry.
+
+:arg:prim:
+    The primitive number.
+
+:arg:layernames:
+    A list of agent layer names.
+
+:arg:layer_ids:
+    A list of agent layer indices, as returned by [Vex:agentfindlayer].
+
+@related
+- [Vex:agentcollisionlayers]
+- [Vex:agentcurrentlayers]
+- [Vex:agentlayerbindings]
+- [Vex:agentlayers]
+- [Vex:agentlayershapes]
+- [Vex:setagentcollisionlayers]

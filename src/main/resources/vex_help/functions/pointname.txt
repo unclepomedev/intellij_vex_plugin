@@ -1,0 +1,15 @@
+= pointname =
+
+#type: vex
+#context: cop2
+#tags: output_plane
+#group: image
+
+"""Returns the default name of the point plane (as it appears in the
+compositor preferences)."""
+
+:usage: `string pointname()`
+
+Returns the default name of the point plane (as it appears in the
+compositor preferences). Using this instead of hardcoding the default
+makes your code more portable. Default is "P".

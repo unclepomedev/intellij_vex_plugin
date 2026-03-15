@@ -1,0 +1,18 @@
+= slerpv =
+
+#type: vex
+#context: all
+#tags: interp
+#group: interp
+
+"""Spherical blends between two vectors based on the bias."""
+
+:usage: `vector2 slerpv(vector2 v1, vector2 v2, float bias)`
+:usage: `vector slerpv(vector v1, vector v2, float bias)`
+
+    Blends between vectors <<v1>> and <<v2>> based on the <<bias>>.
+    
+    The directions are interpolated spherically and the magnitudes are interpolated linearly.
+
+@related
+ - [VEX:slerp]

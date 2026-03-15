@@ -1,0 +1,23 @@
+= acos =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the inverse cosine of the argument."""
+
+:usage: `float acos(float v)`
+    Returns the inverse cosine of `n`, where `n` is in radians. The return value is in the range 0 to &pi;.
+    
+:usage: `vector2 acos(vector2 v)`
+:usage: `vector4 acos(vector4 v)`
+:usage: `vector acos(vector v)`
+    Returns a new vector with `acos` applied to each component.
+
+@related
+
+- [Vex:cos]
+- [Vex:sin]
+- [Vex:tan]
+

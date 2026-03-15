@@ -1,0 +1,23 @@
+= fit10 =
+
+#type: vex
+#context: all
+#tags: interp
+#group: interp
+
+"""Takes the value in the range `(1, 0)` and shifts it to the corresponding value in a new range."""
+
+:usage: `float fit10(float value, float nmin, float nmax)`
+:usage: `<vector> fit10(<vector>  value, <vector>  nmin, <vector>  nmax)`
+
+    Takes the value in the range `(1, 0)` and shifts it to the corresponding value in the new range (<<nmin>>, <<nmax>>). For vectors it does this per-component.
+
+
+@related
+
+- [Vex:clamp]
+- [Vex:fit]
+- [Vex:fit01]
+- [Vex:fit11]
+- [Vex:efit]
+

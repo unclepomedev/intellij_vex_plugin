@@ -1,0 +1,35 @@
+= usd_makepropertypath =
+
+#type: vex
+#context: all
+#tags: usd, usd_attrib, usd_relationship
+#group: usd
+#since: 18.0
+
+"""Constructs an property path from a primitive path and an property name."""
+
+:usage: `string usd_makepropertypath(<stage>; string primpath; string name)`
+
+This function returns the full path of a given property.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Property name.
+
+:returns:
+    The full path of a given property.
+
+@examples 
+{{{
+#!vex
+// Obtain the full path to the property "prop_name" on the cube primitive.
+string prop_path = usd_makepropertypath(0, "/geo/cube", "prop_name");
+}}}
+
+@related
+- [Vex:usd_makeattribpath]
+- [Vex:usd_makerelationshippath]
+- [Vex:usd_makecollectionpath]

@@ -1,0 +1,40 @@
+= usd_ismetadata =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Checks if the primitive has metadata by the given name."""
+
+:usage: `int usd_ismetadata(<stage>; string path; string name)`
+
+This function checks whether the given object has metadata of a given name.
+
+:include _common#usd_stage:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:returns:
+    `1` if the primitive has the given metadata, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the primitives have various metadata:
+int has_doc = usd_ismetadata(0, "/geo/sphere", "documentation");
+int has_custom_foo_bar = usd_ismetadata(0, "/geo/cube", "customData:foo:bar");
+
+// Check if the attribute has custom data set
+string attrib_path = usd_makeattribpath(0, "/geo/sphere", "attrib_name");
+int has_attrib_foo = usd_ismetadata(0, attrib_path, "customData:foo");
+}}}
+
+@related
+- [Vex:usd_makeattribpath]
+- [Vex:usd_isprim]
+- [Vex:usd_isattrib]
+- [Vex:usd_isstage]

@@ -1,0 +1,13 @@
+= luminance =
+
+#type: vex
+#context: all
+#tags: color, convert
+#group: color
+
+"""Compute the luminance of the RGB color specified by the parameters."""
+
+:usage: `float luminance(const vector rgb)`
+:usage: `float luminance(const vector4 rgb)`
+:usage: `float luminance(const float r, float g, float b)`
+

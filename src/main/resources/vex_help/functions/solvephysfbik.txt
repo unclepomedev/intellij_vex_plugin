@@ -1,0 +1,109 @@
+= solvephysfbik =
+
+#type: vex
+#context: all
+#tags: crowds, transform, solve
+#group: transform
+#since: 18.5
+
+"""Applies a full-body inverse kinematics algorithm to a skeleton, with optional control over the center of mass."""
+
+:usage: `matrix[] solvephysfbik(matrix xforms[], int parents[], dict jointoptions[], matrix targetxforms[], int targets[], dict targetoptions[], int iters, float damping, float tolerance)`
+
+This solver uses a different algorithm than [Vex:solvefbik] - it typically performs somewhat slower, but provides more control over the skeleton's behavior and can produce higher-quality results.
+The solver can also use the optional per-joint masses and center of mass positions to achieve a target position for the skeleton's center of mass, allowing for physics-based behavior such as maintaining balance.
+
+Compared to [Vex:solvefbik], this solver has more stable behavior when joint limits are enabled, and produces more accurate results when there are targets at different priority levels.
+This solver also tends to distribute joint angle changes more evenly along the chain (particularly when orientation targets are being used), rather than producing large joint angle changes for one or two joints.
+
+The rotation and translation weight parameters provide control over how each joint axis behaves during the solve. This can be used to ensure that certain joints rotate more than others, to lock a specific joint axis, or to enable translating (stretchy) joints.
+
+Returns an empty array if:
+- `xforms` or `jointoptions` are not the same size as `parents`.
+- `targetxforms` or `targetoptions` are not the same size as `targets`.
+
+:include /vex/functions/solvefbik#xforms:
+
+:include /vex/functions/solvefbik#parents:
+
+:arg:jointoptions:
+    Specifies optional parameters for the joints. The valid keys are:
+
+    `rotation_weights`:
+        A `vector` specifying weights for the joint's rotation axes.
+        Given a larger relative weight, the solution will tend to be achieved by rotating around that axis.
+        A weight of zero will disable the rotation axis.
+        The default value is `{1,1,1}`.
+
+    `translation_weights`:
+        A `vector` specifying weights for the joint's translation axes.
+        Given a larger relative weight, the solution will tend to be achieved by translating along that axis.
+        A weight of zero will disable the translation axis.
+        To achieve an unpinned root joint, the root's translation weight should be non-zero (e.g. `{1,1,1}`).
+        The default value is `{0,0,0}`.
+
+    `rotation_order`:
+        An `int` specifying the joint's rotation order.
+        :include _common#xyz/:
+
+    `rotation_lower_limits`:
+        A `vector` specifying the lower rotation limits (in radians) for the joint's rotation axes.
+        The rotation limits are applied relative to the joint's local rest transform, if specified.
+
+        NOTE:
+            To prevent a particular axis from rotating, it is much more efficient to set its weight to zero instead of setting its rotation limits to zero.
+
+    `rotation_upper_limits`:
+        A `vector` specifying the upper rotation limits (in radians) for the joint's rotation axes.
+
+    `translation_lower_limits`:
+        A `vector` specifying the lower translation limits for the joint's translation axes.
+
+    `translation_upper_limits`:
+        A `vector` specifying the upper translation limits for the joint's translation axes.
+
+    `rest_xform`:
+        A local space `matrix` specifying the joint's rest pose.
+        The default value is the identity matrix.
+
+    `rest_rotation_weights`:
+        A `vector` specifying how strongly the solver attempts to match the rest transform for the rotation axes.
+        This has a priority lower than any of the end effector targets.
+        A value of `0.1` is typically a suitable value when enabling the rest transform constraint, and a value of 0 will disable it.
+        The default value is `{0,0,0}`.
+
+    `rest_translation_weights`:
+        A `vector` specifying how strongly the solver attempts to match the rest transform for the translation axes.
+        This has a priority lower than any of the end effector targets.
+        A value of `0.1` is typically a suitable value when enabling the rest transform constraint, and a value of 0 will disable it.
+        The default value is `{0,0,0}`.
+
+    `mass`:
+        A `float` specifying the mass of the body associated with the joint.
+        This parameter is only used when a center of mass target is provided.
+        The default value is `1.0`.
+
+    `local_com`:
+        A `vector` specifying the position of the joint's center of mass, in local space.
+        An value of `{0,0,0}` (default) will position the center of mass at the joint's position.
+
+:include /vex/functions/solvefbik#targets:
+
+:include /vex/functions/solvefbik#targetxforms:
+
+:include /vex/functions/solvefbik#targetoptions:
+
+:include /vex/functions/agentsolvefbik#iters:
+
+:arg:damping:
+    #id: damping
+    Damping factor for the solver.
+    Larger values will produce more stable results when, for example, a target is unreachable.
+    A value that is too large, however, will require more iterations to converge.
+    Around 0.5 is typically a suitable initial value.
+
+:include /vex/functions/agentsolvefbik#tolerance:
+
+@related
+- [Vex:agentsolvefbik]
+- [Vex:solvefbik]

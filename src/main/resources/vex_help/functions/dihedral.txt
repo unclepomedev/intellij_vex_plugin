@@ -1,0 +1,16 @@
+= dihedral =
+
+#type: vex
+#context: all
+#tags: matrix, quaternion
+#group: transform
+
+"""Computes the rotation matrix or quaternion which rotates the vector a onto the vector b."""
+
+:usage: `matrix3 dihedral(vector a, vector b)`
+
+Computes the rotation matrix which rotates the vector <<a>> onto the vector <<b>>.
+
+:usage: `vector4 dihedral(vector a, vector b)`
+
+Computes the normalized quaternion which rotates the vector <<a>> onto the vector <<b>>.

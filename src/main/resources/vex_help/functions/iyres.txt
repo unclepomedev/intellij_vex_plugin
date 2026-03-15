@@ -1,0 +1,16 @@
+= iyres =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the Y resolution of the specified input."""
+
+:usage: `int iyres(int opinput)`
+
+:include _common#opinput_arg:
+
+:returns:
+    The Y resolution of the specified input.
+

@@ -1,0 +1,70 @@
+= pcgenerate =
+
+#type: vex
+#context: all
+#tags: ptcloud, create
+#group: ptcloud
+
+"""Generates a point cloud."""
+
+:usage: `int pcgenerate(string filename, int npoints)`
+
+This function returns a handle to the point cloud with the specified name or
+creates a new point cloud with the specified name and number of points.
+Initially, the point cloud has no channels, but channels can be added using
+[Vex:pcexport] in a [Vex:pcunshaded] loop.  Note that if pcgenerate() is called
+with the name of a point cloud that already exists, that point cloud will not
+be re-sized to contain the specified number of points.
+
+Once a position channel has been established, call [Vex:pcopen] to query the
+generated point cloud.  Note that calling [Vex:pcopen] will lock the specified
+position channel.  Once a point cloud has been opened, it is considered to be
+generated.  Calling pcgenerate() with the name of a generated point cloud is
+similar to calling pcopen() and requesting 0 points: no points will be available
+in a [Vex:pcunshaded] or [Vex:pciterate] loop.
+
+This function only stores a point cloud in RAM. To write points to disk, use [pcwrite()|/vex/functions/pcwrite].
+
+NOTE:
+    We refer to the parameter as a filename to be consistent with `pcopen()`. The two functions share the same namespace. That is, if you call `pcgenerate("myfile.pc", ...)`, you can then query `"myfile.pc"` by calling `pcopen("myfile.pc", ...)` or `pcopenlod("myfile.pc", ...)`.
+
+    This works the other way as well. If you call `pcopen("myfile.pc", ...)` and then call `pcgenerate("myfile.pc", ...)`, the `pcgenerate()` call will use the point cloud that is already loaded into memory through the `pcopen()` call rather than creating a new point cloud.
+
+
+@examples
+
+{{{
+#!vex
+vector position;
+int ohandle, ghandle, rval;
+
+ghandle = pcgenerate(texturename, npoints);
+while (pcunshaded(ghandle, "P"))
+{
+    // Compute 'position'...
+    rval = pcexport(ghandle, "P", position);
+}
+
+ohandle = pcopen(texturename, "P", P, maxdistance, maxpoints);
+while (pciterate(ohandle))
+{
+    rval = pcimport(ohandle, "P", position);
+    // Do something with 'position'...
+}
+
+pcclose(ohandle);
+pcclose(ghandle);
+}}}
+
+
+@related
+
+- [Vex:pcopen]
+- [Vex:pcwrite]
+- [Vex:pcfilter]
+- [Vex:pciterate]
+- [Vex:pcunshaded]
+- [Vex:pcimport]
+- [Vex:pcexport]
+- [Vex:pcclose]
+

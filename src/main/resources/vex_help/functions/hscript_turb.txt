@@ -1,0 +1,29 @@
+= hscript_turb =
+
+#type: vex
+#context: all
+#tags: noise
+#group: noise
+
+"""Generates turbulence matching the output of the HScript turb() expression function."""
+
+:usage: `float hscript_turb(vector pos, int depth)`
+
+Matches the output of [Exp:turb]. This function can be useful if you convert a workflow to VEX, or have VEX work in tandem with Hscript expressions, and need the turbulence to look the same as in an expression.
+
+:arg:pos:
+    Position at which to sample the turbulent noise.
+
+:arg:depth:
+    Number of fractal iterations of noise.
+
+:returns:
+    The range is usually within -1 to 1, but can exceed it depending on the depth. The maximum range is -2 to 2 for high depths.
+
+
+@related
+
+- [Vex:hscript_sturb]
+- [Vex:hscript_noise]
+- [Vex:hscript_snoise]
+- [Vex:hscript_rand]

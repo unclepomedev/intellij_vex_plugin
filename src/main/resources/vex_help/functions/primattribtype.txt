@@ -1,0 +1,14 @@
+= primattribtype =
+
+#type: vex
+#context: all
+#tags: prim, attrib
+#group: attrib
+
+"""Returns the type of a geometry prim attribute."""
+
+:usage: `int primattribtype(<geometry>, string attribute_name)`
+
+:include _common#geometry:
+
+See [Vex:attribtype] for more information.

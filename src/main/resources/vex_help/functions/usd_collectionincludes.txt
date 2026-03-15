@@ -1,0 +1,32 @@
+= usd_collectionincludes =
+
+#type: vex
+#context: all
+#tags: usd, usd_collection
+#group: usd
+#since: 18.0
+
+"""Obtains the object paths that are in the collection's include list"""
+
+:usage: `string[] usd_collectionincludes(<stage>, string collectionpath)`
+
+This function returns the collection's include list. 
+
+:include _common#usd_stage:
+
+:include _common#usd_collectionpath:
+
+:returns:
+    The collection's include list. 
+
+@examples 
+{{{
+#!vex
+// Get collection's include list.
+string collection_path = usd_makecollectionpath(0, "/geo/cube", "some_collection");
+string include_list[]  = usd_collectionincludes(0, collection_path);
+}}}
+
+@related
+- [Vex:usd_iscollection]
+- [Vex:usd_collectionexcludes]

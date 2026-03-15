@@ -1,0 +1,19 @@
+= unpack_intfromsafefloat =
+
+#type: vex
+#context: all
+#tags: polysoup
+#group: utility
+
+"""Reverses the packing of pack_inttosafefloat to get back the original integer."""
+
+:usage: `int unpack_intfromsafefloat(float f)`
+
+See [Vex:pack_inttosafefloat]
+
+
+@related
+
+- [Vex:pack_inttosafefloat]
+- [Vex:xyzdist]
+- [Vex:intersect]

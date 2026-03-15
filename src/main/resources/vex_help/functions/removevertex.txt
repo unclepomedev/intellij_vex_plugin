@@ -1,0 +1,32 @@
+= removevertex =
+
+#type: vex
+#context: all
+#tags: vertex, delete
+#group: geo
+#since: 18.0
+
+"""Removes a vertex from the geometry."""
+
+:usage: `int removevertex(int geohandle, int linear_vertex_index)`
+
+:include _common#geohandle_arg:
+
+:arg:linear_vertex_index:
+    If this is `-1`, the function has no effect.  This is a linear
+    vertex index, so `vertexindex` may be needed to convert from
+    a primitive and vertex number.
+
+This removes the given vertex from the geometry.  Note: This is done as
+a post process, not immediately when invoked.
+
+Only polygons currently support the removal of vertices.
+
+This can result in degenerate (0 vertex) polygons, as the primitive
+is not deleted.  
+
+Removing many vertices from polygons with high vertex counts can be slow.
+
+@related
+
+- [Vex:addvertex]

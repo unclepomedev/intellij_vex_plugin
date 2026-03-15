@@ -1,0 +1,43 @@
+= usd_iprimvarelement =
+
+#type: vex
+#context: all
+#tags: usd, usd_primvar
+#group: usd
+#since: 19.0
+
+"""Reads the value of an element from the array primvar directly from the USD primitive or from USD primitive's ancestor."""
+
+:usage: `<type> usd_iprimvarelement(<stage>; string primpath; string name; int index)`
+:usage: `<type> usd_iprimvarelement(<stage>; string primpath; string name; int index; float timecode)`
+
+This function returns a value of an element in given array primvar on a given primitive or inherited from primitive's ancestor.
+
+:include _common#usd_stage:
+
+:include _common#usd_primpath:
+
+:arg:name:
+    Primvar name (without namespace).
+
+:arg:index:
+    The index into the array. 
+
+:include _common#usd_timecode:
+
+:returns:
+    The value of an element in an existing array primvar, or zero/empty value if the primvar does not exist. Use [Vex:usd_isiprimvar] if you want to check whether the primvar exists.
+
+@examples 
+{{{
+#!vex
+// Get the value of some primvars on the cube primitive or its ancestor.
+float value    = usd_iprimvarelement(0, "/geo/cube", "primvar_name", 3);
+
+v@element_2_at_current_frame  = usd_iprimvarelement(0, "/geo/sphere", "foo", 2);
+v@element_2_at_frame_8        = usd_iprimvarelement(0, "/geo/sphere", "foo", 2, 8.0);
+}}}
+
+@related
+- [Vex:usd_primvarelement]
+- [Vex:usd_iprimvar]

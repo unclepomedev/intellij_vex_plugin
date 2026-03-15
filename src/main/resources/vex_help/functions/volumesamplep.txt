@@ -1,0 +1,26 @@
+= volumesamplep =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Samples the volume primitive's vector4 value."""
+
+:usage: `vector4 volumesamplep(<geometry>, int primnum, vector pos)`
+:usage: `vector4 volumesamplep(<geometry>, string volumename, vector pos)`
+
+:include _common#geometry:
+
+:returns:
+    The volume primitive's sampled value at the given position.
+    Values between voxels will be trilinearly interpolated.
+
+    For scalar volumes and vdbs, if `Cd` is the volumename, the function
+    will try to evaluate `Cd.x`, `Cd.y`, `Cd.z`, and `Cd.w` and report the
+    joined values.  (rgba can also be used as extensions)
+    
+    Returns 0 if `primnum` or `inputnum` is out of range, the geometry
+    is invalid, or the given primitive is not a vdb or volume
+    primitive.
+

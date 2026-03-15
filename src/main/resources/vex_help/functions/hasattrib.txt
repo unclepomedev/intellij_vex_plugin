@@ -1,0 +1,38 @@
+= hasattrib =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Checks whether a geometry attribute exists."""
+
+If you know the attribute class ahead of time, using [Vex:hasdetailattrib], [Vex:hasprimattrib], [Vex:haspointattrib], or [Vex:hasvertexattrib] may be faster.
+
+:usage: `int hasattrib(<geometry>, string attribclass, string attribute_name)`
+
+:include _common#geometry:
+
+:include _common#attribclass:
+
+Returns `1` if the attribute exists, or `0` otherwise.
+
+
+@examples
+
+{{{
+#!vex
+// Check whether the point group "pointstouse" exists.
+if (hasattrib("defgeo.bgeo", "pointgroup", "pointstouse")) {
+    // Do something with the point group
+}
+}}}
+
+
+@related
+
+- [Vex:hasdetailattrib]
+- [Vex:hasprimattrib]
+- [Vex:haspointattrib]
+- [Vex:hasvertexattrib]
+

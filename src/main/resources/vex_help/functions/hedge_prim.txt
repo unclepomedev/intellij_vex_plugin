@@ -1,0 +1,36 @@
+= hedge_prim =
+
+#type: vex
+#context: all
+#tags: hedge, prim
+#group: hedge
+
+"""Returns the primitive that contains a half-edge."""
+
+:usage: `int hedge_prim(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The primitive number of primitive that contains (the source and destination vertices of) `hedge`.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int prim;
+
+// Get the primitive number of half-edge number 3.
+prim = hedge_prim("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

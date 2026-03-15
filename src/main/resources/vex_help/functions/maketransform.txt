@@ -1,0 +1,45 @@
+= maketransform =
+
+#type: vex
+#context: all
+#tags: matrix
+#group: transform
+
+"""Builds a 3x3 or 4x4 transform matrix."""
+
+:usage: `matrix3 maketransform(vector zaxis, vector yaxis)`
+:usage: `matrix3 maketransform(int xyz, vector angles)`
+:usage: `matrix maketransform(vector zaxis, vector yaxis, vector translate)`
+:usage: `matrix maketransform(int trs, int xyz; const vector t, vector r)`
+:usage: `matrix maketransform(int trs, int xyz; const vector t, vector r, vector s)`
+:usage: `matrix maketransform(int trs, int xyz; const vector t, vector r, vector s, vector p)`
+:usage: `matrix maketransform(int trs, int xyz; const vector t, vector r, vector s, vector p, vector pr)`
+:usage: `matrix maketransform(int trs, int xyz; const vector t, vector r, vector s, vector p, vector pr, vector shears)`
+
+Builds a 3x3 or 4x4 transform matrix.
+
+`maketransform(int trs, ...)` builds a general 4x4 transform matrix
+given an order of transformations (<<trs>>), an order for rotations
+(<<xyz>>), a vector representing the translation (<<t>>), rotation
+(<<r>>), scale (<<s>>) (and optionally a pivot (<<p>>), pivot rotation
+(<<pr>>), and shears (<<shears>>)).
+
+`maketransform(int xyz, vector angles)` builds a 3x3 rotation matrix
+using the same rules as `maketransform(int trs, ...)` but only using
+the rotation parameters.
+
+`maketransform(vector zaxis, yaxis, ...)` builds either a 3x3 transform
+matrix or a 4x4 transform matrix. The matrix will be constructed so that the 
+z-axis will be transformed to the z-axis specified with the given up vector 
+(yaxis). Thus, maketransform({0,0,1}, {0,1,0}) will result in an identity 
+matrix. The version which returns a 4x4 transform will apply the translation 
+to the 4x4 matrix. This function is very similar to the [lookat|Vex:lookat] 
+function. The vectors passed in are _not_ normalized meaning that scales 
+should be preserved in construction of the transform.
+
+NOTE:
+    Unlike most VEX functions, this function expects rotations 
+    in _degrees_, not radians.
+
+:include _common#trs:
+:include _common#xyz:

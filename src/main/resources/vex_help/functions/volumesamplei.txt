@@ -1,0 +1,18 @@
+= volumesamplei =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Samples the volume primitive's integer value."""
+
+:usage: `int volumesamplei(<geometry>, int primnum, vector pos)`
+:usage: `int volumesamplei(<geometry>, string volumename, vector pos)`
+
+:include _common#geometry:
+
+:returns:
+    The volume primitive's sampled value at the given position.  
+    
+    Returns 0 if `primnum` or `inputnum` is out of range, the geometry is invalid, or the given primitive is not a volume or vdb primitive.

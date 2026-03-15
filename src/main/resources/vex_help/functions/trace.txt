@@ -1,0 +1,47 @@
+= trace =
+
+#type: vex
+#context: shading
+#tags: shading, rays
+#group: shading
+
+"""Sends a ray from P along the normalized vector D."""
+
+Disambiguation: The VEX function to compute the trace of input matrix is [tr|VEX:tr].
+
+:usage: `void trace(vector &cv, vector &of, float &af, vector P, vector D, float shadow_bias, float max_contrib, ...)`
+
+    Sends a ray from <<P>> along the normalized vector <<D>>. The resulting
+    color, opacity and alpha will be put in the export variables.
+
+    <<shadow_bias>> is typically a small number which is used to prevent
+    self-shading.
+
+    <<max_contrib>> controls how much the result of the trace() call will
+    contribute to the resulting pixel color. <<max_contrib>> has no effect
+    on the results of the trace() call.
+
+:usage: `int trace(vector pos, vector dir, float time, ...)`
+
+    Sends a single ray into the scene at `time` and retrieves information from the hit surface. A return value of 1 means the ray hit a surface.
+
+Only the second signature accepts any of the following variadic arguments. The first trace signature is more specific, and is legacy from older versions of mantra.
+
+:include _lightmask_variadic:
+
+:include _area_variadic:
+
+:include _rayopts_variadic:
+
+:include _gather_variadic:
+
+
+@related
+
+- [Vex:tr]
+- [Vex:rayhittest]
+- [Node:vop/raytrace]
+- [Vex:reflectlight]
+- [Vex:gather]
+- [Vex:irradiance]
+- [Vex:pathtrace]

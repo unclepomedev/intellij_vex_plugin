@@ -1,0 +1,23 @@
+= erf =
+
+#type: vex
+#context: all
+#tags: math
+#group: math
+
+"""Gauss error function."""
+
+:usage: `float erf(float v)`
+:usage: `vector2 erf(vector2 v)`
+
+The [Gauss error function|Wp:Error_function]. Houdini uses the Boost
+library's implementation internally.
+
+The erf(vector2) version computes the complex error function and returns
+the complex result. This function is much slower than the erf(float)
+function for real values.
+
+@related
+
+- [Vex:erf_inv]
+- [Vex:erfc]

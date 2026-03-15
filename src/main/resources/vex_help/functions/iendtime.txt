@@ -1,0 +1,14 @@
+= iendtime =
+
+#type: vex
+#context: cop2
+#tags: input_plane
+#group: image
+
+"""Returns the end time of the specified input."""
+
+:usage: `float iendtime(int opinput)`
+
+Returns the end time of the specified input.
+
+:include _common#opinput_arg:

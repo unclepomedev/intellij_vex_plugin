@@ -1,0 +1,12 @@
+= writepixel =
+
+#type: vex
+#tags: file, experimental
+#context: shading
+#group: shading
+
+"""Writes color information to a pixel in the output image """
+
+:usage: `void writepixel(string channel, float ndc_x, float ndc_y, vector clr)`
+
+This is an experimental function which can be used by the generator rendering engine to write pixel values into the image.

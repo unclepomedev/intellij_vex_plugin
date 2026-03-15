@@ -1,0 +1,46 @@
+= attribsize =
+
+#type: vex
+#context: all
+#tags: attrib
+#group: attrib
+
+"""Returns the size of a geometry attribute."""
+
+If you know the attribute class ahead of time, using [Vex:detailattribsize], [Vex:primattribsize], [Vex:pointattribsize], or [Vex:vertexattribsize] may be faster.
+
+:usage: `int attribsize(<geometry>, string attribclass, string attribute_name)`
+
+:include _common#geometry:
+
+:include _common#attribclass:
+
+:returns:
+    The size of an attribute's _type_.
+
+    * For a vector type, this is the number of components.
+
+    * For an integer, float, or string, this returns `1`.
+
+    * For an array attribute, this returns the size of the tuples in the array. The tuple size is controlled by the __Size__ parameter on the [Attribute Create node|Node:sop/attribcreate].
+
+    If the attribute does not exist, returns `0`.
+
+* This function works with the attribute's _type_. It does not return the size of an attribute _value_. You can't use this function to get the length of a string or array value.
+
+
+@examples
+
+{{{
+#!vex
+// Get the size of the position attribute of "defgeo.bgeo"
+int size = attribsize("defgeo.bgeo", "point", "P");
+}}}
+
+
+@related
+
+- [Vex:addattrib]
+- [Vex:attrib]
+- [Vex:getattrib]
+- [Vex:attribtype]

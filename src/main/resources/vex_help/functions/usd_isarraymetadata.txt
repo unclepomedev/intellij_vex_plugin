@@ -1,0 +1,33 @@
+= usd_isarraymetadata =
+
+#type: vex
+#context: all
+#tags: usd, usd_metadata
+#group: usd
+#since: 18.0
+
+"""Checks if the given metadata is an array."""
+
+:usage: `int usd_isarraymetadata(<stage>; string path; string name)`
+
+This function checks whether the given metadata is an array.
+
+:include _common#usd_stage:
+
+:include _common#usd_path:
+
+:include _common#usd_metadataname:
+
+:returns:
+    `1` if the metadata exists and is an array, or `0` otherwise.
+
+@examples 
+{{{
+#!vex
+// Check if the metadata is an array.
+int is_array = usd_isarraymetadata(0, "/geo/sphere", "documentation");
+int is_array_too = usd_isarraymetadata(0, "/geo/cube", "customData:foo:bar");
+}}}
+
+@related
+- [Vex:usd_ismetadata]

@@ -1,0 +1,20 @@
+= volumevoxeldiameter =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Computes the approximate diameter of a voxel."""
+
+:usage: `float volumevoxeldiameter(<geometry>, int primnum)`
+:usage: `float volumevoxeldiameter(<geometry>, string primname)`
+
+:include _common#geometry:
+
+:returns:
+    The diameter of a voxel in the given primitive.
+    To find the length of a side of a voxel, divide by `sqrt(3)`.
+    
+    Returns 0 if `primnum` or `inputnum` is out of range, the geometry is invalid, or the given primitive is not a vector volume primitive.
+

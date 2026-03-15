@@ -1,0 +1,18 @@
+= py_dumps =
+
+#type: vex
+#context: all
+#group: dict
+#since: 21.0
+
+"""Converts a VEX dictionary into a Python-style dictionary string."""
+
+:usage: `string py_dumps(dict d)`
+
+Converts the dictionary into a Python-compatible dictionary string.
+
+@related
+
+- [Vex:json_loads]
+- [Vex:json_dumps]
+- [Vex:py_loads]

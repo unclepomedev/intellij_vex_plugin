@@ -1,0 +1,36 @@
+= hedge_presrcpoint =
+
+#type: vex
+#context: all
+#tags: hedge
+#group: hedge
+
+"""Returns the point into which the vertex that precedes the source vertex of a half-edge in its primitive is wired."""
+
+:usage: `int hedge_presrcpoint(<geometry>, int hedge)`
+
+:include _common#geometry:
+
+:arg:hedge:
+    Input half-edge.
+
+:returns:
+    The point of the point into which the vertex that comes before the source vertex of the `hedge` in the primitive that contains `hedge` is wired.
+    Returns `-1` if the half-edge is not valid.
+
+
+@examples
+
+{{{
+#!vex
+
+int presrcpt;
+
+// Get the pre-source point of half-edge number 3.
+presrcpt = hedge_presrcpoint("defgeo.bgeo", 3);
+
+}}}
+
+@related
+    - [VEX Geometry functions|../geometry]
+    - [VEX Half-edges|../halfedges]

@@ -1,0 +1,29 @@
+= removeattrib =
+
+#type: vex
+#context: all
+#tags: point, delete
+#group: geo
+
+"""Removes an attribute or group from the geometry."""
+
+:usage: `int removeattrib(int geohandle, string attribclass, string name)`
+
+:include _common#geohandle_arg:
+
+:include _common#attribclass:
+
+:arg:name:
+    The name of the attribute or group to remove.
+
+@related
+
+- [Vex:removeattrib]
+- [Vex:removedetailattrib]
+- [Vex:removepointattrib]
+- [Vex:removepointgroup]
+- [Vex:removevertexattrib]
+- [Vex:removevertexgroup]
+- [Vex:removeprimattrib]
+- [Vex:removeprimgroup]
+
