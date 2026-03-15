@@ -144,7 +144,7 @@ return_statement ::= RETURN expr? SEMICOLON { pin=1 }
 control_statement ::= (BREAK | CONTINUE) SEMICOLON { pin=1 }
 
 declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON { pin=1 }
-private declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
+declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
 
 expr_statement ::= expr? SEMICOLON
 
