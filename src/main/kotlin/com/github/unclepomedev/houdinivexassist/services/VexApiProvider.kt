@@ -46,4 +46,8 @@ class VexApiProvider {
             emptyList()
         }
     }
+
+    fun hasFunction(functionName: String): Boolean {
+        return functions.any { it.name == functionName }
+    }
 }
