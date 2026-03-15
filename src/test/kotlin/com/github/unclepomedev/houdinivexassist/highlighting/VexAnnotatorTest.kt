@@ -79,4 +79,31 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testUnresolvedVariableIsHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            int a = 1;
+            int b = a + <error descr="Unresolved variable: 'c'">c</error>;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testResolvedVariableIsNotHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            int outerVar = 1;
+            void myFunc(int paramVar) {
+                if (outerVar > 0) {
+                    int innerVar = outerVar + paramVar;
+                    @P.x += innerVar;
+                }
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }

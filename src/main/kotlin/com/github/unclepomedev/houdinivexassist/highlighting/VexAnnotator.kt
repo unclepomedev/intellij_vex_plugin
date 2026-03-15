@@ -7,9 +7,6 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiTreeUtil
 
 class VexAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -18,76 +15,55 @@ class VexAnnotator : Annotator {
             is VexFunctionDef -> annotateFunctionDef(element, holder)
             is VexStructDef -> annotateStructDef(element, holder)
             is VexDeclarationItem -> annotateDeclarationItem(element, holder)
+            is VexPrimaryExpr -> annotatePrimaryExpr(element, holder)
         }
     }
 
-    private fun findDeclarationScope(element: PsiElement): PsiElement? =
-        PsiTreeUtil.getParentOfType(
-            element,
-            VexBlock::class.java,
-            VexStructDef::class.java,
-            VexFile::class.java
-        )
-
+    /**
+     * check variable declarations (for flag duplicate errors)
+     */
     private fun annotateDeclarationItem(element: VexDeclarationItem, holder: AnnotationHolder) {
         val identifier = element.identifier
         val varName = identifier.text
-        val scope = findDeclarationScope(element) ?: return
+        val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
 
-        if (checkScopeConflict(element, varName, scope, holder)) return
-        checkParameterConflict(element, varName, scope, holder)
-    }
-
-    private fun checkScopeConflict(
-        element: VexDeclarationItem,
-        varName: String,
-        scope: PsiElement,
-        holder: AnnotationHolder
-    ): Boolean {
-        val declarationsInScope = CachedValuesManager.getCachedValue(scope) {
-            val decls = PsiTreeUtil.findChildrenOfType(scope, VexDeclarationItem::class.java)
-                .filter { findDeclarationScope(it) == scope }
-            CachedValueProvider.Result.create(decls, scope)
-        }
-
-        // Find one that was declared before it and have the same direct parent scope.
-        val hasConflict = declarationsInScope.any { sibling ->
+        val declarationsInScope = VexScopeAnalyzer.getDeclarationsInScope(scope)
+        val hasScopeConflict = declarationsInScope.any { sibling ->
             sibling != element &&
                     sibling.identifier.text == varName &&
                     sibling.textOffset < element.textOffset
         }
 
-        if (hasConflict) {
+        if (hasScopeConflict) {
             holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is already defined in this scope")
-                .range(element.identifier.textRange)
+                .range(identifier.textRange)
                 .create()
-            return true
+            return
         }
-        return false
+
+        val parameters = VexScopeAnalyzer.getParametersForScope(scope)
+        val hasParamConflict = parameters.any { it.identifier.text == varName }
+
+        if (hasParamConflict) {
+            holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is already defined as a parameter")
+                .range(identifier.textRange)
+                .create()
+        }
     }
 
-    private fun checkParameterConflict(
-        element: VexDeclarationItem,
-        varName: String,
-        scope: PsiElement,
-        holder: AnnotationHolder
-    ) {
-        // No check is necessary if it's not a block directly under a function.
-        if (scope !is VexBlock || scope.parent !is VexFunctionDef) return
+    /**
+     * check variable usage (for undefined errors)
+     */
+    private fun annotatePrimaryExpr(element: VexPrimaryExpr, holder: AnnotationHolder) {
+        val identifier = element.identifier ?: return
+        val varName = identifier.text
 
-        val funcDef = scope.parent as VexFunctionDef
-        val paramList = funcDef.parameterListDef ?: return
+        val resolvedElement = VexVariableResolver.resolveVariable(element, varName)
 
-        val parameters = CachedValuesManager.getCachedValue(paramList) {
-            val params = PsiTreeUtil.findChildrenOfType(paramList, VexParameterDef::class.java)
-            CachedValueProvider.Result.create(params, paramList)
-        }
-
-        val hasConflict = parameters.any { it.identifier.text == varName }
-
-        if (hasConflict) {
-            holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is already defined as a parameter")
-                .range(element.identifier.textRange)
+        if (resolvedElement == null) {
+            holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved variable: '$varName'")
+                .range(identifier.textRange)
+                .textAttributes(DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
                 .create()
         }
     }
@@ -99,14 +75,8 @@ class VexAnnotator : Annotator {
         val apiProvider = element.project.getService(VexApiProvider::class.java)
         val isStandardFunction = apiProvider.hasFunction(functionName)
 
-        val containingFile = element.containingFile
-        val localFunctionNames = CachedValuesManager.getCachedValue(containingFile) {
-            val names = PsiTreeUtil.findChildrenOfType(containingFile, VexFunctionDef::class.java)
-                .mapNotNull { it.identifier.text }
-                .toSet()
-            CachedValueProvider.Result.create(names, containingFile)
-        }
-
+        val containingFile = element.containingFile as? VexFile ?: return
+        val localFunctionNames = VexScopeAnalyzer.getLocalFunctionNames(containingFile)
         val isLocalFunction = functionName in localFunctionNames
 
         if (isStandardFunction || isLocalFunction) {
@@ -122,17 +92,14 @@ class VexAnnotator : Annotator {
     }
 
     private fun annotateFunctionDef(element: VexFunctionDef, holder: AnnotationHolder) {
-        val identifier = element.identifier
-
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-            .range(identifier.textRange)
+            .range(element.identifier.textRange)
             .textAttributes(DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
             .create()
     }
 
     private fun annotateStructDef(element: VexStructDef, holder: AnnotationHolder) {
         val identifier = element.identifier ?: return
-
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
             .range(identifier.textRange)
             .textAttributes(DefaultLanguageHighlighterColors.CLASS_NAME)
