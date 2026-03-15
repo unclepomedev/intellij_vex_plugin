@@ -1,8 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
-import com.github.unclepomedev.houdinivexassist.psi.VexCallExpr
-import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
-import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
+import com.github.unclepomedev.houdinivexassist.psi.*
 import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
@@ -19,6 +17,64 @@ class VexAnnotator : Annotator {
             is VexCallExpr -> annotateCallExpr(element, holder)
             is VexFunctionDef -> annotateFunctionDef(element, holder)
             is VexStructDef -> annotateStructDef(element, holder)
+            is VexDeclarationItem -> annotateDeclarationItem(element, holder)
+        }
+    }
+
+    private fun annotateDeclarationItem(element: VexDeclarationItem, holder: AnnotationHolder) {
+        val identifier = element.identifier
+        val varName = identifier.text
+        val scope = PsiTreeUtil.getParentOfType(element, VexBlock::class.java, VexFile::class.java) ?: return
+
+        if (checkScopeConflict(element, varName, scope, holder)) return
+        checkParameterConflict(element, varName, scope, holder)
+    }
+
+    private fun checkScopeConflict(
+        element: VexDeclarationItem,
+        varName: String,
+        scope: PsiElement,
+        holder: AnnotationHolder
+    ): Boolean {
+        // all decls in the same scope
+        val allDeclsInScope = PsiTreeUtil.findChildrenOfType(scope, VexDeclarationItem::class.java)
+
+        // Find one that was declared before it and have the same direct parent scope.
+        val hasConflict = allDeclsInScope.any { sibling ->
+            sibling != element &&
+                    sibling.identifier.text == varName &&
+                    sibling.textOffset < element.textOffset &&
+                    PsiTreeUtil.getParentOfType(sibling, VexBlock::class.java, VexFile::class.java) == scope
+        }
+
+        if (hasConflict) {
+            holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is already defined in this scope")
+                .range(element.identifier.textRange)
+                .create()
+            return true
+        }
+        return false
+    }
+
+    private fun checkParameterConflict(
+        element: VexDeclarationItem,
+        varName: String,
+        scope: PsiElement,
+        holder: AnnotationHolder
+    ) {
+        // No check is necessary if it's not a block directly under a function.
+        if (scope !is VexBlock || scope.parent !is VexFunctionDef) return
+
+        val funcDef = scope.parent as VexFunctionDef
+        val paramList = funcDef.parameterListDef ?: return
+
+        val hasConflict = PsiTreeUtil.findChildrenOfType(paramList, VexParameterDef::class.java)
+            .any { it.identifier.text == varName }
+
+        if (hasConflict) {
+            holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is already defined as a parameter")
+                .range(element.identifier.textRange)
+                .create()
         }
     }
 

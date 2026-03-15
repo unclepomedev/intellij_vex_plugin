@@ -2,10 +2,23 @@ package com.github.unclepomedev.houdinivexassist.formatting
 
 import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
+import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
+import com.intellij.application.options.CodeStyle
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.codeStyle.CodeStyleManager
 
 class VexFormatterTest : VexTestBase() {
+
+    override fun setUp() {
+        super.setUp()
+        val settings = CodeStyle.getSettings(project).getCommonSettings(VexLanguage.INSTANCE)
+        settings.indentOptions?.apply {
+            INDENT_SIZE = 4
+            CONTINUATION_INDENT_SIZE = 4
+            TAB_SIZE = 4
+            USE_TAB_CHARACTER = false
+        }
+    }
 
     private fun reformatAndAssert(before: String, after: String) {
         myFixture.configureByText(VexFileType, before)

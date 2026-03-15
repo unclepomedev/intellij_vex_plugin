@@ -28,6 +28,7 @@ class VexFormattingModelBuilder : FormattingModelBuilder {
 
             // identifiers
             .between(VexTypes.TYPE, VexTypes.IDENTIFIER).spaces(1)
+            .between(VexTypes.TYPE, VexTypes.DECLARATION_ITEM).spaces(1)
             .between(VexTypes.STRUCT, VexTypes.IDENTIFIER).spaces(1)
 
             // blocks & parentheses
