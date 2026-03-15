@@ -6,13 +6,21 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiTreeUtil
 
 object VexScopeAnalyzer {
-    fun findDeclarationScope(element: PsiElement): PsiElement? =
-        PsiTreeUtil.getParentOfType(
+    /**
+     * Finds the closest declaration scope (Block, Struct, or File) for the given element.
+     * Safely returns null if the input element is null, or if no such scope exists.
+     * @param element The starting element to search upwards from.
+     * @return The containing scope element, or null.
+     */
+    fun findDeclarationScope(element: PsiElement?): PsiElement? {
+        if (element == null) return null
+        return PsiTreeUtil.getParentOfType(
             element,
             VexBlock::class.java,
             VexStructDef::class.java,
             VexFile::class.java
         )
+    }
 
     fun getDeclarationsInScope(scope: PsiElement): List<VexDeclarationItem> {
         return CachedValuesManager.getCachedValue(scope) {
