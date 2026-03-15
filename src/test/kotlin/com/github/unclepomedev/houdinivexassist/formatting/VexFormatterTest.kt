@@ -82,4 +82,52 @@ class VexFormatterTest : VexTestBase() {
 
         myFixture.checkResult(after)
     }
+
+    fun testAdvancedOperatorsAndMultilineLists() {
+        val before = """
+            int myFunc (
+            int a,
+            int b
+            ) {
+                int x=a<<2 ;
+                int y=b>>1;
+                int z = a|b&x^y ;
+                return x>y?x :y;
+            }
+
+            void test ( ){
+                myFunc (
+                1 ,
+                2
+                ) ;
+            }
+        """.trimIndent()
+
+        val after = """
+            int myFunc(
+                int a,
+                int b
+            ) {
+                int x = a << 2;
+                int y = b >> 1;
+                int z = a | b & x ^ y;
+                return x > y ? x : y;
+            }
+
+            void test() {
+                myFunc(
+                    1,
+                    2
+                );
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, before)
+
+        WriteCommandAction.runWriteCommandAction(project) {
+            CodeStyleManager.getInstance(project).reformat(myFixture.file)
+        }
+
+        myFixture.checkResult(after)
+    }
 }

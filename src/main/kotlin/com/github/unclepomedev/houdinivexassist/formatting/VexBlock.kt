@@ -27,7 +27,13 @@ class VexBlock(
 
     override fun getChildAttributes(newChildIndex: Int): ChildAttributes {
         val type = myNode.elementType
-        if (type == VexTypes.BLOCK || type == VexTypes.STRUCT_DEF) {
+        if (
+            type == VexTypes.BLOCK ||
+            type == VexTypes.STRUCT_DEF ||
+            type == VexTypes.PARAMETER_LIST_DEF ||
+            type == VexTypes.PARAMETER_LIST_SIG ||
+            type == VexTypes.ARGUMENT_LIST
+        ) {
             return ChildAttributes(Indent.getNormalIndent(), null)
         }
         return ChildAttributes(Indent.getNoneIndent(), null)
