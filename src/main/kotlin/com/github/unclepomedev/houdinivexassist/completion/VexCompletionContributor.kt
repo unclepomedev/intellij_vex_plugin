@@ -52,7 +52,7 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
 
         localFunctions.forEach { localFunc ->
             val funcName = localFunc.identifier.text ?: return@forEach
-            val hasArgs = localFunc.parameterListDef != null
+            val hasArgs = localFunc.parameterListDef?.parameterDefList?.isNotEmpty() == true
             val tailText = if (hasArgs) "(...)" else "()"
 
             val lookupElement = LookupElementBuilder.create(funcName)
@@ -74,6 +74,10 @@ private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandle
         val editor = context.editor
         val document = context.document
         val offset = context.tailOffset
+
+        if (context.completionChar == '(') {
+            context.setAddCompletionChar(false)
+        }
 
         val hasParen = offset < document.textLength && document.charsSequence[offset] == '('
 
