@@ -19,7 +19,7 @@ import com.intellij.psi.TokenType;
 WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
 NUMBER=([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)
-STRING=(\"[^\"]*\")|(\'[^\']*\')
+STRING=(\"[^\r\n\"]*\"?)|(\'[^\r\n\']*\'?)
 ATTRIBUTE=[fiuvsp]?(\[\])?\@[a-zA-Z0-9_]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
 MACRO="#".*
