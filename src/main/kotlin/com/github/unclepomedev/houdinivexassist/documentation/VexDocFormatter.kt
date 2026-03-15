@@ -28,7 +28,8 @@ object VexDocFormatter {
 
     private fun String.removeMetadata(): String = this
         .replace(Regex("(?m)^=\\s*.*\\s*=$"), "")
-        .replace(Regex("(?m)^#.*$"), "")
+        // Remove metadata keys like `#type`: / `#context`:, but keep shebang-style fences like #!vex
+        .replace(Regex("(?m)^#[A-Za-z][\\w-]*\\s*:.*$"), "")
 
     private fun String.extractUsagesTo(usages: MutableList<String>): String {
         return this.replace(Regex("(?m)^\\s*:usage:\\s*`([^`]+)`")) {
