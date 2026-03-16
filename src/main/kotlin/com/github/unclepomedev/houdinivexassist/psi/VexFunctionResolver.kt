@@ -1,5 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
+import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
@@ -18,5 +19,16 @@ object VexFunctionResolver {
             val paramCount = def.parameterListDef?.parameterDefList?.size ?: 0
             paramCount == arity
         } ?: candidates.firstOrNull()
+    }
+
+    /**
+     * Check if the specified function name actually exists as a standard function or a local function.
+     */
+    fun isKnownFunction(functionName: String, file: VexFile): Boolean {
+        val apiProvider = file.project.getService(VexApiProvider::class.java)
+        if (apiProvider?.hasFunction(functionName) == true) return true
+
+        val localFunctions = VexScopeAnalyzer.getLocalFunctionNames(file)
+        return functionName in localFunctions
     }
 }
