@@ -18,6 +18,7 @@ object VexTypeInference {
             is VexEqualityExpr, is VexRelationalExpr,
             is VexLogicalAndExpr, is VexLogicalOrExpr -> VexType.IntType // Boolean representation in VEX
             is VexAssignExpr -> inferAssignmentExpr(expr)
+            is VexMemberExpr -> inferMemberExpr(expr)
             else -> VexType.UnknownType
         }
     }
@@ -90,9 +91,9 @@ object VexTypeInference {
         if (attrText.startsWith("4@")) return VexType.MatrixType
 
         return when (attrText) {
-            "@P", "@N", "@Cd", "@v" -> VexType.VectorType
-            "@ptnum", "@numpt" -> VexType.IntType
-            "@Time" -> VexType.FloatType
+            "@P", "@N", "@Cd", "@v", "@uv", "@rest", "@up", "@orient" -> VexType.VectorType
+            "@ptnum", "@numpt", "@primnum", "@numprim" -> VexType.IntType
+            "@Time", "@Frame", "@pscale", "@width", "@Alpha" -> VexType.FloatType
             else -> VexType.UnknownType
         }
     }
@@ -128,5 +129,33 @@ object VexTypeInference {
         }
 
         return leftType
+    }
+
+    private fun inferMemberExpr(expr: VexMemberExpr): VexType {
+        val baseExpr = expr.expr
+        val memberName = expr.identifier.text ?: return VexType.UnknownType
+
+        val baseType = inferType(baseExpr)
+
+        val isSwizzlable = baseType == VexType.Vector2Type ||
+                baseType == VexType.VectorType ||
+                baseType == VexType.Vector4Type ||
+                baseType == VexType.Matrix3Type ||
+                baseType == VexType.MatrixType
+
+        if (isSwizzlable) {
+            val validSwizzleChars = setOf('x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v')
+            if (memberName.isEmpty() || memberName.any { it !in validSwizzleChars }) {
+                return VexType.UnknownType
+            }
+            return when (memberName.length) {
+                1 -> VexType.FloatType   // .x, .r, .u
+                2 -> VexType.Vector2Type // .xy, .uv
+                3 -> VexType.VectorType  // .xyz, .rgb
+                4 -> VexType.Vector4Type // .xyzw, .rgba
+                else -> VexType.UnknownType
+            }
+        }
+        return VexType.UnknownType
     }
 }
