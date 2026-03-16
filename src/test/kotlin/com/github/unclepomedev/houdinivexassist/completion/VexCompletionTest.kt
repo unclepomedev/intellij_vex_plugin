@@ -63,7 +63,12 @@ class VexCompletionTest : VexTestBase() {
             }
         """.trimIndent()
         myFixture.configureByText(VexFileType, code)
-        myFixture.completeBasic()
+        val lookups = myFixture.completeBasic()
+        val lookupStrings = lookups?.map { it.lookupString }.orEmpty()
+        assertFalse(
+            "Completion should not contain future variable 'my_future_var'",
+            lookupStrings.contains("my_future_var")
+        )
 
         myFixture.checkResult(
             """
@@ -73,5 +78,39 @@ class VexCompletionTest : VexTestBase() {
             }
         """.trimIndent()
         )
+    }
+
+    fun testVariableShadowingCompletion() {
+        val code = """
+            int my_shadow_var = 1;
+            void main() {
+                int my_shadow_var = 2;
+                if (1) {
+                    float my_shadow_var = 3.0;
+                    my_shad<caret>
+                }
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val lookups = myFixture.completeBasic()
+
+        if (lookups == null) {
+            myFixture.checkResult(
+                """
+                int my_shadow_var = 1;
+                void main() {
+                    int my_shadow_var = 2;
+                    if (1) {
+                        float my_shadow_var = 3.0;
+                        my_shadow_var<caret>
+                    }
+                }
+            """.trimIndent()
+            )
+        } else {
+            val shadowVarCount = lookups.count { it.lookupString == "my_shadow_var" }
+            assertEquals("Shadowed variable should appear exactly once in completion list", 1, shadowVarCount)
+        }
     }
 }

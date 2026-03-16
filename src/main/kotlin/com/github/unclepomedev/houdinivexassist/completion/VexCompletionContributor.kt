@@ -42,11 +42,12 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         val element = parameters.position
         val currentOffset = element.textOffset
         var currentScope = VexScopeAnalyzer.findDeclarationScope(element)
+        val seenNames = mutableSetOf<String>()
 
         // Traverse scopes upwards and delegate the extraction
         while (currentScope != null) {
-            addVariablesFromScope(currentScope, currentOffset, result)
-            addParametersFromScope(currentScope, result)
+            addVariablesFromScope(currentScope, currentOffset, result, seenNames)
+            addParametersFromScope(currentScope, result, seenNames)
             currentScope = VexScopeAnalyzer.findDeclarationScope(currentScope.parent)
         }
     }
@@ -54,12 +55,13 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
     private fun addVariablesFromScope(
         scope: PsiElement,
         currentOffset: Int,
-        result: CompletionResultSet
+        result: CompletionResultSet,
+        seenNames: MutableSet<String>
     ) {
         VexScopeAnalyzer.getDeclarationsInScope(scope)
             .filter { it.textOffset < currentOffset }
             .map { it.identifier.text }
-            .filter { it.isNotEmpty() }
+            .filter { it.isNotEmpty() && seenNames.add(it) }
             .forEach { name ->
                 result.addElement(createVariableLookup(name))
             }
@@ -67,11 +69,12 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
 
     private fun addParametersFromScope(
         scope: PsiElement,
-        result: CompletionResultSet
+        result: CompletionResultSet,
+        seenNames: MutableSet<String>
     ) {
         VexScopeAnalyzer.getParametersForScope(scope)
             .map { it.identifier.text }
-            .filter { it.isNotEmpty() }
+            .filter { it.isNotEmpty() && seenNames.add(it) }
             .forEach { name ->
                 result.addElement(createParameterLookup(name))
             }
