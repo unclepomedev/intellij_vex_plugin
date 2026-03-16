@@ -161,7 +161,7 @@ class VexAnnotatorTest : VexTestBase() {
             
             void myFunc(int a, float b) {}
             
-            void <error descr="Function 'myFunc' with 1 parameters is already defined">myFunc</error>(float a) {}
+            void <error descr="Function 'myFunc' with 1 parameters is already defined">myFunc</error>(int a) {}
             """.trimIndent()
         )
         myFixture.checkHighlighting(false, false, false, false)
@@ -206,9 +206,81 @@ class VexAnnotatorTest : VexTestBase() {
             """
         float d = myLaterFunc();
         
-        void myLaterFunc() {}
+        float myLaterFunc() { return 0.0; }
         """.trimIndent()
         )
         myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testUnusedVariableIsHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int <weak_warning descr="Unused variable 'myVar'">myVar</weak_warning> = 1;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, false)
+    }
+
+    fun testUsedVariableIsNotHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int myVar = 1;
+                @P.x += myVar;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, false)
+    }
+
+    fun testUnusedParameterIsHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myFunc(int <weak_warning descr="Unused parameter 'unusedParam'">unusedParam</weak_warning>, int usedParam) {
+                int a = usedParam;
+            }
+            
+            void main() {
+                myFunc(1, 2);
+            }
+            """.trimIndent()
+        )
+        // unused `unusedParam` and `a`
+        myFixture.checkHighlighting(true, false, true, true)
+    }
+
+    fun testUnusedFunctionIsHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void <weak_warning descr="Unused function 'myHelper'">myHelper</weak_warning>() {
+            }
+            
+            void main() {
+                // main is not marked as unused
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, false)
+    }
+
+    fun testUsedFunctionIsNotHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myHelper() {
+            }
+            
+            void main() {
+                myHelper();
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, false)
     }
 }
