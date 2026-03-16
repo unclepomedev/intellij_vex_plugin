@@ -68,8 +68,7 @@ object VexTypeInference {
      * infer type of CallExpr
      */
     private fun inferCallExpr(expr: VexCallExpr): VexType {
-        val identifier = expr.identifier
-        val funcName = identifier.text
+        val funcName = expr.identifier.text ?: return VexType.UnknownType
 
         val arity = expr.argumentList?.exprList?.size ?: 0
         val resolvedFunc = VexFunctionResolver.resolveFunction(expr, funcName, arity)

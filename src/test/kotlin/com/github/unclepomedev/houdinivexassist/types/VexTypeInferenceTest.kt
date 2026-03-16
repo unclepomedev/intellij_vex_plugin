@@ -23,6 +23,7 @@ class VexTypeInferenceTest : VexTestBase() {
 
         val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
         val exprs = declItems.mapNotNull { it.expr }
+        assertEquals(6, exprs.size)
 
         assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[0]))      // 1
         assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[1]))    // 1.0
@@ -45,6 +46,7 @@ class VexTypeInferenceTest : VexTestBase() {
         myFixture.configureByText(VexFileType, code)
         val file = myFixture.file as VexFile
         val exprs = PsiTreeUtil.findChildrenOfType(file, VexPrimaryExpr::class.java).toList()
+        assertEquals(5, exprs.size)
 
         assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[0])) // @P
         assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[1]))    // @ptnum
@@ -63,6 +65,7 @@ class VexTypeInferenceTest : VexTestBase() {
         myFixture.configureByText(VexFileType, code)
         val file = myFixture.file as VexFile
         val exprs = PsiTreeUtil.findChildrenOfType(file, VexPrimaryExpr::class.java).toList()
+        assertEquals(2, exprs.size)
 
         assertEquals(VexType.MatrixType, VexTypeInference.inferType(exprs[1]))
     }
@@ -78,6 +81,7 @@ class VexTypeInferenceTest : VexTestBase() {
         myFixture.configureByText(VexFileType, code)
         val file = myFixture.file as VexFile
         val callExprs = PsiTreeUtil.findChildrenOfType(file, VexCallExpr::class.java).toList()
+        assertEquals(1, callExprs.size)
 
         assertEquals(VexType.StringType, VexTypeInference.inferType(callExprs[0]))
     }
