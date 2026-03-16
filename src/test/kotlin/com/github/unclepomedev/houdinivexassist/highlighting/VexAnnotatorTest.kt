@@ -242,7 +242,7 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             void myFunc(int <weak_warning descr="Unused parameter 'unusedParam'">unusedParam</weak_warning>, int usedParam) {
-                int a = usedParam;
+                int <weak_warning descr="Unused variable 'a'">a</weak_warning> = usedParam;
             }
             
             void main() {
@@ -250,8 +250,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        // unused `unusedParam` and `a`
-        myFixture.checkHighlighting(true, false, true, true)
+        myFixture.checkHighlighting(true, false, true, false)
     }
 
     fun testUnusedFunctionIsHighlighted() {
