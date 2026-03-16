@@ -23,5 +23,6 @@
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexHighlightingAnnotator"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexReferenceAnnotator"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexDeclarationAnnotator"/>
+        <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexUnusedSymbolAnnotator"/>
     </extensions>
 </idea-plugin>
