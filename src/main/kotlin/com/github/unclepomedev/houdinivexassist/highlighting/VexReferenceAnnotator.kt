@@ -24,7 +24,6 @@ class VexReferenceAnnotator : Annotator {
         if (resolvedElement == null) {
             holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved variable: '$varName'")
                 .range(identifier.textRange)
-                .textAttributes(DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
                 .create()
         }
     }

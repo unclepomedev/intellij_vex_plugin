@@ -199,4 +199,16 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testForwardDeclaredFunctionCall() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+        float d = myLaterFunc();
+        
+        void myLaterFunc() {}
+        """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }

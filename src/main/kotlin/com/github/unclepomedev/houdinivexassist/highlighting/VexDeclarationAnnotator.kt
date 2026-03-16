@@ -80,7 +80,7 @@ class VexDeclarationAnnotator : Annotator {
         }
     }
 
-    // --- Declarative Conflict Checks ---
+    // --- Conflict Checks ---
 
     private fun isAlreadyDefinedInScope(element: VexDeclarationItem, name: String, scope: PsiElement): Boolean {
         return VexScopeAnalyzer.getDeclarationsInScope(scope).any {
