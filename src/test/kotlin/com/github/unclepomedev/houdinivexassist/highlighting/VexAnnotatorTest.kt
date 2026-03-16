@@ -106,4 +106,97 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testVariableConflictsWithStandardFunction() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            float <error descr="Variable name 'distance' conflicts with a standard VEX function">distance</error> = 1.0;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testVariableConflictsWithLocalFunction() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myLocalFunc() {}
+            
+            void main() {
+                int <error descr="Variable name 'myLocalFunc' conflicts with a local function">myLocalFunc</error> = 1;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionConflictsWithStandardFunction() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void <error descr="Function name 'normalize' conflicts with a standard VEX function">normalize</error>(vector v) {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionConflictsWithStruct() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct MyData { int a; }
+            
+            void <error descr="Function name 'MyData' conflicts with a struct definition">MyData</error>() {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionExactOverloadConflict() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myFunc(int a) {}
+            
+            void myFunc(int a, float b) {}
+            
+            void <error descr="Function 'myFunc' with 1 parameters is already defined">myFunc</error>(float a) {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testStructConflictsWithStruct() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct MyData { int a; }
+            struct <error descr="Struct 'MyData' is already defined">MyData</error> { float b; }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testStructConflictsWithStandardFunction() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct <error descr="Struct name 'length' conflicts with a standard VEX function">length</error> { int val; }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testStructConflictsWithLocalFunction() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myProc() {}
+            
+            struct <error descr="Struct name 'myProc' conflicts with a local function">myProc</error> { int val; }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }
