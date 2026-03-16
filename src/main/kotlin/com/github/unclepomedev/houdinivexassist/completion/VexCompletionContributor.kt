@@ -2,6 +2,7 @@ package com.github.unclepomedev.houdinivexassist.completion
 
 import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
+import com.github.unclepomedev.houdinivexassist.psi.VexScopeAnalyzer
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
 import com.intellij.codeInsight.completion.*
@@ -9,6 +10,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 
@@ -30,6 +32,64 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
     ) {
         val localFunctionNames = addLocalFunctions(parameters, result)
         addStandardFunctions(parameters, result, localFunctionNames)
+        addLocalVariablesAndParameters(parameters, result)
+    }
+
+    private fun addLocalVariablesAndParameters(
+        parameters: CompletionParameters,
+        result: CompletionResultSet
+    ) {
+        val element = parameters.position
+        val currentOffset = element.textOffset
+        var currentScope = VexScopeAnalyzer.findDeclarationScope(element)
+        val seenNames = mutableSetOf<String>()
+
+        // Traverse scopes upwards and delegate the extraction
+        while (currentScope != null) {
+            addVariablesFromScope(currentScope, currentOffset, result, seenNames)
+            addParametersFromScope(currentScope, result, seenNames)
+            currentScope = VexScopeAnalyzer.findDeclarationScope(currentScope.parent)
+        }
+    }
+
+    private fun addVariablesFromScope(
+        scope: PsiElement,
+        currentOffset: Int,
+        result: CompletionResultSet,
+        seenNames: MutableSet<String>
+    ) {
+        VexScopeAnalyzer.getDeclarationsInScope(scope)
+            .filter { it.textOffset < currentOffset }
+            .map { it.identifier.text }
+            .filter { it.isNotEmpty() && seenNames.add(it) }
+            .forEach { name ->
+                result.addElement(createVariableLookup(name))
+            }
+    }
+
+    private fun addParametersFromScope(
+        scope: PsiElement,
+        result: CompletionResultSet,
+        seenNames: MutableSet<String>
+    ) {
+        VexScopeAnalyzer.getParametersForScope(scope)
+            .map { it.identifier.text }
+            .filter { it.isNotEmpty() && seenNames.add(it) }
+            .forEach { name ->
+                result.addElement(createParameterLookup(name))
+            }
+    }
+
+    private fun createVariableLookup(name: String): LookupElementBuilder {
+        return LookupElementBuilder.create(name)
+            .withIcon(AllIcons.Nodes.Variable)
+            .withTypeText("local variable")
+    }
+
+    private fun createParameterLookup(name: String): LookupElementBuilder {
+        return LookupElementBuilder.create(name)
+            .withIcon(AllIcons.Nodes.Parameter)
+            .withTypeText("parameter")
     }
 
     private fun addLocalFunctions(

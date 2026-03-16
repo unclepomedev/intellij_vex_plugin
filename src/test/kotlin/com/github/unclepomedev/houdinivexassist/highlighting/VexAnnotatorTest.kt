@@ -30,7 +30,7 @@ class VexAnnotatorTest : VexTestBase() {
             """.trimIndent()
         )
 
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testVariableRedeclarationInSameScope() {
@@ -41,7 +41,7 @@ class VexAnnotatorTest : VexTestBase() {
             float <error descr="Variable 'myVar' is already defined in this scope">myVar</error> = 2.0;
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testVariableRedeclarationWithParameter() {
@@ -53,7 +53,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testValidVariableShadowingInDifferentScope() {
@@ -66,7 +66,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testValidVariableInDifferentStructs() {
@@ -77,7 +77,7 @@ class VexAnnotatorTest : VexTestBase() {
             struct B { int val; }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testUnresolvedVariableIsHighlighted() {
