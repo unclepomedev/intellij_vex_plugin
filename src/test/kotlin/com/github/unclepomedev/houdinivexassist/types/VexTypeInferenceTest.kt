@@ -159,6 +159,7 @@ class VexTypeInferenceTest : VexTestBase() {
 
         val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
         val exprs = declItems.mapNotNull { it.expr }
+        assertEquals(9, exprs.size)
 
         assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[0]))    // v1: 1 + 2.0
         assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[1]))   // v2: {1,2,3} * 0.5
@@ -170,6 +171,31 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6]))  // inv1: "x" * 2
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[7]))  // inv2: 1 << 2.0
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8]))  // inv3: 2.0 & 1.0
+    }
+
+    fun testChainedOperatorExpressions() {
+        val code = """
+            void main() {
+                int c1 = 1 + 2 + 3;
+                int c2 = 1 + 2 - 3;
+                float c3 = 1 + 2.0 + 3;
+                float c4 = 1.0 * 2.0 / 3.0;
+                vector c5 = {1,2,3} * 0.5 + {4,5,6};
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        val exprs = declItems.mapNotNull { it.expr }
+        assertEquals(5, exprs.size)
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[0]))      // 1 + 2 + 3 -> int
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[1]))      // 1 + 2 - 3 -> int
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[2]))    // 1 + 2.0 + 3 -> float
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[3]))    // 1.0 * 2.0 / 3.0 -> float
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[4]))   // {1,2,3} * 0.5 + {4,5,6} -> vector
     }
 
     fun testStrictOperatorRulesAndPropagation() {
@@ -196,14 +222,7 @@ class VexTypeInferenceTest : VexTestBase() {
 
         val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
         val exprs = declItems.mapNotNull { it.expr }
-
-        // 0: "a" + "b"
-        // 1: "a" - "b"
-        // 2: ("x" * 2) + 1
-        // 4: (a += 2)
-        // 5: (a <<= 2.0)
-        // 7: (s += "!")
-        // 8: (s -= "?")
+        assertEquals(9, exprs.size)
 
         assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[0]))
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[1]))
@@ -213,6 +232,43 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[4]))
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[5]))
         assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[7]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8]))
+    }
+
+    fun testInferMemberAccessAndSwizzling() {
+        val code = """
+            void main() {
+                vector pos = {1, 2, 3};
+                
+                float v1 = pos.x;           // length 1 -> float
+                vector2 v2 = pos.xy;        // length 2 -> vector2
+                vector v3 = pos.zyx;        // length 3 -> vector
+                vector4 v4 = pos.xyzw;      // length 4 -> vector4
+                
+                // Type chaining from attributes (@P is inferred as a vector type, and its .y becomes a float type)
+                float v5 = @P.y;
+                vector2 v6 = @uv.xy;
+                
+                int a = 1;
+                float inv1 = a.x;           // invalid
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+
+        val exprs = declItems.mapNotNull { it.expr }
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[1]))
+        assertEquals(VexType.Vector2Type, VexTypeInference.inferType(exprs[2]))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[3]))
+        assertEquals(VexType.Vector4Type, VexTypeInference.inferType(exprs[4]))
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[5]))
+        assertEquals(VexType.Vector2Type, VexTypeInference.inferType(exprs[6]))
+
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8]))
     }
 }
