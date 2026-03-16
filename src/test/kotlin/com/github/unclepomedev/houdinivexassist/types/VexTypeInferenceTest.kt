@@ -67,6 +67,7 @@ class VexTypeInferenceTest : VexTestBase() {
         val exprs = PsiTreeUtil.findChildrenOfType(file, VexPrimaryExpr::class.java).toList()
         assertEquals(2, exprs.size)
 
+        assertEquals("myVar", exprs[1].text)
         assertEquals(VexType.MatrixType, VexTypeInference.inferType(exprs[1]))
     }
 
@@ -84,5 +85,45 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(1, callExprs.size)
 
         assertEquals(VexType.StringType, VexTypeInference.inferType(callExprs[0]))
+    }
+
+    fun testInferOperators() {
+        val code = """
+            void main() {
+                // int + float -> float
+                float v1 = 1 + 2.0;
+                
+                // vector * float -> vector
+                vector v2 = {1, 2, 3} * 0.5;
+                
+                // float < float -> int
+                int v3 = 1.0 < 2.0;
+                
+                // string + int -> string
+                string v4 = "Value: " + 100;
+                
+                // += represents the type of the left operand
+                int a = 1;
+                int v5 = (a += 2);
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+
+        val targetExprs = listOf(
+            declItems[0].expr, // 1 + 2.0
+            declItems[1].expr, // {1, 2, 3} * 0.5
+            declItems[2].expr, // 1.0 < 2.0
+            declItems[3].expr, // "Value: " + 100
+            declItems[5].expr  // (a += 2)
+        )
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(targetExprs[0]))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(targetExprs[1]))
+        assertEquals(VexType.IntType, VexTypeInference.inferType(targetExprs[2]))
+        assertEquals(VexType.StringType, VexTypeInference.inferType(targetExprs[3]))
+        assertEquals(VexType.IntType, VexTypeInference.inferType(targetExprs[4]))
     }
 }
