@@ -249,8 +249,11 @@ class VexTypeInferenceTest : VexTestBase() {
                 float v5 = @P.y;
                 vector2 v6 = @uv.xy;
                 
+                // invalid
                 int a = 1;
-                float inv1 = a.x;           // invalid
+                float inv1 = a.x; 
+                vector inv2 = pos.foo;
+                float inv3 = pos.q;
             }
         """.trimIndent()
 
@@ -260,6 +263,7 @@ class VexTypeInferenceTest : VexTestBase() {
         val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
 
         val exprs = declItems.mapNotNull { it.expr }
+        assertEquals(11, exprs.size)
 
         assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[1]))
         assertEquals(VexType.Vector2Type, VexTypeInference.inferType(exprs[2]))
@@ -270,5 +274,7 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.Vector2Type, VexTypeInference.inferType(exprs[6]))
 
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[9]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[10]))
     }
 }

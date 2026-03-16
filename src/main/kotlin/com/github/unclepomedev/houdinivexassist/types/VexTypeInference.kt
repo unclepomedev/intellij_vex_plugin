@@ -144,6 +144,10 @@ object VexTypeInference {
                 baseType == VexType.MatrixType
 
         if (isSwizzlable) {
+            val validSwizzleChars = setOf('x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v')
+            if (memberName.isEmpty() || memberName.any { it !in validSwizzleChars }) {
+                return VexType.UnknownType
+            }
             return when (memberName.length) {
                 1 -> VexType.FloatType   // .x, .r, .u
                 2 -> VexType.Vector2Type // .xy, .uv
