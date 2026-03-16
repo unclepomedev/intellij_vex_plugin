@@ -41,8 +41,7 @@ object VexTypeExtractor {
      */
     private fun extractFromParameterDef(paramDef: VexParameterDef): VexType {
         val typeString = paramDef.firstChild?.text ?: return VexType.UnknownType
-        val baseType = VexType.fromString(typeString)
-        return baseType
+        return VexType.fromString(typeString)
     }
 
     /**
