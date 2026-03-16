@@ -100,7 +100,16 @@ object VexTypeInference {
     private fun inferArithmeticExpr(expr: PsiElement): VexType {
         val left = expr.children.firstOrNull { it is VexExpr }
         val right = expr.children.lastOrNull { it is VexExpr }
-        return VexTypePromotion.promote(inferType(left), inferType(right))
+
+        val operatorKind = when (expr) {
+            is VexAddExpr -> VexTypePromotion.OperatorKind.ADDITIVE
+            is VexMulExpr -> VexTypePromotion.OperatorKind.MULTIPLICATIVE
+            is VexBitwiseAndExpr, is VexBitwiseOrExpr, is VexBitwiseXorExpr -> VexTypePromotion.OperatorKind.BITWISE
+            is VexShiftExpr -> VexTypePromotion.OperatorKind.SHIFT
+            else -> return VexType.UnknownType
+        }
+
+        return VexTypePromotion.promote(inferType(left), inferType(right), operatorKind)
     }
 
     private fun inferAssignmentExpr(expr: VexAssignExpr): VexType {
