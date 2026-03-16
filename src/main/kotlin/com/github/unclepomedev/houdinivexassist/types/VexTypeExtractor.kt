@@ -26,7 +26,8 @@ object VexTypeExtractor {
 
         val typeString = statement.firstChild?.text ?: return VexType.UnknownType
         val baseType = VexType.fromString(typeString)
-        val isArray = item.text.contains("[")
+        val isArray = item.node.findChildByType(VexTypes.LBRACK) != null &&
+                item.node.findChildByType(VexTypes.RBRACK) != null
 
         return if (isArray) {
             VexType.ArrayType(baseType)
