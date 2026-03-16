@@ -1,15 +1,19 @@
 package com.github.unclepomedev.houdinivexassist.types
 
+import com.github.unclepomedev.houdinivexassist.psi.VexTypes
+
 object VexTypePromotion {
 
-    enum class OperatorKind { ADDITIVE, MULTIPLICATIVE, BITWISE, SHIFT }
+    enum class OperatorKind { ADDITIVE, SUBTRACTIVE, MULTIPLICATIVE, BITWISE, SHIFT }
 
     fun promote(t1: VexType, t2: VexType, operatorKind: OperatorKind): VexType {
-        if (t1 == VexType.UnknownType) return t2
-        if (t2 == VexType.UnknownType) return t1
+        if (t1 == VexType.UnknownType || t2 == VexType.UnknownType) {
+            return VexType.UnknownType
+        }
 
         return when (operatorKind) {
             OperatorKind.ADDITIVE -> promoteAdditive(t1, t2)
+            OperatorKind.SUBTRACTIVE -> promoteNumeric(t1, t2)
             OperatorKind.MULTIPLICATIVE -> promoteMultiplicative(t1, t2)
             OperatorKind.BITWISE, OperatorKind.SHIFT -> promoteBitwiseOrShift(t1, t2)
         }
@@ -19,7 +23,6 @@ object VexTypePromotion {
         if (t1 == VexType.StringType || t2 == VexType.StringType) {
             return VexType.StringType
         }
-
         return promoteNumeric(t1, t2)
     }
 
@@ -46,6 +49,9 @@ object VexTypePromotion {
     }
 
     private fun promoteNumeric(t1: VexType, t2: VexType): VexType {
+        if (t1 == VexType.StringType || t2 == VexType.StringType) {
+            return VexType.UnknownType
+        }
         if (t1 == t2) return t1
 
         val types = setOf(t1, t2)
@@ -79,5 +85,24 @@ object VexTypePromotion {
 
     private fun isScalar(type: VexType): Boolean {
         return type == VexType.IntType || type == VexType.FloatType
+    }
+
+    fun getOperatorKind(tokenType: com.intellij.psi.tree.IElementType): OperatorKind? {
+        return when (tokenType) {
+            VexTypes.PLUS, VexTypes.PLUSEQ -> OperatorKind.ADDITIVE
+            VexTypes.MINUS, VexTypes.MINUSEQ -> OperatorKind.SUBTRACTIVE
+            VexTypes.MUL, VexTypes.MULEQ,
+            VexTypes.DIV, VexTypes.DIVEQ,
+            VexTypes.MOD, VexTypes.MODEQ -> OperatorKind.MULTIPLICATIVE
+
+            VexTypes.BITAND, VexTypes.ANDEQ,
+            VexTypes.BITOR, VexTypes.OREQ,
+            VexTypes.BITXOR, VexTypes.XOREQ -> OperatorKind.BITWISE
+
+            VexTypes.LSHIFT, VexTypes.LSHIFTEQ,
+            VexTypes.RSHIFT, VexTypes.RSHIFTEQ -> OperatorKind.SHIFT
+
+            else -> null
+        }
     }
 }

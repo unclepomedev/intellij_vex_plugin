@@ -102,7 +102,16 @@ object VexTypeInference {
         if (operands.size != 2) return VexType.UnknownType
 
         val operatorKind = when (expr) {
-            is VexAddExpr -> VexTypePromotion.OperatorKind.ADDITIVE
+            is VexAddExpr -> {
+                if (expr.node.findChildByType(VexTypes.PLUS) != null) {
+                    VexTypePromotion.OperatorKind.ADDITIVE
+                } else if (expr.node.findChildByType(VexTypes.MINUS) != null) {
+                    VexTypePromotion.OperatorKind.SUBTRACTIVE
+                } else {
+                    return VexType.UnknownType
+                }
+            }
+
             is VexMulExpr -> VexTypePromotion.OperatorKind.MULTIPLICATIVE
             is VexBitwiseAndExpr, is VexBitwiseOrExpr, is VexBitwiseXorExpr -> VexTypePromotion.OperatorKind.BITWISE
             is VexShiftExpr -> VexTypePromotion.OperatorKind.SHIFT
@@ -114,7 +123,26 @@ object VexTypeInference {
 
     private fun inferAssignmentExpr(expr: VexAssignExpr): VexType {
         val operands = expr.children.filterIsInstance<VexExpr>()
-        if (operands.isEmpty()) return VexType.UnknownType
-        return inferType(operands[0])
+        if (operands.size != 2) return VexType.UnknownType
+
+        val leftType = inferType(operands[0])
+        val rightType = inferType(operands[1])
+
+        if (leftType == VexType.UnknownType || rightType == VexType.UnknownType) {
+            return VexType.UnknownType
+        }
+
+        val operatorNode = expr.node.getChildren(null).firstOrNull {
+            VexTypePromotion.getOperatorKind(it.elementType) != null
+        }
+
+        if (operatorNode != null) {
+            val kind = VexTypePromotion.getOperatorKind(operatorNode.elementType)!!
+            if (VexTypePromotion.promote(leftType, rightType, kind) == VexType.UnknownType) {
+                return VexType.UnknownType
+            }
+        }
+
+        return leftType
     }
 }

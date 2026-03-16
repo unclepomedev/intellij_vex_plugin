@@ -171,4 +171,48 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[7]))  // inv2: 1 << 2.0
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8]))  // inv3: 2.0 & 1.0
     }
+
+    fun testStrictOperatorRulesAndPropagation() {
+        val code = """
+            void main() {
+                string v1 = "a" + "b";       // allowed -> string
+                string v2 = "a" - "b";       // not allowed -> UnknownType
+                
+                // propagate UnknownType
+                int v3 = ("x" * 2) + 1;      // -> UnknownType
+
+                int a = 1;
+                int v4 = (a += 2);           // allowed -> int
+                int v5 = (a <<= 2.0);        // not allowed float shift -> UnknownType
+
+                string s = "test";
+                string v6 = (s += "!");      // allowed -> string
+                string v7 = (s -= "?");      // not allowed -> UnknownType
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        val exprs = declItems.mapNotNull { it.expr }
+
+        // 0: "a" + "b"
+        // 1: "a" - "b"
+        // 2: ("x" * 2) + 1
+        // 4: (a += 2)
+        // 5: (a <<= 2.0)
+        // 7: (s += "!")
+        // 8: (s -= "?")
+
+        assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[0]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[1]))
+
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[2]))
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[4]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[5]))
+        assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[7]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8]))
+    }
 }
