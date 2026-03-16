@@ -9,6 +9,7 @@ abstract class VexCallExprMixin(node: ASTNode) : VexExprImpl(node), VexCallExpr 
 
     override fun getReference(): PsiReference? {
         val id = identifier
-        return VexFunctionReference(this, id.textRangeInParent, id.text)
+        val argCount = argumentList?.exprList?.size ?: 0
+        return VexFunctionReference(this, id.textRangeInParent, id.text, argCount)
     }
 }

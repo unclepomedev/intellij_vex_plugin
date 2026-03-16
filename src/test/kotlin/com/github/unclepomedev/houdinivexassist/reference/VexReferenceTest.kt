@@ -60,4 +60,30 @@ class VexReferenceTest : VexTestBase() {
         assertTrue("Resolved element should be a function definition", resolved is VexFunctionDef)
         assertEquals("myTargetFunction", (resolved as VexFunctionDef).identifier.text)
     }
+
+    fun testFunctionOverloadReference() {
+        myFixture.configureByText(
+            VexFileType, """
+            void myFunc(int a) {}
+            
+            void myFunc(int a, float b) {} 
+
+            void main() {
+                myF<caret>unc(1, 2.0);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Function reference should be resolved", resolved)
+        assertTrue("Resolved element should be a function definition", resolved is VexFunctionDef)
+
+        val funcDef = resolved as VexFunctionDef
+        assertEquals("myFunc", funcDef.identifier.text)
+
+        val paramCount = funcDef.parameterListDef?.parameterDefList?.size ?: 0
+        assertEquals("Should resolve to the overload with 2 parameters", 2, paramCount)
+    }
 }
