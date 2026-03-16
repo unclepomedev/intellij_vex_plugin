@@ -98,46 +98,30 @@ object VexTypeInference {
     }
 
     private fun inferArithmeticExpr(expr: PsiElement): VexType {
-        val operands = expr.children.filterIsInstance<VexExpr>()
-        if (operands.size != 2) return VexType.UnknownType
+        val (left, right) = expr.binaryOperands ?: return VexType.UnknownType
 
-        val operatorKind = when (expr) {
-            is VexAddExpr -> {
-                if (expr.node.findChildByType(VexTypes.PLUS) != null) {
-                    VexTypePromotion.OperatorKind.ADDITIVE
-                } else if (expr.node.findChildByType(VexTypes.MINUS) != null) {
-                    VexTypePromotion.OperatorKind.SUBTRACTIVE
-                } else {
-                    return VexType.UnknownType
-                }
-            }
-
+        val operatorKind = expr.operatorKind ?: when (expr) {
             is VexMulExpr -> VexTypePromotion.OperatorKind.MULTIPLICATIVE
             is VexBitwiseAndExpr, is VexBitwiseOrExpr, is VexBitwiseXorExpr -> VexTypePromotion.OperatorKind.BITWISE
             is VexShiftExpr -> VexTypePromotion.OperatorKind.SHIFT
             else -> return VexType.UnknownType
         }
 
-        return VexTypePromotion.promote(inferType(operands[0]), inferType(operands[1]), operatorKind)
+        return VexTypePromotion.promote(inferType(left), inferType(right), operatorKind)
     }
 
     private fun inferAssignmentExpr(expr: VexAssignExpr): VexType {
-        val operands = expr.children.filterIsInstance<VexExpr>()
-        if (operands.size != 2) return VexType.UnknownType
+        val (left, right) = expr.binaryOperands ?: return VexType.UnknownType
 
-        val leftType = inferType(operands[0])
-        val rightType = inferType(operands[1])
+        val leftType = inferType(left)
+        val rightType = inferType(right)
 
         if (leftType == VexType.UnknownType || rightType == VexType.UnknownType) {
             return VexType.UnknownType
         }
 
-        val operatorNode = expr.node.getChildren(null).firstOrNull {
-            VexTypePromotion.getOperatorKind(it.elementType) != null
-        }
-
-        if (operatorNode != null) {
-            val kind = VexTypePromotion.getOperatorKind(operatorNode.elementType)!!
+        val kind = expr.operatorKind
+        if (kind != null) {
             if (VexTypePromotion.promote(leftType, rightType, kind) == VexType.UnknownType) {
                 return VexType.UnknownType
             }
