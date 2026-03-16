@@ -19,6 +19,10 @@ object VexTypeInference {
             is VexLogicalAndExpr, is VexLogicalOrExpr -> VexType.IntType // Boolean representation in VEX
             is VexAssignExpr -> inferAssignmentExpr(expr)
             is VexMemberExpr -> inferMemberExpr(expr)
+
+            is VexPrefixExpr -> inferPrefixExpr(expr)
+            is VexPostfixExpr -> inferPostfixExpr(expr)
+
             else -> VexType.UnknownType
         }
     }
@@ -157,5 +161,20 @@ object VexTypeInference {
             }
         }
         return VexType.UnknownType
+    }
+
+    private fun inferPrefixExpr(expr: VexPrefixExpr): VexType {
+        val operand = expr.children.firstOrNull { it is VexExpr } ?: return VexType.UnknownType
+
+        if (expr.node.findChildByType(VexTypes.NOT) != null ||
+            expr.node.findChildByType(VexTypes.BITNOT) != null) {
+            return VexType.IntType
+        }
+        return inferType(operand)
+    }
+
+    private fun inferPostfixExpr(expr: VexPostfixExpr): VexType {
+        val operand = expr.children.firstOrNull { it is VexExpr } ?: return VexType.UnknownType
+        return inferType(operand)
     }
 }
