@@ -30,7 +30,7 @@ object VexFunctionResolver {
 
         if (argTypes != null) {
             // Resolve by type signature matching
-            return resolveByTypeSignature(candidates, argTypes) ?: candidates.firstOrNull()
+            return resolveByTypeSignature(candidates, argTypes)
         }
 
         if (arity == null) return candidates.firstOrNull()
@@ -170,11 +170,17 @@ object VexFunctionResolver {
         }
         if (sameArity.isEmpty()) return null
 
-        for (candidate in sameArity) {
+        val fullyAssignable = sameArity.filter { candidate ->
             val paramTypes =
                 candidate.parameterListDef?.parameterDefList?.map { VexTypeExtractor.extractType(it) } ?: emptyList()
-            if (calculateMatchScore(paramTypes, argTypes) == Int.MAX_VALUE) {
-                return candidate
+            calculateMatchScore(paramTypes, argTypes) == Int.MAX_VALUE
+        }
+
+        if (fullyAssignable.isNotEmpty()) {
+            return fullyAssignable.maxByOrNull { candidate ->
+                val paramTypes = candidate.parameterListDef?.parameterDefList?.map { VexTypeExtractor.extractType(it) }
+                    ?: emptyList()
+                calculatePartialMatchScore(paramTypes, argTypes)
             }
         }
 
