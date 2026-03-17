@@ -2,6 +2,7 @@ package com.github.unclepomedev.houdinivexassist.highlighting
 
 import com.github.unclepomedev.houdinivexassist.psi.*
 import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
+import com.github.unclepomedev.houdinivexassist.types.VexTypeExtractor
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
@@ -128,14 +129,17 @@ class VexDeclarationAnnotator : Annotator {
     }
 
     private fun hasExactOverloadConflict(element: VexFunctionDef, name: String, file: VexFile): Boolean {
-        val myParamCount = element.parameterListDef?.parameterDefList?.size ?: 0
+        val myParamTypes = extractParameterTypes(element)
         return PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).any { sibling ->
             sibling != element &&
                     sibling.identifier.text == name &&
                     sibling.textOffset < element.textOffset &&
-                    (sibling.parameterListDef?.parameterDefList?.size ?: 0) == myParamCount
+                    extractParameterTypes(sibling) == myParamTypes
         }
     }
+
+    private fun extractParameterTypes(funcDef: VexFunctionDef) =
+        funcDef.parameterListDef?.parameterDefList?.map(VexTypeExtractor::extractType) ?: emptyList()
 
     // --- Error Reporting Utility ---
 

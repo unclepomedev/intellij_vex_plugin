@@ -500,6 +500,42 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false, false)
     }
 
+    fun testLocalOverloadResolutionByTypeSignature() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            function void process(int a, int b) {}
+            function void process(string a, string b) {}
+
+            void main() {
+                process(1, 2);           // OK: matches (int, int)
+                process("a", "b");       // OK: matches (string, string)
+                process(1, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testLocalOverloadResolutionByTypeSignatureDifferentArgNum() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            function void process(int a) {}
+            function void process(int a, int b) {}
+            function void process(string a, string b, string c) {}
+
+            void main() {
+                process(1);              // OK: matches (int)
+                process(1, 2);           // OK: matches (int, int)
+                process("a", "b", "c");  // OK: matches (string, string, string)
+                process(1, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
     fun testApiArrayParameterSupport() {
         myFixture.configureByText(
             VexFileType,
@@ -519,5 +555,52 @@ class VexAnnotatorTest : VexTestBase() {
             """.trimIndent()
         )
         myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionExactOverloadConflictWithDifferentParameterNames() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            // First definition
+            void myFunc(int a, float b) {}
+            
+            // Second definition: different parameter names, but same type signature
+            void <error descr="Function 'myFunc' with 2 parameters is already defined">myFunc</error>(int x, float y) {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionExactOverloadConflictWithArraySyntax() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            // First definition
+            void processArray(int arr[]) {}
+            
+            // Second definition: identical signature, should trigger conflict error
+            void <error descr="Function 'processArray' with 1 parameters is already defined">processArray</error>(int arr[]) {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testUnresolvedFunctionWithWrongArityIsNotFallbackToAnotherOverload() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            // Define overloads with 1 and 2 arguments
+            void myProc(int a) {}
+            void myProc(int a, float b) {}
+            
+            void main() {
+                // Calling with 3 arguments. 
+                // It should NOT fall back to myProc(int, float).
+                // It should correctly report that no matching overload exists.
+                <error descr="No matching overload for function 'myProc' with 3 arguments">myProc</error>(1, 2.0, 3.0);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
     }
 }
