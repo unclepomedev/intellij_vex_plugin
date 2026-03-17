@@ -37,11 +37,19 @@ class VexApiProvider {
                         val obj = overload.takeIf { it.isJsonObject }?.asJsonObject
                             ?: return@mapNotNull null
 
-                        val returnType = obj.get("return")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+                        val returnType = obj.get("return")
+                            ?.takeIf { it.isJsonPrimitive }
+                            ?.asString
+                            ?: return@mapNotNull null
 
-                        val argsList = obj.get("args")?.takeIf { it.isJsonArray }?.asJsonArray
-                            ?.mapNotNull { it.takeIf { arg -> arg.isJsonPrimitive }?.asString }
-                            ?: emptyList()
+                        val argsJson = obj.get("args")
+                            ?.takeIf { it.isJsonArray }
+                            ?.asJsonArray
+                            ?: return@mapNotNull null
+
+                        val argsList = argsJson.mapNotNull { it.takeIf { arg -> arg.isJsonPrimitive }?.asString }
+
+                        if (argsList.size != argsJson.size()) return@mapNotNull null
 
                         VexFunction(funcName, argsList, returnType)
                     }

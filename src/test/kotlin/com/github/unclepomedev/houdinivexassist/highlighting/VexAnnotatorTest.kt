@@ -491,37 +491,33 @@ class VexAnnotatorTest : VexTestBase() {
             """
             void main() {
                 // 'set' has overloads like set(float, float, float) and set(vector, vector, vector).
-                // Both score 2/3 matches (since float casts to vector). The checker picks one correctly.
-                vector v = set(1.0, <error descr="Type mismatch in argument 2: expected 'vector', got 'string'">"string"</error>, 3.0);
+                // passing (float, string, float) gives exact matches for the float overload.
+                // The exact-match tie-breaker selects the float overload.
+                vector v = set(1.0, <error descr="Type mismatch in argument 2: expected 'float', got 'string'">"string"</error>, 3.0);
             }
             """.trimIndent()
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
 
-    fun testStrictParameterTypeMismatch() {
+    fun testApiArrayParameterSupport() {
         myFixture.configureByText(
             VexFileType,
             """
-            struct IntData { int val; }
-            struct FloatData { float val; }
-            
-            void myProcessData(IntData data, int val) {}
+            void myProcessIntArray(int arr[], int val) {}
             
             void main() {
-                IntData valid_data;
-                FloatData invalid_data;
+                int valid_arr[] = {1, 2, 3};
+                float invalid_arr[] = {1.0, 2.0, 3.0};
                 
-                myProcessData(valid_data, 4); // OK
+                myProcessIntArray(valid_arr, 4); // OK: (int[], int)
                 
-                myProcessData(<error descr="Type mismatch in argument 1: expected 'struct IntData', got 'struct FloatData'">invalid_data</error>, 4);
+                myProcessIntArray(<error descr="Type mismatch in argument 1: expected 'int[]', got 'float[]'">invalid_arr</error>, 4);
                 
-                myProcessData(valid_data, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+                myProcessIntArray(valid_arr, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
             }
             """.trimIndent()
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
-
-    // TODO: after fix parser bug concerning arr[], add tests
 }

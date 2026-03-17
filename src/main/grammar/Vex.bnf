@@ -111,7 +111,7 @@ function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
 function_def ::= EXPORT? FUNCTION? type_ref IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin="LPAREN" }
 
 parameter_list_def ::= parameter_def ((COMMA | SEMICOLON) parameter_def)*
-parameter_def ::= type_ref IDENTIFIER
+parameter_def ::= type_ref IDENTIFIER (LBRACK RBRACK)? BITAND?
 
 parameter_list_sig ::= parameter_sig ((COMMA | SEMICOLON) parameter_sig)*
 parameter_sig ::= type_ref IDENTIFIER?

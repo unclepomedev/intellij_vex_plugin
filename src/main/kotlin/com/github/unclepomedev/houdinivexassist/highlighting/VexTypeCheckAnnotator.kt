@@ -87,7 +87,7 @@ class VexTypeCheckAnnotator : Annotator {
     }
 
     private fun checkFunctionArguments(element: VexCallExpr, holder: AnnotationHolder) {
-        val funcName = element.identifier.text ?: return
+        val funcName = element.identifier.text
         val args = element.argumentList?.exprList ?: return
         val argTypes = args.map { VexTypeInference.inferType(it) }
 
@@ -148,10 +148,14 @@ class VexTypeCheckAnnotator : Annotator {
 
         val best = sameArityOverloads.maxByOrNull { overload ->
             val paramTypes = overload.args.map { parseApiArgType(it) }
-            paramTypes.zip(argTypes).count { (expected, actual) ->
+            val exactMatches = paramTypes.zip(argTypes).count { (expected, actual) ->
+                expected == actual
+            }
+            val assignableMatches = paramTypes.zip(argTypes).count { (expected, actual) ->
                 expected == VexType.UnknownType || actual == VexType.UnknownType ||
                         VexTypePromotion.isAssignable(expected, actual)
             }
+            exactMatches * 1000 + assignableMatches
         } ?: return null
         return best.args.map { parseApiArgType(it) }
     }
