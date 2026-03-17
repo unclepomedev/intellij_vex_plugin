@@ -2,9 +2,11 @@ package com.github.unclepomedev.houdinivexassist.highlighting
 
 import com.github.unclepomedev.houdinivexassist.psi.VexAssignExpr
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
+import com.github.unclepomedev.houdinivexassist.types.VexType
 import com.github.unclepomedev.houdinivexassist.types.VexTypeExtractor
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.github.unclepomedev.houdinivexassist.types.VexTypePromotion
+import com.github.unclepomedev.houdinivexassist.types.operatorKind
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
@@ -43,15 +45,39 @@ class VexTypeCheckAnnotator : Annotator {
         val rhsExpr = exprs[1]
 
         val lhsType = VexTypeInference.inferType(lhsExpr)
-
         val rhsType = VexTypeInference.inferType(rhsExpr)
+        val operatorKind = element.operatorKind
 
-        if (!VexTypePromotion.isAssignable(lhsType, rhsType)) {
+        if (operatorKind == null) {
+            if (!VexTypePromotion.isAssignable(lhsType, rhsType)) {
+                holder.newAnnotation(
+                    HighlightSeverity.ERROR,
+                    "Incompatible types: cannot assign '${rhsType.displayName}' to '${lhsType.displayName}'"
+                )
+                    .range(rhsExpr.textRange)
+                    .create()
+            }
+            return
+        }
+
+        val promotedType = VexTypePromotion.promote(lhsType, rhsType, operatorKind)
+
+        if (promotedType == VexType.UnknownType) {
             holder.newAnnotation(
                 HighlightSeverity.ERROR,
-                "Incompatible types: cannot assign '${rhsType.displayName}' to '${lhsType.displayName}'"
+                "Invalid operation: cannot apply operator to '${lhsType.displayName}' and '${rhsType.displayName}'"
             )
-                .range(rhsExpr.textRange)
+                .range(element.textRange)
+                .create()
+            return
+        }
+
+        if (!VexTypePromotion.isAssignable(lhsType, promotedType)) {
+            holder.newAnnotation(
+                HighlightSeverity.ERROR,
+                "Incompatible types: cannot assign result of type '${promotedType.displayName}' to '${lhsType.displayName}'"
+            )
+                .range(element.textRange)
                 .create()
         }
     }

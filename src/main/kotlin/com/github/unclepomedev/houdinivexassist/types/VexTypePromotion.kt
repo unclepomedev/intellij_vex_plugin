@@ -115,7 +115,7 @@ object VexTypePromotion {
         }
 
         if (lhs is VexType.ArrayType && rhs is VexType.ArrayType) {
-            return isAssignable(lhs.elementType, rhs.elementType)
+            return lhs.elementType == rhs.elementType
         }
 
         if (lhs is VexType.StructType && rhs is VexType.StructType) {
@@ -130,6 +130,8 @@ object VexTypePromotion {
         val isRhsNumeric = isNumericType(rhs)
 
         if (isLhsNumeric && isRhsNumeric) {
+            if (isVector(lhs) && isVector(rhs) && lhs != rhs) return false
+            if (isMatrix(lhs) && isMatrix(rhs) && lhs != rhs) return false
             if (isMatrix(rhs) && !isMatrix(lhs)) return false
             if (isVector(rhs) && isScalar(lhs)) return false
             return true

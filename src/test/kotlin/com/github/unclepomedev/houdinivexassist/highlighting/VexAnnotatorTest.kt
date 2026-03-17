@@ -401,4 +401,62 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testCompoundAssignmentTypeCheck() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                string s = "test";
+                s += 1; // OK: string + int = string
+                
+                vector v = {1,2,3};
+                matrix m = 1;
+                v *= m; // OK: vector * matrix = vector
+                
+                int i = 1;
+                <error descr="Incompatible types: cannot assign result of type 'string' to 'int'">i += "text"</error>;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testStrictNumericAssignmentCheck() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                vector2 v2;
+                vector4 v4;
+                
+                v2 = <error descr="Incompatible types: cannot assign 'vector4' to 'vector2'">v4</error>;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testArrayAndStructAssignmentCheck() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct A { int val; }
+            struct B { int val; }
+            
+            void main() {
+                int int_arr[];
+                float float_arr[];
+                
+                int_arr = <error descr="Incompatible types: cannot assign 'float[]' to 'int[]'">float_arr</error>;
+                
+                A a_obj;
+                B b_obj;
+                
+                a_obj = <error descr="Incompatible types: cannot assign 'struct B' to 'struct A'">b_obj</error>;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }
