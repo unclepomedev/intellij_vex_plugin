@@ -1,12 +1,9 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
-import com.github.unclepomedev.houdinivexassist.psi.VexAssignExpr
-import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
-import com.github.unclepomedev.houdinivexassist.types.VexType
-import com.github.unclepomedev.houdinivexassist.types.VexTypeExtractor
-import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
-import com.github.unclepomedev.houdinivexassist.types.VexTypePromotion
-import com.github.unclepomedev.houdinivexassist.types.operatorKind
+import com.github.unclepomedev.houdinivexassist.psi.*
+import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
+import com.github.unclepomedev.houdinivexassist.services.VexFunction
+import com.github.unclepomedev.houdinivexassist.types.*
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
@@ -17,6 +14,7 @@ class VexTypeCheckAnnotator : Annotator {
         when (element) {
             is VexDeclarationItem -> checkDeclarationInitialization(element, holder)
             is VexAssignExpr -> checkAssignmentExpression(element, holder)
+            is VexCallExpr -> checkFunctionArguments(element, holder)
         }
     }
 
@@ -80,5 +78,88 @@ class VexTypeCheckAnnotator : Annotator {
                 .range(element.textRange)
                 .create()
         }
+    }
+
+    private fun checkFunctionArguments(element: VexCallExpr, holder: AnnotationHolder) {
+        val funcName = element.identifier.text ?: return
+        val args = element.argumentList?.exprList ?: return
+        val argTypes = args.map { VexTypeInference.inferType(it) }
+
+        val paramTypes = resolveParameterTypes(element, funcName, args.size)
+            ?: return // unknown function or can't resolve — skip
+
+        for (i in args.indices) {
+            if (i >= paramTypes.size) break
+            val expected = paramTypes[i]
+            val actual = argTypes[i]
+            if (expected == VexType.UnknownType || actual == VexType.UnknownType) continue
+            if (!VexTypePromotion.isAssignable(expected, actual)) {
+                holder.newAnnotation(
+                    HighlightSeverity.ERROR,
+                    "Type mismatch in argument ${i + 1}: expected '${expected.displayName}', got '${actual.displayName}'"
+                )
+                    .range(args[i].textRange)
+                    .create()
+            }
+        }
+    }
+
+    private fun resolveParameterTypes(element: VexCallExpr, funcName: String, arity: Int): List<VexType>? {
+        // local function
+        val localFunc = VexFunctionResolver.resolveFunction(element, funcName, arity)
+        if (localFunc is VexFunctionDef) {
+            val params = localFunc.parameterListDef?.parameterDefList ?: return null
+            return params.map { VexTypeExtractor.extractType(it) }
+        }
+
+        // API functions
+        val file = element.containingFile as? VexFile ?: return null
+        val apiProvider = file.project.getService(VexApiProvider::class.java) ?: return null
+        val overloads = apiProvider.getOverloads(funcName)
+        if (overloads.isEmpty()) return null
+
+        return findBestApiOverload(overloads, element)
+    }
+
+    private fun findBestApiOverload(overloads: List<VexFunction>, element: VexCallExpr): List<VexType>? {
+        val args = element.argumentList?.exprList ?: return null
+        val argTypes = args.map { VexTypeInference.inferType(it) }
+
+        // Find an overload where all arguments are assignable
+        for (overload in overloads) {
+            if (overload.args.size != args.size) continue
+            val paramTypes = overload.args.map { parseApiArgType(it) }
+            val allMatch = paramTypes.zip(argTypes).all { (expected, actual) ->
+                expected == VexType.UnknownType || actual == VexType.UnknownType ||
+                        VexTypePromotion.isAssignable(expected, actual)
+            }
+            if (allMatch) return paramTypes
+        }
+
+        // No perfect match — pick the overload with the most matching arguments for best error reporting
+        val sameArityOverloads = overloads.filter { it.args.size == args.size }
+        if (sameArityOverloads.isEmpty()) return null
+
+        val best = sameArityOverloads.maxByOrNull { overload ->
+            val paramTypes = overload.args.map { parseApiArgType(it) }
+            paramTypes.zip(argTypes).count { (expected, actual) ->
+                expected == VexType.UnknownType || actual == VexType.UnknownType ||
+                        VexTypePromotion.isAssignable(expected, actual)
+            }
+        } ?: return null
+        return best.args.map { parseApiArgType(it) }
+    }
+
+    private fun parseApiArgType(argString: String): VexType {
+        val cleaned = argString.replace("const", "").replace("&", "").trim()
+        // Split by spaces and get only the first word ("vector pt1" -> "vector")
+        val typeWord = cleaned.split("\\s+".toRegex()).firstOrNull() ?: ""
+
+        val normalizedType = when (typeWord) {
+            "vector3" -> "vector"
+            "matrix4" -> "matrix"
+            else -> typeWord
+        }
+        return VexType.fromString(normalizedType)
     }
 }

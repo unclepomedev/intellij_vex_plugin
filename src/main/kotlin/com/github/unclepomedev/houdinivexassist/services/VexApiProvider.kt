@@ -28,18 +28,22 @@ class VexApiProvider {
                     ?.getAsJsonObject("functions")
                     ?: return emptyList()
 
-                funcsObj.entrySet().mapNotNull { (funcName, element) ->
+                funcsObj.entrySet().flatMap { (funcName, element) ->
                     val funcArray = element.takeIf { it.isJsonArray }?.asJsonArray
-                    val firstOverload = funcArray?.firstOrNull()?.takeIf { it.isJsonObject }?.asJsonObject
-                        ?: return@mapNotNull null
+                        ?: return@flatMap emptyList()
 
-                    val returnType = firstOverload.get("return")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+                    funcArray.mapNotNull { overload ->
+                        val obj = overload.takeIf { it.isJsonObject }?.asJsonObject
+                            ?: return@mapNotNull null
 
-                    val argsList = firstOverload.get("args")?.takeIf { it.isJsonArray }?.asJsonArray
-                        ?.mapNotNull { it.takeIf { arg -> arg.isJsonPrimitive }?.asString }
-                        ?: emptyList()
+                        val returnType = obj.get("return")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
 
-                    VexFunction(funcName, argsList, returnType)
+                        val argsList = obj.get("args")?.takeIf { it.isJsonArray }?.asJsonArray
+                            ?.mapNotNull { it.takeIf { arg -> arg.isJsonPrimitive }?.asString }
+                            ?: emptyList()
+
+                        VexFunction(funcName, argsList, returnType)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -50,5 +54,9 @@ class VexApiProvider {
 
     fun hasFunction(functionName: String): Boolean {
         return functionName in functionNames
+    }
+
+    fun getOverloads(functionName: String): List<VexFunction> {
+        return functions.filter { it.name == functionName }
     }
 }

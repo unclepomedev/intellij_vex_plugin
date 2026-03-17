@@ -299,6 +299,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
+        // e is also unused
         myFixture.checkHighlighting(true, false, true, true)
     }
 
@@ -334,7 +335,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testStructFieldShadowingCollisionWithAandB() {
@@ -352,6 +353,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
+        // objB is also unused
         myFixture.checkHighlighting(true, false, true, true)
     }
 
@@ -367,7 +369,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testTypeCheckInAssignment() {
@@ -382,7 +384,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testTypeCheckFunctionReturnTypeAssignment() {
@@ -419,7 +421,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testStrictNumericAssignmentCheck() {
@@ -438,7 +440,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testArrayAndStructAssignmentCheck() {
@@ -461,6 +463,25 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionArgumentTypeCheck() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myFunc(int a, vector v) {}
+
+            void main() {
+                myFunc(1, {0,0,0}); // OK
+                myFunc(1, 2.0);     // OK implicit cast
+
+                myFunc(<error descr="Type mismatch in argument 1: expected 'int', got 'string'">"text"</error>, {0,0,0});
+                
+                float d = distance({0,0,0}, <error descr="Type mismatch in argument 2: expected 'vector', got 'string'">"string"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
     }
 }
