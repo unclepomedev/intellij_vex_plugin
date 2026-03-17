@@ -113,4 +113,110 @@ class VexCompletionTest : VexTestBase() {
             assertEquals("Shadowed variable should appear exactly once in completion list", 1, shadowVarCount)
         }
     }
+
+    fun testStructMemberCompletion() {
+        val code = """
+            struct Engine {
+                int power;
+            }
+
+            struct Car {
+                float speed;
+                Engine engine;
+            }
+
+            void main() {
+                Car myCar;
+                // 'sp' should complete to 'speed'
+                myCar.sp<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val lookups = myFixture.completeBasic()
+        assertNull("Completion should auto-insert when only one match exists", lookups)
+
+        myFixture.checkResult(
+            """
+            struct Engine {
+                int power;
+            }
+
+            struct Car {
+                float speed;
+                Engine engine;
+            }
+
+            void main() {
+                Car myCar;
+                // 'sp' should complete to 'speed'
+                myCar.speed<caret>
+            }
+        """.trimIndent()
+        )
+
+        val nestedCode = """
+            struct Engine {
+                int power;
+            }
+
+            struct Car {
+                float speed;
+                Engine engine;
+            }
+
+            void main() {
+                Car myCar;
+                // 'pow' should complete to 'power'
+                myCar.engine.pow<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, nestedCode)
+        myFixture.completeBasic()
+
+        myFixture.checkResult(
+            """
+            struct Engine {
+                int power;
+            }
+
+            struct Car {
+                float speed;
+                Engine engine;
+            }
+
+            void main() {
+                Car myCar;
+                // 'pow' should complete to 'power'
+                myCar.engine.power<caret>
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testSwizzleCompletion() {
+        val code = """
+            void main() {
+                vector pos = {1, 2, 3};
+                // 'xy' should be in the completion list for vector
+                pos.<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val lookups = myFixture.completeBasic()
+        assertNotNull("Completion list should not be null for swizzles", lookups)
+
+        val lookupStrings = lookups!!.map { it.lookupString }
+
+        assertTrue("Completion should contain 'x'", lookupStrings.contains("x"))
+        assertTrue("Completion should contain 'xy'", lookupStrings.contains("xy"))
+        assertTrue("Completion should contain 'xyz'", lookupStrings.contains("xyz"))
+
+        assertFalse("Completion should NOT contain 'w' for vector3", lookupStrings.contains("w"))
+        assertFalse("Completion should NOT contain 'xyzw' for vector3", lookupStrings.contains("xyzw"))
+
+        assertFalse("Completion should NOT contain local variables during dot access", lookupStrings.contains("pos"))
+        assertFalse("Completion should NOT contain standard functions during dot access", lookupStrings.contains("abs"))
+    }
 }

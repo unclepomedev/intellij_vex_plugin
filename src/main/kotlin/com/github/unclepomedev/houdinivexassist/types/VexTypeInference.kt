@@ -140,7 +140,7 @@ object VexTypeInference {
 
     private fun inferMemberExpr(expr: VexMemberExpr): VexType {
         val baseExpr = expr.expr
-        val memberName = expr.identifier.text ?: return VexType.UnknownType
+        val memberName = expr.identifier?.text ?: return VexType.UnknownType
 
         val baseType = inferType(baseExpr)
 
