@@ -2,6 +2,7 @@ package com.github.unclepomedev.houdinivexassist.types
 
 import com.github.unclepomedev.houdinivexassist.psi.*
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
 
 object VexTypeExtractor {
 
@@ -48,7 +49,18 @@ object VexTypeExtractor {
      * Extracts the return type from a function definition (e.g., float myFunc()).
      */
     private fun extractFromFunctionDef(funcDef: VexFunctionDef): VexType {
-        val typeNode = funcDef.node.findChildByType(VexTypes.TYPE) ?: return VexType.UnknownType
-        return VexType.fromString(typeNode.text)
+        var child = funcDef.firstChild
+        while (child != null) {
+            val elementType = child.node.elementType
+            if (child !is PsiWhiteSpace &&
+                elementType != VexTypes.EXPORT &&
+                elementType != VexTypes.FUNCTION
+            ) {
+                return VexType.fromString(child.text)
+            }
+            child = child.nextSibling
+        }
+
+        return VexType.UnknownType
     }
 }
