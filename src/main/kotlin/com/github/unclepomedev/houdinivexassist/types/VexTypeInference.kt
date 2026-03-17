@@ -140,7 +140,7 @@ object VexTypeInference {
 
     private fun inferMemberExpr(expr: VexMemberExpr): VexType {
         val baseExpr = expr.expr
-        val memberName = expr.identifier.text ?: return VexType.UnknownType
+        val memberName = expr.identifier?.text ?: return VexType.UnknownType
 
         val baseType = inferType(baseExpr)
 
@@ -171,6 +171,7 @@ object VexTypeInference {
     }
 
     private fun resolveStructMemberType(context: PsiElement, structName: String, memberName: String): VexType {
+        // TODO: Support struct resolution across multiple files via #include directives or project-wide indices.
         val file = context.containingFile
         val structDefs = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java)
 

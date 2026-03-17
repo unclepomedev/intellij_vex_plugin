@@ -14,8 +14,20 @@ class VexDeclarationAnnotator : Annotator {
             is VexDeclarationItem -> checkVariableDeclaration(element, holder)
             is VexFunctionDef -> checkFunctionDefinition(element, holder)
             is VexStructDef -> checkStructDefinition(element, holder)
+            is VexExprStatement -> checkMissingSemicolon(element, holder)
         }
     }
+
+    // --- Syntax Check (correcting destruction caused by hacks) ---
+
+    private fun checkMissingSemicolon(element: VexExprStatement, holder: AnnotationHolder) {
+        val hasSemicolon = element.node.findChildByType(VexTypes.SEMICOLON) != null
+        if (!hasSemicolon) {
+            reportError(holder, element, "Missing ';'")
+        }
+    }
+
+    // --- Declaration Conflict Checks ---
 
     private fun checkVariableDeclaration(element: VexDeclarationItem, holder: AnnotationHolder) {
         val identifier = element.identifier

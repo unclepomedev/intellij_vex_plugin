@@ -282,4 +282,74 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
+
+    fun testUnusedStructFieldIsHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct Engine {
+                int <weak_warning descr="Unused field 'power'">power</weak_warning>;
+                float <weak_warning descr="Unused field 'torque'">torque</weak_warning>;
+            }
+
+            void main() {
+                Engine e;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, true)
+    }
+
+    fun testUsedStructFieldIsNotHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct Engine {
+                int power;
+                float torque;
+            }
+
+            void main() {
+                Engine e;
+                e.power = 100;
+                float <weak_warning descr="Unused variable 't'">t</weak_warning> = e.torque;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, false)
+    }
+
+    fun testMissingSemicolonIsHighlighted() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                vector pos = {0, 0, 0};
+                // no semicolon
+                <error descr="Missing ';'">pos.x</error>
+                
+                int a = 1;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testStructFieldShadowingCollisionWithAandB() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct A { int power; }
+            struct B { int <weak_warning descr="Unused field 'power'">power</weak_warning>; }
+
+            void main() {
+                A objA;
+                objA.power = 100;
+                
+                B objB;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, true)
+    }
 }

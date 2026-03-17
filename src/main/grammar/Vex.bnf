@@ -150,7 +150,7 @@ control_statement ::= (BREAK | CONTINUE) SEMICOLON { pin=1 }
 declaration_statement ::= type_ref declaration_item (COMMA declaration_item)* SEMICOLON { pin=2 }
 declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
 
-expr_statement ::= expr? SEMICOLON
+expr_statement ::= expr SEMICOLON? | SEMICOLON
 
 expr ::= assign_expr
        | ternary_expr
@@ -210,7 +210,7 @@ array_access_expr ::= expr LBRACK expr RBRACK
 call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexCallExprMixin"
 }
-member_expr ::= expr DOT IDENTIFIER
+member_expr ::= expr DOT IDENTIFIER? { pin=2 }
 primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexPrimaryExprMixin"
 }
