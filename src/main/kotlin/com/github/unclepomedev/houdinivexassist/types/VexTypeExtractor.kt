@@ -19,52 +19,58 @@ object VexTypeExtractor {
         }
     }
 
-    /**
-     * Extracts the type from a variable declaration (e.g., int a = 1;).
-     */
     private fun extractFromDeclarationItem(item: VexDeclarationItem): VexType {
-        val typeString = when (val parent = item.parent) {
-            is VexDeclarationStatement -> parent.firstChild?.text
-            is VexStructMember -> parent.firstChild?.text
-            // VexForInit is private in BNF, but it falls back to VexDeclarationStatement or VexExprStatement, so don't need to handle it separately.
-            else -> null
-        } ?: return VexType.UnknownType
-
+        val typeString = resolveDeclarationBaseTypeString(item) ?: return VexType.UnknownType
         val baseType = VexType.fromString(typeString)
-        val isArray = item.node.findChildByType(VexTypes.LBRACK) != null &&
-                item.node.findChildByType(VexTypes.RBRACK) != null
 
-        return if (isArray) {
-            VexType.ArrayType(baseType)
-        } else {
-            baseType
-        }
+        return wrapInArrayIfNeeded(baseType, item)
     }
 
-    /**
-     * Extract the type from the parameter definition (e.g., vector pos).
-     */
     private fun extractFromParameterDef(paramDef: VexParameterDef): VexType {
         val typeString = paramDef.firstChild?.text ?: return VexType.UnknownType
-        return VexType.fromString(typeString)
+        val baseType = VexType.fromString(typeString)
+
+        return wrapInArrayIfNeeded(baseType, paramDef)
     }
 
-    /**
-     * Extracts the return type from a function definition (e.g., float myFunc()).
-     */
     private fun extractFromFunctionDef(funcDef: VexFunctionDef): VexType {
         var child = funcDef.firstChild
         while (child != null) {
-            val elementType = child.node.elementType
-            if (child !is PsiWhiteSpace &&
-                elementType != VexTypes.EXPORT &&
-                elementType != VexTypes.FUNCTION
-            ) {
+            if (isReturnTypeIdentifier(child)) {
                 return VexType.fromString(child.text)
             }
             child = child.nextSibling
         }
 
         return VexType.UnknownType
+    }
+
+    private fun resolveDeclarationBaseTypeString(item: VexDeclarationItem): String? {
+        return when (val parent = item.parent) {
+            is VexDeclarationStatement -> parent.firstChild?.text
+            is VexStructMember -> parent.firstChild?.text
+            else -> null
+        }
+    }
+
+    private fun isReturnTypeIdentifier(element: PsiElement): Boolean {
+        val elementType = element.node.elementType
+        return element !is PsiWhiteSpace &&
+                elementType != VexTypes.EXPORT &&
+                elementType != VexTypes.FUNCTION
+    }
+
+    private fun wrapInArrayIfNeeded(baseType: VexType, element: PsiElement): VexType {
+        return if (hasArrayBrackets(element)) {
+            VexType.ArrayType(baseType)
+        } else {
+            baseType
+        }
+    }
+
+    private fun hasArrayBrackets(element: PsiElement): Boolean {
+        val hasLeftBracket = element.node.findChildByType(VexTypes.LBRACK) != null
+        val hasRightBracket = element.node.findChildByType(VexTypes.RBRACK) != null
+        return hasLeftBracket && hasRightBracket
     }
 }

@@ -299,6 +299,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
+        // e is also unused
         myFixture.checkHighlighting(true, false, true, true)
     }
 
@@ -334,7 +335,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testStructFieldShadowingCollisionWithAandB() {
@@ -352,6 +353,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
+        // objB is also unused
         myFixture.checkHighlighting(true, false, true, true)
     }
 
@@ -367,7 +369,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testTypeCheckInAssignment() {
@@ -382,7 +384,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testTypeCheckFunctionReturnTypeAssignment() {
@@ -419,7 +421,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testStrictNumericAssignmentCheck() {
@@ -438,7 +440,7 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testArrayAndStructAssignmentCheck() {
@@ -461,6 +463,61 @@ class VexAnnotatorTest : VexTestBase() {
             }
             """.trimIndent()
         )
-        myFixture.checkHighlighting(false, false, false, true)
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionArgumentTypeCheck() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myFunc(int a, vector v) {}
+
+            void main() {
+                myFunc(1, {0,0,0}); // OK
+                myFunc(1, 2.0);     // OK implicit cast
+
+                myFunc(<error descr="Type mismatch in argument 1: expected 'int', got 'string'">"text"</error>, {0,0,0});
+                
+                float d = distance({0,0,0}, <error descr="Type mismatch in argument 2: expected 'vector', got 'string'">"string"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testOverloadResolutionChoosesBestError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                // 'set' has overloads like set(float, float, float) and set(vector, vector, vector).
+                // passing (float, string, float) gives exact matches for the float overload.
+                // The exact-match tie-breaker selects the float overload.
+                vector v = set(1.0, <error descr="Type mismatch in argument 2: expected 'float', got 'string'">"string"</error>, 3.0);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testApiArrayParameterSupport() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myProcessIntArray(int arr[], int val) {}
+            
+            void main() {
+                int valid_arr[] = {1, 2, 3};
+                float invalid_arr[] = {1.0, 2.0, 3.0};
+                
+                myProcessIntArray(valid_arr, 4); // OK: (int[], int)
+                
+                myProcessIntArray(<error descr="Type mismatch in argument 1: expected 'int[]', got 'float[]'">invalid_arr</error>, 4);
+                
+                myProcessIntArray(valid_arr, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
     }
 }
