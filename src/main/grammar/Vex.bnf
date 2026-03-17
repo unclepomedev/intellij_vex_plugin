@@ -91,7 +91,7 @@ private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fall
 
 private type_ref ::= TYPE | IDENTIFIER
 
-private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | type_ref
+private fallback_item ::= NUMBER | STRING | ATTRIBUTE | type_ref
                         | LBRACK | RBRACK | ARROW
                         | SEMICOLON | COMMA | DOT
                         | PLUSEQ | MINUSEQ | MULEQ | DIVEQ | MODEQ | ANDEQ | OREQ | XOREQ | LSHIFTEQ | RSHIFTEQ
