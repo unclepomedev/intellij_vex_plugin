@@ -1,8 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
 import com.github.unclepomedev.houdinivexassist.psi.*
-import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
-import com.github.unclepomedev.houdinivexassist.services.VexFunction
 import com.github.unclepomedev.houdinivexassist.types.*
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
@@ -10,9 +8,6 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 
 class VexTypeCheckAnnotator : Annotator {
-    companion object {
-        private const val EXACT_MATCH_WEIGHT = 1000
-    }
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when (element) {
@@ -91,11 +86,10 @@ class VexTypeCheckAnnotator : Annotator {
     }
 
     private fun checkFunctionArguments(element: VexCallExpr, holder: AnnotationHolder) {
-        val funcName = element.identifier.text
         val args = element.argumentList?.exprList ?: return
         val argTypes = args.map { VexTypeInference.inferType(it) }
 
-        val paramTypes = resolveParameterTypes(element, funcName, args.size)
+        val paramTypes = VexFunctionResolver.resolveParameterTypes(element)
             ?: return // unknown function or can't resolve — skip
 
         for (i in args.indices) {
@@ -112,83 +106,6 @@ class VexTypeCheckAnnotator : Annotator {
                     .create()
             }
         }
-    }
-
-    private fun resolveParameterTypes(element: VexCallExpr, funcName: String, arity: Int): List<VexType>? {
-        // local function
-        val localFunc = VexFunctionResolver.resolveFunction(element, funcName, arity)
-        if (localFunc is VexFunctionDef) {
-            val params = localFunc.parameterListDef?.parameterDefList ?: return null
-            return params.map { VexTypeExtractor.extractType(it) }
-        }
-
-        // API functions
-        val file = element.containingFile as? VexFile ?: return null
-        val apiProvider = file.project.getService(VexApiProvider::class.java) ?: return null
-        val overloads = apiProvider.getOverloads(funcName)
-        if (overloads.isEmpty()) return null
-
-        return findBestApiOverload(overloads, element)
-    }
-
-    private fun findBestApiOverload(overloads: List<VexFunction>, element: VexCallExpr): List<VexType>? {
-        val args = element.argumentList?.exprList ?: return null
-        val argTypes = args.map { VexTypeInference.inferType(it) }
-        // Cache parsed parameter types per overload
-        val parsedOverloads = overloads.associateWith { it.args.map { arg -> parseApiArgType(arg) } }
-
-        // Find an overload where all arguments are assignable
-        for (overload in overloads) {
-            if (overload.args.size != args.size) continue
-            val paramTypes = parsedOverloads[overload]!!
-            val allMatch = paramTypes.zip(argTypes).all { (expected, actual) ->
-                expected == VexType.UnknownType || actual == VexType.UnknownType ||
-                        VexTypePromotion.isAssignable(expected, actual)
-            }
-            if (allMatch) return paramTypes
-        }
-
-        // No perfect match — pick the overload with the most matching arguments for best error reporting
-        val sameArityOverloads = overloads.filter { it.args.size == args.size }
-        if (sameArityOverloads.isEmpty()) return null
-
-        val best = sameArityOverloads.maxByOrNull { overload ->
-            val paramTypes = parsedOverloads[overload]!!
-            val exactMatches = paramTypes.zip(argTypes).count { (expected, actual) ->
-                expected == actual
-            }
-            val assignableMatches = paramTypes.zip(argTypes).count { (expected, actual) ->
-                expected == VexType.UnknownType || actual == VexType.UnknownType ||
-                        VexTypePromotion.isAssignable(expected, actual)
-            }
-            exactMatches * EXACT_MATCH_WEIGHT + assignableMatches
-        } ?: return null
-        return parsedOverloads[best]!!
-    }
-
-    private fun parseApiArgType(argString: String): VexType {
-        val tokens = argString
-            .replace("&", " ")
-            .split("\\s+".toRegex())
-            .filter { it.isNotBlank() && it !in setOf("const", "export") }
-
-        if (tokens.isEmpty()) return VexType.UnknownType
-
-        val (rawType, rawName) = when (tokens.first()) {
-            "struct" -> (tokens.getOrNull(1) ?: return VexType.UnknownType) to tokens.getOrNull(2).orEmpty()
-            else -> tokens.first() to tokens.getOrNull(1).orEmpty()
-        }
-
-        val isArray = rawType.endsWith("[]") || rawName.endsWith("[]")
-
-        val normalizedType = when (val base = rawType.removeSuffix("[]")) {
-            "vector3" -> "vector"
-            "matrix4" -> "matrix"
-            else -> base
-        }
-
-        val baseType = VexType.fromString(normalizedType)
-        return if (isArray && baseType != VexType.UnknownType) VexType.ArrayType(baseType) else baseType
     }
 
     /**

@@ -500,6 +500,42 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false, false)
     }
 
+    fun testLocalOverloadResolutionByTypeSignature() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            function void process(int a, int b) {}
+            function void process(string a, string b) {}
+
+            void main() {
+                process(1, 2);           // OK: matches (int, int)
+                process("a", "b");       // OK: matches (string, string)
+                process(1, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testLocalOverloadResolutionByTypeSignatureDifferentArgNum() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            function void process(int a) {}
+            function void process(int a, int b) {}
+            function void process(string a, string b, string c) {}
+
+            void main() {
+                process(1);              // OK: matches (int)
+                process(1, 2);           // OK: matches (int, int)
+                process("a", "b", "c");  // OK: matches (string, string, string)
+                process(1, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
     fun testApiArrayParameterSupport() {
         myFixture.configureByText(
             VexFileType,

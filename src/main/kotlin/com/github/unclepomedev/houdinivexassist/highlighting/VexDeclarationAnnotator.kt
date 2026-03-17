@@ -128,13 +128,19 @@ class VexDeclarationAnnotator : Annotator {
     }
 
     private fun hasExactOverloadConflict(element: VexFunctionDef, name: String, file: VexFile): Boolean {
-        val myParamCount = element.parameterListDef?.parameterDefList?.size ?: 0
+        val myParamTypes = extractParameterTypeNames(element)
         return PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).any { sibling ->
             sibling != element &&
                     sibling.identifier.text == name &&
                     sibling.textOffset < element.textOffset &&
-                    (sibling.parameterListDef?.parameterDefList?.size ?: 0) == myParamCount
+                    extractParameterTypeNames(sibling) == myParamTypes
         }
+    }
+
+    private fun extractParameterTypeNames(funcDef: VexFunctionDef): List<String> {
+        return funcDef.parameterListDef?.parameterDefList?.map { param ->
+            param.type?.text ?: "unknown"
+        } ?: emptyList()
     }
 
     // --- Error Reporting Utility ---
