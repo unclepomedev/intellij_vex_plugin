@@ -603,4 +603,33 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testReturnStatementTypeCheck() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myVoidFunc() {
+                if (1) return; // OK
+                return <error descr="Cannot return a value from a function returning 'void'">1</error>;
+            }
+
+            int myIntFunc() {
+                <error descr="Missing return value: expected 'int'">return;</error>
+            }
+
+            float myFloatFunc() {
+                return 1; // OK: int implicitly casts to float
+            }
+
+            string myStringFunc() {
+                return <error descr="Incompatible return type: expected 'string', got 'vector'">{1, 2, 3}</error>;
+            }
+
+            vector myVectorFunc() {
+                return 1.0; // OK: float implicitly casts to vector
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }
