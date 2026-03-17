@@ -85,7 +85,7 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
 
         val candidates = mutableListOf("x", "y", "z", "w", "xy", "xyz", "xyzw")
         if (!isMatrix) {
-            candidates.addAll(listOf("r", "g", "b", "a", "u", "v", "rgb", "rgba"))
+            candidates.addAll(listOf("r", "g", "b", "a", "u", "v", "uv", "rg", "rgb", "rgba"))
         }
 
         val componentIndices = mapOf(

@@ -20,15 +20,24 @@ class VexUnusedSymbolAnnotator : Annotator {
     private fun checkUnusedVariable(element: VexDeclarationItem, holder: AnnotationHolder) {
         val identifier = element.identifier
         val varName = identifier.text
-        val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
 
-        val usages = PsiTreeUtil.findChildrenOfType(scope, VexPrimaryExpr::class.java)
-        val isUsed = usages.any { expr ->
-            expr.identifier?.text == varName && VexVariableResolver.resolveVariable(expr, varName) == element
+        val isStructField = PsiTreeUtil.getParentOfType(element, VexStructMember::class.java) != null
+
+        val isUsed = if (isStructField) {
+            val file = element.containingFile ?: return
+            val memberAccesses = PsiTreeUtil.findChildrenOfType(file, VexMemberExpr::class.java)
+            memberAccesses.any { it.identifier?.text == varName }
+        } else {
+            val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
+            val usages = PsiTreeUtil.findChildrenOfType(scope, VexPrimaryExpr::class.java)
+            usages.any { expr ->
+                expr.identifier?.text == varName && VexVariableResolver.resolveVariable(expr, varName) == element
+            }
         }
 
         if (!isUsed) {
-            holder.newAnnotation(HighlightSeverity.WEAK_WARNING, "Unused variable '$varName'")
+            val messageType = if (isStructField) "field" else "variable"
+            holder.newAnnotation(HighlightSeverity.WEAK_WARNING, "Unused $messageType '$varName'")
                 .range(identifier.textRange)
                 .textAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES)
                 .create()
