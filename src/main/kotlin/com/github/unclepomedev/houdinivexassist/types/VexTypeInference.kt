@@ -20,6 +20,9 @@ object VexTypeInference {
             is VexAssignExpr -> inferAssignmentExpr(expr)
             is VexMemberExpr -> inferMemberExpr(expr)
 
+            is VexCastExpr -> inferCastExpr(expr)
+            is VexArrayAccessExpr -> inferArrayAccessExpr(expr)
+
             is VexPrefixExpr -> inferPrefixExpr(expr)
             is VexPostfixExpr -> inferPostfixExpr(expr)
 
@@ -184,11 +187,31 @@ object VexTypeInference {
         return VexType.UnknownType
     }
 
+    private fun inferCastExpr(expr: VexCastExpr): VexType {
+        val typeNode = expr.node.findChildByType(VexTypes.TYPE)
+            ?: expr.node.findChildByType(VexTypes.IDENTIFIER)
+        val typeName = typeNode?.text ?: return VexType.UnknownType
+        return VexType.fromString(typeName)
+    }
+
+    private fun inferArrayAccessExpr(expr: VexArrayAccessExpr): VexType {
+        val arrayExpr = expr.exprList.firstOrNull() ?: return VexType.UnknownType
+        return when (val baseType = inferType(arrayExpr)) {
+            is VexType.ArrayType -> baseType.elementType
+            VexType.MatrixType -> VexType.Vector4Type
+            VexType.Matrix3Type -> VexType.VectorType
+            VexType.VectorType, VexType.Vector2Type, VexType.Vector4Type -> VexType.FloatType
+
+            else -> VexType.UnknownType
+        }
+    }
+
     private fun inferPrefixExpr(expr: VexPrefixExpr): VexType {
         val operand = expr.children.firstOrNull { it is VexExpr } ?: return VexType.UnknownType
 
         if (expr.node.findChildByType(VexTypes.NOT) != null ||
-            expr.node.findChildByType(VexTypes.BITNOT) != null) {
+            expr.node.findChildByType(VexTypes.BITNOT) != null
+        ) {
             return VexType.IntType
         }
         return inferType(operand)

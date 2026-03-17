@@ -3,6 +3,7 @@ package com.github.unclepomedev.houdinivexassist.types
 import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.*
+import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
 class VexTypeInferenceTest : VexTestBase() {
@@ -405,24 +406,27 @@ class VexTypeInferenceTest : VexTestBase() {
         val file = myFixture.file as VexFile
 
         // Function Return and Parameter
-        val processFunc = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "process" }
+        val processFunc =
+            PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "process" }
         assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(processFunc))
         val paramDef = processFunc.parameterListDef?.parameterDefList?.first()
         assertNotNull(paramDef)
         assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(paramDef!!))
 
         // Struct Members
-        val carStruct = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java).first { it.identifier?.text == "Car" }
+        val carStruct =
+            PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java).first { it.identifier?.text == "Car" }
         val structMembers = PsiTreeUtil.findChildrenOfType(carStruct, VexStructMember::class.java).toList()
         assertEquals(2, structMembers.size)
-        
+
         // Field "Engine engine;"
         val engineFieldDecl = structMembers[0].declarationItemList.first()
         assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(engineFieldDecl))
-        
-        val mainFunc = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "main" }
+
+        val mainFunc =
+            PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "main" }
         val declItems = PsiTreeUtil.findChildrenOfType(mainFunc, VexDeclarationItem::class.java).toList()
-        
+
         // Local Declarations
         val e1Decl = declItems.first { it.identifier.text == "e1" }
         assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(e1Decl))
@@ -435,14 +439,80 @@ class VexTypeInferenceTest : VexTestBase() {
 
         val localEDecl = declItems.first { it.identifier.text == "local_e" }
         assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(localEDecl))
-        
+
         // Foreach statement contains the type identifier "Engine" and variable identifier "e"
         val foreachStmt = PsiTreeUtil.findChildrenOfType(mainFunc, VexForeachStatement::class.java).first()
-        val foreachIdentifiers = PsiTreeUtil.findChildrenOfType(foreachStmt, com.intellij.psi.impl.source.tree.LeafPsiElement::class.java)
+        val foreachIdentifiers = PsiTreeUtil.findChildrenOfType(foreachStmt, LeafPsiElement::class.java)
             .filter { it.elementType == VexTypes.IDENTIFIER }
             .map { it.text }
             .toList()
         assertTrue(foreachIdentifiers.contains("Engine"))
         assertTrue(foreachIdentifiers.contains("e"))
+    }
+
+    fun testInferCastExpr() {
+        val code = """
+            void main() {
+                int v1 = (int)3.14;
+                float v2 = (float)1;
+                vector v3 = (vector)1.0;
+                
+                Engine v4 = (Engine)myCar;
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        val exprs = declItems.mapNotNull { it.expr }
+
+        assertEquals(4, exprs.size)
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[0]))
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[1]))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[2]))
+        assertEquals(VexType.StructType("Engine"), VexTypeInference.inferType(exprs[3]))
+    }
+
+    fun testInferArrayAccessExpr() {
+        val code = """
+            void main() {
+                int int_arr[];
+                vector vec_arr[];
+                
+                int v1 = int_arr[0];
+                vector v2 = vec_arr[1];
+                
+                float v3 = vec_arr[0].x;
+                
+                matrix m;
+                vector v4 = m[0];
+                float v5 = m[0][1];
+                
+                int scalar = 1;
+                int err = scalar[0];
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+
+        val exprs = declItems.mapNotNull { it.expr }
+
+        assertEquals(7, exprs.size)
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[0]))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[1]))
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[2]))
+
+        assertEquals(VexType.Vector4Type, VexTypeInference.inferType(exprs[3])) // m[0]
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[4]))   // m[0][1]
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[5]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6]))
     }
 }
