@@ -134,11 +134,13 @@ class VexTypeCheckAnnotator : Annotator {
     private fun findBestApiOverload(overloads: List<VexFunction>, element: VexCallExpr): List<VexType>? {
         val args = element.argumentList?.exprList ?: return null
         val argTypes = args.map { VexTypeInference.inferType(it) }
+        // Cache parsed parameter types per overload
+        val parsedOverloads = overloads.associateWith { it.args.map { arg -> parseApiArgType(arg) } }
 
         // Find an overload where all arguments are assignable
         for (overload in overloads) {
             if (overload.args.size != args.size) continue
-            val paramTypes = overload.args.map { parseApiArgType(it) }
+            val paramTypes = parsedOverloads[overload]!!
             val allMatch = paramTypes.zip(argTypes).all { (expected, actual) ->
                 expected == VexType.UnknownType || actual == VexType.UnknownType ||
                         VexTypePromotion.isAssignable(expected, actual)
@@ -151,7 +153,7 @@ class VexTypeCheckAnnotator : Annotator {
         if (sameArityOverloads.isEmpty()) return null
 
         val best = sameArityOverloads.maxByOrNull { overload ->
-            val paramTypes = overload.args.map { parseApiArgType(it) }
+            val paramTypes = parsedOverloads[overload]!!
             val exactMatches = paramTypes.zip(argTypes).count { (expected, actual) ->
                 expected == actual
             }
@@ -161,7 +163,7 @@ class VexTypeCheckAnnotator : Annotator {
             }
             exactMatches * EXACT_MATCH_WEIGHT + assignableMatches
         } ?: return null
-        return best.args.map { parseApiArgType(it) }
+        return parsedOverloads[best]!!
     }
 
     private fun parseApiArgType(argString: String): VexType {
