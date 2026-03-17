@@ -20,8 +20,11 @@ class VexTypeCheckAnnotator : Annotator {
 
     private fun checkDeclarationInitialization(element: VexDeclarationItem, holder: AnnotationHolder) {
         val expr = element.expr ?: return
-
         val declaredType = VexTypeExtractor.extractType(element)
+
+        if (declaredType is VexType.ArrayType && isLiteralInitializerList(expr)) {
+            return
+        }
 
         val inferredType = VexTypeInference.inferType(expr)
 
@@ -47,6 +50,9 @@ class VexTypeCheckAnnotator : Annotator {
         val operatorKind = element.operatorKind
 
         if (operatorKind == null) {
+            if (lhsType is VexType.ArrayType && isLiteralInitializerList(rhsExpr)) {
+                return
+            }
             if (!VexTypePromotion.isAssignable(lhsType, rhsType)) {
                 holder.newAnnotation(
                     HighlightSeverity.ERROR,
@@ -151,15 +157,35 @@ class VexTypeCheckAnnotator : Annotator {
     }
 
     private fun parseApiArgType(argString: String): VexType {
-        val cleaned = argString.replace("const", "").replace("&", "").trim()
-        // Split by spaces and get only the first word ("vector pt1" -> "vector")
-        val typeWord = cleaned.split("\\s+".toRegex()).firstOrNull() ?: ""
+        val tokens = argString
+            .replace("&", " ")
+            .split("\\s+".toRegex())
+            .filter { it.isNotBlank() && it !in setOf("const", "export") }
 
-        val normalizedType = when (typeWord) {
+        if (tokens.isEmpty()) return VexType.UnknownType
+
+        val (rawType, rawName) = when (tokens.first()) {
+            "struct" -> (tokens.getOrNull(1) ?: return VexType.UnknownType) to tokens.getOrNull(2).orEmpty()
+            else -> tokens.first() to tokens.getOrNull(1).orEmpty()
+        }
+
+        val isArray = rawType.endsWith("[]") || rawName.endsWith("[]")
+
+        val normalizedType = when (val base = rawType.removeSuffix("[]")) {
             "vector3" -> "vector"
             "matrix4" -> "matrix"
-            else -> typeWord
+            else -> base
         }
-        return VexType.fromString(normalizedType)
+
+        val baseType = VexType.fromString(normalizedType)
+        return if (isArray && baseType != VexType.UnknownType) VexType.ArrayType(baseType) else baseType
+    }
+
+    /**
+     * Determines whether the expression is a pure {...} literal (initializer list).
+     */
+    private fun isLiteralInitializerList(expr: PsiElement?): Boolean {
+        val text = expr?.text?.trim() ?: return false
+        return text.startsWith("{") && text.endsWith("}")
     }
 }

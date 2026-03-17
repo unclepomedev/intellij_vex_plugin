@@ -484,4 +484,44 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testOverloadResolutionChoosesBestError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                // 'set' has overloads like set(float, float, float) and set(vector, vector, vector).
+                // Both score 2/3 matches (since float casts to vector). The checker picks one correctly.
+                vector v = set(1.0, <error descr="Type mismatch in argument 2: expected 'vector', got 'string'">"string"</error>, 3.0);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testStrictParameterTypeMismatch() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct IntData { int val; }
+            struct FloatData { float val; }
+            
+            void myProcessData(IntData data, int val) {}
+            
+            void main() {
+                IntData valid_data;
+                FloatData invalid_data;
+                
+                myProcessData(valid_data, 4); // OK
+                
+                myProcessData(<error descr="Type mismatch in argument 1: expected 'struct IntData', got 'struct FloatData'">invalid_data</error>, 4);
+                
+                myProcessData(valid_data, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    // TODO: after fix parser bug concerning arr[], add tests
 }

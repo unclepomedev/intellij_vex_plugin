@@ -13,7 +13,8 @@ data class VexFunction(val name: String, val args: List<String>, val returnType:
 class VexApiProvider {
     private val logger = Logger.getInstance(VexApiProvider::class.java)
     val functions: List<VexFunction> by lazy { loadApiDump() }
-    private val functionNames: Set<String> by lazy { functions.map { it.name }.toSet() }
+    private val overloadsByName: Map<String, List<VexFunction>> by lazy { functions.groupBy(VexFunction::name) }
+    private val functionNames: Set<String> by lazy { overloadsByName.keys }
 
     private fun loadApiDump(): List<VexFunction> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
@@ -57,6 +58,6 @@ class VexApiProvider {
     }
 
     fun getOverloads(functionName: String): List<VexFunction> {
-        return functions.filter { it.name == functionName }
+        return overloadsByName[functionName].orEmpty()
     }
 }
