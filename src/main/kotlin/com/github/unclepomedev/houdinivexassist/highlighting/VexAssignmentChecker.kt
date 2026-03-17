@@ -21,6 +21,9 @@ class VexAssignmentChecker(private val reporter: VexTypeCheckReporter) {
                 reporter.reportIncompatibleAssignment(lhsType, rhsType, rhsExpr)
             }
         } else {
+            if (lhsType == VexType.UnknownType || rhsType == VexType.UnknownType) {
+                return
+            }
             val promotedType = VexTypePromotion.promote(lhsType, rhsType, operatorKind)
             if (promotedType == VexType.UnknownType) {
                 reporter.reportInvalidOperation(lhsType, rhsType, element)
