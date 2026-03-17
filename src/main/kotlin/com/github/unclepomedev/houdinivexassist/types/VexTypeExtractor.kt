@@ -23,9 +23,13 @@ object VexTypeExtractor {
      * Extracts the type from a variable declaration (e.g., int a = 1;).
      */
     private fun extractFromDeclarationItem(item: VexDeclarationItem): VexType {
-        val statement = item.parent as? VexDeclarationStatement ?: return VexType.UnknownType
+        val typeString = when (val parent = item.parent) {
+            is VexDeclarationStatement -> parent.firstChild?.text
+            is VexStructMember -> parent.firstChild?.text
+            // VexForInit is private in BNF, but it falls back to VexDeclarationStatement or VexExprStatement, so don't need to handle it separately.
+            else -> null
+        } ?: return VexType.UnknownType
 
-        val typeString = statement.firstChild?.text ?: return VexType.UnknownType
         val baseType = VexType.fromString(typeString)
         val isArray = item.node.findChildByType(VexTypes.LBRACK) != null &&
                 item.node.findChildByType(VexTypes.RBRACK) != null

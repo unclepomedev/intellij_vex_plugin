@@ -374,4 +374,75 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[5]))    // myCar.unknown_prop
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6]))    // myCar.speed.foo
     }
+
+    fun testIdentifierAsTypePaths() {
+        val code = """
+            struct Engine {
+                int power;
+            }
+
+            struct Car {
+                Engine engine;
+                Engine field2;
+            }
+
+            Engine process(Engine arg) {
+                return arg;
+            }
+
+            void main() {
+                Engine e1;
+                Engine e2 = process(e1);
+                
+                Engine arr[];
+                foreach (Engine e; arr) {
+                    Engine local_e = e;
+                }
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        // Function Return and Parameter
+        val processFunc = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "process" }
+        assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(processFunc))
+        val paramDef = processFunc.parameterListDef?.parameterDefList?.first()
+        assertNotNull(paramDef)
+        assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(paramDef!!))
+
+        // Struct Members
+        val carStruct = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java).first { it.identifier?.text == "Car" }
+        val structMembers = PsiTreeUtil.findChildrenOfType(carStruct, VexStructMember::class.java).toList()
+        assertEquals(2, structMembers.size)
+        
+        // Field "Engine engine;"
+        val engineFieldDecl = structMembers[0].declarationItemList.first()
+        assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(engineFieldDecl))
+        
+        val mainFunc = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "main" }
+        val declItems = PsiTreeUtil.findChildrenOfType(mainFunc, VexDeclarationItem::class.java).toList()
+        
+        // Local Declarations
+        val e1Decl = declItems.first { it.identifier.text == "e1" }
+        assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(e1Decl))
+
+        val arrDecl = declItems.first { it.identifier.text == "arr" }
+        assertEquals(VexType.ArrayType(VexType.StructType("Engine")), VexTypeExtractor.extractType(arrDecl))
+
+        val e2Decl = declItems.first { it.identifier.text == "e2" }
+        assertEquals(VexType.StructType("Engine"), VexTypeInference.inferType(e2Decl.expr))
+
+        val localEDecl = declItems.first { it.identifier.text == "local_e" }
+        assertEquals(VexType.StructType("Engine"), VexTypeExtractor.extractType(localEDecl))
+        
+        // Foreach statement contains the type identifier "Engine" and variable identifier "e"
+        val foreachStmt = PsiTreeUtil.findChildrenOfType(mainFunc, VexForeachStatement::class.java).first()
+        val foreachIdentifiers = PsiTreeUtil.findChildrenOfType(foreachStmt, com.intellij.psi.impl.source.tree.LeafPsiElement::class.java)
+            .filter { it.elementType == VexTypes.IDENTIFIER }
+            .map { it.text }
+            .toList()
+        assertTrue(foreachIdentifiers.contains("Engine"))
+        assertTrue(foreachIdentifiers.contains("e"))
+    }
 }
