@@ -5,6 +5,7 @@ import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
+import com.github.unclepomedev.houdinivexassist.psi.identifier
 
 class VexReferenceTest : VexTestBase() {
 

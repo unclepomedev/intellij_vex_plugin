@@ -4,6 +4,7 @@ import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexScopeAnalyzer
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
+import com.github.unclepomedev.houdinivexassist.psi.identifier
 import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement

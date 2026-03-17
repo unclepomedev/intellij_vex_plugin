@@ -89,7 +89,9 @@ vexFile ::= item_*
 
 private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fallback_item
 
-private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
+private type_ref ::= TYPE | IDENTIFIER
+
+private fallback_item ::= NUMBER | STRING | ATTRIBUTE | type_ref
                         | LBRACK | RBRACK | ARROW
                         | SEMICOLON | COMMA | DOT
                         | PLUSEQ | MINUSEQ | MULEQ | DIVEQ | MODEQ | ANDEQ | OREQ | XOREQ | LSHIFTEQ | RSHIFTEQ
@@ -100,18 +102,20 @@ private fallback_item ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | TYPE
                         | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT
 
 struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE { pin=1 }
-struct_member ::= TYPE ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }
-private struct_member_recover ::= !(TYPE | RBRACE)
+
+struct_member ::= type_ref ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }
+private struct_member_recover ::= !(type_ref | RBRACE)
 
 function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
 
-function_def ::= EXPORT? FUNCTION? TYPE IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin="LPAREN" }
+function_def ::= EXPORT? FUNCTION? type_ref IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin="LPAREN" }
 
 parameter_list_def ::= parameter_def ((COMMA | SEMICOLON) parameter_def)*
-parameter_def ::= TYPE IDENTIFIER
+parameter_def ::= type_ref IDENTIFIER
 
 parameter_list_sig ::= parameter_sig ((COMMA | SEMICOLON) parameter_sig)*
-parameter_sig ::= TYPE IDENTIFIER?
+parameter_sig ::= type_ref IDENTIFIER?
+
 block ::= LBRACE item_* RBRACE
 
 statement ::= block
@@ -134,7 +138,7 @@ foreach_statement ::= FOREACH LPAREN foreach_body RPAREN statement { pin=1 }
 private foreach_body ::= foreach_var SEMICOLON foreach_var SEMICOLON expr
                        | foreach_var COMMA foreach_var SEMICOLON expr
                        | foreach_var SEMICOLON expr
-private foreach_var ::= TYPE? IDENTIFIER
+private foreach_var ::= (type_ref IDENTIFIER) | IDENTIFIER
 
 while_statement ::= WHILE LPAREN expr RPAREN statement { pin=1 }
 do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON { pin=1 }
@@ -143,7 +147,7 @@ return_statement ::= RETURN expr? SEMICOLON { pin=1 }
 
 control_statement ::= (BREAK | CONTINUE) SEMICOLON { pin=1 }
 
-declaration_statement ::= TYPE declaration_item (COMMA declaration_item)* SEMICOLON { pin=1 }
+declaration_statement ::= type_ref declaration_item (COMMA declaration_item)* SEMICOLON { pin=2 }
 declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
 
 expr_statement ::= expr? SEMICOLON
