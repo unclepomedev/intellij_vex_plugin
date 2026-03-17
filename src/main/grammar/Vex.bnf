@@ -164,8 +164,10 @@ expr ::= assign_expr
        | shift_expr
        | add_expr
        | mul_expr
+       | cast_expr
        | prefix_expr
        | postfix_expr
+       | array_access_expr
        | call_expr
        | member_expr
        | primary_expr
@@ -195,11 +197,15 @@ private add_op ::= PLUS | MINUS
 mul_expr ::= expr mul_op expr
 private mul_op ::= MUL | DIV | MOD
 
+cast_expr ::= LPAREN type_ref RPAREN expr { rightAssociative=true }
+
 prefix_expr ::= prefix_op expr
 private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT | BITNOT
 
 postfix_expr ::= expr postfix_op
 private postfix_op ::= PLUSPLUS | MINUSMINUS
+
+array_access_expr ::= expr LBRACK expr RBRACK
 
 call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexCallExprMixin"

@@ -449,4 +449,70 @@ class VexTypeInferenceTest : VexTestBase() {
         assertTrue(foreachIdentifiers.contains("Engine"))
         assertTrue(foreachIdentifiers.contains("e"))
     }
+
+    fun testInferCastExpr() {
+        val code = """
+            void main() {
+                int v1 = (int)3.14;
+                float v2 = (float)1;
+                vector v3 = (vector)1.0;
+                
+                Engine v4 = (Engine)myCar;
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        val exprs = declItems.mapNotNull { it.expr }
+
+        assertEquals(4, exprs.size)
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[0]))
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[1]))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[2]))
+        assertEquals(VexType.StructType("Engine"), VexTypeInference.inferType(exprs[3]))
+    }
+
+    fun testInferArrayAccessExpr() {
+        val code = """
+            void main() {
+                int int_arr[];
+                vector vec_arr[];
+                
+                int v1 = int_arr[0];
+                vector v2 = vec_arr[1];
+                
+                float v3 = vec_arr[0].x;
+                
+                matrix m;
+                vector v4 = m[0];
+                float v5 = m[0][1];
+                
+                int scalar = 1;
+                int err = scalar[0];
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+
+        val exprs = declItems.mapNotNull { it.expr }
+
+        assertEquals(7, exprs.size)
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[0]))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[1]))
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[2]))
+
+        assertEquals(VexType.Vector4Type, VexTypeInference.inferType(exprs[3])) // m[0]
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[4]))   // m[0][1]
+
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[5]))
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6]))
+    }
 }
