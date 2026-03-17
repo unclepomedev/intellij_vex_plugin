@@ -556,4 +556,51 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testFunctionExactOverloadConflictWithDifferentParameterNames() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            // First definition
+            void myFunc(int a, float b) {}
+            
+            // Second definition: different parameter names, but same type signature
+            void <error descr="Function 'myFunc' with 2 parameters is already defined">myFunc</error>(int x, float y) {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionExactOverloadConflictWithArraySyntax() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            // First definition
+            void processArray(int arr[]) {}
+            
+            // Second definition: identical signature, should trigger conflict error
+            void <error descr="Function 'processArray' with 1 parameters is already defined">processArray</error>(int arr[]) {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testUnresolvedFunctionWithWrongArityIsNotFallbackToAnotherOverload() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            // Define overloads with 1 and 2 arguments
+            void myProc(int a) {}
+            void myProc(int a, float b) {}
+            
+            void main() {
+                // Calling with 3 arguments. 
+                // It should NOT fall back to myProc(int, float).
+                // It should correctly report that no matching overload exists.
+                <error descr="No matching overload for function 'myProc' with 3 arguments">myProc</error>(1, 2.0, 3.0);
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }
