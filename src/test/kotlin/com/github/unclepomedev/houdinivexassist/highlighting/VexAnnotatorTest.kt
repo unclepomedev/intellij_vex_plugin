@@ -22,11 +22,13 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.configureByText(
             VexFileType,
             """
-            void myLocalFunc() {
-                // do something
+            float myLocalFunc() {
+                return 1.0;
             }
             
-            float d = myLocalFunc();
+            void main() {
+                float d = myLocalFunc();
+            }
             """.trimIndent()
         )
 
@@ -351,5 +353,52 @@ class VexAnnotatorTest : VexTestBase() {
             """.trimIndent()
         )
         myFixture.checkHighlighting(true, false, true, true)
+    }
+
+    fun testTypeCheckInDeclaration() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int a = 1;         // OK
+                vector v = 1.0;    // OK (Implicit cast)
+                
+                int b = <error descr="Incompatible types: cannot assign 'string' to 'int'">"hello"</error>;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testTypeCheckInAssignment() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                string s = "test";
+                vector v = {1, 2, 3};
+                
+                s = <error descr="Incompatible types: cannot assign 'vector' to 'string'">v</error>;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testTypeCheckFunctionReturnTypeAssignment() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void myVoidFunc() {}
+            vector myVectorFunc() { return {1,2,3}; }
+
+            void main() {
+                float f = <error descr="Incompatible types: cannot assign 'void' to 'float'">myVoidFunc()</error>;
+                string s = <error descr="Incompatible types: cannot assign 'vector' to 'string'">myVectorFunc()</error>;
+                vector v = myVectorFunc();
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
     }
 }

@@ -105,4 +105,40 @@ object VexTypePromotion {
             else -> null
         }
     }
+
+    /**
+     * Determines whether the type of the right-hand side (rhs) is substitutable for the type of the left-hand side (lhs) (i.e., whether an implicit cast is possible).
+     */
+    fun isAssignable(lhs: VexType, rhs: VexType): Boolean {
+        if (lhs == rhs || lhs == VexType.UnknownType || rhs == VexType.UnknownType) {
+            return true
+        }
+
+        if (lhs is VexType.ArrayType && rhs is VexType.ArrayType) {
+            return isAssignable(lhs.elementType, rhs.elementType)
+        }
+
+        if (lhs is VexType.StructType && rhs is VexType.StructType) {
+            return lhs.name == rhs.name
+        }
+
+        if (lhs == VexType.StringType || rhs == VexType.StringType) {
+            return false
+        }
+
+        val isLhsNumeric = isNumericType(lhs)
+        val isRhsNumeric = isNumericType(rhs)
+
+        if (isLhsNumeric && isRhsNumeric) {
+            if (isMatrix(rhs) && !isMatrix(lhs)) return false
+            if (isVector(rhs) && isScalar(lhs)) return false
+            return true
+        }
+
+        return false
+    }
+
+    private fun isNumericType(type: VexType): Boolean {
+        return isScalar(type) || isVector(type) || isMatrix(type)
+    }
 }
