@@ -62,7 +62,10 @@ class VexTypeCheckAnnotator : Annotator {
         rhsExpr: PsiElement,
         holder: AnnotationHolder
     ) {
-        if (lhsType is VexType.ArrayType && isLiteralInitializerList(rhsExpr)) {
+        if (lhsType is VexType.ArrayType &&
+            isLiteralInitializerList(rhsExpr) &&
+            rhsType == VexType.UnknownType
+        ) {
             return
         }
 
@@ -138,7 +141,7 @@ class VexTypeCheckAnnotator : Annotator {
 
         val paramTypes = VexFunctionResolver.resolveParameterTypes(element)
 
-        if (paramTypes == null) {
+        if (paramTypes == null || paramTypes.size != args.size) {
             reportMissingOverloadIfNeeded(element, args.size, holder)
             return
         }
