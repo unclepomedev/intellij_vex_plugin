@@ -10,6 +10,10 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 
 class VexTypeCheckAnnotator : Annotator {
+    companion object {
+        private const val EXACT_MATCH_WEIGHT = 1000
+    }
+
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when (element) {
             is VexDeclarationItem -> checkDeclarationInitialization(element, holder)
@@ -155,7 +159,7 @@ class VexTypeCheckAnnotator : Annotator {
                 expected == VexType.UnknownType || actual == VexType.UnknownType ||
                         VexTypePromotion.isAssignable(expected, actual)
             }
-            exactMatches * 1000 + assignableMatches
+            exactMatches * EXACT_MATCH_WEIGHT + assignableMatches
         } ?: return null
         return best.args.map { parseApiArgType(it) }
     }
@@ -189,7 +193,6 @@ class VexTypeCheckAnnotator : Annotator {
      * Determines whether the expression is a pure {...} literal (initializer list).
      */
     private fun isLiteralInitializerList(expr: PsiElement?): Boolean {
-        val text = expr?.text?.trim() ?: return false
-        return text.startsWith("{") && text.endsWith("}")
+        return expr is VexPrimaryExpr && expr.vectorLiteral != null
     }
 }
