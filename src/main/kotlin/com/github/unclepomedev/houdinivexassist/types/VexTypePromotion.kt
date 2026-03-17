@@ -132,6 +132,7 @@ object VexTypePromotion {
         if (isLhsNumeric && isRhsNumeric) {
             if (isVector(lhs) && isVector(rhs) && lhs != rhs) return false
             if (isMatrix(lhs) && isMatrix(rhs) && lhs != rhs) return false
+            if (isMatrix(lhs) && isVector(rhs)) return false
             if (isMatrix(rhs) && !isMatrix(lhs)) return false
             if (isVector(rhs) && isScalar(lhs)) return false
             return true

@@ -431,6 +431,10 @@ class VexAnnotatorTest : VexTestBase() {
                 vector4 v4;
                 
                 v2 = <error descr="Incompatible types: cannot assign 'vector4' to 'vector2'">v4</error>;
+                
+                matrix m;
+                vector v;
+                m = <error descr="Incompatible types: cannot assign 'vector' to 'matrix'">v</error>;
             }
             """.trimIndent()
         )
