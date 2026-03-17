@@ -1,10 +1,13 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
 import com.github.unclepomedev.houdinivexassist.psi.*
+import com.github.unclepomedev.houdinivexassist.types.VexType
+import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.colors.CodeInsightColors
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
@@ -21,12 +24,26 @@ class VexUnusedSymbolAnnotator : Annotator {
         val identifier = element.identifier
         val varName = identifier.text
 
-        val isStructField = PsiTreeUtil.getParentOfType(element, VexStructMember::class.java) != null
+        val structDef = PsiTreeUtil.getParentOfType(element, VexStructDef::class.java)
+        val isStructField = structDef != null
+        val parentStructName = structDef?.identifier?.text
 
-        val isUsed = if (isStructField) {
+        val isUsed = if (isStructField && parentStructName != null) {
             val file = element.containingFile ?: return
-            val memberAccesses = PsiTreeUtil.findChildrenOfType(file, VexMemberExpr::class.java)
-            memberAccesses.any { it.identifier?.text == varName }
+
+            val session = holder.currentAnnotationSession
+            var accessesMap = session.getUserData(MEMBER_ACCESSES_KEY)
+            if (accessesMap == null) {
+                val allAccesses = PsiTreeUtil.findChildrenOfType(file, VexMemberExpr::class.java)
+                accessesMap = allAccesses.groupBy { it.identifier?.text ?: "" }
+                session.putUserData(MEMBER_ACCESSES_KEY, accessesMap)
+            }
+
+            val relevantAccesses = accessesMap[varName] ?: emptyList()
+            relevantAccesses.any { access ->
+                val baseType = VexTypeInference.inferType(access.expr)
+                baseType is VexType.StructType && baseType.name == parentStructName
+            }
         } else {
             val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
             val usages = PsiTreeUtil.findChildrenOfType(scope, VexPrimaryExpr::class.java)
@@ -86,3 +103,6 @@ class VexUnusedSymbolAnnotator : Annotator {
         }
     }
 }
+
+/** Key for caching scan results during one highlighting process */
+private val MEMBER_ACCESSES_KEY = Key.create<Map<String, List<VexMemberExpr>>>("VEX_MEMBER_ACCESSES")

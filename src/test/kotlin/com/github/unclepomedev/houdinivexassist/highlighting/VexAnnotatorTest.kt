@@ -334,4 +334,22 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testStructFieldShadowingCollisionWithAandB() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct A { int power; }
+            struct B { int <weak_warning descr="Unused field 'power'">power</weak_warning>; }
+
+            void main() {
+                A objA;
+                objA.power = 100;
+                
+                B objB;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(true, false, true, true)
+    }
 }
