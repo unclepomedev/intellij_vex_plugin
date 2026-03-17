@@ -141,6 +141,10 @@ object VexTypeInference {
 
         val baseType = inferType(baseExpr)
 
+        if (baseType is VexType.StructType) {
+            return resolveStructMemberType(expr, baseType.name, memberName)
+        }
+
         val isSwizzlable = baseType == VexType.Vector2Type ||
                 baseType == VexType.VectorType ||
                 baseType == VexType.Vector4Type ||
@@ -160,6 +164,23 @@ object VexTypeInference {
                 else -> VexType.UnknownType
             }
         }
+        return VexType.UnknownType
+    }
+
+    private fun resolveStructMemberType(context: PsiElement, structName: String, memberName: String): VexType {
+        val file = context.containingFile
+        val structDefs = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java)
+
+        val targetStruct = structDefs.find { it.identifier?.text == structName } ?: return VexType.UnknownType
+
+        for (member in targetStruct.structMemberList) {
+            val matchedDecl = member.declarationItemList.find { it.identifier.text == memberName }
+            if (matchedDecl != null) {
+                val typeString = member.firstChild?.text ?: return VexType.UnknownType
+                return VexType.fromString(typeString)
+            }
+        }
+
         return VexType.UnknownType
     }
 

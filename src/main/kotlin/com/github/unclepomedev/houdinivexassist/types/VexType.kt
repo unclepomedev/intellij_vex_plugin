@@ -84,7 +84,9 @@ sealed class VexType {
                 "void" -> VoidType
                 "bsdf" -> BsdfType
                 "dict" -> DictType
-                else -> UnknownType // TODO: struct, etc.
+                else -> {
+                    if (typeName.isNotEmpty()) StructType(typeName) else UnknownType
+                }
             }
         }
     }

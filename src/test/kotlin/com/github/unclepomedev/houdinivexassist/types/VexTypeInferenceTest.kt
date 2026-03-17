@@ -325,4 +325,53 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[7])) // ++f
         assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[8]))   // i--
     }
+
+    fun testInferStructMemberAccess() {
+        val code = """
+            struct Engine {
+                int power;
+                string model_name;
+            }
+
+            struct Car {
+                float speed;
+                vector position;
+                Engine engine;
+            }
+
+            void main() {
+                Car myCar;
+                
+                float v1 = myCar.speed;          // -> float
+                vector v2 = myCar.position;      // -> vector
+                
+                Engine e = myCar.engine;         // -> struct Engine
+                int v3 = myCar.engine.power;     // -> int
+                string v4 = myCar.engine.model_name; // -> string
+                
+                int err1 = myCar.unknown_prop;   // -> UnknownType
+                float err2 = myCar.speed.foo;    // -> UnknownType
+            }
+        """.trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val mainFunc =
+            PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).first { it.identifier.text == "main" }
+        val mainDeclItems = PsiTreeUtil.findChildrenOfType(mainFunc, VexDeclarationItem::class.java).toList()
+
+        val exprs = mainDeclItems.mapNotNull { it.expr }
+        assertEquals(7, exprs.size)
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[0]))      // myCar.speed
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[1]))     // myCar.position
+
+        assertEquals(VexType.StructType("Engine"), VexTypeInference.inferType(exprs[2])) // myCar.engine
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[3]))        // myCar.engine.power
+        assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[4]))     // myCar.engine.model_name
+
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[5]))    // myCar.unknown_prop
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6]))    // myCar.speed.foo
+    }
 }
