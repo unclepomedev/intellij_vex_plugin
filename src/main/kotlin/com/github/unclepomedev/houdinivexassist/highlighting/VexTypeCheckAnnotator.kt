@@ -7,6 +7,7 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 
 class VexTypeCheckAnnotator : Annotator {
 
@@ -15,7 +16,74 @@ class VexTypeCheckAnnotator : Annotator {
             is VexDeclarationItem -> checkDeclarationInitialization(element, holder)
             is VexAssignExpr -> checkAssignmentExpression(element, holder)
             is VexCallExpr -> checkFunctionArguments(element, holder)
+            is VexReturnStatement -> checkReturnStatement(element, holder)
         }
+    }
+
+    private fun checkReturnStatement(element: VexReturnStatement, holder: AnnotationHolder) {
+        val enclosingFunction = PsiTreeUtil.getParentOfType(element, VexFunctionDef::class.java)
+            ?: return // Not inside a function (e.g., top-level code or malformed AST)
+
+        val declaredReturnType = VexTypeExtractor.extractType(enclosingFunction)
+        if (declaredReturnType == VexType.UnknownType) return
+
+        val returnExpr = element.expr
+        val isVoidFunction = declaredReturnType.displayName == "void"
+
+        if (isVoidFunction) {
+            if (returnExpr != null) {
+                reportUnexpectedReturnValue(returnExpr, holder)
+            }
+            return
+        }
+
+        if (returnExpr == null) {
+            reportMissingReturnValue(element, declaredReturnType, holder)
+            return
+        }
+
+        val actualReturnType = VexTypeInference.inferType(returnExpr)
+        if (actualReturnType == VexType.UnknownType) return
+
+        if (!VexTypePromotion.isAssignable(declaredReturnType, actualReturnType)) {
+            reportIncompatibleReturnType(returnExpr, declaredReturnType, actualReturnType, holder)
+        }
+    }
+
+    private fun reportUnexpectedReturnValue(expr: PsiElement, holder: AnnotationHolder) {
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "Cannot return a value from a function returning 'void'"
+        )
+            .range(expr.textRange)
+            .create()
+    }
+
+    private fun reportMissingReturnValue(
+        element: VexReturnStatement,
+        expectedType: VexType,
+        holder: AnnotationHolder
+    ) {
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "Missing return value: expected '${expectedType.displayName}'"
+        )
+            .range(element.textRange)
+            .create()
+    }
+
+    private fun reportIncompatibleReturnType(
+        expr: PsiElement,
+        expectedType: VexType,
+        actualType: VexType,
+        holder: AnnotationHolder
+    ) {
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "Incompatible return type: expected '${expectedType.displayName}', got '${actualType.displayName}'"
+        )
+            .range(expr.textRange)
+            .create()
     }
 
     private fun checkDeclarationInitialization(element: VexDeclarationItem, holder: AnnotationHolder) {
