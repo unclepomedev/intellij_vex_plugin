@@ -219,4 +219,20 @@ class VexParserTest : VexTestBase() {
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Export and function modifiers should be parsed", hasErrors)
     }
+
+    fun testArrayLiterals() {
+        val code = """
+            int arr1[] = {1, 2, 3};
+            vector arr2[] = {{1,0,0}, {0,1,0}};
+            
+            int arr3[] = [1, 2, 3];
+            float arr4[] = [1.0, 2.5, 3.14];
+            vector arr5[] = [[1,0,0], [0,1,0]];
+            
+            float d = distance([0,0,0], [1,1,1]);
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Array literals with both braces {} and brackets [] should be parsed without errors", hasErrors)
+    }
 }
