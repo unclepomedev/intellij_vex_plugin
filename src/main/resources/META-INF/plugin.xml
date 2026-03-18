@@ -25,5 +25,13 @@
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexDeclarationAnnotator"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexUnusedSymbolAnnotator"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexTypeCheckAnnotator"/>
+
+        <fileTemplateGroup implementation="com.github.unclepomedev.houdinivexassist.actions.VexFileTemplateFactory"/>
+        <internalFileTemplate name="VexFile"/>
     </extensions>
+    <actions>
+        <action id="Vex.NewFile" class="com.github.unclepomedev.houdinivexassist.actions.CreateVexFileAction">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+    </actions>
 </idea-plugin>
