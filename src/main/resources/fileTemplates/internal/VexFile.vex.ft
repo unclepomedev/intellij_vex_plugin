@@ -1,7 +1,10 @@
-#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+// ============================================================================
+// File:        ${NAME}.vex
+// Author:      ${USER}
+// Created:     ${DATE}
+// Description:
+// ============================================================================
 
-// Created by ${USER} on ${DATE}.
-
-void main() {
+void ${NAME}() {
 #[[$END$]]#
 }
