@@ -219,4 +219,24 @@ class VexCompletionTest : VexTestBase() {
         assertFalse("Completion should NOT contain local variables during dot access", lookupStrings.contains("pos"))
         assertFalse("Completion should NOT contain standard functions during dot access", lookupStrings.contains("abs"))
     }
+
+    fun testPrimitiveTypeCompletion() {
+        val code = """
+            void main() {
+                vec<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val lookups = myFixture.completeBasic()
+
+        assertNotNull("Completion list should not be null", lookups)
+        val lookupStrings = lookups!!.map { it.lookupString }
+
+        assertTrue("Completion should contain 'vector'", lookupStrings.contains("vector"))
+        assertTrue("Completion should contain 'vector2'", lookupStrings.contains("vector2"))
+        assertTrue("Completion should contain 'vector4'", lookupStrings.contains("vector4"))
+
+        assertFalse("Completion should NOT contain 'int'", lookupStrings.contains("int"))
+        assertFalse("Completion should NOT contain 'float'", lookupStrings.contains("float"))
+    }
 }

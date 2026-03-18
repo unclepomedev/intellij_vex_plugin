@@ -57,9 +57,32 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
     }
 
     private fun handleStandardCompletion(parameters: CompletionParameters, result: CompletionResultSet) {
+        addPrimitiveTypes(result)
         val localFunctionNames = addLocalFunctions(parameters, result)
         addStandardFunctions(parameters, result, localFunctionNames)
         addLocalVariablesAndParameters(parameters, result)
+    }
+
+    private fun addPrimitiveTypes(result: CompletionResultSet) {
+        val primitiveTypes = listOf(
+            "int", "float", "vector", "vector2", "vector4",
+            "matrix", "matrix2", "matrix3", "string", "void",
+            "bsdf", "dict", "struct", "function"
+        )
+
+        primitiveTypes.forEach { typeName ->
+            result.addElement(
+                LookupElementBuilder.create(typeName)
+                    .withBoldness(true)
+                    .withIcon(AllIcons.Nodes.Type)
+                    .withInsertHandler { context, _ ->
+                        val document = context.document
+                        val offset = context.tailOffset
+                        document.insertString(offset, " ")
+                        context.editor.caretModel.moveToOffset(offset + 1)
+                    }
+            )
+        }
     }
 
     private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
