@@ -57,9 +57,40 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
     }
 
     private fun handleStandardCompletion(parameters: CompletionParameters, result: CompletionResultSet) {
+        addPrimitiveTypes(result)
         val localFunctionNames = addLocalFunctions(parameters, result)
         addStandardFunctions(parameters, result, localFunctionNames)
         addLocalVariablesAndParameters(parameters, result)
+    }
+
+    private fun addPrimitiveTypes(result: CompletionResultSet) {
+        val primitiveTypes = listOf(
+            "int", "float", "vector", "vector2", "vector4",
+            "matrix", "matrix2", "matrix3", "string", "void",
+            "bsdf", "dict", "struct", "function"
+        )
+
+        primitiveTypes.forEach { typeName ->
+            result.addElement(
+                LookupElementBuilder.create(typeName)
+                    .withBoldness(true)
+                    .withIcon(AllIcons.Nodes.Type)
+                    .withInsertHandler { context, _ ->
+                        val document = context.document
+                        val offset = context.tailOffset
+
+                        val hasNextChar = offset < document.textLength
+                        val nextChar = if (hasNextChar) document.charsSequence[offset] else null
+
+                        if (nextChar == null || nextChar !in " ()[]") {
+                            document.insertString(offset, " ")
+                            context.editor.caretModel.moveToOffset(offset + 1)
+                        } else {
+                            context.editor.caretModel.moveToOffset(offset)
+                        }
+                    }
+            )
+        }
     }
 
     private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
@@ -160,7 +191,11 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
             .forEach { name -> result.addElement(createVariableLookup(name)) }
     }
 
-    private fun addParametersFromScope(scope: PsiElement, result: CompletionResultSet, seenNames: MutableSet<String>) {
+    private fun addParametersFromScope(
+        scope: PsiElement,
+        result: CompletionResultSet,
+        seenNames: MutableSet<String>
+    ) {
         VexScopeAnalyzer.getParametersForScope(scope)
             .map { it.identifier.text }
             .filter { it.isNotEmpty() && seenNames.add(it) }
@@ -236,7 +271,8 @@ private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandle
         }
 
         val hasParen = offset < document.textLength && document.charsSequence[offset] == '('
-        val hasClosingParen = hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
+        val hasClosingParen =
+            hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
 
         if (!hasParen) {
             document.insertString(offset, "()")
