@@ -1,7 +1,7 @@
 package com.github.unclepomedev.houdinivexassist.services
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import java.io.InputStreamReader
@@ -9,12 +9,22 @@ import java.nio.charset.StandardCharsets
 
 data class VexFunction(val name: String, val args: List<String>, val returnType: String)
 
+private data class ApiDumpDto(
+    @SerializedName("Vex") val vex: VexContextDto?
+)
+
+private data class VexContextDto(val cvex: CvexContextDto?)
+private data class CvexContextDto(val functions: Map<String, List<FunctionOverloadDto>>?)
+private data class FunctionOverloadDto(
+    @SerializedName("return") val returnType: String?, // avoid reserved word with annotation
+    val args: List<String>?
+)
+
 @Service(Service.Level.PROJECT)
 class VexApiProvider {
     private val logger = Logger.getInstance(VexApiProvider::class.java)
     val functions: List<VexFunction> by lazy { loadApiDump() }
     private val overloadsByName: Map<String, List<VexFunction>> by lazy { functions.groupBy(VexFunction::name) }
-    private val functionNames: Set<String> by lazy { overloadsByName.keys }
 
     private fun loadApiDump(): List<VexFunction> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
@@ -22,36 +32,15 @@ class VexApiProvider {
 
         return try {
             InputStreamReader(resourceStream, StandardCharsets.UTF_8).use { reader ->
-                val jsonObject = Gson().fromJson(reader, JsonObject::class.java)
+                val dump = Gson().fromJson(reader, ApiDumpDto::class.java)
+                val functionsMap = dump?.vex?.cvex?.functions ?: return emptyList()
 
-                val funcsObj = jsonObject.getAsJsonObject("Vex")
-                    ?.getAsJsonObject("cvex")
-                    ?.getAsJsonObject("functions")
-                    ?: return emptyList()
+                functionsMap.flatMap { (funcName, overloads) ->
+                    overloads.mapNotNull { overload ->
+                        val retType = overload.returnType ?: return@mapNotNull null
+                        val argsList = overload.args ?: return@mapNotNull null
 
-                funcsObj.entrySet().flatMap { (funcName, element) ->
-                    val funcArray = element.takeIf { it.isJsonArray }?.asJsonArray
-                        ?: return@flatMap emptyList()
-
-                    funcArray.mapNotNull { overload ->
-                        val obj = overload.takeIf { it.isJsonObject }?.asJsonObject
-                            ?: return@mapNotNull null
-
-                        val returnType = obj.get("return")
-                            ?.takeIf { it.isJsonPrimitive }
-                            ?.asString
-                            ?: return@mapNotNull null
-
-                        val argsJson = obj.get("args")
-                            ?.takeIf { it.isJsonArray }
-                            ?.asJsonArray
-                            ?: return@mapNotNull null
-
-                        val argsList = argsJson.mapNotNull { it.takeIf { arg -> arg.isJsonPrimitive }?.asString }
-
-                        if (argsList.size != argsJson.size()) return@mapNotNull null
-
-                        VexFunction(funcName, argsList, returnType)
+                        VexFunction(funcName, argsList, retType)
                     }
                 }
             }
@@ -62,7 +51,7 @@ class VexApiProvider {
     }
 
     fun hasFunction(functionName: String): Boolean {
-        return functionName in functionNames
+        return overloadsByName.containsKey(functionName)
     }
 
     fun getOverloads(functionName: String): List<VexFunction> {
