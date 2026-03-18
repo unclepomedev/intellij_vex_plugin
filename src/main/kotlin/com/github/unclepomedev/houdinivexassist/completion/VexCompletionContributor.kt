@@ -34,12 +34,9 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         val memberExpr = PsiTreeUtil.getParentOfType(element, VexMemberExpr::class.java)
         if (memberExpr != null) {
             handleDotAccessCompletion(memberExpr.expr, result)
-            return
+        } else {
+            handleStandardCompletion(parameters, result)
         }
-
-        val localFunctionNames = addLocalFunctions(parameters, result)
-        addStandardFunctions(parameters, result, localFunctionNames)
-        addLocalVariablesAndParameters(parameters, result)
     }
 
     private fun handleDotAccessCompletion(baseExpr: VexExpr, result: CompletionResultSet) {
@@ -59,13 +56,19 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         }
     }
 
+    private fun handleStandardCompletion(parameters: CompletionParameters, result: CompletionResultSet) {
+        val localFunctionNames = addLocalFunctions(parameters, result)
+        addStandardFunctions(parameters, result, localFunctionNames)
+        addLocalVariablesAndParameters(parameters, result)
+    }
+
     private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
         val file = context.containingFile
         val targetStruct = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java)
             .find { it.identifier?.text == structName } ?: return
 
         targetStruct.structMemberList.forEach { member ->
-            val typeString = member.firstChild?.text ?: "unknown"
+            val typeString = member.typeRef.text ?: "unknown"
             member.declarationItemList.forEach { declItem ->
                 val memberName = declItem.identifier.text
                 if (memberName.isNotEmpty()) {
