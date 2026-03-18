@@ -27,8 +27,8 @@ class VexFormattingModelBuilder : FormattingModelBuilder {
             .after(VexTypes.COMMA).spaceIf(true)
 
             // identifiers
-            .between(VexTypes.TYPE, VexTypes.IDENTIFIER).spaces(1)
-            .between(VexTypes.TYPE, VexTypes.DECLARATION_ITEM).spaces(1)
+            .between(VexTypes.TYPE_REF, VexTypes.IDENTIFIER).spaces(1)
+            .between(VexTypes.TYPE_REF, VexTypes.DECLARATION_ITEM).spaces(1)
             .between(VexTypes.STRUCT, VexTypes.IDENTIFIER).spaces(1)
 
             // blocks & parentheses

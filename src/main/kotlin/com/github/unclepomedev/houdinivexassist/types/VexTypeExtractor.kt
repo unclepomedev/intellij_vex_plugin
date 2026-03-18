@@ -2,7 +2,6 @@ package com.github.unclepomedev.houdinivexassist.types
 
 import com.github.unclepomedev.houdinivexassist.psi.*
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiWhiteSpace
 
 object VexTypeExtractor {
 
@@ -27,37 +26,23 @@ object VexTypeExtractor {
     }
 
     private fun extractFromParameterDef(paramDef: VexParameterDef): VexType {
-        val typeString = paramDef.firstChild?.text ?: return VexType.UnknownType
+        val typeString = paramDef.typeRef.text
         val baseType = VexType.fromString(typeString)
 
         return wrapInArrayIfNeeded(baseType, paramDef)
     }
 
     private fun extractFromFunctionDef(funcDef: VexFunctionDef): VexType {
-        var child = funcDef.firstChild
-        while (child != null) {
-            if (isReturnTypeIdentifier(child)) {
-                return VexType.fromString(child.text)
-            }
-            child = child.nextSibling
-        }
-
-        return VexType.UnknownType
+        val typeString = funcDef.typeRef.text ?: return VexType.UnknownType
+        return VexType.fromString(typeString)
     }
 
     private fun resolveDeclarationBaseTypeString(item: VexDeclarationItem): String? {
         return when (val parent = item.parent) {
-            is VexDeclarationStatement -> parent.firstChild?.text
-            is VexStructMember -> parent.firstChild?.text
+            is VexDeclarationStatement -> parent.typeRef.text
+            is VexStructMember -> parent.typeRef.text
             else -> null
         }
-    }
-
-    private fun isReturnTypeIdentifier(element: PsiElement): Boolean {
-        val elementType = element.node.elementType
-        return element !is PsiWhiteSpace &&
-                elementType != VexTypes.EXPORT &&
-                elementType != VexTypes.FUNCTION
     }
 
     private fun wrapInArrayIfNeeded(baseType: VexType, element: PsiElement): VexType {
