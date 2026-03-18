@@ -1,7 +1,11 @@
-#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+// ============================================================================
+// File:        ${NAME}.vex
+// Author:      ${USER}
+// Created:     ${DATE}
+// Description:
+// ============================================================================
 
-// Created by ${USER} on ${DATE}.
-
-void main() {
-#[[$END$]]#
+#set($SAFE_NAME = $NAME.replaceAll("[^A-Za-z0-9_]", "_"))
+void ${SAFE_NAME}() {
+    // TODO: implement#[[$END$]]#
 }

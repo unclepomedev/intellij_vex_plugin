@@ -66,8 +66,10 @@ class VexUnusedSymbolAnnotator : Annotator {
         val funcName = identifier.text
         val file = element.containingFile as? VexFile ?: return
 
-        // main is not marked as unused
-        if (funcName == "main") return
+        // entrypoint is not marked as unused
+        val fileBaseName = file.virtualFile?.nameWithoutExtension
+        val sanitizedBaseName = fileBaseName?.replace(Regex("[^A-Za-z0-9_]"), "_")
+        if (funcName == "main" || (sanitizedBaseName != null && funcName == sanitizedBaseName)) return
 
         val usages = PsiTreeUtil.findChildrenOfType(file, VexCallExpr::class.java)
         val isUsed = usages.any { call ->
