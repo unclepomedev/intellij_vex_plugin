@@ -632,4 +632,25 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testFileNamedFunctionIsNotHighlightedAsUnused() {
+        myFixture.configureByText("my_wrangle.vex", """
+            void my_wrangle() {
+                int a = 1;
+                @P.x += a;
+            }
+        """.trimIndent())
+
+        myFixture.checkHighlighting(true, false, true, false)
+    }
+
+    fun testDifferentNamedFunctionIsHighlightedAsUnused() {
+        myFixture.configureByText("my_wrangle.vex", """
+            void <weak_warning descr="Unused function 'another_func'">another_func</weak_warning>() {
+                int <weak_warning descr="Unused variable 'a'">a</weak_warning> = 1;
+            }
+        """.trimIndent())
+
+        myFixture.checkHighlighting(true, false, true, false)
+    }
 }
