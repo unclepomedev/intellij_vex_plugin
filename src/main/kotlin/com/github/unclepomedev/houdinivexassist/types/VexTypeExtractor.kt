@@ -26,7 +26,7 @@ object VexTypeExtractor {
     }
 
     private fun extractFromParameterDef(paramDef: VexParameterDef): VexType {
-        val typeString = paramDef.typeRef.text
+        val typeString = paramDef.typeRef.text ?: return VexType.UnknownType
         val baseType = VexType.fromString(typeString)
 
         return wrapInArrayIfNeeded(baseType, paramDef)
@@ -39,8 +39,8 @@ object VexTypeExtractor {
 
     private fun resolveDeclarationBaseTypeString(item: VexDeclarationItem): String? {
         return when (val parent = item.parent) {
-            is VexDeclarationStatement -> parent.typeRef.text
-            is VexStructMember -> parent.typeRef.text
+            is VexDeclarationStatement -> parent.typeRef.text ?: return null
+            is VexStructMember -> parent.typeRef.text ?: return null
             else -> null
         }
     }
