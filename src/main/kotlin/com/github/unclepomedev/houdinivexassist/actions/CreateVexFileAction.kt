@@ -1,5 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.actions
 
+import com.github.unclepomedev.houdinivexassist.icons.VexIcons
 import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
 import com.intellij.openapi.project.Project
@@ -8,12 +9,11 @@ import com.intellij.psi.PsiDirectory
 class CreateVexFileAction : CreateFileFromTemplateAction(
     "Vex File",
     "Creates a new Vex file",
-    null // TODO icon
+    VexIcons.FILE
 ) {
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
         builder.setTitle("New Vex File")
-            // TODO icon
-            .addKind("VexFile", null, "VexFile.vex")
+            .addKind("Vex file", VexIcons.FILE, "VexFile.vex")
     }
 
     override fun getActionName(directory: PsiDirectory?, newName: String, templateName: String?): String {

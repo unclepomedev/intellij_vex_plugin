@@ -13,3 +13,6 @@ Under development.
 * Error and Warnings (Syntax, Type, etc.)
 * Quick Documentation
 * Code Navigation
+
+* create a new file
+
