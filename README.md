@@ -14,5 +14,5 @@ Under development.
 * Quick Documentation
 * Code Navigation
 
-* create a new file
+* Create a new file
 

@@ -7,13 +7,21 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 
 class CreateVexFileAction : CreateFileFromTemplateAction(
-    "Vex File",
-    "Creates a new Vex file",
+    ACTION_TITLE,
+    ACTION_DESCRIPTION,
     VexIcons.FILE
 ) {
+    companion object {
+        private const val ACTION_TITLE = "Vex File"
+        private const val ACTION_DESCRIPTION = "Creates a new Vex file"
+        private const val DIALOG_TITLE = "New Vex File"
+        private const val KIND_TITLE = "Vex file"
+        private const val TEMPLATE_NAME = "VexFile.vex"
+    }
+
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
-        builder.setTitle("New Vex File")
-            .addKind("Vex file", VexIcons.FILE, "VexFile.vex")
+        builder.setTitle(DIALOG_TITLE)
+            .addKind(KIND_TITLE, VexIcons.FILE, TEMPLATE_NAME)
     }
 
     override fun getActionName(directory: PsiDirectory?, newName: String, templateName: String?): String {
