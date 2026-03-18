@@ -5,6 +5,7 @@
 // Description:
 // ============================================================================
 
-void ${NAME}() {
+#set($SAFE_NAME = $NAME.replaceAll("[^A-Za-z0-9_]", "_"))
+void ${SAFE_NAME}() {
     // TODO: implement#[[$END$]]#
 }
