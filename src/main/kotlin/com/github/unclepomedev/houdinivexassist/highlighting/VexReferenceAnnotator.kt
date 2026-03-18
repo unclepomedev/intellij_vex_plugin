@@ -24,6 +24,15 @@ class VexReferenceAnnotator : Annotator {
             holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved variable: '$varName'")
                 .range(identifier.textRange)
                 .create()
+            return
+        }
+        if (resolvedElement is VexDeclarationItem) {
+            // Check whether the variable on the right-hand side is within the tree of its own declaration statement.
+            if (com.intellij.psi.util.PsiTreeUtil.isAncestor(resolvedElement, element, false)) {
+                holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is used in its own initialization")
+                    .range(identifier.textRange)
+                    .create()
+            }
         }
     }
 

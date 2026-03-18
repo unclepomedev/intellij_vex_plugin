@@ -670,4 +670,25 @@ class VexAnnotatorTest : VexTestBase() {
 
         myFixture.checkHighlighting(true, false, true, false)
     }
+
+    fun testSelfInitializationIsHighlightedAsError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int a = <error descr="Variable 'a' is used in its own initialization">a</error>;
+                int b = <error descr="Variable 'b' is used in its own initialization">b</error> + 1;
+                vector v = {<error descr="Variable 'v' is used in its own initialization">v</error>.x, 0, 0};
+                
+                int c = 1;
+                int d = c + 1;
+                
+                if (1) {
+                    int a = 10;
+                }
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }
