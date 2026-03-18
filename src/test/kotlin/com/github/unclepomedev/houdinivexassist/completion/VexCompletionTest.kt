@@ -239,4 +239,104 @@ class VexCompletionTest : VexTestBase() {
         assertFalse("Completion should NOT contain 'int'", lookupStrings.contains("int"))
         assertFalse("Completion should NOT contain 'float'", lookupStrings.contains("float"))
     }
+
+    fun testPrimitiveTypeCompletionInsertsSpaceNormally() {
+        val code1 = """
+            void main() {
+                in<caret>my_var;
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code1)
+
+        var targetLookup = myFixture.completeBasic()?.find { it.lookupString == "int" }
+        assertNotNull(targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void main() {
+                int <caret>my_var;
+            }
+        """.trimIndent()
+        )
+
+        val code2 = """
+            void myFunc(in<caret>, float b) {}
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code2)
+
+        targetLookup = myFixture.completeBasic()?.find { it.lookupString == "int" }
+        assertNotNull(targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void myFunc(int <caret>, float b) {}
+        """.trimIndent()
+        )
+    }
+
+    fun testPrimitiveTypeCompletionDoesNotInsertSpaceBeforeBrackets() {
+        val code1 = """
+            void main() {
+                vector pos = vec<caret>(1.0, 2.0, 3.0);
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code1)
+
+        var targetLookup = myFixture.completeBasic()?.find { it.lookupString == "vector" }
+        assertNotNull(targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void main() {
+                vector pos = vector<caret>(1.0, 2.0, 3.0);
+            }
+        """.trimIndent()
+        )
+
+        val code2 = """
+            void main() {
+                vector a = vector(floa<caret>);
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code2)
+
+        targetLookup = myFixture.completeBasic()?.find { it.lookupString == "float" }
+        assertNotNull(targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void main() {
+                vector a = vector(float<caret>);
+            }
+        """.trimIndent()
+        )
+
+        val code3 = """
+            void main() {
+                floa<caret>[] my_array;
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code3)
+
+        targetLookup = myFixture.completeBasic()?.find { it.lookupString == "float" }
+        assertNotNull(targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void main() {
+                float<caret>[] my_array;
+            }
+        """.trimIndent()
+        )
+    }
 }

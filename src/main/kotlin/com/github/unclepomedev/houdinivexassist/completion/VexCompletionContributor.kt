@@ -78,8 +78,16 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
                     .withInsertHandler { context, _ ->
                         val document = context.document
                         val offset = context.tailOffset
-                        document.insertString(offset, " ")
-                        context.editor.caretModel.moveToOffset(offset + 1)
+
+                        val hasNextChar = offset < document.textLength
+                        val nextChar = if (hasNextChar) document.charsSequence[offset] else null
+
+                        if (nextChar == null || nextChar !in " ()[]") {
+                            document.insertString(offset, " ")
+                            context.editor.caretModel.moveToOffset(offset + 1)
+                        } else {
+                            context.editor.caretModel.moveToOffset(offset)
+                        }
                     }
             )
         }
@@ -183,7 +191,11 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
             .forEach { name -> result.addElement(createVariableLookup(name)) }
     }
 
-    private fun addParametersFromScope(scope: PsiElement, result: CompletionResultSet, seenNames: MutableSet<String>) {
+    private fun addParametersFromScope(
+        scope: PsiElement,
+        result: CompletionResultSet,
+        seenNames: MutableSet<String>
+    ) {
         VexScopeAnalyzer.getParametersForScope(scope)
             .map { it.identifier.text }
             .filter { it.isNotEmpty() && seenNames.add(it) }
@@ -259,7 +271,8 @@ private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandle
         }
 
         val hasParen = offset < document.textLength && document.charsSequence[offset] == '('
-        val hasClosingParen = hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
+        val hasClosingParen =
+            hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
 
         if (!hasParen) {
             document.insertString(offset, "()")
