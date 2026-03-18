@@ -5,7 +5,6 @@ import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
-import com.github.unclepomedev.houdinivexassist.psi.identifier
 
 class VexReferenceTest : VexTestBase() {
 
@@ -86,5 +85,60 @@ class VexReferenceTest : VexTestBase() {
 
         val paramCount = funcDef.parameterListDef?.parameterDefList?.size ?: 0
         assertEquals("Should resolve to the overload with 2 parameters", 2, paramCount)
+    }
+
+    fun testFunctionOverloadReferenceByTypeSignature() {
+        myFixture.configureByText(
+            VexFileType, """
+            void process(int a) {}      // candidate 1 (Int)
+            void process(string a) {}   // candidate 2 (String)
+            void process(float a) {}    // candidate 3 (Float)
+
+            void main() {
+                // This should jump to the string overload, not the first one defined.
+                proce<caret>ss("hello");
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Function reference should be resolved", resolved)
+        assertTrue("Resolved element should be a function definition", resolved is VexFunctionDef)
+
+        val funcDef = resolved as VexFunctionDef
+        assertEquals("process", funcDef.identifier.text)
+
+        // Ensure we jumped to the correct overload by checking the parameter type
+        val paramType = funcDef.parameterListDef?.parameterDefList?.firstOrNull()?.typeRef?.text
+        assertEquals("Should resolve to the overload with string parameter", "string", paramType)
+    }
+
+    fun testFunctionOverloadReferenceWithImplicitCast() {
+        myFixture.configureByText(
+            VexFileType, """
+            void set(int a, int b) {}       // candidate 1
+            void set(vector a, vector b) {} // candidate 2
+
+            void main() {
+                // This should jump to the vector overload due to implicit casting from float
+                s<caret>et({1,2,3}, 2.0);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Function reference should be resolved", resolved)
+        assertTrue("Resolved element should be a function definition", resolved is VexFunctionDef)
+
+        val funcDef = resolved as VexFunctionDef
+        assertEquals("set", funcDef.identifier.text)
+
+        // Ensure we jumped to the correct overload by checking the parameter type
+        val paramType = funcDef.parameterListDef?.parameterDefList?.firstOrNull()?.typeRef?.text
+        assertEquals("Should resolve to the overload with vector parameter via implicit cast", "vector", paramType)
     }
 }

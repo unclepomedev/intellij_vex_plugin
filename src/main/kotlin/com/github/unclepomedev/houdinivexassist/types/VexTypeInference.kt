@@ -180,7 +180,7 @@ object VexTypeInference {
         for (member in targetStruct.structMemberList) {
             val matchedDecl = member.declarationItemList.find { it.identifier.text == memberName }
             if (matchedDecl != null) {
-                val typeString = member.firstChild?.text ?: return VexType.UnknownType
+                val typeString = member.typeRef.text ?: return VexType.UnknownType
                 return VexType.fromString(typeString)
             }
         }
@@ -189,9 +189,7 @@ object VexTypeInference {
     }
 
     private fun inferCastExpr(expr: VexCastExpr): VexType {
-        val typeNode = expr.node.findChildByType(VexTypes.TYPE)
-            ?: expr.node.findChildByType(VexTypes.IDENTIFIER)
-        val typeName = typeNode?.text ?: return VexType.UnknownType
+        val typeName = expr.typeRef.text ?: return VexType.UnknownType
         return VexType.fromString(typeName)
     }
 

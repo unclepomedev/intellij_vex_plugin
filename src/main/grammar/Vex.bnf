@@ -89,7 +89,7 @@ vexFile ::= item_*
 
 private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fallback_item
 
-private type_ref ::= TYPE | IDENTIFIER
+type_ref ::= TYPE | IDENTIFIER
 
 private fallback_item ::= NUMBER | STRING | ATTRIBUTE | type_ref
                         | LBRACK | RBRACK | ARROW
