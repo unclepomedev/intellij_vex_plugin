@@ -113,7 +113,18 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.configureByText(
             VexFileType,
             """
-            float <error descr="Variable name 'distance' conflicts with a standard VEX function">distance</error> = 1.0;
+            float distance = 1.0;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testFunctionCallShadowedByVariable() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            float distance = 1.0;
+            <error descr="Variable 'distance' cannot be called as a function">distance</error>(@P, @P);
             """.trimIndent()
         )
         myFixture.checkHighlighting(false, false, false, false)
