@@ -38,10 +38,20 @@ class VexReferenceAnnotator : Annotator {
 
     private fun checkFunctionCall(element: VexCallExpr, holder: AnnotationHolder) {
         val identifier = element.identifier
+        val funcName = identifier.text
         val containingFile = element.containingFile as? VexFile ?: return
 
-        if (!VexFunctionResolver.isKnownFunction(identifier.text, containingFile)) {
-            holder.newAnnotation(HighlightSeverity.ERROR, "Unknown VEX function: '${identifier.text}'")
+        // If a variable with the same name is resolved, the function call is invalid (shadowed)
+        val resolvedVar = VexVariableResolver.resolveVariable(element, funcName)
+        if (resolvedVar != null) {
+            holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$funcName' cannot be called as a function")
+                .range(identifier.textRange)
+                .create()
+            return
+        }
+
+        if (!VexFunctionResolver.isKnownFunction(funcName, containingFile)) {
+            holder.newAnnotation(HighlightSeverity.ERROR, "Unknown VEX function: '$funcName'")
                 .range(identifier.textRange)
                 .create()
         }

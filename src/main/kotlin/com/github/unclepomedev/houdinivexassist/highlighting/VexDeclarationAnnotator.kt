@@ -44,10 +44,6 @@ class VexDeclarationAnnotator : Annotator {
             reportError(holder, identifier, "Variable '$varName' is already defined as a parameter")
             return
         }
-        if (isStandardFunction(varName, element)) {
-            reportError(holder, identifier, "Variable name '$varName' conflicts with a standard VEX function")
-            return
-        }
         if (isLocalFunctionBefore(element, varName, file)) {
             reportError(holder, identifier, "Variable name '$varName' conflicts with a local function")
             return
