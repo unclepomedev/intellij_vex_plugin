@@ -82,12 +82,12 @@ class VexApiProvider {
                 if (params.last() == "...") {
                     // Exclude type information and get only variable names (excluding modifiers such as & and *)
                     val names = params.dropLast(1).map { param ->
-                        param.split("\\s+".toRegex()).last().removePrefix("&").removePrefix("*")
+                        param.split("\\s+".toRegex()).last().trimStart('&', '*')
                     }.toMutableList()
                     result.add(names)
                 } else {
                     val names = params.map { param ->
-                        param.split("\\s+".toRegex()).last().removePrefix("&").removePrefix("*")
+                        param.split("\\s+".toRegex()).last().trimStart('&', '*')
                     }
                     result.add(names)
                 }
@@ -95,9 +95,10 @@ class VexApiProvider {
             result
         }
 
-        // Select the best overload based on the number of arguments (arity)
-        // For variable length arguments, match at least the minimum defined argument
-        return overloads.find { it.size == arity }
-            ?: overloads.find { arity >= it.size }
+        // Exact match takes priority
+        overloads.find { it.size == arity }?.let { return it }
+        // For variadic functions, prefer overloads where arity > size
+        // This requires tracking variadic status during parsing
+        return overloads.filter { arity >= it.size }.maxByOrNull { it.size }
     }
 }

@@ -78,10 +78,10 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
         for ((offset, expectedText) in expectedHints) {
             val actualText = actualHints[offset]
             assertNotNull(
-                "Expected hint '$expectedText' at offset $offset but found none. Actual hints: \$actualHints",
+                "Expected hint '$expectedText' at offset $offset but found none. Actual hints: $actualHints",
                 actualText
             )
-            assertTrue("Expected hint '$expectedText' but was '\$actualText'", actualText!!.contains(expectedText))
+            assertTrue("Expected hint '$expectedText' but was '$actualText'", actualText!!.contains(expectedText))
         }
     }
 
@@ -113,6 +113,27 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
         val text = """
             void main() {
                 pow(<# n: #>2.0, <# exponent: #>3.0);
+            }
+        """.trimIndent()
+        doTest(text)
+    }
+
+    fun testNoHintsForUnknownFunction() {
+        // expectedHints 0, pass if actualHints 0
+        val text = "void main() { unknownFunc(1, 2); }"
+        doTest(text)
+    }
+
+    fun testNoHintsForEmptyArgs() {
+        val text = "void main() { getbbox_center(); }"
+        doTest(text)
+    }
+
+    fun testVariadicFunction() {
+        // printf(string format, ...) only gives a hint for the first element.
+        val text = """
+            void main() {
+                printf(<# format: #>"%d", 123);
             }
         """.trimIndent()
         doTest(text)

@@ -21,7 +21,16 @@ class VexInlayHintsProvider : InlayHintsProvider<VexInlayHintsProvider.Settings>
 
     override fun createConfigurable(settings: Settings): ImmediateConfigurable {
         return object : ImmediateConfigurable {
-            override fun createComponent(listener: ChangeListener): JPanel = JPanel()
+            override fun createComponent(listener: ChangeListener): JPanel {
+                val panel = JPanel()
+                val checkbox = javax.swing.JCheckBox(mainCheckboxText, settings.showParameterHints)
+                checkbox.addActionListener {
+                    settings.showParameterHints = checkbox.isSelected
+                    listener.settingsChanged()
+                }
+                panel.add(checkbox)
+                return panel
+            }
             override val mainCheckboxText: String = "Show parameter hints"
         }
     }

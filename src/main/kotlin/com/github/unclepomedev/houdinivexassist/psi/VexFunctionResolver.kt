@@ -84,17 +84,15 @@ object VexFunctionResolver {
 
         // try to resolve to standard function
         val apiProvider = element.project.getService(VexApiProvider::class.java) ?: return emptyList()
-        
+
         // First try to get from help files
         val helpNames = apiProvider.getParameterNamesFromHelp(funcName, args.size)
         if (!helpNames.isNullOrEmpty()) {
             return helpNames
         }
-        
-        // Fallback to JSON dump (which might just have type names)
-        val overloads = apiProvider.getOverloads(funcName)
-        val matchedOverload = overloads.find { it.args.size == args.size }
-        return matchedOverload?.args ?: emptyList()
+
+        // No parameter names available from help files
+        return emptyList()
     }
 
     /**
