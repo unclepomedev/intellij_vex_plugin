@@ -25,6 +25,7 @@ class VexApiProvider {
     private val logger = Logger.getInstance(VexApiProvider::class.java)
     val functions: List<VexFunction> by lazy { loadApiDump() }
     private val overloadsByName: Map<String, List<VexFunction>> by lazy { functions.groupBy(VexFunction::name) }
+    private val helpArgNamesCache = java.util.concurrent.ConcurrentHashMap<String, List<List<String>>>()
 
     private fun loadApiDump(): List<VexFunction> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
@@ -56,5 +57,47 @@ class VexApiProvider {
 
     fun getOverloads(functionName: String): List<VexFunction> {
         return overloadsByName[functionName].orEmpty()
+    }
+
+    fun getParameterNamesFromHelp(functionName: String, arity: Int): List<String>? {
+        val overloads = helpArgNamesCache.computeIfAbsent(functionName) { name ->
+            val path = "vex_help/functions/$name.txt"
+            val helpText = javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
+                InputStreamReader(stream, StandardCharsets.UTF_8).readText()
+            } ?: return@computeIfAbsent emptyList()
+
+            val usageRegex = Regex(":usage:\\s*`.*?\\((.*?)\\)`")
+            val matches = usageRegex.findAll(helpText)
+
+            val result = mutableListOf<List<String>>()
+            for (match in matches) {
+                val paramsStr = match.groupValues[1].trim()
+                if (paramsStr.isEmpty()) {
+                    result.add(emptyList())
+                    continue
+                }
+                val params = paramsStr.split(",").map { it.trim() }
+
+                // variadic function like `printf(string format, ...)`
+                if (params.last() == "...") {
+                    // Exclude type information and get only variable names (excluding modifiers such as & and *)
+                    val names = params.dropLast(1).map { param ->
+                        param.split("\\s+".toRegex()).last().removePrefix("&").removePrefix("*")
+                    }.toMutableList()
+                    result.add(names)
+                } else {
+                    val names = params.map { param ->
+                        param.split("\\s+".toRegex()).last().removePrefix("&").removePrefix("*")
+                    }
+                    result.add(names)
+                }
+            }
+            result
+        }
+
+        // Select the best overload based on the number of arguments (arity)
+        // For variable length arguments, match at least the minimum defined argument
+        return overloads.find { it.size == arity }
+            ?: overloads.find { arity >= it.size }
     }
 }
