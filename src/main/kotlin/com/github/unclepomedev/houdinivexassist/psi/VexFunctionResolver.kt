@@ -67,6 +67,35 @@ object VexFunctionResolver {
     }
 
     /**
+     * Resolves the parameter names for a function call expression.
+     * Checks local functions first, then falls back to API functions.
+     * Returns an empty list if no match is found.
+     */
+    fun resolveParameterNames(element: VexCallExpr): List<String> {
+        val funcName = element.identifier.text
+        val args = element.argumentList?.exprList ?: return emptyList()
+        val argTypes = args.map { VexTypeInference.inferType(it) }
+
+        // try to resolve to local function
+        val resolved = resolveFunction(element, funcName, args.size, argTypes)
+        if (resolved is VexFunctionDef) {
+            return resolved.parameterListDef?.parameterDefList?.map { it.identifier.text } ?: emptyList()
+        }
+
+        // try to resolve to standard function
+        val apiProvider = element.project.getService(VexApiProvider::class.java) ?: return emptyList()
+
+        // First try to get from help files
+        val helpNames = apiProvider.getParameterNamesFromHelp(funcName, args.size)
+        if (!helpNames.isNullOrEmpty()) {
+            return helpNames
+        }
+
+        // No parameter names available from help files
+        return emptyList()
+    }
+
+    /**
      * Check if the specified function name actually exists as a standard function or a local function.
      */
     fun isKnownFunction(functionName: String, file: VexFile): Boolean {
