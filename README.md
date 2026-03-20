@@ -13,6 +13,7 @@ Under development.
 * Error and Warnings (Syntax, Type, etc.)
 * Quick Documentation
 * Code Navigation
+* Inlay Hints
 
-* Create a new file
+* Create a new .vex file
 
