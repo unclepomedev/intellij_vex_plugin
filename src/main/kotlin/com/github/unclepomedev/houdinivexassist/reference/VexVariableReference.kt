@@ -5,6 +5,7 @@ import com.github.unclepomedev.houdinivexassist.psi.VexVariableResolver
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.impl.source.resolve.ResolveCache
 
 class VexVariableReference(
     element: PsiElement,
@@ -12,8 +13,19 @@ class VexVariableReference(
 ) : PsiReferenceBase<PsiElement>(element, textRange) {
 
     override fun resolve(): PsiElement? {
-        val identifierName = rangeInElement.substring(element.text)
-        return VexVariableResolver.resolveVariable(element, identifierName)
+        return ResolveCache.getInstance(element.project).resolveWithCaching(
+            this,
+            Resolver,
+            false,
+            false
+        )
+    }
+
+    private object Resolver : ResolveCache.AbstractResolver<VexVariableReference, PsiElement> {
+        override fun resolve(ref: VexVariableReference, incompleteCode: Boolean): PsiElement? {
+            val identifierName = ref.rangeInElement.substring(ref.element.text)
+            return VexVariableResolver.resolveVariable(ref.element, identifierName)
+        }
     }
 
     override fun getVariants(): Array<Any> {

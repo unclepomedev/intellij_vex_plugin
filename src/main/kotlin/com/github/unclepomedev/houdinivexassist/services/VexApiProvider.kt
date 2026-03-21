@@ -26,13 +26,14 @@ class VexApiProvider {
     val functions: List<VexFunction> by lazy { loadApiDump() }
     private val overloadsByName: Map<String, List<VexFunction>> by lazy { functions.groupBy(VexFunction::name) }
     private val helpArgNamesCache = java.util.concurrent.ConcurrentHashMap<String, List<List<String>>>()
+    private val usageRegex = Regex(":usage:\\s*`.*?\\((.*?)\\)`")
 
     private fun loadApiDump(): List<VexFunction> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
             ?: return emptyList()
 
         return try {
-            InputStreamReader(resourceStream, StandardCharsets.UTF_8).use { reader ->
+            resourceStream.reader().use { reader ->
                 val dump = Gson().fromJson(reader, ApiDumpDto::class.java)
                 val functionsMap = dump?.vex?.cvex?.functions ?: return emptyList()
 
@@ -66,7 +67,6 @@ class VexApiProvider {
                 InputStreamReader(stream, StandardCharsets.UTF_8).readText()
             } ?: return@computeIfAbsent emptyList()
 
-            val usageRegex = Regex(":usage:\\s*`.*?\\((.*?)\\)`")
             val matches = usageRegex.findAll(helpText)
 
             val result = mutableListOf<List<String>>()

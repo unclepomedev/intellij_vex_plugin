@@ -7,6 +7,9 @@ import com.github.unclepomedev.houdinivexassist.types.VexTypeExtractor
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.github.unclepomedev.houdinivexassist.types.VexTypePromotion
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 
 object VexFunctionResolver {
@@ -25,7 +28,12 @@ object VexFunctionResolver {
         argTypes: List<VexType>? = null
     ): PsiElement? {
         val file = element.containingFile as? VexFile ?: return null
-        val localFunctions = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java)
+        val localFunctions = CachedValuesManager.getCachedValue(file) {
+            CachedValueProvider.Result.create(
+                PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java),
+                PsiModificationTracker.MODIFICATION_COUNT
+            )
+        }
         val candidates = localFunctions.filter { it.identifier.text == functionName }
 
         if (argTypes != null) {
