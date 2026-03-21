@@ -59,7 +59,7 @@ private object VexDotAccessCompletionHandler {
     }
 
     private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
-        val file = context.containingFile
+        val file = context.containingFile.originalFile
 
         val targetStruct = CachedValuesManager.getCachedValue(file) {
             CachedValueProvider.Result.create(
