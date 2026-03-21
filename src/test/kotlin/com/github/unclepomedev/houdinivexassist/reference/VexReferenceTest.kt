@@ -157,12 +157,14 @@ class VexReferenceTest : VexTestBase() {
 
         myFixture.renameElementAtCaret("newVarName")
 
-        myFixture.checkResult("""
+        myFixture.checkResult(
+            """
             function void test() {
                 int newVarName = 1;
                 newVarName = 2;
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 
     fun testFunctionParameterRename() {
@@ -176,10 +178,41 @@ class VexReferenceTest : VexTestBase() {
 
         myFixture.renameElementAtCaret("paramNew")
 
-        myFixture.checkResult("""
+        myFixture.checkResult(
+            """
             void myFunc(int paramNew) {
                 paramNew = 10;
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
+    }
+
+    fun testFunctionRename() {
+        myFixture.configureByText(
+            VexFileType, """
+            void oldName() {
+            }
+
+            void main() {
+                old<caret>Name();
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        assertNotNull("Resolve failed", ref.resolve())
+
+        myFixture.renameElementAtCaret("newName")
+
+        myFixture.checkResult(
+            """
+            void newName() {
+            }
+
+            void main() {
+                newName();
+            }
+        """.trimIndent()
+        )
     }
 }

@@ -5,12 +5,18 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.IncorrectOperationException
 
 object VexElementFactory {
     fun createIdentifier(project: Project, name: String): PsiElement {
         val file = createVexFile(project, "int $name;")
         val declarationItem = PsiTreeUtil.findChildOfType(file, VexDeclarationItem::class.java)
-        return declarationItem!!.identifier
+            ?: throw IncorrectOperationException("Invalid identifier: $name")
+        val identifier = declarationItem.identifier
+        if (identifier.text != name) {
+            throw IncorrectOperationException("Invalid identifier: $name")
+        }
+        return identifier
     }
 
     private fun createVexFile(project: Project, text: String): VexFile {
