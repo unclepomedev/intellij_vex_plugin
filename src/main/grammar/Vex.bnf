@@ -114,17 +114,28 @@ private fallback_item ::= NUMBER | STRING | ATTRIBUTE | type_ref
                         | ANDAND | OROR | NOT | QMARK | COLON
                         | IF | ELSE | FOR | FOREACH | WHILE | DO | BREAK | CONTINUE | RETURN | STRUCT
 
-struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE { pin=1 }
+struct_def ::= STRUCT IDENTIFIER LBRACE struct_member* RBRACE {
+    pin=1
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 struct_member ::= type_ref ( IDENTIFIER ARROW function_signature | declaration_item (COMMA declaration_item)* ) SEMICOLON { pin=1 recoverWhile=struct_member_recover }
 private struct_member_recover ::= !(type_ref | RBRACE)
 
 function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
 
-function_def ::= EXPORT? FUNCTION? type_ref IDENTIFIER LPAREN parameter_list_def? RPAREN block { pin="LPAREN" }
+function_def ::= EXPORT? FUNCTION? type_ref IDENTIFIER LPAREN parameter_list_def? RPAREN block {
+    pin="LPAREN"
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 parameter_list_def ::= parameter_def ((COMMA | SEMICOLON) parameter_def)*
-parameter_def ::= type_ref IDENTIFIER (LBRACK RBRACK)? BITAND?
+parameter_def ::= type_ref IDENTIFIER (LBRACK RBRACK)? BITAND? {
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 parameter_list_sig ::= parameter_sig ((COMMA | SEMICOLON) parameter_sig)*
 parameter_sig ::= type_ref IDENTIFIER?
@@ -161,7 +172,11 @@ return_statement ::= RETURN expr? SEMICOLON { pin=1 }
 control_statement ::= (BREAK | CONTINUE) SEMICOLON { pin=1 }
 
 declaration_statement ::= type_ref declaration_item (COMMA declaration_item)* SEMICOLON { pin=2 }
-declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? { pin=1 }
+declaration_item ::= IDENTIFIER (LBRACK RBRACK)? (EQUALS expr)? {
+    pin=1
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 expr_statement ::= expr SEMICOLON? | SEMICOLON
 
@@ -226,6 +241,7 @@ call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN {
 member_expr ::= expr DOT IDENTIFIER? { pin=2 }
 primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexPrimaryExprMixin"
+  implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
 }
 vector_literal ::= LBRACE argument_list? RBRACE
 

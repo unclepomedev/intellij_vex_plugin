@@ -1,6 +1,7 @@
 package com.github.unclepomedev.houdinivexassist.reference
 
 import com.github.unclepomedev.houdinivexassist.psi.VexCallExpr
+import com.github.unclepomedev.houdinivexassist.psi.VexElementFactory
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionResolver
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.intellij.openapi.util.TextRange
@@ -30,5 +31,12 @@ class VexFunctionReference(
 
     override fun getVariants(): Array<Any> {
         return emptyArray()
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+        val callExpr = element as? VexCallExpr ?: return element
+        val newId = VexElementFactory.createIdentifier(element.project, newElementName)
+        callExpr.identifier.replace(newId)
+        return element
     }
 }
