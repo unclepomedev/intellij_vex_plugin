@@ -75,7 +75,7 @@ class VexApiProvider {
                     result.add(emptyList())
                     continue
                 }
-                val params = paramsStr.split(",").map { it.trim() }
+                val params = paramsStr.split("[,;]".toRegex()).map { it.trim() }
 
                 // variadic function like `printf(string format, ...)`
                 if (params.last() == "...") {

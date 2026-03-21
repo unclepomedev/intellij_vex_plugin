@@ -138,4 +138,13 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
         """.trimIndent()
         doTest(text)
     }
+
+    fun testSetFunction() {
+        val text = """
+            void main() {
+                set(<# v1: #>1.0, <# v2: #>2.0, <# v3: #>3.0);
+            }
+        """.trimIndent()
+        doTest(text)
+    }
 }
