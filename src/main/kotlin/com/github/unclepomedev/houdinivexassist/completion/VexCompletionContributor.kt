@@ -6,11 +6,11 @@ import com.github.unclepomedev.houdinivexassist.services.VexApiProvider
 import com.github.unclepomedev.houdinivexassist.types.VexType
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.intellij.codeInsight.completion.*
-import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.icons.AllIcons
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 
@@ -33,13 +33,15 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         val element = parameters.position
         val memberExpr = PsiTreeUtil.getParentOfType(element, VexMemberExpr::class.java)
         if (memberExpr != null) {
-            handleDotAccessCompletion(memberExpr.expr, result)
+            VexDotAccessCompletionHandler.handle(memberExpr.expr, result)
         } else {
-            handleStandardCompletion(parameters, result)
+            VexStandardCompletionHandler.handle(parameters, result)
         }
     }
+}
 
-    private fun handleDotAccessCompletion(baseExpr: VexExpr, result: CompletionResultSet) {
+private object VexDotAccessCompletionHandler {
+    fun handle(baseExpr: VexExpr, result: CompletionResultSet) {
         when (val baseType = VexTypeInference.inferType(baseExpr)) {
             is VexType.StructType -> {
                 addStructMemberCompletions(baseExpr, baseType.name, result)
@@ -56,58 +58,22 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         }
     }
 
-    private fun handleStandardCompletion(parameters: CompletionParameters, result: CompletionResultSet) {
-        addPrimitiveTypes(result)
-        val localFunctionNames = addLocalFunctions(parameters, result)
-        addStandardFunctions(parameters, result, localFunctionNames)
-        addLocalVariablesAndParameters(parameters, result)
-    }
-
-    private fun addPrimitiveTypes(result: CompletionResultSet) {
-        val primitiveTypes = listOf(
-            "int", "float", "vector", "vector2", "vector4",
-            "matrix", "matrix2", "matrix3", "string", "void",
-            "bsdf", "dict", "struct", "function"
-        )
-
-        primitiveTypes.forEach { typeName ->
-            result.addElement(
-                LookupElementBuilder.create(typeName)
-                    .withBoldness(true)
-                    .withIcon(AllIcons.Nodes.Type)
-                    .withInsertHandler { context, _ ->
-                        val document = context.document
-                        val offset = context.tailOffset
-
-                        val hasNextChar = offset < document.textLength
-                        val nextChar = if (hasNextChar) document.charsSequence[offset] else null
-
-                        if (nextChar == null || nextChar !in " ()[]") {
-                            document.insertString(offset, " ")
-                            context.editor.caretModel.moveToOffset(offset + 1)
-                        } else {
-                            context.editor.caretModel.moveToOffset(offset)
-                        }
-                    }
-            )
-        }
-    }
-
     private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
-        val file = context.containingFile
-        val targetStruct = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java)
-            .find { it.identifier?.text == structName } ?: return
+        val file = context.containingFile.originalFile
+
+        val targetStruct = CachedValuesManager.getCachedValue(file) {
+            CachedValueProvider.Result.create(
+                PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java),
+                PsiModificationTracker.MODIFICATION_COUNT
+            )
+        }.find { it.identifier?.text == structName } ?: return
 
         targetStruct.structMemberList.forEach { member ->
             val typeString = member.typeRef.text ?: "unknown"
             member.declarationItemList.forEach { declItem ->
                 val memberName = declItem.identifier.text
                 if (memberName.isNotEmpty()) {
-                    result.addElement(
-                        LookupElementBuilder.create(memberName)
-                            .withIcon(AllIcons.Nodes.Field)
-                            .withTypeText(typeString)
-                    )
+                    result.addElement(VexLookupElementFactory.createStructMember(memberName, typeString))
                 }
             }
         }
@@ -136,11 +102,8 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
             }
 
             if (isValid) {
-                result.addElement(
-                    LookupElementBuilder.create(swizzle)
-                        .withIcon(AllIcons.Nodes.Property)
-                        .withTypeText(getSwizzleTypeText(swizzle.length))
-                )
+                val typeText = getSwizzleTypeText(swizzle.length)
+                result.addElement(VexLookupElementFactory.createSwizzle(swizzle, typeText))
             }
         }
     }
@@ -161,6 +124,27 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
             3 -> "vector"
             4 -> "vector4"
             else -> "unknown"
+        }
+    }
+}
+
+private object VexStandardCompletionHandler {
+    fun handle(parameters: CompletionParameters, result: CompletionResultSet) {
+        addPrimitiveTypes(result)
+        val localFunctionNames = addLocalFunctions(parameters, result)
+        addStandardFunctions(parameters, result, localFunctionNames)
+        addLocalVariablesAndParameters(parameters, result)
+    }
+
+    private fun addPrimitiveTypes(result: CompletionResultSet) {
+        val primitiveTypes = listOf(
+            "int", "float", "vector", "vector2", "vector4",
+            "matrix", "matrix2", "matrix3", "string", "void",
+            "bsdf", "dict", "struct", "function"
+        )
+
+        primitiveTypes.forEach { typeName ->
+            result.addElement(VexLookupElementFactory.createKeyword(typeName))
         }
     }
 
@@ -188,7 +172,7 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
             .filter { it.textOffset < currentOffset }
             .map { it.identifier.text }
             .filter { it.isNotEmpty() && seenNames.add(it) }
-            .forEach { name -> result.addElement(createVariableLookup(name)) }
+            .forEach { name -> result.addElement(VexLookupElementFactory.createVariable(name, isParameter = false)) }
     }
 
     private fun addParametersFromScope(
@@ -199,38 +183,26 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
         VexScopeAnalyzer.getParametersForScope(scope)
             .map { it.identifier.text }
             .filter { it.isNotEmpty() && seenNames.add(it) }
-            .forEach { name -> result.addElement(createParameterLookup(name)) }
-    }
-
-    private fun createVariableLookup(name: String): LookupElementBuilder {
-        return LookupElementBuilder.create(name)
-            .withIcon(AllIcons.Nodes.Variable)
-            .withTypeText("local variable")
-    }
-
-    private fun createParameterLookup(name: String): LookupElementBuilder {
-        return LookupElementBuilder.create(name)
-            .withIcon(AllIcons.Nodes.Parameter)
-            .withTypeText("parameter")
+            .forEach { name -> result.addElement(VexLookupElementFactory.createVariable(name, isParameter = true)) }
     }
 
     private fun addLocalFunctions(parameters: CompletionParameters, result: CompletionResultSet): Set<String> {
-        val containingFile = parameters.originalFile
-        val localFunctions = PsiTreeUtil.findChildrenOfType(containingFile, VexFunctionDef::class.java)
+        val file = parameters.originalFile
+
+        val localFunctions = CachedValuesManager.getCachedValue(file) {
+            CachedValueProvider.Result.create(
+                PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java),
+                PsiModificationTracker.MODIFICATION_COUNT
+            )
+        }
+
         val addedNames = mutableSetOf<String>()
 
         localFunctions.forEach { localFunc ->
             val funcName = localFunc.identifier.text ?: return@forEach
             val hasArgs = localFunc.parameterListDef?.parameterDefList?.isNotEmpty() == true
-            val tailText = if (hasArgs) "(...)" else "()"
 
-            val lookupElement = LookupElementBuilder.create(funcName)
-                .withTypeText("local")
-                .withTailText(tailText, true)
-                .withIcon(AllIcons.Nodes.Method)
-                .withInsertHandler(FunctionInsertHandler(hasArgs = hasArgs))
-
-            result.addElement(lookupElement)
+            result.addElement(VexLookupElementFactory.createLocalFunction(funcName, hasArgs))
             addedNames.add(funcName)
         }
         return addedNames
@@ -245,43 +217,7 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
 
         vexApiProvider.functions.forEach { func ->
             if (func.name in skipNames) return@forEach
-
-            val lookupElement = LookupElementBuilder.create(func.name)
-                .withTypeText(func.returnType)
-                .withTailText("(${func.args.joinToString(", ")})", true)
-                .withIcon(AllIcons.Nodes.Function)
-                .withInsertHandler(FunctionInsertHandler(hasArgs = func.args.isNotEmpty()))
-
-            result.addElement(lookupElement)
+            result.addElement(VexLookupElementFactory.createStandardFunction(func))
         }
-    }
-}
-
-/**
- * Handler that inserts `()` and moves the cursor to the appropriate position immediately after completion is confirmed.
- */
-private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandler<LookupElement> {
-    override fun handleInsert(context: InsertionContext, item: LookupElement) {
-        val editor = context.editor
-        val document = context.document
-        val offset = context.tailOffset
-
-        if (context.completionChar == '(') {
-            context.setAddCompletionChar(false)
-        }
-
-        val hasParen = offset < document.textLength && document.charsSequence[offset] == '('
-        val hasClosingParen =
-            hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
-
-        if (!hasParen) {
-            document.insertString(offset, "()")
-        }
-
-        // Calculate cursor movement:
-        // Move outside (+2) ONLY IF the function has NO arguments AND it has cleanly closed empty parentheses `()`.
-        // Otherwise, move inside (+1).
-        val moveOffset = if (!hasArgs && (!hasParen || hasClosingParen)) offset + 2 else offset + 1
-        editor.caretModel.moveToOffset(moveOffset)
     }
 }

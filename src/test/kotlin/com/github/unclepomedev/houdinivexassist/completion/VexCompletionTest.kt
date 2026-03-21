@@ -339,4 +339,112 @@ class VexCompletionTest : VexTestBase() {
         """.trimIndent()
         )
     }
+
+    fun testZeroArgFunctionInsert() {
+        val code = """
+            void my_zero_arg() {}
+            void my_zero_dummy() {}
+            void main() {
+                my_zero<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_zero_arg" }
+        assertNotNull("Lookup list should not be null", targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void my_zero_arg() {}
+            void my_zero_dummy() {}
+            void main() {
+                my_zero_arg()<caret>
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testArgFunctionInsert() {
+        val code = """
+            void my_arg_func(int a) {}
+            void my_arg_dummy() {}
+            void main() {
+                my_arg_<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_arg_func" }
+        assertNotNull("Lookup list should not be null", targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void my_arg_func(int a) {}
+            void my_arg_dummy() {}
+            void main() {
+                my_arg_func(<caret>)
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testFunctionInsertWithParenTyped() {
+        val code = """
+            void my_arg_func(int a) {}
+            void my_arg_dummy() {}
+            void main() {
+                my_arg_<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_arg_func" }
+        assertNotNull("Lookup list should not be null", targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+
+        myFixture.type('(')
+
+        myFixture.checkResult(
+            """
+            void my_arg_func(int a) {}
+            void my_arg_dummy() {}
+            void main() {
+                my_arg_func(<caret>)
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testFunctionInsertWithExistingParens() {
+        val code = """
+            void my_arg_func(int a) {}
+            void my_arg_dummy() {}
+            void main() {
+                my_arg_<caret>()
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_arg_func" }
+        assertNotNull("Lookup list should not be null", targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void my_arg_func(int a) {}
+            void my_arg_dummy() {}
+            void main() {
+                my_arg_func(<caret>)
+            }
+        """.trimIndent()
+        )
+    }
 }
