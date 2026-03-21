@@ -71,7 +71,11 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
             VexTypes.WHILE, VexTypes.DO, VexTypes.BREAK, VexTypes.CONTINUE,
             VexTypes.RETURN, VexTypes.STRUCT, VexTypes.EXPORT, VexTypes.FUNCTION -> KEYWORD_KEYS
 
-            VexTypes.TYPE -> TYPE_KEYS
+            VexTypes.INT_KW, VexTypes.FLOAT_KW, VexTypes.VECTOR_KW,
+            VexTypes.VECTOR2_KW, VexTypes.VECTOR4_KW, VexTypes.MATRIX_KW,
+            VexTypes.MATRIX3_KW, VexTypes.STRING_KW, VexTypes.VOID_KW,
+            VexTypes.BSDF_KW, VexTypes.DICT_KW -> TYPE_KEYS
+
             VexTypes.NUMBER -> NUMBER_KEYS
             VexTypes.STRING -> STRING_KEYS
             VexTypes.COMMENT -> COMMENT_KEYS

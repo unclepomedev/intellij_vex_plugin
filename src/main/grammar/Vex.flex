@@ -36,7 +36,17 @@ MACRO="#".*
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
   {MACRO}             { return VexTypes.MACRO; }
 
-  "int"|"float"|"vector"|"vector2"|"vector4"|"matrix"|"matrix3"|"string"|"void"|"bsdf"|"dict" { return VexTypes.TYPE; }
+  "int"               { return VexTypes.INT_KW; }
+  "float"             { return VexTypes.FLOAT_KW; }
+  "vector"            { return VexTypes.VECTOR_KW; }
+  "vector2"           { return VexTypes.VECTOR2_KW; }
+  "vector4"           { return VexTypes.VECTOR4_KW; }
+  "matrix"            { return VexTypes.MATRIX_KW; }
+  "matrix3"           { return VexTypes.MATRIX3_KW; }
+  "string"            { return VexTypes.STRING_KW; }
+  "void"              { return VexTypes.VOID_KW; }
+  "bsdf"              { return VexTypes.BSDF_KW; }
+  "dict"              { return VexTypes.DICT_KW; }
 
   "{"                 { return VexTypes.LBRACE; }
   "}"                 { return VexTypes.RBRACE; }

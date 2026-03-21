@@ -21,7 +21,17 @@
     UNCLOSED_STRING="regexp:\"[^\r\n\"]*|'[^\r\n']*"
     ATTRIBUTE="regexp:[fiuvsp]?(\\[\\])?@\\w+"
     MACRO='regexp:#.*'
-    TYPE='regexp:int|float|vector2?|vector4|matrix3?|string|void|bsdf|dict'
+    INT_KW='int'
+    FLOAT_KW='float'
+    VECTOR_KW='vector'
+    VECTOR2_KW='vector2'
+    VECTOR4_KW='vector4'
+    MATRIX_KW='matrix'
+    MATRIX3_KW='matrix3'
+    STRING_KW='string'
+    VOID_KW='void'
+    BSDF_KW='bsdf'
+    DICT_KW='dict'
     IDENTIFIER="regexp:[a-zA-Z_]\w*"
     LBRACE="{"
     RBRACE="}"
@@ -89,7 +99,10 @@ vexFile ::= item_*
 
 private item_ ::= MACRO | struct_def | function_def | statement | COMMENT | fallback_item
 
-type_ref ::= TYPE | IDENTIFIER
+type_ref ::= primitive_type | IDENTIFIER
+private primitive_type ::=
+    INT_KW | FLOAT_KW | VECTOR_KW | VECTOR2_KW | VECTOR4_KW |
+    MATRIX_KW | MATRIX3_KW | STRING_KW | VOID_KW | BSDF_KW | DICT_KW
 
 private fallback_item ::= NUMBER | STRING | ATTRIBUTE | type_ref
                         | LBRACK | RBRACK | ARROW
