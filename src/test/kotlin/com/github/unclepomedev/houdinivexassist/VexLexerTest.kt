@@ -21,7 +21,7 @@ class VexLexerTest : VexTestBase() {
     fun testKeywordAndIdentifier() {
         doTest(
             "int a;",
-            VexTypes.TYPE to "int",
+            VexTypes.INT_KW to "int",
             TokenType.WHITE_SPACE to " ",
             VexTypes.IDENTIFIER to "a",
             VexTypes.SEMICOLON to ";"
@@ -47,10 +47,10 @@ class VexLexerTest : VexTestBase() {
 
     fun testComments() {
         doTest(
-            "// comment\nint", VexTypes.COMMENT to "// comment", TokenType.WHITE_SPACE to "\n", VexTypes.TYPE to "int"
+            "// comment\nint", VexTypes.COMMENT to "// comment", TokenType.WHITE_SPACE to "\n", VexTypes.INT_KW to "int"
         )
         doTest(
-            "/* comment\n */int", VexTypes.COMMENT to "/* comment\n */", VexTypes.TYPE to "int"
+            "/* comment\n */int", VexTypes.COMMENT to "/* comment\n */", VexTypes.INT_KW to "int"
         )
     }
 
@@ -205,27 +205,27 @@ class VexLexerTest : VexTestBase() {
     fun testTypes() {
         doTest(
             "int float vector vector2 vector4 matrix matrix3 string void bsdf dict",
-            VexTypes.TYPE to "int",
+            VexTypes.INT_KW to "int",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "float",
+            VexTypes.FLOAT_KW to "float",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "vector",
+            VexTypes.VECTOR_KW to "vector",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "vector2",
+            VexTypes.VECTOR2_KW to "vector2",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "vector4",
+            VexTypes.VECTOR4_KW to "vector4",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "matrix",
+            VexTypes.MATRIX_KW to "matrix",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "matrix3",
+            VexTypes.MATRIX3_KW to "matrix3",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "string",
+            VexTypes.STRING_KW to "string",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "void",
+            VexTypes.VOID_KW to "void",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "bsdf",
+            VexTypes.BSDF_KW to "bsdf",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.TYPE to "dict"
+            VexTypes.DICT_KW to "dict"
         )
     }
 
