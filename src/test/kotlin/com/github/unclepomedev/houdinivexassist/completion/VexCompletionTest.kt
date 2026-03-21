@@ -447,4 +447,31 @@ class VexCompletionTest : VexTestBase() {
         """.trimIndent()
         )
     }
+
+    fun testZeroArgFunctionInsertWithExistingParens() {
+        val code = """
+            void my_zero_arg() {}
+            void my_zero_dummy() {}
+            void main() {
+                my_zero<caret>()
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+
+        val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_zero_arg" }
+        assertNotNull("Lookup item should not be null", targetLookup)
+        myFixture.lookup.currentItem = targetLookup
+
+        myFixture.type('\n')
+
+        myFixture.checkResult(
+            """
+            void my_zero_arg() {}
+            void my_zero_dummy() {}
+            void main() {
+                my_zero_arg()<caret>
+            }
+        """.trimIndent()
+        )
+    }
 }

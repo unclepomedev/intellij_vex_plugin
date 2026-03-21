@@ -14,6 +14,7 @@ Under development.
 * Quick Documentation
 * Code Navigation
 * Inlay Hints
+* Rename
 
 * Create a new .vex file
 
