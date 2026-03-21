@@ -4,8 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
 
 data class VexFunction(val name: String, val args: List<String>, val returnType: String)
 
@@ -26,13 +24,15 @@ class VexApiProvider {
     val functions: List<VexFunction> by lazy { loadApiDump() }
     private val overloadsByName: Map<String, List<VexFunction>> by lazy { functions.groupBy(VexFunction::name) }
     private val helpArgNamesCache = java.util.concurrent.ConcurrentHashMap<String, List<List<String>>>()
+    private val usageRegex = Regex(":usage:\\s*`.*?\\((.*?)\\)`")
+    private val whitespaceRegex = Regex("\\s+")
 
     private fun loadApiDump(): List<VexFunction> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
             ?: return emptyList()
 
         return try {
-            InputStreamReader(resourceStream, StandardCharsets.UTF_8).use { reader ->
+            resourceStream.reader().use { reader ->
                 val dump = Gson().fromJson(reader, ApiDumpDto::class.java)
                 val functionsMap = dump?.vex?.cvex?.functions ?: return emptyList()
 
@@ -63,10 +63,9 @@ class VexApiProvider {
         val overloads = helpArgNamesCache.computeIfAbsent(functionName) { name ->
             val path = "vex_help/functions/$name.txt"
             val helpText = javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
-                InputStreamReader(stream, StandardCharsets.UTF_8).readText()
+                stream.reader().readText()
             } ?: return@computeIfAbsent emptyList()
 
-            val usageRegex = Regex(":usage:\\s*`.*?\\((.*?)\\)`")
             val matches = usageRegex.findAll(helpText)
 
             val result = mutableListOf<List<String>>()
@@ -82,12 +81,12 @@ class VexApiProvider {
                 if (params.last() == "...") {
                     // Exclude type information and get only variable names (excluding modifiers such as & and *)
                     val names = params.dropLast(1).map { param ->
-                        param.split("\\s+".toRegex()).last().trimStart('&', '*')
+                        param.split(whitespaceRegex).last().trimStart('&', '*')
                     }.toMutableList()
                     result.add(names)
                 } else {
                     val names = params.map { param ->
-                        param.split("\\s+".toRegex()).last().trimStart('&', '*')
+                        param.split(whitespaceRegex).last().trimStart('&', '*')
                     }
                     result.add(names)
                 }
