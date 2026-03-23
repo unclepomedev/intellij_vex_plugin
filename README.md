@@ -6,6 +6,20 @@ Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, 
 ## Features
 
 * Code Formatting
+* Autocomplete
+* Error and Warnings (Syntax, Type, etc.)
+* Quick Documentation
+* Code Navigation / Rename
+* Inlay Hints
+* Create a new .vex file (Custom templates can be set.)
+
+source code and issue: https://github.com/unclepomedev/intellij_vex_plugin
+
+<!-- Plugin description end -->
+
+### images
+
+* Code Formatting
 
 ![fmt_vex.gif](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/fmt_vex.gif)
 
@@ -32,10 +46,3 @@ Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, 
 * Create a new .vex file (Custom templates can be set.)
 
 ![new.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/new.png)
-
-
-source code and issue: https://github.com/unclepomedev/intellij_vex_plugin
-
-<!-- Plugin description end -->
-
-
