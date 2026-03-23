@@ -11,7 +11,7 @@ Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, 
 
 * Autocomplete
 
-![fmt_vex.gif](fig/fmt_vex.gif)
+![fmt_vex.gif](fig/complete.gif)
 
 * Error and Warnings (Syntax, Type, etc.)
 
