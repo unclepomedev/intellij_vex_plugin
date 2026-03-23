@@ -215,4 +215,30 @@ class VexReferenceTest : VexTestBase() {
         """.trimIndent()
         )
     }
+
+    fun testFunctionDeclarationRename() {
+        myFixture.configureByText(
+            VexFileType, """
+            void old<caret>Name() {
+            }
+
+            void main() {
+                oldName();
+            }
+        """.trimIndent()
+        )
+
+        myFixture.renameElementAtCaret("newName")
+
+        myFixture.checkResult(
+            """
+            void newName() {
+            }
+
+            void main() {
+                newName();
+            }
+        """.trimIndent()
+        )
+    }
 }
