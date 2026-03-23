@@ -702,4 +702,18 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testVariadicFunctionSupport() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                printf("%d\n", 3);
+                printf("%d %f %s\n", 1, 2.0, "test");
+                printf("no args");
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }

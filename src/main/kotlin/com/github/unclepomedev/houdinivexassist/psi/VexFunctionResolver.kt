@@ -229,10 +229,19 @@ object VexFunctionResolver {
     }
 
     private fun findBestApiOverload(overloads: List<VexFunction>, argTypes: List<VexType>): List<VexType>? {
-        val sameArityOverloads = overloads.filter { it.args.size == argTypes.size }
+        val sameArityOverloads = overloads.filter {
+            it.args.size == argTypes.size || (it.isVariadic && argTypes.size >= it.args.size)
+        }
         if (sameArityOverloads.isEmpty()) return null
 
-        val parsedOverloads = sameArityOverloads.associateWith { it.args.map { arg -> parseApiArgType(arg) } }
+        val parsedOverloads = sameArityOverloads.associateWith { overload ->
+            val baseArgs = overload.args.map { arg -> parseApiArgType(arg) }
+            if (overload.isVariadic && argTypes.size > baseArgs.size) {
+                baseArgs + List(argTypes.size - baseArgs.size) { VexType.UnknownType }
+            } else {
+                baseArgs
+            }
+        }
 
         // look for an overload where all arguments are assignable.
         // If multiple are completely assignable (due to implicit casting), tie-break using exact matches.
