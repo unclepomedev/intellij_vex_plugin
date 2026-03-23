@@ -7,31 +7,31 @@ Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, 
 
 * Code Formatting
 
-![fmt_vex.gif](fig/fmt_vex.gif)
+![fmt_vex.gif](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/fmt_vex.gif)
 
 * Autocomplete
 
-![fmt_vex.gif](fig/complete.gif)
+![fmt_vex.gif](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/complete.gif)
 
 * Error and Warnings (Syntax, Type, etc.)
 
-![highlight.png](fig/highlight.png)
+![highlight.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/highlight.png)
 
 * Quick Documentation
 
-![doc.png](fig/doc.png)
+![doc.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/doc.png)
 
 * Code Navigation / Rename
 
-![rename.gif](fig/rename.gif)
+![rename.gif](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/rename.gif)
 
 * Inlay Hints
 
-![inlay_hint.png](fig/inlay_hint.png)
+![inlay_hint.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/inlay_hint.png)
 
 * Create a new .vex file (Custom templates can be set.)
 
-![new.png](fig/new.png)
+![new.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/new.png)
 
 
 source code and issue: https://github.com/unclepomedev/intellij_vex_plugin
