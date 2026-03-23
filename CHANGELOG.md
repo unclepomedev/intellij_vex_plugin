@@ -3,5 +3,15 @@
 # intellij_vex_plugin Changelog
 
 ## [Unreleased]
+
+## [0.1.0] - 2021-01-22
+
 ### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+
+* Code Formatting
+* Autocomplete
+* Error and Warnings (Syntax, Type, etc.)
+* Quick Documentation
+* Code Navigation / Rename
+* Inlay Hints
+* Create a new .vex file (Custom templates can be set.)
