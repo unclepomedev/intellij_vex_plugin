@@ -5,7 +5,12 @@ import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 
-data class VexFunction(val name: String, val args: List<String>, val returnType: String)
+data class VexFunction(
+    val name: String,
+    val args: List<String>,
+    val returnType: String,
+    val isVariadic: Boolean = false
+)
 
 private data class ApiDumpDto(
     @SerializedName("Vex") val vex: VexContextDto?
@@ -15,7 +20,8 @@ private data class VexContextDto(val cvex: CvexContextDto?)
 private data class CvexContextDto(val functions: Map<String, List<FunctionOverloadDto>>?)
 private data class FunctionOverloadDto(
     @SerializedName("return") val returnType: String?, // avoid reserved word with annotation
-    val args: List<String>?
+    val args: List<String>?,
+    val variadic: Boolean?
 )
 
 @Service(Service.Level.PROJECT)
@@ -40,8 +46,9 @@ class VexApiProvider {
                     overloads.mapNotNull { overload ->
                         val retType = overload.returnType ?: return@mapNotNull null
                         val argsList = overload.args ?: return@mapNotNull null
+                        val isVariadic = overload.variadic == true
 
-                        VexFunction(funcName, argsList, retType)
+                        VexFunction(funcName, argsList, retType, isVariadic)
                     }
                 }
             }
@@ -96,8 +103,6 @@ class VexApiProvider {
 
         // Exact match takes priority
         overloads.find { it.size == arity }?.let { return it }
-        // For variadic functions, prefer overloads where arity > size
-        // This requires tracking variadic status during parsing
         return overloads.filter { arity >= it.size }.maxByOrNull { it.size }
     }
 }
