@@ -103,8 +103,6 @@ class VexApiProvider {
 
         // Exact match takes priority
         overloads.find { it.size == arity }?.let { return it }
-        // For variadic functions, prefer overloads where arity > size
-        // This requires tracking variadic status during parsing
         return overloads.filter { arity >= it.size }.maxByOrNull { it.size }
     }
 }
