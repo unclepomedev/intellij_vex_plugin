@@ -20,4 +20,8 @@ abstract class VexNamedElementImpl(node: ASTNode) : ASTWrapperPsiElement(node), 
     override fun getNameIdentifier(): PsiElement? {
         return findChildByType(VexTypes.IDENTIFIER)
     }
+
+    override fun getTextOffset(): Int {
+        return nameIdentifier?.textOffset ?: super.getTextOffset()
+    }
 }
