@@ -7,7 +7,6 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.colors.CodeInsightColors
-import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 
@@ -29,26 +28,18 @@ class VexUnusedSymbolAnnotator : Annotator {
         val parentStructName = structDef?.identifier?.text
 
         val isUsed = if (isStructField && parentStructName != null) {
-            val file = element.containingFile ?: return
+            val file = element.containingFile as? VexFile ?: return
 
-            val session = holder.currentAnnotationSession
-            var accessesMap = session.getUserData(MEMBER_ACCESSES_KEY)
-            if (accessesMap == null) {
-                val allAccesses = PsiTreeUtil.findChildrenOfType(file, VexMemberExpr::class.java)
-                accessesMap = allAccesses.groupBy { it.identifier?.text ?: "" }
-                session.putUserData(MEMBER_ACCESSES_KEY, accessesMap)
-            }
-
-            val relevantAccesses = accessesMap[varName] ?: emptyList()
+            val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
             relevantAccesses.any { access ->
                 val baseType = VexTypeInference.inferType(access.expr)
                 baseType is VexType.StructType && baseType.name == parentStructName
             }
         } else {
             val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
-            val usages = PsiTreeUtil.findChildrenOfType(scope, VexPrimaryExpr::class.java)
+            val usages = VexUsageAnalyzer.getVariableUsages(scope, varName)
             usages.any { expr ->
-                expr.identifier?.text == varName && VexVariableResolver.resolveVariable(expr, varName) == element
+                VexVariableResolver.resolveVariable(expr, varName) == element
             }
         }
 
@@ -71,10 +62,19 @@ class VexUnusedSymbolAnnotator : Annotator {
         val sanitizedBaseName = fileBaseName?.replace(Regex("[^A-Za-z0-9_]"), "_")
         if (funcName == "main" || (sanitizedBaseName != null && funcName == sanitizedBaseName)) return
 
-        val usages = PsiTreeUtil.findChildrenOfType(file, VexCallExpr::class.java)
+        val usages = VexUsageAnalyzer.getFunctionCalls(file, funcName)
         val isUsed = usages.any { call ->
-            val arity = call.argumentList?.exprList?.size ?: 0
-            call.identifier.text == funcName && VexFunctionResolver.resolveFunction(call, funcName, arity) == element
+            val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
+            val resolved = VexFunctionResolver.resolveFunction(
+                element = call,
+                functionName = funcName,
+                argTypes = argTypes
+            ) ?: VexFunctionResolver.resolveFunction(
+                element = call,
+                functionName = funcName,
+                arity = argTypes.size
+            )
+            resolved == element
         }
 
         if (!isUsed) {
@@ -92,9 +92,9 @@ class VexUnusedSymbolAnnotator : Annotator {
         val functionDef = PsiTreeUtil.getParentOfType(element, VexFunctionDef::class.java) ?: return
         val block = functionDef.block ?: return
 
-        val usages = PsiTreeUtil.findChildrenOfType(block, VexPrimaryExpr::class.java)
+        val usages = VexUsageAnalyzer.getVariableUsages(block, paramName)
         val isUsed = usages.any { expr ->
-            expr.identifier?.text == paramName && VexVariableResolver.resolveVariable(expr, paramName) == element
+            VexVariableResolver.resolveVariable(expr, paramName) == element
         }
 
         if (!isUsed) {
@@ -105,6 +105,3 @@ class VexUnusedSymbolAnnotator : Annotator {
         }
     }
 }
-
-/** Key for caching scan results during one highlighting process */
-private val MEMBER_ACCESSES_KEY = Key.create<Map<String, List<VexMemberExpr>>>("VEX_MEMBER_ACCESSES")
