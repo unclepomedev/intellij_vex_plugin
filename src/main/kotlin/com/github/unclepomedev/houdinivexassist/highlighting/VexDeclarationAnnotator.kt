@@ -104,13 +104,13 @@ class VexDeclarationAnnotator : Annotator {
 
     private fun isLocalFunctionBefore(element: PsiElement, name: String): Boolean {
         return VexScopeAnalyzer.getVisibleFunctions(element).any {
-            it != element && it.identifier.text == name && it.textOffset < element.textOffset
+            it.identifier.text == name && it.textOffset < element.textOffset
         }
     }
 
     private fun isStructNameBefore(element: PsiElement, name: String): Boolean {
         return VexScopeAnalyzer.getVisibleStructs(element).any {
-            it != element && it.identifier?.text == name && it.textOffset < element.textOffset
+            it.identifier?.text == name && it.textOffset < element.textOffset
         }
     }
 
