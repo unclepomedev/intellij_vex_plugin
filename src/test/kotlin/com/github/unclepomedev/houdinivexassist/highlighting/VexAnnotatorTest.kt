@@ -740,7 +740,7 @@ class VexAnnotatorTest : VexTestBase() {
     }
 
     fun testIncludeUnusedWarning() {
-        myFixture.addFileToProject(
+        val libFile = myFixture.addFileToProject(
             "my_lib.vfl",
             """
             void my_lib_func() {}
@@ -759,6 +759,10 @@ class VexAnnotatorTest : VexTestBase() {
             """.trimIndent()
         )
         // No unused warnings for my_lib_func and my_lib_var because they are used in main
+        myFixture.checkHighlighting(true, false, true, false)
+
+        // Verify the included file also has no unused warnings
+        myFixture.openFileInEditor(libFile.virtualFile)
         myFixture.checkHighlighting(true, false, true, false)
     }
 }

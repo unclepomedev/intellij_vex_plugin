@@ -1,5 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
+import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.*
 import com.github.unclepomedev.houdinivexassist.types.VexType
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
@@ -8,6 +9,9 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.colors.CodeInsightColors
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 
 class VexUnusedSymbolAnnotator : Annotator {
@@ -28,18 +32,35 @@ class VexUnusedSymbolAnnotator : Annotator {
         val parentStructName = structDef?.identifier?.text
 
         val isUsed = if (isStructField && parentStructName != null) {
-            val file = element.containingFile as? VexFile ?: return
+            val project = element.project
+            val virtualFiles = FileTypeIndex.getFiles(VexFileType, GlobalSearchScope.projectScope(project))
+            val files = virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) as? VexFile }
 
-            val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
-            relevantAccesses.any { access ->
-                val baseType = VexTypeInference.inferType(access.expr)
-                baseType is VexType.StructType && baseType.name == parentStructName
+            files.any { file ->
+                val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
+                relevantAccesses.any { access ->
+                    val baseType = VexTypeInference.inferType(access.expr)
+                    baseType is VexType.StructType && baseType.name == parentStructName
+                }
             }
         } else {
             val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
-            val usages = VexUsageAnalyzer.getVariableUsages(scope, varName)
-            usages.any { expr ->
-                VexVariableResolver.resolveVariable(expr, varName) == element
+            if (scope is VexFile) {
+                val project = element.project
+                val virtualFiles = FileTypeIndex.getFiles(VexFileType, GlobalSearchScope.projectScope(project))
+                val files = virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) as? VexFile }
+
+                files.any { file ->
+                    val usages = VexUsageAnalyzer.getVariableUsages(file, varName)
+                    usages.any { expr ->
+                        VexVariableResolver.resolveVariable(expr, varName) == element
+                    }
+                }
+            } else {
+                val usages = VexUsageAnalyzer.getVariableUsages(scope, varName)
+                usages.any { expr ->
+                    VexVariableResolver.resolveVariable(expr, varName) == element
+                }
             }
         }
 
@@ -62,19 +83,25 @@ class VexUnusedSymbolAnnotator : Annotator {
         val sanitizedBaseName = fileBaseName?.replace(Regex("[^A-Za-z0-9_]"), "_")
         if (funcName == "main" || (sanitizedBaseName != null && funcName == sanitizedBaseName)) return
 
-        val usages = VexUsageAnalyzer.getFunctionCalls(file, funcName)
-        val isUsed = usages.any { call ->
-            val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
-            val resolved = VexFunctionResolver.resolveFunction(
-                element = call,
-                functionName = funcName,
-                argTypes = argTypes
-            ) ?: VexFunctionResolver.resolveFunction(
-                element = call,
-                functionName = funcName,
-                arity = argTypes.size
-            )
-            resolved == element
+        val project = element.project
+        val virtualFiles = FileTypeIndex.getFiles(VexFileType, GlobalSearchScope.projectScope(project))
+        val files = virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) as? VexFile }
+
+        val isUsed = files.any { f ->
+            val usages = VexUsageAnalyzer.getFunctionCalls(f, funcName)
+            usages.any { call ->
+                val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
+                val resolved = VexFunctionResolver.resolveFunction(
+                    element = call,
+                    functionName = funcName,
+                    argTypes = argTypes
+                ) ?: VexFunctionResolver.resolveFunction(
+                    element = call,
+                    functionName = funcName,
+                    arity = argTypes.size
+                )
+                resolved == element
+            }
         }
 
         if (!isUsed) {
