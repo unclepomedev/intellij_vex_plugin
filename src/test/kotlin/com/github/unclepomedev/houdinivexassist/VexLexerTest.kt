@@ -288,6 +288,13 @@ class VexLexerTest : VexTestBase() {
         )
 
         doTest(
+            "#include <math.h>",
+            VexTypes.INCLUDE_KW to "#include",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.SYS_STRING to "<math.h>"
+        )
+
+        doTest(
             "#define MAX 100",
             VexTypes.MACRO to "#define MAX 100"
         )

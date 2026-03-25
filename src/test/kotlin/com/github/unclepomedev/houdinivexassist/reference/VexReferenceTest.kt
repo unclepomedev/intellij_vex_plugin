@@ -424,6 +424,32 @@ class VexReferenceTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false)
     }
 
+    fun testIncludeRenameSystemHeaderFile() {
+        myFixture.addFileToProject("my_sys_lib.h", "int add(int a, int b) { return a + b; }")
+        myFixture.configureByText(
+            VexFileType, """
+            #include <my_sys_<caret>lib.h>
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        assertNotNull("Resolve failed", ref.resolve())
+
+        myFixture.renameElementAtCaret("new_sys_lib.h")
+
+        myFixture.checkResult(
+            """
+            #include <new_sys_lib.h>
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+    }
+
     fun testStructReference() {
         myFixture.configureByText(
             VexFileType, """
