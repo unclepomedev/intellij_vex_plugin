@@ -522,5 +522,6 @@ class VexCompletionTest : VexTestBase() {
         val lookupStrings = lookups!!.map { it.lookupString }
         assertTrue("Completion should contain 'my_lib_func'", lookupStrings.contains("my_lib_func"))
         assertTrue("Completion should contain 'my_lib_var'", lookupStrings.contains("my_lib_var"))
+        assertTrue("Completion should contain 'my_lib_struct'", lookupStrings.contains("my_lib_struct"))
     }
 }
