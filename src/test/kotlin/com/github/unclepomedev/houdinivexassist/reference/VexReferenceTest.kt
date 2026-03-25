@@ -394,6 +394,36 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("core_func", (nestedFuncResolved as VexFunctionDef).identifier.text)
     }
 
+    fun testIncludeSystemHeaderFileReference() {
+        // test my_sys_lib.h included via <my_sys_lib.h>
+        val headerCode = """
+            void my_sys_lib_func() {
+            }
+        """.trimIndent()
+        myFixture.addFileToProject("my_sys_lib.h", headerCode)
+
+        val mainCode = """
+            #include <my_sys_lib.h>
+            
+            void main() {
+                my_sys_lib_f<caret>unc();
+            }
+        """.trimIndent()
+
+        myFixture.configureByText("main.vfl", mainCode)
+
+        val reference = myFixture.getReferenceAtCaretPosition()
+        assertNotNull("Function reference should be resolved", reference)
+
+        val resolved = reference?.resolve()
+        assertNotNull("Reference should resolve to a valid element", resolved)
+        assertTrue("Resolved element should be a VexFunctionDef", resolved is VexFunctionDef)
+        assertEquals("my_sys_lib_func", (resolved as VexFunctionDef).name)
+
+        // ensure no parse errors
+        myFixture.checkHighlighting(false, false, false)
+    }
+
     fun testStructReference() {
         myFixture.configureByText(
             VexFileType, """

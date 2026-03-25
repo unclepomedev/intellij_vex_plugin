@@ -16,6 +16,8 @@ import com.intellij.psi.TokenType;
 %eof{  return;
 %eof}
 
+%state IN_INCLUDE
+
 WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
 NUMBER=([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)
@@ -35,12 +37,13 @@ MACRO="#".*
   {STRING}            { return VexTypes.STRING; }
   {UNCLOSED_STRING}   { return VexTypes.UNCLOSED_STRING; }
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
-  {INCLUDE_KW}        { return VexTypes.INCLUDE_KW; }
+  {INCLUDE_KW}        { yybegin(IN_INCLUDE); return VexTypes.INCLUDE_KW; }
   "#" [^\r\n]*        { 
                           String text = yytext().toString();
                           if (text.matches("^#[ \\t]*include([ \\t]+.*|)$")) {
                               int includeIdx = text.indexOf("include");
                               yypushback(yylength() - (includeIdx + 7));
+                              yybegin(IN_INCLUDE);
                               return VexTypes.INCLUDE_KW;
                           }
                           return VexTypes.MACRO; 
@@ -120,4 +123,13 @@ MACRO="#".*
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 
   [^]                 { return TokenType.BAD_CHARACTER; }
+}
+
+<IN_INCLUDE> {
+  [ \t]+              { return TokenType.WHITE_SPACE; }
+  "<" [^\r\n>]* ">"   { yybegin(YYINITIAL); return VexTypes.SYS_STRING; }
+  "<" [^\r\n>]*       { yybegin(YYINITIAL); return VexTypes.UNCLOSED_SYS_STRING; }
+  {STRING}            { yybegin(YYINITIAL); return VexTypes.STRING; }
+  {UNCLOSED_STRING}   { yybegin(YYINITIAL); return VexTypes.UNCLOSED_STRING; }
+  [^]                 { yybegin(YYINITIAL); yypushback(1); }
 }
