@@ -241,4 +241,93 @@ class VexReferenceTest : VexTestBase() {
         """.trimIndent()
         )
     }
+
+    fun testIncludeReference() {
+        myFixture.addFileToProject("my_math.vfl", "int add(int a, int b) { return a + b; }")
+        myFixture.configureByText(
+            VexFileType, """
+            #include "my_<caret>math.vfl"
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Include reference should be resolved", resolved)
+        assertTrue(
+            "Resolved element should be a VexFile",
+            resolved is com.github.unclepomedev.houdinivexassist.psi.VexFile
+        )
+        assertEquals("my_math.vfl", (resolved as com.github.unclepomedev.houdinivexassist.psi.VexFile).name)
+    }
+
+    fun testIncludeRename() {
+        myFixture.addFileToProject("my_math.vfl", "int add(int a, int b) { return a + b; }")
+        myFixture.configureByText(
+            VexFileType, """
+            #include "my_<caret>math.vfl"
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        assertNotNull("Resolve failed", ref.resolve())
+
+        myFixture.renameElementAtCaret("new_math.vfl")
+
+        myFixture.checkResult(
+            """
+            #include "new_math.vfl"
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testIncludeHeaderFileReference() {
+        myFixture.addFileToProject("my_math.h", "int add_header(int a, int b) { return a + b; }")
+        myFixture.configureByText(
+            VexFileType, """
+            #include "my_<caret>math.h"
+            void main() {
+                add_header(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Include reference should be resolved", resolved)
+        assertTrue(
+            "Resolved element should be a PsiFile",
+            resolved is com.intellij.psi.PsiFile
+        )
+        assertEquals("my_math.h", (resolved as com.intellij.psi.PsiFile).name)
+
+        // Ensure that function reference from the .h file resolves correctly
+        myFixture.configureByText(
+            VexFileType, """
+            #include "my_math.h"
+            void main() {
+                add_head<caret>er(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val funcRef = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val funcResolved = funcRef.resolve()
+        assertNotNull("Function reference from .h should be resolved", funcResolved)
+        assertTrue(funcResolved is VexFunctionDef)
+        assertEquals(
+            "add_header",
+            (funcResolved as VexFunctionDef).identifier.text
+        )
+    }
 }

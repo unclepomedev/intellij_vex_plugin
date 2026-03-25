@@ -19,6 +19,12 @@ object VexElementFactory {
         return identifier
     }
 
+    fun createIncludeDirective(project: Project, text: String): VexIncludeDirective {
+        val file = createVexFile(project, "#include $text")
+        return PsiTreeUtil.findChildOfType(file, VexIncludeDirective::class.java)
+            ?: throw IncorrectOperationException("Invalid include string: $text")
+    }
+
     private fun createVexFile(project: Project, text: String): VexFile {
         return PsiFileFactory.getInstance(project)
             .createFileFromText("dummy.vfl", VexLanguage.INSTANCE, text) as VexFile

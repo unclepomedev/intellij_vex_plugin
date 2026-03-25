@@ -23,6 +23,7 @@ STRING=(\"[^\r\n\"]*\")|(\'[^\r\n\']*\')
 UNCLOSED_STRING=(\"[^\r\n\"]*)|(\'[^\r\n\']*)
 ATTRIBUTE=[fiuvsp]?(\[\])?\@[a-zA-Z0-9_]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
+INCLUDE_KW="#"[ \t]*"include"
 MACRO="#".*
 
 %%
@@ -34,7 +35,16 @@ MACRO="#".*
   {STRING}            { return VexTypes.STRING; }
   {UNCLOSED_STRING}   { return VexTypes.UNCLOSED_STRING; }
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
-  {MACRO}             { return VexTypes.MACRO; }
+  {INCLUDE_KW}        { return VexTypes.INCLUDE_KW; }
+  "#" [^\r\n]*        { 
+                          String text = yytext().toString();
+                          if (text.startsWith("#include") || text.matches("#[ \\t]+include.*")) {
+                              int includeIdx = text.indexOf("include");
+                              yypushback(yylength() - (includeIdx + 7));
+                              return VexTypes.INCLUDE_KW;
+                          }
+                          return VexTypes.MACRO; 
+                      }
 
   "int"               { return VexTypes.INT_KW; }
   "float"             { return VexTypes.FLOAT_KW; }
