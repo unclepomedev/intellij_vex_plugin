@@ -38,7 +38,7 @@ MACRO="#".*
   {INCLUDE_KW}        { return VexTypes.INCLUDE_KW; }
   "#" [^\r\n]*        { 
                           String text = yytext().toString();
-                          if (text.startsWith("#include") || text.matches("#[ \\t]+include.*")) {
+                          if (text.matches("^#[ \\t]*include([ \\t]+.*|)$")) {
                               int includeIdx = text.indexOf("include");
                               yypushback(yylength() - (includeIdx + 7));
                               return VexTypes.INCLUDE_KW;

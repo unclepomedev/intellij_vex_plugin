@@ -28,8 +28,15 @@ class VexIncludeReference(
         val endQuote =
             if (oldText.endsWith("\"") && oldText.length > 1) "\"" else if (oldText.endsWith("'") && oldText.length > 1) "'" else "\""
 
+        val innerPath = oldText.removePrefix(startQuote).removeSuffix(endQuote)
+        val lastSlashIndex = innerPath.lastIndexOf('/')
+        val lastBackslashIndex = innerPath.lastIndexOf('\\')
+        val splitIndex = maxOf(lastSlashIndex, lastBackslashIndex)
+        
+        val dirPath = if (splitIndex != -1) innerPath.substring(0, splitIndex + 1) else ""
+
         val newInclude =
-            VexElementFactory.createIncludeDirective(element.project, "$startQuote$newElementName$endQuote")
+            VexElementFactory.createIncludeDirective(element.project, "$startQuote$dirPath$newElementName$endQuote")
         val newStringNode = newInclude.string ?: newInclude.unclosedString
         if (newStringNode != null) {
             stringNode.replace(newStringNode)

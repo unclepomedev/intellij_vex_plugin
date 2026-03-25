@@ -16,10 +16,14 @@ import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 
 object VexScopeAnalyzer {
+    private val includePathTracker = com.intellij.openapi.util.ModificationTracker {
+        ApplicationManager.getApplication().getService(VexSettingsState::class.java)?.includePath?.hashCode()?.toLong() ?: 0L
+    }
+
     /**
      * Resolves the #include file path to a VirtualFile.
      */
-    fun resolveIncludeFile(includeDirective: VexIncludeDirective): PsiFile? {
+    fun resolveIncludeFile(includeDirective: VexIncludeDirective, contextFile: PsiFile? = null): PsiFile? {
         val pathStringNode = includeDirective.string ?: includeDirective.unclosedString ?: return null
         val rawText = pathStringNode.text
 
@@ -28,7 +32,7 @@ object VexScopeAnalyzer {
 
         if (fileName.isEmpty()) return null
 
-        val currentFile = includeDirective.containingFile ?: return null
+        val currentFile = contextFile ?: includeDirective.containingFile ?: return null
 
         return resolveFromCurrentDirectory(currentFile, fileName)
             ?: resolveFromIncludePaths(currentFile.project, fileName)
@@ -92,7 +96,7 @@ object VexScopeAnalyzer {
 
                 val includes = PsiTreeUtil.findChildrenOfType(vexFile, VexIncludeDirective::class.java)
                 for (include in includes) {
-                    val resolved = resolveIncludeFile(include)
+                    val resolved = resolveIncludeFile(include, current)
                     if (resolved != null) {
                         visit(resolved)
                     }
@@ -101,7 +105,7 @@ object VexScopeAnalyzer {
 
             visit(file)
 
-            CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT)
+            CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
 
@@ -146,7 +150,7 @@ object VexScopeAnalyzer {
             val funcs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
             }
-            CachedValueProvider.Result.create(funcs, PsiModificationTracker.MODIFICATION_COUNT)
+            CachedValueProvider.Result.create(funcs, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
 
@@ -156,7 +160,7 @@ object VexScopeAnalyzer {
             val structs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexStructDef::class.java)
             }
-            CachedValueProvider.Result.create(structs, PsiModificationTracker.MODIFICATION_COUNT)
+            CachedValueProvider.Result.create(structs, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
 
@@ -192,7 +196,7 @@ object VexScopeAnalyzer {
             val names = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
             }.mapNotNull { it.identifier.text }.toSet()
-            CachedValueProvider.Result.create(names, PsiModificationTracker.MODIFICATION_COUNT)
+            CachedValueProvider.Result.create(names, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
 }
