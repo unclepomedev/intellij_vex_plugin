@@ -1,5 +1,5 @@
 // ============================================================================
-// File:        ${NAME}.vex
+// File:        ${NAME}.vfl
 // Author:      ${USER}
 // Created:     ${DATE}
 // Description:
@@ -7,5 +7,5 @@
 
 #set($SAFE_NAME = $NAME.replaceAll("[^A-Za-z0-9_]", "_"))
 void ${SAFE_NAME}() {
-// TODO: implement#[[$END$]]#
+    // TODO: implement#[[$END$]]#
 }
