@@ -6,6 +6,7 @@
 // ============================================================================
 
 #set($SAFE_NAME = $NAME.replaceAll("[^A-Za-z0-9_]", "_"))
+#if($SAFE_NAME.matches("^[0-9].*"))#set($SAFE_NAME = "_${SAFE_NAME}")#end
 void ${SAFE_NAME}() {
     // TODO: implement#[[$END$]]#
 }

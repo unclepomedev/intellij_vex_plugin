@@ -32,7 +32,8 @@
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexTypeCheckAnnotator"/>
 
         <fileTemplateGroup implementation="com.github.unclepomedev.houdinivexassist.actions.VexFileTemplateFactory"/>
-        <internalFileTemplate name="VexFile"/>
+        <internalFileTemplate name="VexFile.vfl"/>
+        <internalFileTemplate name="VexFile.vex"/>
     </extensions>
     <actions>
         <action id="Vex.NewFile" class="com.github.unclepomedev.houdinivexassist.actions.CreateVexFileAction">

@@ -11,7 +11,7 @@ Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, 
 * Quick Documentation
 * Code Navigation / Rename
 * Inlay Hints
-* Create a new .vfl file (Custom templates can be set.)
+* Create new VEX files (.vfl and .vex) (Custom templates can be set.)
 
 source code and issue: https://github.com/unclepomedev/intellij_vex_plugin
 
@@ -43,6 +43,6 @@ source code and issue: https://github.com/unclepomedev/intellij_vex_plugin
 
 ![inlay_hint.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/inlay_hint.png)
 
-* Create a new .vex file (Custom templates can be set.)
+* Create new VEX files (.vfl and .vex) (Custom templates can be set.)
 
 ![new.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/new.png)
