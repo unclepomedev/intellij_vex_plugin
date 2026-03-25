@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-## [0.1.0] - 2021-01-26
+## [0.2.0] - 2026-03-26
 
 ### Added
 
@@ -12,7 +12,7 @@
 * Include directory (HOUDINI_VEX_PATH) settings and features that span multiple files
 * Create a new .vfl file
 
-## [0.1.0] - 2021-01-22
+## [0.1.0] - 2026-03-23
 
 ### Added
 

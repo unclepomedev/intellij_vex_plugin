@@ -19,7 +19,7 @@ source code and issue tracker: https://github.com/unclepomedev/intellij_vex_plug
 
 ### Quick Usage
 
-To enable multi-file features (like resolving `#include`), set your **Include path** (intended for the Houdini environment variable `HOUDINI_VEX_PATH`) in `Settings/Preferences > Tools > VEX`.
+To enable multi-file features (like resolving `#include`), set your **Include path** in `Settings/Preferences > Tools > VEX`. This setting is similar to `HOUDINI_VEX_PATH` and can use the same path values.
 
 Usage and shortcuts conform to standard JetBrains IDE behavior.
 
