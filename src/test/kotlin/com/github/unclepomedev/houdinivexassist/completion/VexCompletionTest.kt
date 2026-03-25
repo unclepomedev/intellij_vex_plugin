@@ -474,4 +474,27 @@ class VexCompletionTest : VexTestBase() {
         """.trimIndent()
         )
     }
+
+    fun testIncludeCompletion() {
+        myFixture.addFileToProject(
+            "my_lib.vfl",
+            """
+            void my_lib_func() { }
+            int my_lib_var = 123;
+            struct my_lib_struct { int a; }
+            """.trimIndent()
+        )
+        val code = """
+            #include "my_lib.vfl"
+            void main() {
+                my_lib_<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val lookups = myFixture.completeBasic()
+        assertNotNull("Completion list should not be null", lookups)
+        val lookupStrings = lookups!!.map { it.lookupString }
+        assertTrue("Completion should contain 'my_lib_func'", lookupStrings.contains("my_lib_func"))
+        assertTrue("Completion should contain 'my_lib_var'", lookupStrings.contains("my_lib_var"))
+    }
 }

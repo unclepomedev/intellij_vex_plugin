@@ -28,18 +28,33 @@ class VexUnusedSymbolAnnotator : Annotator {
         val parentStructName = structDef?.identifier?.text
 
         val isUsed = if (isStructField && parentStructName != null) {
-            val file = element.containingFile as? VexFile ?: return
+            val project = element.project
+            val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
 
-            val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
-            relevantAccesses.any { access ->
-                val baseType = VexTypeInference.inferType(access.expr)
-                baseType is VexType.StructType && baseType.name == parentStructName
+            files.any { file ->
+                val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
+                relevantAccesses.any { access ->
+                    val baseType = VexTypeInference.inferType(access.expr)
+                    baseType is VexType.StructType && baseType.name == parentStructName
+                }
             }
         } else {
             val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
-            val usages = VexUsageAnalyzer.getVariableUsages(scope, varName)
-            usages.any { expr ->
-                VexVariableResolver.resolveVariable(expr, varName) == element
+            if (scope is VexFile) {
+                val project = element.project
+                val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
+
+                files.any { file ->
+                    val usages = VexUsageAnalyzer.getVariableUsages(file, varName)
+                    usages.any { expr ->
+                        VexVariableResolver.resolveVariable(expr, varName) == element
+                    }
+                }
+            } else {
+                val usages = VexUsageAnalyzer.getVariableUsages(scope, varName)
+                usages.any { expr ->
+                    VexVariableResolver.resolveVariable(expr, varName) == element
+                }
             }
         }
 
@@ -62,19 +77,24 @@ class VexUnusedSymbolAnnotator : Annotator {
         val sanitizedBaseName = fileBaseName?.replace(Regex("[^A-Za-z0-9_]"), "_")
         if (funcName == "main" || (sanitizedBaseName != null && funcName == sanitizedBaseName)) return
 
-        val usages = VexUsageAnalyzer.getFunctionCalls(file, funcName)
-        val isUsed = usages.any { call ->
-            val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
-            val resolved = VexFunctionResolver.resolveFunction(
-                element = call,
-                functionName = funcName,
-                argTypes = argTypes
-            ) ?: VexFunctionResolver.resolveFunction(
-                element = call,
-                functionName = funcName,
-                arity = argTypes.size
-            )
-            resolved == element
+        val project = element.project
+        val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
+
+        val isUsed = files.any { f ->
+            val usages = VexUsageAnalyzer.getFunctionCalls(f, funcName)
+            usages.any { call ->
+                val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
+                val resolved = VexFunctionResolver.resolveFunction(
+                    element = call,
+                    functionName = funcName,
+                    argTypes = argTypes
+                ) ?: VexFunctionResolver.resolveFunction(
+                    element = call,
+                    functionName = funcName,
+                    arity = argTypes.size
+                )
+                resolved == element
+            }
         }
 
         if (!isUsed) {
