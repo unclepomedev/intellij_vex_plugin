@@ -4,6 +4,7 @@ import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
 import com.github.unclepomedev.houdinivexassist.settings.VexSettingsState
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.ModificationTracker
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -16,8 +17,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 
 object VexScopeAnalyzer {
-    private val includePathTracker = com.intellij.openapi.util.ModificationTracker {
-        ApplicationManager.getApplication().getService(VexSettingsState::class.java)?.includePath?.hashCode()?.toLong() ?: 0L
+    private val includePathTracker = ModificationTracker {
+        ApplicationManager.getApplication().getService(VexSettingsState::class.java)?.includePath?.hashCode()?.toLong()
+            ?: 0L
     }
 
     /**
