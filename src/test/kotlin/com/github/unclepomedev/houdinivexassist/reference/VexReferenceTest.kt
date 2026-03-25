@@ -6,6 +6,7 @@ import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
 import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
+import java.nio.file.Files
 
 class VexReferenceTest : VexTestBase() {
 
@@ -526,7 +527,7 @@ class VexReferenceTest : VexTestBase() {
     }
 
     fun testIncludePathWithSpecialCharacters() {
-        val tempDir = java.nio.file.Files.createTempDirectory("vex_include_test")
+        val tempDir = Files.createTempDirectory("vex_include_test")
         val libFile = tempDir.resolve("lib.vfl").toFile()
         libFile.writeText("void my_lib_func() {}")
 
@@ -541,7 +542,7 @@ class VexReferenceTest : VexTestBase() {
             settings.includePath = "${tempDir.toAbsolutePath()};&"
 
             myFixture.configureByText(
-                com.github.unclepomedev.houdinivexassist.lang.VexFileType, """
+                VexFileType, """
                 #include "l<caret>ib.vfl"
                 void main() {
                     my_lib_func();
@@ -556,8 +557,8 @@ class VexReferenceTest : VexTestBase() {
             assertEquals("lib.vfl", (resolved as com.intellij.psi.PsiFile).name)
         } finally {
             settings.includePath = oldPath
-            libFile.delete()
-            tempDir.toFile().delete()
+            Files.deleteIfExists(libFile.toPath())
+            Files.deleteIfExists(tempDir.toFile().toPath())
         }
     }
 }

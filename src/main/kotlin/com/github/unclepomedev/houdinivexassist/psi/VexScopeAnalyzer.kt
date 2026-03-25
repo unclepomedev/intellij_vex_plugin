@@ -52,23 +52,44 @@ object VexScopeAnalyzer {
         return null
     }
 
+    fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
+        val rawTokens = includePathStr.split(";", pathSeparator)
+        val paths = mutableListOf<String>()
+
+        var i = 0
+        while (i < rawTokens.size) {
+            var token = rawTokens[i].trim()
+
+            val isWindowsDrive = token.length == 1 && token.first().isLetter()
+            val isUrlScheme = token == "file" || token == "temp"
+
+            if (i + 1 < rawTokens.size && (isWindowsDrive || isUrlScheme)) {
+                token = token + ":" + rawTokens[i + 1].trim()
+                i++
+            }
+
+            token = token.removeSuffix("&").trim()
+
+            if (token.isNotEmpty()) {
+                paths.add(token)
+            }
+            i++
+        }
+
+        return paths
+    }
+
     private fun resolveFromIncludePaths(project: Project, fileName: String): PsiFile? {
         val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
         val includePathStr = settingsState?.includePath ?: return null
 
-        if (includePathStr.isEmpty()) return null
-
-        val paths = includePathStr.split(";", File.pathSeparator)
-        for (rawPath in paths) {
-            val path = rawPath.replace("&", "").trim()
-            if (path.isEmpty()) continue
-            
+        val paths = parseIncludePaths(includePathStr)
+        for (path in paths) {
             var dir = LocalFileSystem.getInstance().findFileByPath(path)
             if (dir == null) {
-                // Fallback for tests using temp:// or file:// URLs
                 dir = com.intellij.openapi.vfs.VirtualFileManager.getInstance().findFileByUrl(path)
             }
-            
+
             if (dir != null && dir.isDirectory) {
                 val file = dir.findFileByRelativePath(fileName)
                 if (file != null && !file.isDirectory) {
