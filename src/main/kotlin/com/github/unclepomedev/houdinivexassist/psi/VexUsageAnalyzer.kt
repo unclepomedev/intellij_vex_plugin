@@ -19,7 +19,9 @@ object VexUsageAnalyzer {
     fun getVariableUsages(scope: PsiElement, varName: String): List<VexPrimaryExpr> {
         val cache = CachedValuesManager.getCachedValue(scope) {
             val usages = PsiTreeUtil.findChildrenOfType(scope, VexPrimaryExpr::class.java)
-            val grouped = usages.groupBy { it.identifier?.text ?: "" }
+            val grouped = usages
+                .mapNotNull { expr -> expr.identifier?.text?.let { name -> name to expr } }
+                .groupBy({ it.first }, { it.second })
             CachedValueProvider.Result.create(grouped, PsiModificationTracker.MODIFICATION_COUNT)
         }
         return cache[varName] ?: emptyList()
@@ -28,7 +30,9 @@ object VexUsageAnalyzer {
     fun getMemberAccesses(file: VexFile, memberName: String): List<VexMemberExpr> {
         val cache = CachedValuesManager.getCachedValue(file) {
             val accesses = PsiTreeUtil.findChildrenOfType(file, VexMemberExpr::class.java)
-            val grouped = accesses.groupBy { it.identifier?.text ?: "" }
+            val grouped = accesses
+                .mapNotNull { expr -> expr.identifier?.text?.let { name -> name to expr } }
+                .groupBy({ it.first }, { it.second })
             CachedValueProvider.Result.create(grouped, PsiModificationTracker.MODIFICATION_COUNT)
         }
         return cache[memberName] ?: emptyList()

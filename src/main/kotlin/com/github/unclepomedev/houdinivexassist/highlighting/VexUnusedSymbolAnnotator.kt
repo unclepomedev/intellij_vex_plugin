@@ -64,8 +64,17 @@ class VexUnusedSymbolAnnotator : Annotator {
 
         val usages = VexUsageAnalyzer.getFunctionCalls(file, funcName)
         val isUsed = usages.any { call ->
-            val arity = call.argumentList?.exprList?.size ?: 0
-            VexFunctionResolver.resolveFunction(call, funcName, arity) == element
+            val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
+            val resolved = VexFunctionResolver.resolveFunction(
+                element = call,
+                functionName = funcName,
+                argTypes = argTypes
+            ) ?: VexFunctionResolver.resolveFunction(
+                element = call,
+                functionName = funcName,
+                arity = argTypes.size
+            )
+            resolved == element
         }
 
         if (!isUsed) {
