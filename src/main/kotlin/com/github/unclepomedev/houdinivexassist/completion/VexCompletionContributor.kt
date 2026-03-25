@@ -125,6 +125,7 @@ private object VexStandardCompletionHandler {
         val localFunctionNames = addLocalFunctions(parameters, result)
         addStandardFunctions(parameters, result, localFunctionNames)
         addLocalVariablesAndParameters(parameters, result)
+        addStructs(parameters, result)
     }
 
     private fun addPrimitiveTypes(result: CompletionResultSet) {
@@ -155,6 +156,18 @@ private object VexStandardCompletionHandler {
                 if (name.isNotEmpty() && seenNames.add(name)) {
                     result.addElement(VexLookupElementFactory.createVariable(name, isParameter = true))
                 }
+            }
+        }
+    }
+
+    private fun addStructs(parameters: CompletionParameters, result: CompletionResultSet) {
+        val element = parameters.position
+        val visibleStructs = VexScopeAnalyzer.getVisibleStructs(element)
+        val addedNames = mutableSetOf<String>()
+        visibleStructs.forEach { structDef ->
+            val name = structDef.identifier?.text ?: return@forEach
+            if (name.isNotEmpty() && addedNames.add(name)) {
+                result.addElement(VexLookupElementFactory.createStruct(name))
             }
         }
     }

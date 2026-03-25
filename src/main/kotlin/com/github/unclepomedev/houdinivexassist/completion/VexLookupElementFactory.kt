@@ -58,6 +58,12 @@ object VexLookupElementFactory {
             .withTypeText(typeString)
     }
 
+    fun createStruct(name: String): LookupElementBuilder {
+        return LookupElementBuilder.create(name)
+            .withIcon(AllIcons.Nodes.Class)
+            .withTypeText("struct")
+    }
+
     fun createSwizzle(swizzle: String, typeText: String): LookupElementBuilder {
         return LookupElementBuilder.create(swizzle)
             .withIcon(AllIcons.Nodes.Property)
