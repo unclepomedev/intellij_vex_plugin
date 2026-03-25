@@ -71,7 +71,7 @@ class VexDeclarationAnnotator : Annotator {
         val identifier = element.identifier ?: return
         val structName = identifier.text
 
-        if (isAlreadyDefinedStruct(element, structName)) {
+        if (isStructNameBefore(element, structName)) {
             reportError(holder, identifier, "Struct '$structName' is already defined")
             return
         }
@@ -109,12 +109,6 @@ class VexDeclarationAnnotator : Annotator {
     }
 
     private fun isStructNameBefore(element: PsiElement, name: String): Boolean {
-        return VexScopeAnalyzer.getVisibleStructs(element).any {
-            it != element && it.identifier?.text == name && it.textOffset < element.textOffset
-        }
-    }
-
-    private fun isAlreadyDefinedStruct(element: VexStructDef, name: String): Boolean {
         return VexScopeAnalyzer.getVisibleStructs(element).any {
             it != element && it.identifier?.text == name && it.textOffset < element.textOffset
         }

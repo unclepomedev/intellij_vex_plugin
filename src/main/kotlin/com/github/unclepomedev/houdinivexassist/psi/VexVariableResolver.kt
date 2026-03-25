@@ -10,7 +10,11 @@ object VexVariableResolver {
     fun resolveVariable(element: PsiElement, varName: String): PsiElement? {
         val visibleVariables = VexScopeAnalyzer.getVisibleVariables(element)
         return visibleVariables.find {
-            val ident = if (it is VexDeclarationItem) it.identifier else (it as VexParameterDef).identifier
+            val ident = when (it) {
+                is VexDeclarationItem -> it.identifier
+                is VexParameterDef -> it.identifier
+                else -> return@find false
+            }
             ident.text == varName
         }
     }
