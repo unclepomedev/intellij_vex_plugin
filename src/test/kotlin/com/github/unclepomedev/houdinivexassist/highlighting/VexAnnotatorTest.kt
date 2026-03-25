@@ -716,4 +716,49 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testIncludeHighlighting() {
+        myFixture.addFileToProject(
+            "my_lib.vfl",
+            """
+            void my_lib_func() {}
+            int my_lib_var = 123;
+            """.trimIndent()
+        )
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #include "my_lib.vfl"
+            void main() {
+                my_lib_func();
+                int a = my_lib_var;
+            }
+            """.trimIndent()
+        )
+        // Everything should be resolved, no errors
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testIncludeUnusedWarning() {
+        myFixture.addFileToProject(
+            "my_lib.vfl",
+            """
+            void my_lib_func() {}
+            int my_lib_var = 123;
+            """.trimIndent()
+        )
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #include "my_lib.vfl"
+            void main() {
+                my_lib_func();
+                int a = my_lib_var;
+                a = 2; // to mark 'a' as used
+            }
+            """.trimIndent()
+        )
+        // No unused warnings for my_lib_func and my_lib_var because they are used in main
+        myFixture.checkHighlighting(true, false, true, false)
+    }
 }

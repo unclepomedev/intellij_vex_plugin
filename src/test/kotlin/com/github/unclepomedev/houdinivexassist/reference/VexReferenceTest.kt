@@ -330,4 +330,67 @@ class VexReferenceTest : VexTestBase() {
             (funcResolved as VexFunctionDef).identifier.text
         )
     }
+
+    fun testIncludeRenameWithDirectoryPath() {
+        myFixture.addFileToProject("subdir/my_math.vfl", "int add(int a, int b) { return a + b; }")
+        myFixture.configureByText(
+            VexFileType, """
+            #include "subdir/my_<caret>math.vfl"
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        assertNotNull("Resolve failed", ref.resolve())
+
+        myFixture.renameElementAtCaret("new_math.vfl")
+
+        myFixture.checkResult(
+            """
+            #include "subdir/new_math.vfl"
+            void main() {
+                add(1, 2);
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testIncludeHeaderFileRelativeResolution() {
+        myFixture.addFileToProject("lib/core.h", "int core_func() { return 1; }")
+        myFixture.addFileToProject("lib/wrapper.h", "#include \"core.h\"\nint wrapper_func() { return core_func(); }")
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "lib/wrapper.h"
+            void main() {
+                wrap<caret>per_func();
+            }
+        """.trimIndent()
+        )
+
+        val funcRef = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val funcResolved = funcRef.resolve()
+
+        assertNotNull("Function reference from nested .h should be resolved", funcResolved)
+        assertTrue(funcResolved is VexFunctionDef)
+        assertEquals("wrapper_func", (funcResolved as VexFunctionDef).identifier.text)
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "lib/wrapper.h"
+            void main() {
+                cor<caret>e_func();
+            }
+        """.trimIndent()
+        )
+
+        val nestedFuncRef = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val nestedFuncResolved = nestedFuncRef.resolve()
+
+        assertNotNull("Function reference from deeply nested .h should be resolved", nestedFuncResolved)
+        assertTrue(nestedFuncResolved is VexFunctionDef)
+        assertEquals("core_func", (nestedFuncResolved as VexFunctionDef).identifier.text)
+    }
 }
