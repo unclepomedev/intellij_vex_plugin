@@ -5,6 +5,7 @@ import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
+import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
 
 class VexReferenceTest : VexTestBase() {
 
@@ -388,9 +389,83 @@ class VexReferenceTest : VexTestBase() {
 
         val nestedFuncRef = myFixture.getReferenceAtCaretPositionWithAssertion()
         val nestedFuncResolved = nestedFuncRef.resolve()
-
         assertNotNull("Function reference from deeply nested .h should be resolved", nestedFuncResolved)
         assertTrue(nestedFuncResolved is VexFunctionDef)
         assertEquals("core_func", (nestedFuncResolved as VexFunctionDef).identifier.text)
+    }
+
+    fun testStructReference() {
+        myFixture.configureByText(
+            VexFileType, """
+            struct MyStruct { int a; }
+            void main() {
+                MySt<caret>ruct s;
+            }
+        """.trimIndent()
+        )
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Struct reference should be resolved", resolved)
+        assertTrue(resolved is VexStructDef)
+        assertEquals("MyStruct", (resolved as VexStructDef).identifier?.text)
+    }
+
+    fun testStructRename() {
+        myFixture.configureByText(
+            VexFileType, """
+            struct MyStruct { int a; }
+            void main() {
+                MySt<caret>ruct s;
+            }
+        """.trimIndent()
+        )
+        myFixture.renameElementAtCaret("NewStruct")
+        myFixture.checkResult(
+            """
+            struct NewStruct { int a; }
+            void main() {
+                NewStruct s;
+            }
+        """.trimIndent()
+        )
+    }
+
+    fun testStructMemberReference() {
+        myFixture.configureByText(
+            VexFileType, """
+            struct MyStruct { int my_field; }
+            void main() {
+                MyStruct s;
+                s.my_fie<caret>ld = 1;
+            }
+        """.trimIndent()
+        )
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Struct member reference should be resolved", resolved)
+        assertTrue(resolved is VexDeclarationItem)
+        assertEquals("my_field", (resolved as VexDeclarationItem).identifier.text)
+    }
+
+    fun testStructMemberRename() {
+        myFixture.configureByText(
+            VexFileType, """
+            struct MyStruct { int my_field; }
+            void main() {
+                MyStruct s;
+                s.my_fie<caret>ld = 1;
+            }
+        """.trimIndent()
+        )
+        myFixture.renameElementAtCaret("new_field")
+        myFixture.checkResult(
+            """
+            struct MyStruct { int new_field; }
+            void main() {
+                MyStruct s;
+                s.new_field = 1;
+            }
+        """.trimIndent()
+        )
     }
 }
