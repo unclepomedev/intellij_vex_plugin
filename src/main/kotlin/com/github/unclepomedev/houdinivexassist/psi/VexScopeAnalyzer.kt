@@ -58,10 +58,17 @@ object VexScopeAnalyzer {
 
         if (includePathStr.isEmpty()) return null
 
-        val paths = includePathStr.split(File.pathSeparator)
-        for (path in paths) {
-            if (path.isBlank()) continue
-            val dir = LocalFileSystem.getInstance().findFileByPath(path)
+        val paths = includePathStr.split(";", File.pathSeparator)
+        for (rawPath in paths) {
+            val path = rawPath.replace("&", "").trim()
+            if (path.isEmpty()) continue
+            
+            var dir = LocalFileSystem.getInstance().findFileByPath(path)
+            if (dir == null) {
+                // Fallback for tests using temp:// or file:// URLs
+                dir = com.intellij.openapi.vfs.VirtualFileManager.getInstance().findFileByUrl(path)
+            }
+            
             if (dir != null && dir.isDirectory) {
                 val file = dir.findFileByRelativePath(fileName)
                 if (file != null && !file.isDirectory) {
