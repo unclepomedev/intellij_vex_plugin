@@ -1,22 +1,32 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
+import com.github.unclepomedev.houdinivexassist.lang.VexFileType
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootModificationTracker
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 
 object VexUsageAnalyzer {
-    fun getAllProjectVexFiles(project: com.intellij.openapi.project.Project): List<VexFile> {
+    fun getAllProjectVexFiles(project: Project): List<VexFile> {
         return CachedValuesManager.getManager(project).getCachedValue(project) {
-            val virtualFiles = com.intellij.psi.search.FileTypeIndex.getFiles(
-                com.github.unclepomedev.houdinivexassist.lang.VexFileType,
-                com.intellij.psi.search.GlobalSearchScope.projectScope(project)
+            val virtualFiles = FileTypeIndex.getFiles(
+                VexFileType,
+                GlobalSearchScope.projectScope(project)
             )
-            val files = virtualFiles.mapNotNull { 
-                com.intellij.psi.PsiManager.getInstance(project).findFile(it) as? VexFile 
+            val files = virtualFiles.mapNotNull {
+                PsiManager.getInstance(project).findFile(it) as? VexFile
             }
-            CachedValueProvider.Result.create(files, PsiModificationTracker.MODIFICATION_COUNT)
+            CachedValueProvider.Result.create(
+                files,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                ProjectRootModificationTracker.getInstance(project)
+            )
         }
     }
 
