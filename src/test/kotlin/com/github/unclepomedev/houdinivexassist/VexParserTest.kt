@@ -219,4 +219,25 @@ class VexParserTest : VexTestBase() {
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Export and function modifiers should be parsed", hasErrors)
     }
+
+    fun testIncludeDirective() {
+        val code = """
+            #include "math.vfl"
+            #include 'utils.h'
+            
+            void main() {
+                int a = 1;
+            }
+        """.trimIndent()
+
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Include directives should be parsed without errors", hasErrors)
+
+        val includes = PsiTreeUtil.findChildrenOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexIncludeDirective::class.java
+        )
+        assertEquals("Should find exactly 2 include directives", 2, includes.size)
+    }
 }

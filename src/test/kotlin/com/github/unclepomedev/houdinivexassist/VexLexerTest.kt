@@ -271,4 +271,30 @@ class VexLexerTest : VexTestBase() {
             VexTypes.NUMBER to "0Xff"
         )
     }
+
+    fun testIncludeDirective() {
+        doTest(
+            "#include \"math.h\"",
+            VexTypes.INCLUDE_KW to "#include",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.STRING to "\"math.h\""
+        )
+
+        doTest(
+            "#  include 'utils.vfl'",
+            VexTypes.INCLUDE_KW to "#  include",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.STRING to "'utils.vfl'"
+        )
+
+        doTest(
+            "#define MAX 100",
+            VexTypes.MACRO to "#define MAX 100"
+        )
+
+        doTest(
+            "#include_guard",
+            VexTypes.MACRO to "#include_guard"
+        )
+    }
 }
