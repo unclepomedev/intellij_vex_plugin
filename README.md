@@ -1,7 +1,7 @@
 # intellij_vex_plugin
 
 <!-- Plugin description -->
-Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.)
+Houdini VEX assist plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.)
 
 ## Features
 
@@ -13,9 +13,15 @@ Houdini VEX assyst plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, 
 * Inlay Hints
 * Create new VEX files (.vfl and .vex) (Custom templates can be set.)
 
-source code and issue: https://github.com/unclepomedev/intellij_vex_plugin
+source code and issue tracker: https://github.com/unclepomedev/intellij_vex_plugin
 
 <!-- Plugin description end -->
+
+### Quick Usage
+
+To enable multi-file features (like resolving `#include`), set your **Include path** in `Settings/Preferences > Tools > VEX`. This setting is similar to `HOUDINI_VEX_PATH` and can use the same path values.
+
+Usage and shortcuts conform to standard JetBrains IDE behavior.
 
 ### images
 
