@@ -172,8 +172,7 @@ object VexTypeInference {
 
     private fun resolveStructMemberType(context: PsiElement, structName: String, memberName: String): VexType {
         // TODO: Support struct resolution across multiple files via #include directives or project-wide indices.
-        val file = context.containingFile
-        val structDefs = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java)
+        val structDefs = VexScopeAnalyzer.getVisibleStructs(context)
 
         val targetStruct = structDefs.find { it.identifier?.text == structName } ?: return VexType.UnknownType
 

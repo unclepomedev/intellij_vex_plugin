@@ -7,10 +7,6 @@ import com.github.unclepomedev.houdinivexassist.types.VexTypeExtractor
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.github.unclepomedev.houdinivexassist.types.VexTypePromotion
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
-import com.intellij.psi.util.PsiTreeUtil
 
 object VexFunctionResolver {
     private const val EXACT_MATCH_WEIGHT = 1000
@@ -27,14 +23,8 @@ object VexFunctionResolver {
         arity: Int? = null,
         argTypes: List<VexType>? = null
     ): PsiElement? {
-        val file = element.containingFile as? VexFile ?: return null
-        val localFunctions = CachedValuesManager.getCachedValue(file) {
-            CachedValueProvider.Result.create(
-                PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java),
-                PsiModificationTracker.MODIFICATION_COUNT
-            )
-        }
-        val candidates = localFunctions.filter { it.identifier.text == functionName }
+        val candidates = VexScopeAnalyzer.getVisibleFunctions(element).filter { it.identifier.text == functionName }
+        if (candidates.isEmpty()) return null
 
         if (argTypes != null) {
             // Resolve by type signature matching

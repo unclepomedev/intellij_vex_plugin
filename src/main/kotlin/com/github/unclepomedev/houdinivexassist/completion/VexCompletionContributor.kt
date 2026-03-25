@@ -8,9 +8,6 @@ import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.intellij.codeInsight.completion.*
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 
@@ -59,14 +56,8 @@ private object VexDotAccessCompletionHandler {
     }
 
     private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
-        val file = context.containingFile.originalFile
-
-        val targetStruct = CachedValuesManager.getCachedValue(file) {
-            CachedValueProvider.Result.create(
-                PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java),
-                PsiModificationTracker.MODIFICATION_COUNT
-            )
-        }.find { it.identifier?.text == structName } ?: return
+        val targetStruct = VexScopeAnalyzer.getVisibleStructs(context)
+            .find { it.identifier?.text == structName } ?: return
 
         targetStruct.structMemberList.forEach { member ->
             val typeString = member.typeRef.text ?: "unknown"
@@ -150,51 +141,27 @@ private object VexStandardCompletionHandler {
 
     private fun addLocalVariablesAndParameters(parameters: CompletionParameters, result: CompletionResultSet) {
         val element = parameters.position
-        val currentOffset = element.textOffset
-        var currentScope = VexScopeAnalyzer.findDeclarationScope(element)
         val seenNames = mutableSetOf<String>()
 
-        // Traverse scopes upwards and delegate the extraction
-        while (currentScope != null) {
-            addVariablesFromScope(currentScope, currentOffset, result, seenNames)
-            addParametersFromScope(currentScope, result, seenNames)
-            currentScope = VexScopeAnalyzer.findDeclarationScope(currentScope.parent)
+        val visibleVariables = VexScopeAnalyzer.getVisibleVariables(element)
+        visibleVariables.forEach { variable ->
+            if (variable is VexDeclarationItem) {
+                val name = variable.identifier.text
+                if (name.isNotEmpty() && seenNames.add(name)) {
+                    result.addElement(VexLookupElementFactory.createVariable(name, isParameter = false))
+                }
+            } else if (variable is VexParameterDef) {
+                val name = variable.identifier.text
+                if (name.isNotEmpty() && seenNames.add(name)) {
+                    result.addElement(VexLookupElementFactory.createVariable(name, isParameter = true))
+                }
+            }
         }
-    }
-
-    private fun addVariablesFromScope(
-        scope: PsiElement,
-        currentOffset: Int,
-        result: CompletionResultSet,
-        seenNames: MutableSet<String>
-    ) {
-        VexScopeAnalyzer.getDeclarationsInScope(scope)
-            .filter { it.textOffset < currentOffset }
-            .map { it.identifier.text }
-            .filter { it.isNotEmpty() && seenNames.add(it) }
-            .forEach { name -> result.addElement(VexLookupElementFactory.createVariable(name, isParameter = false)) }
-    }
-
-    private fun addParametersFromScope(
-        scope: PsiElement,
-        result: CompletionResultSet,
-        seenNames: MutableSet<String>
-    ) {
-        VexScopeAnalyzer.getParametersForScope(scope)
-            .map { it.identifier.text }
-            .filter { it.isNotEmpty() && seenNames.add(it) }
-            .forEach { name -> result.addElement(VexLookupElementFactory.createVariable(name, isParameter = true)) }
     }
 
     private fun addLocalFunctions(parameters: CompletionParameters, result: CompletionResultSet): Set<String> {
-        val file = parameters.originalFile
-
-        val localFunctions = CachedValuesManager.getCachedValue(file) {
-            CachedValueProvider.Result.create(
-                PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java),
-                PsiModificationTracker.MODIFICATION_COUNT
-            )
-        }
+        val element = parameters.position
+        val localFunctions = VexScopeAnalyzer.getVisibleFunctions(element)
 
         val addedNames = mutableSetOf<String>()
 

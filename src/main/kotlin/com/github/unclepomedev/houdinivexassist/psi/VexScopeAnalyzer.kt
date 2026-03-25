@@ -41,6 +41,37 @@ object VexScopeAnalyzer {
         }
     }
 
+    fun getVisibleFunctions(element: PsiElement): List<VexFunctionDef> {
+        val file = element.containingFile as? VexFile ?: return emptyList()
+        return CachedValuesManager.getCachedValue(file) {
+            val funcs = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).toList()
+            CachedValueProvider.Result.create(funcs, file)
+        }
+    }
+
+    fun getVisibleStructs(element: PsiElement): List<VexStructDef> {
+        val file = element.containingFile as? VexFile ?: return emptyList()
+        return CachedValuesManager.getCachedValue(file) {
+            val structs = PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java).toList()
+            CachedValueProvider.Result.create(structs, file)
+        }
+    }
+
+    fun getVisibleVariables(element: PsiElement): List<PsiElement> {
+        val result = mutableListOf<PsiElement>()
+        var currentScope = findDeclarationScope(element)
+        while (currentScope != null) {
+            val decls = getDeclarationsInScope(currentScope)
+            result.addAll(decls.filter { it.textOffset < element.textOffset })
+
+            val params = getParametersForScope(currentScope)
+            result.addAll(params)
+
+            currentScope = findDeclarationScope(currentScope.parent)
+        }
+        return result
+    }
+
     fun getLocalFunctionNames(file: VexFile): Set<String> {
         return CachedValuesManager.getCachedValue(file) {
             val names = PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java)
