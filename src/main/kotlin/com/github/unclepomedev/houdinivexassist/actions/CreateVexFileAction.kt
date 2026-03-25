@@ -12,19 +12,18 @@ class CreateVexFileAction : CreateFileFromTemplateAction(
     VexIcons.FILE
 ) {
     companion object {
-        private const val ACTION_TITLE = "Vex File"
-        private const val ACTION_DESCRIPTION = "Creates a new Vex file"
-        private const val DIALOG_TITLE = "New Vex File"
-        private const val KIND_TITLE = "Vex file"
-        private const val TEMPLATE_NAME = "VexFile.vex"
+        private const val ACTION_TITLE = "VEX File"
+        private const val ACTION_DESCRIPTION = "Creates a new VEX file"
+        private const val DIALOG_TITLE = "New VEX File"
     }
 
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
         builder.setTitle(DIALOG_TITLE)
-            .addKind(KIND_TITLE, VexIcons.FILE, TEMPLATE_NAME)
+            .addKind("VEX Library file (.vfl)", VexIcons.FILE, "VexFile.vfl")
+            .addKind("VEX Snippet (.vex)", VexIcons.FILE, "VexFile.vex")
     }
 
     override fun getActionName(directory: PsiDirectory?, newName: String, templateName: String?): String {
-        return "Create Vex File: $newName"
+        return "Create VEX File: $newName"
     }
 }
