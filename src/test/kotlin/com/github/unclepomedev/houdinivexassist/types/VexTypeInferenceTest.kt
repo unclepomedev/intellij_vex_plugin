@@ -515,4 +515,33 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[5]))
         assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6]))
     }
+
+    fun testInferIncludeStructMember() {
+        myFixture.addFileToProject(
+            "my_lib.vfl",
+            """
+            struct MyStruct {
+                float my_float_val;
+                vector my_vec_val;
+            }
+            """.trimIndent()
+        )
+        val code = """
+            #include "my_lib.vfl"
+            void main() {
+                MyStruct s;
+                float v1 = s.my_float_val;
+                vector v2 = s.my_vec_val;
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+
+        val v1Decl = declItems.first { it.identifier.text == "v1" }
+        val v2Decl = declItems.first { it.identifier.text == "v2" }
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(v1Decl.expr))
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(v2Decl.expr))
+    }
 }
