@@ -12,7 +12,7 @@
         <applicationService serviceImplementation="com.github.unclepomedev.houdinivexassist.settings.VexSettingsState"/>
         <applicationConfigurable parentId="tools" instance="com.github.unclepomedev.houdinivexassist.settings.VexSettingsConfigurable"
                                  id="com.github.unclepomedev.houdinivexassist.settings.VexSettingsConfigurable"
-                                 displayName="VEX"/>
+                                 key="vex.settings.display.name"/>
         <fileType name="VEX File" implementationClass="com.github.unclepomedev.houdinivexassist.lang.VexFileType"
                   fieldName="INSTANCE" language="VEX" extensions="vfl;vex"/>
 
@@ -32,6 +32,7 @@
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexTypeCheckAnnotator"/>
 
         <fileTemplateGroup implementation="com.github.unclepomedev.houdinivexassist.actions.VexFileTemplateFactory"/>
+        <internalFileTemplate name="VexFile"/>
         <internalFileTemplate name="VexFile"/>
     </extensions>
     <actions>

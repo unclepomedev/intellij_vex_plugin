@@ -17,6 +17,32 @@ class VexCompletionTest : VexTestBase() {
         assertTrue("Completion should contain 'distance'", lookupStrings.contains("distance"))
     }
 
+    fun testStructCompletion() {
+        val code = """
+            struct MyAwesomeStruct {
+                int a;
+            }
+            
+            void main() {
+                MyAwes<caret>
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        myFixture.completeBasic()
+
+        myFixture.checkResult(
+            """
+            struct MyAwesomeStruct {
+                int a;
+            }
+            
+            void main() {
+                MyAwesomeStruct<caret>
+            }
+        """.trimIndent()
+        )
+    }
+
     fun testLocalVariableCompletion() {
         val code = """
             void main() {
