@@ -1,6 +1,5 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
-import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.*
 import com.github.unclepomedev.houdinivexassist.types.VexType
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
@@ -9,9 +8,6 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.colors.CodeInsightColors
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 
 class VexUnusedSymbolAnnotator : Annotator {
@@ -33,8 +29,7 @@ class VexUnusedSymbolAnnotator : Annotator {
 
         val isUsed = if (isStructField && parentStructName != null) {
             val project = element.project
-            val virtualFiles = FileTypeIndex.getFiles(VexFileType, GlobalSearchScope.projectScope(project))
-            val files = virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) as? VexFile }
+            val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
 
             files.any { file ->
                 val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
@@ -47,8 +42,7 @@ class VexUnusedSymbolAnnotator : Annotator {
             val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
             if (scope is VexFile) {
                 val project = element.project
-                val virtualFiles = FileTypeIndex.getFiles(VexFileType, GlobalSearchScope.projectScope(project))
-                val files = virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) as? VexFile }
+                val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
 
                 files.any { file ->
                     val usages = VexUsageAnalyzer.getVariableUsages(file, varName)
@@ -84,8 +78,7 @@ class VexUnusedSymbolAnnotator : Annotator {
         if (funcName == "main" || (sanitizedBaseName != null && funcName == sanitizedBaseName)) return
 
         val project = element.project
-        val virtualFiles = FileTypeIndex.getFiles(VexFileType, GlobalSearchScope.projectScope(project))
-        val files = virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) as? VexFile }
+        val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
 
         val isUsed = files.any { f ->
             val usages = VexUsageAnalyzer.getFunctionCalls(f, funcName)
