@@ -102,7 +102,9 @@ private item_ ::= include_directive | MACRO | struct_def | function_def | statem
 
 include_directive ::= INCLUDE_KW (STRING | UNCLOSED_STRING) { pin=1 mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexIncludeDirectiveMixin" }
 
-type_ref ::= primitive_type | IDENTIFIER
+type_ref ::= primitive_type | IDENTIFIER {
+  mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexTypeRefMixin"
+}
 private primitive_type ::=
     INT_KW | FLOAT_KW | VECTOR_KW | VECTOR2_KW | VECTOR4_KW |
     MATRIX_KW | MATRIX3_KW | STRING_KW | VOID_KW | BSDF_KW | DICT_KW
@@ -241,7 +243,10 @@ array_access_expr ::= expr LBRACK expr RBRACK
 call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexCallExprMixin"
 }
-member_expr ::= expr DOT IDENTIFIER? { pin=2 }
+member_expr ::= expr DOT IDENTIFIER? {
+  pin=2
+  mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexMemberExprMixin"
+}
 primary_expr ::= IDENTIFIER | NUMBER | STRING | ATTRIBUTE | LPAREN expr RPAREN | vector_literal {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexPrimaryExprMixin"
   implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
