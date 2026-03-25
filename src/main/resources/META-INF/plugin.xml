@@ -9,6 +9,10 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.github.unclepomedev.houdinivexassist.settings.VexSettingsState"/>
+        <applicationConfigurable parentId="tools" instance="com.github.unclepomedev.houdinivexassist.settings.VexSettingsConfigurable"
+                                 id="com.github.unclepomedev.houdinivexassist.settings.VexSettingsConfigurable"
+                                 displayName="VEX"/>
         <fileType name="VEX File" implementationClass="com.github.unclepomedev.houdinivexassist.lang.VexFileType"
                   fieldName="INSTANCE" language="VEX" extensions="vfl;vex"/>
 
