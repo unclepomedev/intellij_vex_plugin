@@ -224,6 +224,7 @@ class VexParserTest : VexTestBase() {
         val code = """
             #include "math.vfl"
             #include 'utils.h'
+            #include <kinefx.h>
             
             void main() {
                 int a = 1;
@@ -238,6 +239,6 @@ class VexParserTest : VexTestBase() {
             file,
             com.github.unclepomedev.houdinivexassist.psi.VexIncludeDirective::class.java
         )
-        assertEquals("Should find exactly 2 include directives", 2, includes.size)
+        assertEquals("Should find exactly 3 include directives", 3, includes.size)
     }
 }

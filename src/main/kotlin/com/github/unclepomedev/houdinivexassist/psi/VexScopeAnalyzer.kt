@@ -26,11 +26,13 @@ object VexScopeAnalyzer {
      * Resolves the #include file path to a VirtualFile.
      */
     fun resolveIncludeFile(includeDirective: VexIncludeDirective, contextFile: PsiFile? = null): PsiFile? {
-        val pathStringNode = includeDirective.string ?: includeDirective.unclosedString ?: return null
+        val pathStringNode = includeDirective.string ?: includeDirective.unclosedString ?: includeDirective.sysString
+        ?: includeDirective.unclosedSysString ?: return null
         val rawText = pathStringNode.text
 
         val fileName = rawText.removePrefix("\"").removeSuffix("\"")
             .removePrefix("'").removeSuffix("'")
+            .removePrefix("<").removeSuffix(">")
 
         if (fileName.isEmpty()) return null
 

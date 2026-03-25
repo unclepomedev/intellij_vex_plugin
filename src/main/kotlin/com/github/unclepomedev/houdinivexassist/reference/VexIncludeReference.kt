@@ -21,17 +21,22 @@ class VexIncludeReference(
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        val stringNode = element.string ?: element.unclosedString ?: return element
+        val stringNode = element.string ?: element.unclosedString ?: element.sysString ?: element.unclosedSysString ?: return element
         val oldText = stringNode.text
 
         val startQuote = when {
             oldText.startsWith("\"") -> "\""
             oldText.startsWith("'") -> "'"
+            oldText.startsWith("<") -> "<"
             else -> "\""
         }
-        val isClosed = oldText.length > 1 && oldText.endsWith(startQuote)
+        val endQuote = when (startQuote) {
+            "<" -> ">"
+            else -> startQuote
+        }
+        val isClosed = oldText.length > 1 && oldText.endsWith(endQuote)
 
-        val innerPath = oldText.removePrefix(startQuote).let { if (isClosed) it.removeSuffix(startQuote) else it }
+        val innerPath = oldText.removePrefix(startQuote).let { if (isClosed) it.removeSuffix(endQuote) else it }
         val splitIndex = maxOf(innerPath.lastIndexOf('/'), innerPath.lastIndexOf('\\'))
         val dirPath = if (splitIndex != -1) innerPath.substring(0, splitIndex + 1) else ""
 
@@ -41,10 +46,10 @@ class VexIncludeReference(
                 append(startQuote)
                 append(dirPath)
                 append(newElementName)
-                if (isClosed) append(startQuote)
+                if (isClosed) append(endQuote)
             }
         )
-        val newStringNode = newInclude.string ?: newInclude.unclosedString
+        val newStringNode = newInclude.string ?: newInclude.unclosedString ?: newInclude.sysString ?: newInclude.unclosedSysString
         if (newStringNode != null) {
             stringNode.replace(newStringNode)
         }

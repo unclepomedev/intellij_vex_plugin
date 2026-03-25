@@ -8,7 +8,7 @@ import com.intellij.psi.PsiReference
 
 abstract class VexIncludeDirectiveMixin(node: ASTNode) : ASTWrapperPsiElement(node), VexIncludeDirective {
     override fun getReference(): PsiReference? {
-        val stringNode = string ?: unclosedString ?: return null
+        val stringNode = string ?: unclosedString ?: sysString ?: unclosedSysString ?: return null
         return VexIncludeReference(this, stringNode.textRangeInParent)
     }
 }
