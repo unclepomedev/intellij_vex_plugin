@@ -8,20 +8,14 @@ object VexVariableResolver {
      * Returns the PsiElement where the variable is declared, or null if unresolved.
      */
     fun resolveVariable(element: PsiElement, varName: String): PsiElement? {
-        var currentScope = VexScopeAnalyzer.findDeclarationScope(element)
-
-        while (currentScope != null) {
-            val decls = VexScopeAnalyzer.getDeclarationsInScope(currentScope)
-            val decl = decls.find { it.identifier.text == varName && it.textOffset < element.textOffset }
-            if (decl != null) return decl
-
-            val params = VexScopeAnalyzer.getParametersForScope(currentScope)
-            val param = params.find { it.identifier.text == varName }
-            if (param != null) return param
-
-            currentScope = VexScopeAnalyzer.findDeclarationScope(currentScope.parent)
+        val visibleVariables = VexScopeAnalyzer.getVisibleVariables(element)
+        return visibleVariables.find {
+            val ident = when (it) {
+                is VexDeclarationItem -> it.identifier
+                is VexParameterDef -> it.identifier
+                else -> return@find false
+            }
+            ident.text == varName
         }
-
-        return null
     }
 }

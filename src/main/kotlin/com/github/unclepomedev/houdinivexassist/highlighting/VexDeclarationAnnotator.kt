@@ -7,7 +7,6 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 
 class VexDeclarationAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -34,7 +33,6 @@ class VexDeclarationAnnotator : Annotator {
         val identifier = element.identifier
         val varName = identifier.text
         val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
-        val file = element.containingFile as? VexFile ?: return
 
         if (isAlreadyDefinedInScope(element, varName, scope)) {
             reportError(holder, identifier, "Variable '$varName' is already defined in this scope")
@@ -44,7 +42,7 @@ class VexDeclarationAnnotator : Annotator {
             reportError(holder, identifier, "Variable '$varName' is already defined as a parameter")
             return
         }
-        if (isLocalFunctionBefore(element, varName, file)) {
+        if (isLocalFunctionBefore(element, varName)) {
             reportError(holder, identifier, "Variable name '$varName' conflicts with a local function")
             return
         }
@@ -53,17 +51,16 @@ class VexDeclarationAnnotator : Annotator {
     private fun checkFunctionDefinition(element: VexFunctionDef, holder: AnnotationHolder) {
         val identifier = element.identifier
         val funcName = identifier.text
-        val file = element.containingFile as? VexFile ?: return
 
         if (isStandardFunction(funcName, element)) {
             reportError(holder, identifier, "Function name '$funcName' conflicts with a standard VEX function")
             return
         }
-        if (isStructNameBefore(element, funcName, file)) {
+        if (isStructNameBefore(element, funcName)) {
             reportError(holder, identifier, "Function name '$funcName' conflicts with a struct definition")
             return
         }
-        if (hasExactOverloadConflict(element, funcName, file)) {
+        if (hasExactOverloadConflict(element, funcName)) {
             val paramCount = element.parameterListDef?.parameterDefList?.size ?: 0
             reportError(holder, identifier, "Function '$funcName' with $paramCount parameters is already defined")
             return
@@ -73,9 +70,8 @@ class VexDeclarationAnnotator : Annotator {
     private fun checkStructDefinition(element: VexStructDef, holder: AnnotationHolder) {
         val identifier = element.identifier ?: return
         val structName = identifier.text
-        val file = element.containingFile as? VexFile ?: return
 
-        if (isAlreadyDefinedStruct(element, structName, file)) {
+        if (isStructNameBefore(element, structName)) {
             reportError(holder, identifier, "Struct '$structName' is already defined")
             return
         }
@@ -83,7 +79,7 @@ class VexDeclarationAnnotator : Annotator {
             reportError(holder, identifier, "Struct name '$structName' conflicts with a standard VEX function")
             return
         }
-        if (isLocalFunctionBefore(element, structName, file)) {
+        if (isLocalFunctionBefore(element, structName)) {
             reportError(holder, identifier, "Struct name '$structName' conflicts with a local function")
             return
         }
@@ -106,27 +102,21 @@ class VexDeclarationAnnotator : Annotator {
         return apiProvider?.hasFunction(name) == true
     }
 
-    private fun isLocalFunctionBefore(element: PsiElement, name: String, file: VexFile): Boolean {
-        return PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).any {
+    private fun isLocalFunctionBefore(element: PsiElement, name: String): Boolean {
+        return VexScopeAnalyzer.getVisibleFunctions(element).any {
             it != element && it.identifier.text == name && it.textOffset < element.textOffset
         }
     }
 
-    private fun isStructNameBefore(element: PsiElement, name: String, file: VexFile): Boolean {
-        return PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java).any {
+    private fun isStructNameBefore(element: PsiElement, name: String): Boolean {
+        return VexScopeAnalyzer.getVisibleStructs(element).any {
             it != element && it.identifier?.text == name && it.textOffset < element.textOffset
         }
     }
 
-    private fun isAlreadyDefinedStruct(element: VexStructDef, name: String, file: VexFile): Boolean {
-        return PsiTreeUtil.findChildrenOfType(file, VexStructDef::class.java).any {
-            it != element && it.identifier?.text == name && it.textOffset < element.textOffset
-        }
-    }
-
-    private fun hasExactOverloadConflict(element: VexFunctionDef, name: String, file: VexFile): Boolean {
+    private fun hasExactOverloadConflict(element: VexFunctionDef, name: String): Boolean {
         val myParamTypes = extractParameterTypes(element)
-        return PsiTreeUtil.findChildrenOfType(file, VexFunctionDef::class.java).any { sibling ->
+        return VexScopeAnalyzer.getVisibleFunctions(element).any { sibling ->
             sibling != element &&
                     sibling.identifier.text == name &&
                     sibling.textOffset < element.textOffset &&
