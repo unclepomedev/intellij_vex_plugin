@@ -18,13 +18,13 @@ class VexSettingsConfigurable : Configurable {
     }
 
     override fun isModified(): Boolean {
-        val settings = VexSettingsState.instance
-        return mySettingsComponent?.includePathTextField?.text != settings.includePath
+        val component = mySettingsComponent ?: return false
+        return component.includePathTextField.text != VexSettingsState.instance.includePath
     }
 
     override fun apply() {
-        val settings = VexSettingsState.instance
-        settings.includePath = mySettingsComponent?.includePathTextField?.text ?: ""
+        val component = mySettingsComponent ?: return
+        VexSettingsState.instance.includePath = component.includePathTextField.text
     }
 
     override fun reset() {
