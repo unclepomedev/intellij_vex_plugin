@@ -53,30 +53,18 @@ object VexScopeAnalyzer {
     }
 
     fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
-        val rawTokens = includePathStr.split(";", pathSeparator)
-        val paths = mutableListOf<String>()
+        // (?<!^[a-zA-Z]) : Backtracking. If the first character is a single letter (e.g., C:), do not split it.
+        // (?!//|\\\\)    : Do not split URL schemes (://) or Windows backslashes (:\).
+        val colonSplitter = Regex("(?<!^[a-zA-Z]):(?!//|\\\\)")
 
-        var i = 0
-        while (i < rawTokens.size) {
-            var token = rawTokens[i].trim()
-
-            val isWindowsDrive = token.length == 1 && token.first().isLetter()
-            val isUrlScheme = token == "file" || token == "temp"
-
-            if (i + 1 < rawTokens.size && (isWindowsDrive || isUrlScheme)) {
-                token = token + ":" + rawTokens[i + 1].trim()
-                i++
+        return includePathStr
+            .split(";")
+            .flatMap { rawSegment ->
+                val segment = rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
+                if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
             }
-
-            token = token.removeSuffix("&").trim()
-
-            if (token.isNotEmpty()) {
-                paths.add(token)
-            }
-            i++
-        }
-
-        return paths
+            .map { it.removeSuffix("&").trim() }
+            .filter { it.isNotEmpty() }
     }
 
     private fun resolveFromIncludePaths(project: Project, fileName: String): PsiFile? {
