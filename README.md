@@ -1,5 +1,7 @@
 # intellij_vex_plugin
 
+[![Version](https://img.shields.io/jetbrains/plugin/v/30846-houdinivexassist)](https://plugins.jetbrains.com/plugin/30846-houdinivexassist)
+
 <!-- Plugin description -->
 Houdini VEX assist plugin for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.)
 
