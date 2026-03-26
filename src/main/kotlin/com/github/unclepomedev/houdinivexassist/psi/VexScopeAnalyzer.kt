@@ -52,16 +52,32 @@ object VexScopeAnalyzer {
         return null
     }
 
+    fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
+        // (?<!^[a-zA-Z]) : Backtracking. If the first character is a single letter (e.g., C:), do not split it.
+        // (?!//|\\\\)    : Do not split URL schemes (://) or Windows backslashes (:\).
+        val colonSplitter = Regex("(?<!^[a-zA-Z]):(?!//|\\\\)")
+
+        return includePathStr
+            .split(";")
+            .flatMap { rawSegment ->
+                val segment = rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
+                if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
+            }
+            .map { it.removeSuffix("&").trim() }
+            .filter { it.isNotEmpty() }
+    }
+
     private fun resolveFromIncludePaths(project: Project, fileName: String): PsiFile? {
         val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
         val includePathStr = settingsState?.includePath ?: return null
 
-        if (includePathStr.isEmpty()) return null
-
-        val paths = includePathStr.split(File.pathSeparator)
+        val paths = parseIncludePaths(includePathStr)
         for (path in paths) {
-            if (path.isBlank()) continue
-            val dir = LocalFileSystem.getInstance().findFileByPath(path)
+            var dir = LocalFileSystem.getInstance().findFileByPath(path)
+            if (dir == null) {
+                dir = com.intellij.openapi.vfs.VirtualFileManager.getInstance().findFileByUrl(path)
+            }
+
             if (dir != null && dir.isDirectory) {
                 val file = dir.findFileByRelativePath(fileName)
                 if (file != null && !file.isDirectory) {

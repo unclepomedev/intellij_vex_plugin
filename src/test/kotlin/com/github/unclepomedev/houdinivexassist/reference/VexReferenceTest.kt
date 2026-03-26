@@ -6,6 +6,7 @@ import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
 import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
+import java.nio.file.Files
 
 class VexReferenceTest : VexTestBase() {
 
@@ -523,5 +524,41 @@ class VexReferenceTest : VexTestBase() {
             }
         """.trimIndent()
         )
+    }
+
+    fun testIncludePathWithSpecialCharacters() {
+        val tempDir = Files.createTempDirectory("vex_include_test")
+        val libFile = tempDir.resolve("lib.vfl").toFile()
+        libFile.writeText("void my_lib_func() {}")
+
+        val vfsDir = com.intellij.openapi.vfs.LocalFileSystem.getInstance().refreshAndFindFileByIoFile(tempDir.toFile())
+        assertNotNull("Temp directory should be found by VFS", vfsDir)
+
+        val settings = com.intellij.openapi.application.ApplicationManager.getApplication()
+            .getService(com.github.unclepomedev.houdinivexassist.settings.VexSettingsState::class.java)
+        val oldPath = settings.includePath
+        try {
+            // Append ; and & to the path
+            settings.includePath = "${tempDir.toAbsolutePath()};&"
+
+            myFixture.configureByText(
+                VexFileType, """
+                #include "l<caret>ib.vfl"
+                void main() {
+                    my_lib_func();
+                }
+            """.trimIndent()
+            )
+
+            val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+            val resolved = ref.resolve()
+            assertNotNull("Include reference should be resolved using complex include paths", resolved)
+            assertTrue("Resolved element should be a file", resolved is com.intellij.psi.PsiFile)
+            assertEquals("lib.vfl", (resolved as com.intellij.psi.PsiFile).name)
+        } finally {
+            settings.includePath = oldPath
+            Files.deleteIfExists(libFile.toPath())
+            Files.deleteIfExists(tempDir.toFile().toPath())
+        }
     }
 }
