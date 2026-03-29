@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-03-29
+
+### Added
+
+* Fixed false error highlight when a variable and function call share the same name on the same line (e.g., `float dot = dot()`).
+
 ## [0.2.0] - 2026-03-26
 
 ### Added

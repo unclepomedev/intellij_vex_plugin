@@ -42,8 +42,9 @@ class VexReferenceAnnotator : Annotator {
         val containingFile = element.containingFile as? VexFile ?: return
 
         // If a variable with the same name is resolved, the function call is invalid (shadowed)
+        // However, skip if the call is inside the variable's own initializer (e.g., float dot = dot())
         val resolvedVar = VexVariableResolver.resolveVariable(element, funcName)
-        if (resolvedVar != null) {
+        if (resolvedVar != null && !com.intellij.psi.util.PsiTreeUtil.isAncestor(resolvedVar, element, false)) {
             holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$funcName' cannot be called as a function")
                 .range(identifier.textRange)
                 .create()
