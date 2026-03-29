@@ -695,6 +695,18 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false, false)
     }
 
+    fun testNestedFunctionCallInInitializer() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                float dot = abs(dot({1,0,0}, {0,1,0}));
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
     fun testSelfInitializationIsHighlightedAsError() {
         myFixture.configureByText(
             VexFileType,
