@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-03-30
+
+### Added
+
+* Introduced type inference for VEX built-in attributes and explicit cast prefixes.
+
 ## [0.2.1] - 2026-03-29
 
 ### Added

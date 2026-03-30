@@ -790,4 +790,21 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.openFileInEditor(libFile.virtualFile)
         myFixture.checkHighlighting(true, false, true, false)
     }
+
+    fun testAmbiguousAttributeInBinaryExprNoFalseError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int a = @I * 2;
+                float b = @I + 1.0;
+                vector v = @I * {1, 2, 3};
+            }
+            """.trimIndent()
+        )
+        // @I has conflicting types (vector and int) in the builtin data,
+        // so it resolves to UnknownType. No error should be reported
+        // because UnknownType is always assignable.
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }

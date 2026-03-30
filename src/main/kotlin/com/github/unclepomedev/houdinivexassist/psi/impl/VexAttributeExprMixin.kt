@@ -1,8 +1,10 @@
 package com.github.unclepomedev.houdinivexassist.psi.impl
 
 import com.github.unclepomedev.houdinivexassist.psi.VexAttributeExpr
+import com.github.unclepomedev.houdinivexassist.services.VexBuiltinVariableProvider
 import com.github.unclepomedev.houdinivexassist.types.VexType
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.components.service
 
 abstract class VexAttributeExprMixin(node: ASTNode) : VexExprImpl(node), VexAttributeExpr {
 
@@ -37,5 +39,26 @@ abstract class VexAttributeExprMixin(node: ASTNode) : VexExprImpl(node), VexAttr
         }
 
         return if (isArray) VexType.ArrayType(baseType) else baseType
+    }
+
+    /**
+     * Infers the full [VexType] for this attribute expression.
+     *
+     * 1. If an explicit cast prefix exists, use it.
+     * 2. Otherwise, look up the base name in [VexBuiltinVariableProvider].
+     * 3. If not found, return [VexType.UnknownType].
+     */
+    fun inferType(): VexType {
+        inferCastPrefixType()?.let { return it }
+
+        val text = text ?: return VexType.UnknownType
+        val atIndex = text.indexOf('@')
+        if (atIndex < 0) return VexType.UnknownType
+
+        val baseName = text.substring(atIndex + 1)
+        if (baseName.isEmpty()) return VexType.UnknownType
+
+        val provider = project.service<VexBuiltinVariableProvider>()
+        return provider.getBuiltinType(baseName) ?: VexType.UnknownType
     }
 }

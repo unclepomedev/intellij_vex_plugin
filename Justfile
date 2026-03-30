@@ -64,6 +64,10 @@ generate-type-inference:
     HOUDINI_RESOURCES="{{ HOUDINI_RESOURCES }}" hython tools/extract_geo_attrs.py
     hython tools/merge_type_inference.py
 
+# Run in a local environment where Houdini can run.
+setup-e2e: dump generate-type-inference parser
+
+# python =============================================================================
 fmt-py:
     uv run ruff format tools tests
 
