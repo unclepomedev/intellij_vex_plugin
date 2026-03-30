@@ -33,8 +33,11 @@ def merge_for_type_inference(globals_path, attrs_path, out_path):
 
 if __name__ == "__main__":
     base_dir = Path("detect_attr")
+    resources_dir = Path("src/main/resources")
+    resources_dir.mkdir(parents=True, exist_ok=True)
+
     merge_for_type_inference(
         base_dir / "vex_globals.json",
         base_dir / "standard_attributes.json",
-        base_dir / "type_inference_data.json",
+        resources_dir / "type_inference_data.json",
     )
