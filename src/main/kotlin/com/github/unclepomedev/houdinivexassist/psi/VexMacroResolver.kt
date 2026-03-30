@@ -14,27 +14,32 @@ object VexMacroResolver {
         val key = file.originalFile.virtualFile?.path ?: file.name
         if (!visited.add(key)) return null
 
-        var best: VexMacroDef? = null
+        try {
+            var best: VexMacroDef? = null
 
-        val events = mutableListOf<PsiElement>().apply {
-            addAll(PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java))
-            addAll(PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java))
-        }.filter { it.textOffset < maxOffsetExclusive }
-            .sortedBy { it.textOffset }
+            val events = mutableListOf<PsiElement>().apply {
+                addAll(PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java))
+                addAll(PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java))
+            }.filter { it.textOffset < maxOffsetExclusive }
+                .sortedBy { it.textOffset }
 
-        for (event in events) {
-            when (event) {
-                is VexMacroDef -> if (event.identifier?.text == name) best = event
-                is VexIncludeDirective -> {
-                    val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event) ?: continue
-                    // re-parsed as VexFile via getIncludedFiles; take first to get converted file only
-                    val vexFile = VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull() ?: continue
-                    val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited)
-                    if (nested != null) best = nested
+            for (event in events) {
+                when (event) {
+                    is VexMacroDef -> if (event.identifier?.text == name) best = event
+                    is VexIncludeDirective -> {
+                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event) ?: continue
+                        val vexFile = (includedPsi as? VexFile)
+                            ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
+                            ?: continue
+                        val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited)
+                        if (nested != null) best = nested
+                    }
                 }
             }
+            return best
+        } finally {
+            visited.remove(key)
         }
-        return best
     }
 
     fun resolveMacro(context: PsiElement, name: String): PsiElement? {
