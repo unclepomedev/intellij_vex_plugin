@@ -7,10 +7,7 @@ import hou
 def fetch_vex_globals(context_name):
     try:
         result = subprocess.run(
-            ["vcc", "-X", context_name],
-            capture_output=True,
-            text=True,
-            check=True
+            ["vcc", "-X", context_name], capture_output=True, text=True, check=True
         )
         return result.stdout
     except subprocess.CalledProcessError as e:
