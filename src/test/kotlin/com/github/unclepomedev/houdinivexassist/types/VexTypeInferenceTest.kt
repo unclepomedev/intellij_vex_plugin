@@ -102,6 +102,43 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.ArrayType(VexType.Matrix3Type), mixin(15).inferCastPrefixType())    // 3[]@transforms
     }
 
+    fun testInferAttributeBuiltinLookup() {
+        val code = """
+            void main() {
+                @P;
+                @ptnum;
+                @Alpha;
+                @unknown_attr_xyz;
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+        val exprs = PsiTreeUtil.findChildrenOfType(file, VexAttributeExpr::class.java).toList()
+        assertEquals(4, exprs.size)
+
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[0]))   // @P -> vector (from JSON)
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[1]))      // @ptnum -> int (from JSON)
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[2]))    // @Alpha -> float (from JSON)
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[3]))  // @unknown_attr_xyz -> unknown
+    }
+
+    fun testInferBinaryOpMatrixVector() {
+        val code = """
+            void main() {
+                matrix m = 0;
+                vector v = {1, 2, 3};
+                vector r = m * v;
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+        val declItems = PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        assertEquals(3, declItems.size)
+
+        val mulExpr = declItems[2].expr!!
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(mulExpr))  // matrix * vector -> vector
+    }
+
     fun testInferVariableReference() {
         val code = """
             void main() {

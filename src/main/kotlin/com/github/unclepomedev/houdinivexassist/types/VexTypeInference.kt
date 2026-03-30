@@ -10,7 +10,9 @@ object VexTypeInference {
         if (expr == null) return VexType.UnknownType
 
         return when (expr) {
-            is VexAttributeExpr -> inferAttributeType(expr.text)
+            is VexAttributeExpr -> (expr as? com.github.unclepomedev.houdinivexassist.psi.impl.VexAttributeExprMixin)?.inferType()
+                ?: VexType.UnknownType
+
             is VexPrimaryExpr -> inferPrimaryExpr(expr)
             is VexCallExpr -> inferCallExpr(expr)
             is VexAddExpr, is VexMulExpr,
@@ -88,22 +90,6 @@ object VexTypeInference {
         }
     }
 
-    private fun inferAttributeType(attrText: String): VexType {
-        if (attrText.startsWith("f@")) return VexType.FloatType
-        if (attrText.startsWith("v@")) return VexType.VectorType
-        if (attrText.startsWith("i@")) return VexType.IntType
-        if (attrText.startsWith("s@")) return VexType.StringType
-        if (attrText.startsWith("p@")) return VexType.Vector4Type
-        if (attrText.startsWith("m@") || attrText.startsWith("3@")) return VexType.Matrix3Type
-        if (attrText.startsWith("4@")) return VexType.MatrixType
-
-        return when (attrText) {
-            "@P", "@N", "@Cd", "@v", "@uv", "@rest", "@up", "@orient" -> VexType.VectorType
-            "@ptnum", "@numpt", "@primnum", "@numprim" -> VexType.IntType
-            "@Time", "@Frame", "@pscale", "@width", "@Alpha" -> VexType.FloatType
-            else -> VexType.UnknownType
-        }
-    }
 
     private fun inferArithmeticExpr(expr: PsiElement): VexType {
         val (left, right) = expr.binaryOperands ?: return VexType.UnknownType
