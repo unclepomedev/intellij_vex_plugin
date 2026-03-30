@@ -56,6 +56,50 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[4])) // s@my_str
     }
 
+    fun testInferCastPrefixType() {
+        val code = """
+            void main() {
+                f@Cd;
+                i@id;
+                v@vel;
+                u@uv;
+                p@orient;
+                s@name;
+                @ptnum;
+                v[]@myarr;
+                f[]@weights;
+                i[]@pts;
+                s[]@paths;
+                3@m3;
+                4@m4;
+                d@config;
+                3[]@transforms;
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+        val exprs = PsiTreeUtil.findChildrenOfType(file, VexAttributeExpr::class.java).toList()
+        assertEquals(15, exprs.size)
+
+        val mixin = { i: Int -> exprs[i] as com.github.unclepomedev.houdinivexassist.psi.impl.VexAttributeExprMixin }
+
+        assertEquals(VexType.FloatType, mixin(0).inferCastPrefixType())                          // f@Cd
+        assertEquals(VexType.IntType, mixin(1).inferCastPrefixType())                            // i@id
+        assertEquals(VexType.VectorType, mixin(2).inferCastPrefixType())                         // v@vel
+        assertEquals(VexType.Vector2Type, mixin(3).inferCastPrefixType())                        // u@uv
+        assertEquals(VexType.Vector4Type, mixin(4).inferCastPrefixType())                        // p@orient
+        assertEquals(VexType.StringType, mixin(5).inferCastPrefixType())                         // s@name
+        assertNull(mixin(6).inferCastPrefixType())                                               // @ptnum (no prefix)
+        assertEquals(VexType.ArrayType(VexType.VectorType), mixin(7).inferCastPrefixType())      // v[]@myarr
+        assertEquals(VexType.ArrayType(VexType.FloatType), mixin(8).inferCastPrefixType())       // f[]@weights
+        assertEquals(VexType.ArrayType(VexType.IntType), mixin(9).inferCastPrefixType())         // i[]@pts
+        assertEquals(VexType.ArrayType(VexType.StringType), mixin(10).inferCastPrefixType())     // s[]@paths
+        assertEquals(VexType.Matrix3Type, mixin(11).inferCastPrefixType())                       // 3@m3
+        assertEquals(VexType.MatrixType, mixin(12).inferCastPrefixType())                        // 4@m4
+        assertEquals(VexType.DictType, mixin(13).inferCastPrefixType())                          // d@config
+        assertEquals(VexType.ArrayType(VexType.Matrix3Type), mixin(14).inferCastPrefixType())    // 3[]@transforms
+    }
+
     fun testInferVariableReference() {
         val code = """
             void main() {
