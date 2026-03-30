@@ -5,6 +5,8 @@
 .kotlin
 .qodana
 build
+__pycache__
+
 /src/main/gen/
 detect_attr/
 

@@ -47,7 +47,29 @@ detect-attr:
     #!/usr/bin/env bash
     set -e
 
-    cd {{ HOUDINI_RESOURCES }}
+    cd "{{ HOUDINI_RESOURCES }}"
     source houdini_setup
-    cd {{ PROJECT_ROOT }}
+    cd "{{ PROJECT_ROOT }}"
     hython tools/detect_attr.py
+
+generate-type-inference:
+    #!/usr/bin/env bash
+    set -e
+
+    cd "{{ HOUDINI_RESOURCES }}"
+    source houdini_setup
+    cd "{{ PROJECT_ROOT }}"
+
+    hython tools/extract_vex_globals.py
+    HOUDINI_RESOURCES="{{ HOUDINI_RESOURCES }}" hython tools/extract_geo_attrs.py
+    hython tools/merge_type_inference.py
+
+fmt-py:
+    uv run ruff format tools tests
+
+test-py:
+    #!/usr/bin/env bash
+    set -e
+
+    cd "{{ PROJECT_ROOT }}"
+    uv run pytest

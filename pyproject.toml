@@ -5,3 +5,15 @@ description = "Dev Helper Tools for the plugin."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.8",
+    "types-houdini>=21.0.512.3",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "tools"
+]
