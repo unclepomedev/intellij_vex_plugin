@@ -599,4 +599,83 @@ class VexReferenceTest : VexTestBase() {
             Files.deleteIfExists(tempDir.toFile().toPath())
         }
     }
+
+    fun testMacroRedefinitionAcrossIncludes() {
+        myFixture.addFileToProject("def_first.h", "#define OVERRIDE_ME 1")
+        myFixture.addFileToProject("def_second.h", "#define OVERRIDE_ME 2")
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "def_first.h"
+            #include "def_second.h"
+            
+            void main() {
+                int x = OVERRIDE_<caret>ME;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Overridden macro reference should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("def_second.h", resolved?.containingFile?.name)
+    }
+
+    fun testMacroLocalOverridesInclude() {
+        myFixture.addFileToProject("base_const.h", "#define CONFIG_VAL 100")
+
+        val mainFile = myFixture.configureByText(
+            VexFileType, """
+            #include "base_const.h"
+            
+            #define CONFIG_VAL 999
+            
+            void main() {
+                int x = CONFIG_<caret>VAL;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Local override macro should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals(mainFile.name, resolved?.containingFile?.name)
+    }
+
+    fun testMacroCircularIncludeProtection() {
+        myFixture.addFileToProject(
+            "cycle_a.h", """
+            #include "cycle_b.h"
+            #define VAL_A 10
+        """.trimIndent()
+        )
+
+        myFixture.addFileToProject(
+            "cycle_b.h", """
+            #include "cycle_a.h"
+            #define VAL_B 20
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "cycle_a.h"
+            
+            void main() {
+                int a = VAL_<caret>A;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro in circular include should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("cycle_a.h", resolved?.containingFile?.name)
+    }
 }

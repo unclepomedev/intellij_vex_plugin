@@ -26,13 +26,11 @@ object VexMacroResolver {
             when (event) {
                 is VexMacroDef -> if (event.identifier?.text == name) best = event
                 is VexIncludeDirective -> {
-                    // re-parsed as VexFile via getIncludedFiles
                     val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event) ?: continue
-                    val includedFiles = VexScopeAnalyzer.getIncludedFiles(includedPsi)
-                    for (incFile in includedFiles) {
-                        val nested = resolveInFile(incFile, name, Int.MAX_VALUE, visited)
-                        if (nested != null) best = nested
-                    }
+                    // re-parsed as VexFile via getIncludedFiles; take first to get converted file only
+                    val vexFile = VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull() ?: continue
+                    val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited)
+                    if (nested != null) best = nested
                 }
             }
         }
