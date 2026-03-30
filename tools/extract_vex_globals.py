@@ -1,8 +1,8 @@
 import json
 import re
-import subprocess
-import sys
 from pathlib import Path
+
+from vex_utils import fetch_vex_globals
 
 GLOBAL_VAR_PATTERN = re.compile(r"\((.*?)\)\s+([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_]+)")
 
@@ -35,17 +35,6 @@ def parse_global_variables(vcc_output):
             )
 
     return parsed_data
-
-
-def fetch_vex_globals(context_name):
-    try:
-        result = subprocess.run(
-            ["vcc", "-X", context_name], capture_output=True, text=True, check=True
-        )
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"Error fetching {context_name}: {e.stderr}", file=sys.stderr)
-        return ""
 
 
 if __name__ == "__main__":

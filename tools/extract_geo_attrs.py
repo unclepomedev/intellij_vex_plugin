@@ -3,6 +3,9 @@ import json
 import os
 import re
 from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
 
 TYPE_MAP = {
     "float": "float",
@@ -40,7 +43,7 @@ def parse_help_content(content, attributes_data):
             raw_type = type_match.group(1).lower()
             mapped_type = TYPE_MAP.get(raw_type)
 
-            if mapped_type and current_attr not in attributes_data[mapped_type]:
+            if mapped_type:
                 attributes_data[mapped_type].append(current_attr)
 
             current_attr = None
@@ -68,14 +71,16 @@ def extract_attributes_from_zips(zip_paths):
                 try:
                     content = z.read(file_info.filename).decode("utf-8")
                     parse_help_content(content, attributes_data)
-                except Exception:
-                    pass
+                except (KeyError, UnicodeDecodeError) as exc:
+                    logger.warning("Skipping %s: %s", file_info.filename, exc)
 
-    return attributes_data
+    return {k: sorted(set(v)) for k, v in attributes_data.items()}
 
 
 if __name__ == "__main__":
     houdini_resources = os.environ.get("HOUDINI_RESOURCES")
+    if not houdini_resources:
+        raise EnvironmentError("HOUDINI_RESOURCES is not set")
     help_dir = Path(houdini_resources) / "houdini" / "help"
 
     target_zips = [
