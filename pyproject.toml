@@ -1,0 +1,7 @@
+[project]
+name = "intellij-vex-plugin"
+version = "0.0.1"
+description = "Dev Helper Tools for the plugin."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []

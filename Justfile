@@ -41,3 +41,13 @@ parser:
 
     rm -rf src/main/gen
     ./gradlew generateLexer generateParser
+
+
+detect-attr:
+    #!/usr/bin/env bash
+    set -e
+
+    cd {{ HOUDINI_RESOURCES }}
+    source houdini_setup
+    cd {{ PROJECT_ROOT }}
+    hython tools/detect_attr.py
