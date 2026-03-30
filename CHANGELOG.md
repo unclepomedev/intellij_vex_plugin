@@ -9,6 +9,7 @@
 ### Added
 
 * Introduced type inference for VEX built-in attributes and explicit cast prefixes.
+* Fixed parsing of function-style type casts.
 
 ## [0.2.1] - 2026-03-29
 
