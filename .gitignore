@@ -6,3 +6,5 @@
 .qodana
 build
 /src/main/gen/
+detect_attr/
+
