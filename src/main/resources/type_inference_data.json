@@ -1,0 +1,976 @@
+{
+    "Alpha": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "age": {
+        "float": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "airresist": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "bounce": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "bounceforward": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "cling": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "drag": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "dragexp": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "dragnormal": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "dragtangent": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "fresnel": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "friction": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "gl_spritecutoff": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "hitimpulse": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "hittime": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "life": {
+        "float": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "lod": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "mass": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "maxturnrate": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "nage": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "nearestdist": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "pscale": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "rough": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "sbias": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "shadow": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "spinresist": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "spriterot": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "stateduration": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "steerforce": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "steerforceweight": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "vm_cuspangle": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "volvis_ambientmapsize": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "volvis_ambientshadows": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "volvis_ambientsteprate": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "volvis_emitscale": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "volvis_extinctionratio": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "volvis_shadowscale": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "width": {
+        "float": [
+            "attribute"
+        ]
+    },
+    "Cd": {
+        "vector": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "Ce": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "Cr": {
+        "vector": [
+            "attribute"
+        ],
+        "float": [
+            "Cop2"
+        ]
+    },
+    "Cs": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "Ct": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "N": {
+        "vector": [
+            "attribute",
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog",
+            "Sop"
+        ]
+    },
+    "P": {
+        "vector": [
+            "attribute",
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog",
+            "Sop",
+            "Image3d"
+        ]
+    },
+    "accel": {
+        "vector": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "dragcenter": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "dragshape": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "force": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "heading": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "hitnml": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "hitpos": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "hituv": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "hitv": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "posuv": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "pprevious": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "rest": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "scale": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "spinshape": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "spritescale": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "targetv": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "targetw": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "torque": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "up": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "uv": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "v": {
+        "vector": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "volvis_shadowcolor": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "w": {
+        "vector": [
+            "attribute"
+        ]
+    },
+    "backtrack": {
+        "vector4": [
+            "attribute"
+        ]
+    },
+    "orient": {
+        "vector4": [
+            "attribute"
+        ]
+    },
+    "rot": {
+        "vector4": [
+            "attribute"
+        ]
+    },
+    "crowdactive": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "crowdanimated": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "dead": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_lit": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_shadeopencurves": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_showallpoints": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_spherepoints": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_spriteblend": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_wireframe": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_xray": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "has_pprevious": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "hitnum": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "hitprim": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "hittotal": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "id": {
+        "int": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "nearest": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "nextid": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "numproximity": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "piece": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "posprim": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "pstate": {
+        "int": [
+            "attribute",
+            "Sop"
+        ]
+    },
+    "sliding": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "stopped": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "stuck": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "volvis_maxres": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "volvis_motionvec": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "volvis_normals": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "volvis_scatteringiter": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "agentgroup": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "agentname": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "collisionignore": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "gl_spritetex": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "hitpath": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "instance": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "material": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "name": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "nextstate": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "pospath": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "rishade": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "state": {
+        "string": [
+            "attribute"
+        ]
+    },
+    "Cf": {
+        "vector": [
+            "Surface",
+            "Fog"
+        ]
+    },
+    "Of": {
+        "vector": [
+            "Surface",
+            "Fog"
+        ]
+    },
+    "Af": {
+        "float": [
+            "Surface",
+            "Fog"
+        ]
+    },
+    "Pz": {
+        "float": [
+            "Surface",
+            "Displacement",
+            "Fog"
+        ]
+    },
+    "I": {
+        "vector": [
+            "Surface",
+            "Light",
+            "Shadow",
+            "Fog"
+        ],
+        "int": [
+            "Chop",
+            "Cop2"
+        ]
+    },
+    "dPds": {
+        "vector": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "dPdt": {
+        "vector": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "Ng": {
+        "vector": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "Cl": {
+        "vector": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "L": {
+        "vector": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ],
+        "int": [
+            "Chop"
+        ]
+    },
+    "Eye": {
+        "vector": [
+            "Surface",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "s": {
+        "float": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "t": {
+        "float": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "Time": {
+        "float": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog",
+            "Chop",
+            "Sop"
+        ]
+    },
+    "dPdz": {
+        "float": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "F": {
+        "bsdf": [
+            "Surface",
+            "Fog"
+        ],
+        "int": [
+            "Cop2"
+        ]
+    },
+    "SID": {
+        "int": [
+            "Surface",
+            "Displacement",
+            "Light",
+            "Shadow",
+            "Fog"
+        ]
+    },
+    "Ps": {
+        "vector": [
+            "Light",
+            "Shadow"
+        ]
+    },
+    "Lz": {
+        "vector": [
+            "Light",
+            "Shadow"
+        ]
+    },
+    "V": {
+        "float": [
+            "Chop",
+            "Cop2"
+        ]
+    },
+    "S": {
+        "int": [
+            "Chop"
+        ],
+        "float": [
+            "Cop2"
+        ]
+    },
+    "E": {
+        "int": [
+            "Chop"
+        ]
+    },
+    "SR": {
+        "float": [
+            "Chop"
+        ]
+    },
+    "C": {
+        "int": [
+            "Chop"
+        ]
+    },
+    "NC": {
+        "int": [
+            "Chop"
+        ]
+    },
+    "CN": {
+        "string": [
+            "Chop"
+        ]
+    },
+    "FF": {
+        "float": [
+            "Chop"
+        ]
+    },
+    "T": {
+        "float": [
+            "Chop"
+        ]
+    },
+    "IN": {
+        "int": [
+            "Chop"
+        ]
+    },
+    "FFN": {
+        "float": [
+            "Chop"
+        ]
+    },
+    "TN": {
+        "float": [
+            "Chop"
+        ]
+    },
+    "Frame": {
+        "float": [
+            "Chop",
+            "Sop"
+        ]
+    },
+    "Pw": {
+        "float": [
+            "Sop"
+        ]
+    },
+    "ptnum": {
+        "int": [
+            "Sop"
+        ]
+    },
+    "Npt": {
+        "int": [
+            "Sop"
+        ]
+    },
+    "TimeInc": {
+        "float": [
+            "Sop"
+        ]
+    },
+    "XRES": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "YRES": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "AR": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "R": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "G": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "B": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "A": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "Cg": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "Cb": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "C4": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "PNAME": {
+        "string": [
+            "Cop2"
+        ]
+    },
+    "PL": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "NP": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "PS": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "AI": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "AS": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "NI": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "H": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "X": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "Y": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "IX": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "IY": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "SF": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "EF": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "FR": {
+        "int": [
+            "Cop2"
+        ]
+    },
+    "TIME": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "TINC": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "PXSC": {
+        "float": [
+            "Cop2"
+        ]
+    },
+    "density": {
+        "float": [
+            "Image3d"
+        ]
+    }
+}
