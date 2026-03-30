@@ -10,6 +10,7 @@ object VexTypeInference {
         if (expr == null) return VexType.UnknownType
 
         return when (expr) {
+            is VexAttributeExpr -> inferAttributeType(expr.text)
             is VexPrimaryExpr -> inferPrimaryExpr(expr)
             is VexCallExpr -> inferCallExpr(expr)
             is VexAddExpr, is VexMulExpr,
@@ -43,7 +44,6 @@ object VexTypeInference {
             node.findChildByType(VexTypes.STRING) != null ||
                     node.findChildByType(VexTypes.UNCLOSED_STRING) != null -> VexType.StringType
 
-            node.findChildByType(VexTypes.ATTRIBUTE) != null -> inferAttributeType(expr.text)
             expr.identifier != null -> inferVariableReference(expr)
             else -> VexType.UnknownType
         }

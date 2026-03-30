@@ -46,7 +46,7 @@ class VexTypeInferenceTest : VexTestBase() {
         """.trimIndent()
         myFixture.configureByText(VexFileType, code)
         val file = myFixture.file as VexFile
-        val exprs = PsiTreeUtil.findChildrenOfType(file, VexPrimaryExpr::class.java).toList()
+        val exprs = PsiTreeUtil.findChildrenOfType(file, VexAttributeExpr::class.java).toList()
         assertEquals(5, exprs.size)
 
         assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[0])) // @P
