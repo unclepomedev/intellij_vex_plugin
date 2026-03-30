@@ -21,7 +21,7 @@
     UNCLOSED_STRING="regexp:\"[^\r\n\"]*|'[^\r\n']*"
     SYS_STRING="regexp:<[^>]*>"
     UNCLOSED_SYS_STRING="regexp:<[^\r\n>]*"
-    ATTRIBUTE="regexp:[fiuvsp]?(\\[\\])?@\\w+"
+    ATTRIBUTE="regexp:[fiuvsp34md]?(\\[\\])?@\\w+"
     INCLUDE_KW='regexp:#[ \t]*include'
     MACRO='regexp:#.*'
     INT_KW='int'

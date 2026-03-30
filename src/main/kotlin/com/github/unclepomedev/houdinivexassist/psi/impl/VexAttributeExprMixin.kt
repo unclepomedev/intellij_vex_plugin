@@ -30,6 +30,9 @@ abstract class VexAttributeExprMixin(node: ASTNode) : VexExprImpl(node), VexAttr
             'u' -> VexType.Vector2Type
             'p' -> VexType.Vector4Type
             's' -> VexType.StringType
+            'm', '3' -> VexType.Matrix3Type
+            '4' -> VexType.MatrixType
+            'd' -> VexType.DictType
             else -> VexType.UnknownType
         }
 
