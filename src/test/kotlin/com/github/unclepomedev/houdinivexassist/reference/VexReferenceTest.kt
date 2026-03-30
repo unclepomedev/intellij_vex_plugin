@@ -4,6 +4,7 @@ import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
+import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
 import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
 import java.nio.file.Files
@@ -524,6 +525,43 @@ class VexReferenceTest : VexTestBase() {
             }
         """.trimIndent()
         )
+    }
+
+    fun testMacroDefReference() {
+        myFixture.configureByText(
+            VexFileType, """
+            #define MY_VAL 10
+            void main() {
+                int x = MY_<caret>VAL;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro reference should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("MY_VAL", (resolved as VexMacroDef).identifier?.text)
+    }
+
+    fun testMacroDefFromIncludedFile() {
+        myFixture.addFileToProject("constants.h", "#define INCLUDED_CONST 42")
+        myFixture.configureByText(
+            VexFileType, """
+            #include "constants.h"
+            void main() {
+                int x = INCLUDED_<caret>CONST;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro reference from included file should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("INCLUDED_CONST", (resolved as VexMacroDef).identifier?.text)
     }
 
     fun testIncludePathWithSpecialCharacters() {

@@ -23,6 +23,8 @@
     UNCLOSED_SYS_STRING="regexp:<[^\r\n>]*"
     ATTRIBUTE="regexp:[fiuvsp34md]?(\\[\\])?@\\w+"
     INCLUDE_KW='regexp:#[ \t]*include'
+    DEFINE_KW='regexp:#[ \t]*define'
+    MACRO_BODY='regexp:[^\r\n]+'
     MACRO='regexp:#.*'
     INT_KW='int'
     FLOAT_KW='float'
@@ -100,9 +102,15 @@
 
 vexFile ::= item_*
 
-private item_ ::= include_directive | MACRO | struct_def | function_def | statement | COMMENT | fallback_item
+private item_ ::= include_directive | macro_def | MACRO | struct_def | function_def | statement | COMMENT | fallback_item
 
 include_directive ::= INCLUDE_KW (STRING | UNCLOSED_STRING | SYS_STRING | UNCLOSED_SYS_STRING) { pin=1 mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexIncludeDirectiveMixin" }
+
+macro_def ::= DEFINE_KW IDENTIFIER MACRO_BODY? {
+    pin=1
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 type_ref ::= primitive_type | IDENTIFIER {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexTypeRefMixin"
