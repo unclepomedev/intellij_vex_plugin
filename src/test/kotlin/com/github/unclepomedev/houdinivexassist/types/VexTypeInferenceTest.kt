@@ -139,6 +139,25 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.VectorType, VexTypeInference.inferType(mulExpr))  // matrix * vector -> vector
     }
 
+    fun testInferTypeCastCallExpr() {
+        val code = """
+            void main() {
+                int a = 10;
+                float b = float(a);
+                int c = int(b);
+                vector v = vector({1, 2, 3});
+            }
+        """.trimIndent()
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+        val castExprs = PsiTreeUtil.findChildrenOfType(file, VexTypeCastCallExpr::class.java).toList()
+        assertEquals(3, castExprs.size)
+
+        assertEquals(VexType.FloatType, VexTypeInference.inferType(castExprs[0]))   // float(a)
+        assertEquals(VexType.IntType, VexTypeInference.inferType(castExprs[1]))     // int(b)
+        assertEquals(VexType.VectorType, VexTypeInference.inferType(castExprs[2]))  // vector(...)
+    }
+
     fun testInferVariableReference() {
         val code = """
             void main() {
