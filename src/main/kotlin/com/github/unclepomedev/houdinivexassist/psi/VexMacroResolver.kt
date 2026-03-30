@@ -14,7 +14,9 @@ object VexMacroResolver {
             .lastOrNull { it.identifier?.text == name }
         if (localMatch != null) return localMatch
 
-        // Search included files (re-parsed as VexFile via getIncludedFiles)
+        // Search included files in include-directive order.
+        // Local definitions take precedence over included definitions.
+        // Among included files, the first definition found (in include order) wins.
         val includes = PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java)
             .filter { it.textOffset < context.textOffset }
         for (include in includes) {

@@ -80,7 +80,7 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
             VexTypes.STRING -> STRING_KEYS
             VexTypes.COMMENT -> COMMENT_KEYS
             VexTypes.ATTRIBUTE -> ATTRIBUTE_KEYS
-            VexTypes.MACRO, VexTypes.INCLUDE_KW -> MACRO_KEYS
+            VexTypes.MACRO, VexTypes.INCLUDE_KW, VexTypes.DEFINE_KW, VexTypes.MACRO_BODY -> MACRO_KEYS
             VexTypes.IDENTIFIER -> IDENTIFIER_KEYS
 
             TokenType.BAD_CHARACTER -> BAD_CHAR_KEYS
