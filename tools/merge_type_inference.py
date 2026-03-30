@@ -14,7 +14,8 @@ def merge_for_type_inference(globals_path, attrs_path, out_path):
 
     for type_name, var_list in raw_attrs.items():
         for var_name in var_list:
-            merged_data[var_name][type_name].append("attribute")
+            if "attribute" not in merged_data[var_name][type_name]:
+                merged_data[var_name][type_name].append("attribute")
 
     for ctx_name, var_list in raw_globals.items():
         for var_info in var_list:
