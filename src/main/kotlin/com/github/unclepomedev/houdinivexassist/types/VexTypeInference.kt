@@ -24,6 +24,7 @@ object VexTypeInference {
             is VexMemberExpr -> inferMemberExpr(expr)
 
             is VexCastExpr -> inferCastExpr(expr)
+            is VexTypeCastCallExpr -> inferTypeCastCallExpr(expr)
             is VexArrayAccessExpr -> inferArrayAccessExpr(expr)
 
             is VexPrefixExpr -> inferPrefixExpr(expr)
@@ -175,6 +176,24 @@ object VexTypeInference {
     private fun inferCastExpr(expr: VexCastExpr): VexType {
         val typeName = expr.typeRef.text ?: return VexType.UnknownType
         return VexType.fromString(typeName)
+    }
+
+    private fun inferTypeCastCallExpr(expr: VexTypeCastCallExpr): VexType {
+        val node = expr.node
+        return when {
+            node.findChildByType(VexTypes.FLOAT_KW) != null -> VexType.FloatType
+            node.findChildByType(VexTypes.INT_KW) != null -> VexType.IntType
+            node.findChildByType(VexTypes.VECTOR_KW) != null -> VexType.VectorType
+            node.findChildByType(VexTypes.VECTOR2_KW) != null -> VexType.Vector2Type
+            node.findChildByType(VexTypes.VECTOR4_KW) != null -> VexType.Vector4Type
+            node.findChildByType(VexTypes.MATRIX_KW) != null -> VexType.MatrixType
+            node.findChildByType(VexTypes.MATRIX3_KW) != null -> VexType.Matrix3Type
+            node.findChildByType(VexTypes.STRING_KW) != null -> VexType.StringType
+            node.findChildByType(VexTypes.DICT_KW) != null -> VexType.DictType
+            node.findChildByType(VexTypes.VOID_KW) != null -> VexType.VoidType
+            node.findChildByType(VexTypes.BSDF_KW) != null -> VexType.BsdfType
+            else -> VexType.UnknownType
+        }
     }
 
     private fun inferArrayAccessExpr(expr: VexArrayAccessExpr): VexType {

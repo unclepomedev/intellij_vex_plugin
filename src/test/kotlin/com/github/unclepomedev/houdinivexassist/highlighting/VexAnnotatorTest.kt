@@ -791,6 +791,19 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.checkHighlighting(true, false, true, false)
     }
 
+    fun testTypeCastCallInFunctionArg() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int a = 10;
+                int b = floor(@ptnum / float(a));
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
     fun testAmbiguousAttributeInBinaryExprNoFalseError() {
         myFixture.configureByText(
             VexFileType,
