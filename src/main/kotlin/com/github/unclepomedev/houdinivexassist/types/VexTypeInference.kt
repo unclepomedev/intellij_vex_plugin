@@ -190,6 +190,8 @@ object VexTypeInference {
             node.findChildByType(VexTypes.MATRIX3_KW) != null -> VexType.Matrix3Type
             node.findChildByType(VexTypes.STRING_KW) != null -> VexType.StringType
             node.findChildByType(VexTypes.DICT_KW) != null -> VexType.DictType
+            node.findChildByType(VexTypes.VOID_KW) != null -> VexType.VoidType
+            node.findChildByType(VexTypes.BSDF_KW) != null -> VexType.BsdfType
             else -> VexType.UnknownType
         }
     }
