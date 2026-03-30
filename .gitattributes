@@ -1,2 +1,3 @@
 src/main/resources/vex_api_dump.json linguist-generated=true
 src/main/resources/vex_help/** linguist-generated=true
+src/main/resources/type_inference_data.json linguist-generated=true
