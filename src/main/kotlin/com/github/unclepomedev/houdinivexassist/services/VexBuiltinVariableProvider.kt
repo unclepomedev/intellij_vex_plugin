@@ -13,7 +13,10 @@ class VexBuiltinVariableProvider {
 
     private fun loadBuiltinTypes(): Map<String, VexType> {
         val resourceStream = javaClass.classLoader.getResourceAsStream("type_inference_data.json")
-            ?: return emptyMap()
+            ?: run {
+                logger.info("type_inference_data.json not found in resources; builtin attribute types unavailable")
+                return emptyMap()
+            }
 
         return try {
             resourceStream.reader().use { reader ->
