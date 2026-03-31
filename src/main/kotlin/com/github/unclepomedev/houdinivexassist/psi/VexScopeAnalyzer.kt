@@ -58,7 +58,9 @@ object VexScopeAnalyzer {
         if (hfsPath.isEmpty()) return ""
         val macPath = "$hfsPath/Frameworks/Houdini.framework/Versions/Current/Resources/houdini/vex/include"
         if (File(macPath).exists()) return macPath
-        return "$hfsPath/houdini/vex/include"
+        val fallback = "$hfsPath/houdini/vex/include"
+        if (File(fallback).exists()) return fallback
+        return ""
     }
 
     fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
@@ -77,7 +79,10 @@ object VexScopeAnalyzer {
                     rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
                 if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
             }
-            .map { segment -> (if (segment.trim() == "&") defaultInclude else segment).trim() }
+            .map { segment ->
+                val trimmed = segment.trim()
+                if (trimmed == "&") defaultInclude else trimmed
+            }
             .filter { it.isNotEmpty() }
     }
 

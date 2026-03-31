@@ -29,10 +29,13 @@ class VexIncludePathResolutionTest : VexTestBase() {
     fun testStandardPathReplacement() {
         val tmpDir = Files.createTempDirectory("hfs_test")
         try {
+            val standardDir = tmpDir.resolve("houdini/vex/include")
+            Files.createDirectories(standardDir)
+
             val settings = VexSettingsState.instance
             settings.hfsPath = tmpDir.toString()
 
-            val expected = "${tmpDir}/houdini/vex/include"
+            val expected = standardDir.toString()
             val result = VexScopeAnalyzer.parseIncludePaths("&;/other/path", ";")
             assertEquals(listOf(expected, "/other/path"), result)
         } finally {
