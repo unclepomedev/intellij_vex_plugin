@@ -169,28 +169,23 @@ class VexParserTest : VexTestBase() {
         assertFalse("Bitwise and shift operators should be parsed", hasErrors)
 
         val cDecl = PsiTreeUtil.findChildrenOfType(
-            file,
-            com.github.unclepomedev.houdinivexassist.psi.VexDeclarationStatement::class.java
-        )
-            .find { it.text.startsWith("int c =") }
+            file, com.github.unclepomedev.houdinivexassist.psi.VexDeclarationStatement::class.java
+        ).find { it.text.startsWith("int c =") }
         assertNotNull("Could not find declaration for 'c'", cDecl)
 
         val orExpr = PsiTreeUtil.findChildOfType(
-            cDecl,
-            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseOrExpr::class.java
+            cDecl, com.github.unclepomedev.houdinivexassist.psi.VexBitwiseOrExpr::class.java
         )
         assertNotNull("c initializer should be a bitwise OR expression", orExpr)
 
         val andExpr = PsiTreeUtil.getChildOfType(
-            orExpr,
-            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseAndExpr::class.java
+            orExpr, com.github.unclepomedev.houdinivexassist.psi.VexBitwiseAndExpr::class.java
         )
         assertNotNull("Left child should be a bitwise AND expression", andExpr)
         assertEquals("a & b", andExpr!!.text)
 
         val xorExpr = PsiTreeUtil.getChildOfType(
-            orExpr,
-            com.github.unclepomedev.houdinivexassist.psi.VexBitwiseXorExpr::class.java
+            orExpr, com.github.unclepomedev.houdinivexassist.psi.VexBitwiseXorExpr::class.java
         )
         assertNotNull("Right child should be a bitwise XOR expression", xorExpr)
         assertEquals("~a ^ 0xFF", xorExpr!!.text)
@@ -236,9 +231,60 @@ class VexParserTest : VexTestBase() {
         assertFalse("Include directives should be parsed without errors", hasErrors)
 
         val includes = PsiTreeUtil.findChildrenOfType(
-            file,
-            com.github.unclepomedev.houdinivexassist.psi.VexIncludeDirective::class.java
+            file, com.github.unclepomedev.houdinivexassist.psi.VexIncludeDirective::class.java
         )
         assertEquals("Should find exactly 3 include directives", 3, includes.size)
+    }
+
+    fun testEmptyDictLiteral() {
+        val code = "dict my_dict = {};"
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Empty dict literal should not produce parse errors", hasErrors)
+
+        val dictLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexDictLiteral::class.java
+        )
+        assertEquals("Empty dict should produce one dict literal node", 1, dictLiterals.size)
+
+        val vectorLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexVectorLiteral::class.java
+        )
+        assertEquals("Empty dict should not be parsed as vector literal", 0, vectorLiterals.size)
+    }
+
+    fun testDictLiteralWithEntries() {
+        val code = """dict d = { "key1": 1, "key2": "value" };"""
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Dict literal with entries should not produce parse errors", hasErrors)
+
+        val dictLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexDictLiteral::class.java
+        )
+        assertEquals(1, dictLiterals.size)
+    }
+
+    fun testNestedDictLiteral() {
+        val code = """dict nested = { "a": { "b": 1 }, "c": { 1, 2, 3 } };"""
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Nested dict literal should not produce parse errors", hasErrors)
+        val dictLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexDictLiteral::class.java
+        )
+        assertEquals("Should parse outer and inner dict literals", 2, dictLiterals.size)
+    }
+
+    fun testVectorLiteralStillWorks() {
+        val code = "vector v = {1, 2, 3};"
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Vector literal should still parse correctly", hasErrors)
+
+        val vectorLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexVectorLiteral::class.java
+        )
+        assertEquals(1, vectorLiterals.size)
     }
 }

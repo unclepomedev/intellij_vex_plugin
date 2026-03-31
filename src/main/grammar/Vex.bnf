@@ -263,7 +263,7 @@ member_expr ::= expr DOT IDENTIFIER? {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexMemberExprMixin"
 }
 private paren_expr ::= LPAREN expr RPAREN
-primary_expr ::= IDENTIFIER | NUMBER | STRING | paren_expr | vector_literal {
+primary_expr ::= IDENTIFIER | NUMBER | STRING | paren_expr | dict_literal | vector_literal {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexPrimaryExprMixin"
   implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
 }
@@ -271,5 +271,8 @@ attribute_expr ::= ATTRIBUTE {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexAttributeExprMixin"
 }
 vector_literal ::= LBRACE argument_list? RBRACE
+
+dict_literal ::= LBRACE [dict_item (COMMA dict_item)*] RBRACE
+dict_item ::= expr COLON expr
 
 argument_list ::= expr (COMMA expr)*
