@@ -52,7 +52,18 @@ object VexScopeAnalyzer {
         return null
     }
 
+    private fun resolveDefaultIncludePath(hfsPath: String): String {
+        if (hfsPath.isEmpty()) return ""
+        val macPath = "$hfsPath/Frameworks/Houdini.framework/Versions/Current/Resources/houdini/vex/include"
+        if (File(macPath).exists()) return macPath
+        return "$hfsPath/houdini/vex/include"
+    }
+
     fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
+        val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val hfsPath = settingsState?.hfsPath ?: ""
+        val defaultInclude = resolveDefaultIncludePath(hfsPath)
+
         // (?<!^[a-zA-Z]) : Backtracking. If the first character is a single letter (e.g., C:), do not split it.
         // (?!//|\\\\)    : Do not split URL schemes (://) or Windows backslashes (:\).
         val colonSplitter = Regex("(?<!^[a-zA-Z]):(?!//|\\\\)")
@@ -63,7 +74,7 @@ object VexScopeAnalyzer {
                 val segment = rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
                 if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
             }
-            .map { it.removeSuffix("&").trim() }
+            .map { it.replace("&", defaultInclude).trim() }
             .filter { it.isNotEmpty() }
     }
 

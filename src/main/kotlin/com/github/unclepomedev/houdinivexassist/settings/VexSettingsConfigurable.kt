@@ -10,7 +10,7 @@ class VexSettingsConfigurable : Configurable {
     override fun getDisplayName(): String = MyBundle.message("vex.settings.display.name")
 
     override fun getPreferredFocusedComponent(): JComponent? {
-        return mySettingsComponent?.includePathTextField
+        return mySettingsComponent?.hfsPathField
     }
 
     override fun createComponent(): JComponent? {
@@ -20,17 +20,23 @@ class VexSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean {
         val component = mySettingsComponent ?: return false
-        return component.includePathTextField.text != VexSettingsState.instance.includePath
+        val state = VexSettingsState.instance
+        return component.hfsPathField.text != state.hfsPath ||
+                component.includePathTextField.text != state.includePath
     }
 
     override fun apply() {
         val component = mySettingsComponent ?: return
-        VexSettingsState.instance.includePath = component.includePathTextField.text
+        val state = VexSettingsState.instance
+        state.hfsPath = component.hfsPathField.text
+        state.includePath = component.includePathTextField.text
     }
 
     override fun reset() {
-        val settings = VexSettingsState.instance
-        mySettingsComponent?.includePathTextField?.text = settings.includePath
+        val component = mySettingsComponent ?: return
+        val state = VexSettingsState.instance
+        component.hfsPathField.text = state.hfsPath
+        component.includePathTextField.text = state.includePath
     }
 
     override fun disposeUIResources() {
