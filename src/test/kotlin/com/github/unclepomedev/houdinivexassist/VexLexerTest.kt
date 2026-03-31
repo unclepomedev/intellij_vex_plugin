@@ -306,7 +306,36 @@ class VexLexerTest : VexTestBase() {
             VexTypes.DEFINE_KW to "#define",
             TokenType.WHITE_SPACE to " ",
             VexTypes.IDENTIFIER to "MAX",
-            VexTypes.MACRO_BODY to " 100"
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MACRO_BODY to "100"
+        )
+    }
+
+    fun testFunctionLikeMacroDirective() {
+        doTest(
+            "#define ADD(a, b) ((a) + (b))",
+            VexTypes.DEFINE_KW to "#define",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.IDENTIFIER to "ADD",
+            VexTypes.LPAREN to "(",
+            VexTypes.IDENTIFIER to "a",
+            VexTypes.COMMA to ",",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.IDENTIFIER to "b",
+            VexTypes.RPAREN to ")",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MACRO_BODY to "((a) + (b))"
+        )
+    }
+
+    fun testConstantMacroWithSpaceBeforeParen() {
+        doTest(
+            "#define FOO (1)",
+            VexTypes.DEFINE_KW to "#define",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.IDENTIFIER to "FOO",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MACRO_BODY to "(1)"
         )
     }
 }

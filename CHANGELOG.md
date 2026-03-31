@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-03-31
+
+### Added
+
+* Support for resolving constant and function-like #define macros.
+
 ## [0.3.0] - 2026-03-30
 
 ### Added

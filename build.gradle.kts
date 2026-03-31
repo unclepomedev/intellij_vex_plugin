@@ -163,6 +163,10 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         dependsOn("generateLexer", "generateParser")
     }
+
+    withType<Test> {
+        jvmArgs("-Xshare:off")
+    }
 }
 
 intellijPlatformTesting {
