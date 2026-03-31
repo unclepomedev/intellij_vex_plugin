@@ -4,6 +4,7 @@ import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
+import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
 import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
 import java.nio.file.Files
@@ -526,6 +527,43 @@ class VexReferenceTest : VexTestBase() {
         )
     }
 
+    fun testMacroDefReference() {
+        myFixture.configureByText(
+            VexFileType, """
+            #define MY_VAL 10
+            void main() {
+                int x = MY_<caret>VAL;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro reference should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("MY_VAL", (resolved as VexMacroDef).identifier?.text)
+    }
+
+    fun testMacroDefFromIncludedFile() {
+        myFixture.addFileToProject("constants.h", "#define INCLUDED_CONST 42")
+        myFixture.configureByText(
+            VexFileType, """
+            #include "constants.h"
+            void main() {
+                int x = INCLUDED_<caret>CONST;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro reference from included file should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("INCLUDED_CONST", (resolved as VexMacroDef).identifier?.text)
+    }
+
     fun testIncludePathWithSpecialCharacters() {
         val tempDir = Files.createTempDirectory("vex_include_test")
         val libFile = tempDir.resolve("lib.vfl").toFile()
@@ -560,5 +598,84 @@ class VexReferenceTest : VexTestBase() {
             Files.deleteIfExists(libFile.toPath())
             Files.deleteIfExists(tempDir.toFile().toPath())
         }
+    }
+
+    fun testMacroRedefinitionAcrossIncludes() {
+        myFixture.addFileToProject("def_first.h", "#define OVERRIDE_ME 1")
+        myFixture.addFileToProject("def_second.h", "#define OVERRIDE_ME 2")
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "def_first.h"
+            #include "def_second.h"
+            
+            void main() {
+                int x = OVERRIDE_<caret>ME;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Overridden macro reference should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("def_second.h", resolved?.containingFile?.name)
+    }
+
+    fun testMacroLocalOverridesInclude() {
+        myFixture.addFileToProject("base_const.h", "#define CONFIG_VAL 100")
+
+        val mainFile = myFixture.configureByText(
+            VexFileType, """
+            #include "base_const.h"
+            
+            #define CONFIG_VAL 999
+            
+            void main() {
+                int x = CONFIG_<caret>VAL;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Local override macro should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals(mainFile.name, resolved?.containingFile?.name)
+    }
+
+    fun testMacroCircularIncludeProtection() {
+        myFixture.addFileToProject(
+            "cycle_a.h", """
+            #include "cycle_b.h"
+            #define VAL_A 10
+        """.trimIndent()
+        )
+
+        myFixture.addFileToProject(
+            "cycle_b.h", """
+            #include "cycle_a.h"
+            #define VAL_B 20
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "cycle_a.h"
+            
+            void main() {
+                int a = VAL_<caret>A;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro in circular include should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("cycle_a.h", resolved?.containingFile?.name)
     }
 }

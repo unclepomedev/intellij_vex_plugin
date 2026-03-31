@@ -2,6 +2,7 @@ package com.github.unclepomedev.houdinivexassist.psi.impl
 
 import com.github.unclepomedev.houdinivexassist.psi.VexElementFactory
 import com.github.unclepomedev.houdinivexassist.psi.VexPrimaryExpr
+import com.github.unclepomedev.houdinivexassist.reference.VexMacroReference
 import com.github.unclepomedev.houdinivexassist.reference.VexVariableReference
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
@@ -24,6 +25,9 @@ abstract class VexPrimaryExprMixin(node: ASTNode) : VexExprImpl(node), VexPrimar
 
     override fun getReference(): PsiReference? {
         val id = identifier ?: return null
-        return VexVariableReference(this, id.textRangeInParent)
+        val range = id.textRangeInParent
+        val varRef = VexVariableReference(this, range)
+        if (varRef.resolve() != null) return varRef
+        return VexMacroReference(this, range)
     }
 }

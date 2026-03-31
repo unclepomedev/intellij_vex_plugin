@@ -17,6 +17,8 @@ import com.intellij.psi.TokenType;
 %eof}
 
 %state IN_INCLUDE
+%state IN_DEFINE
+%state IN_DEFINE_BODY
 
 WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
@@ -45,6 +47,12 @@ MACRO="#".*
                               yypushback(yylength() - (includeIdx + 7));
                               yybegin(IN_INCLUDE);
                               return VexTypes.INCLUDE_KW;
+                          }
+                          if (text.matches("^#[ \\t]*define[ \\t]+[a-zA-Z_]\\w*.*$")) {
+                              int defineIdx = text.indexOf("define");
+                              yypushback(yylength() - (defineIdx + 6));
+                              yybegin(IN_DEFINE);
+                              return VexTypes.DEFINE_KW;
                           }
                           return VexTypes.MACRO; 
                       }
@@ -131,5 +139,18 @@ MACRO="#".*
   "<" [^\r\n>]*       { yybegin(YYINITIAL); return VexTypes.UNCLOSED_SYS_STRING; }
   {STRING}            { yybegin(YYINITIAL); return VexTypes.STRING; }
   {UNCLOSED_STRING}   { yybegin(YYINITIAL); return VexTypes.UNCLOSED_STRING; }
+  [^]                 { yybegin(YYINITIAL); yypushback(1); }
+}
+
+<IN_DEFINE> {
+  [ \t]+              { return TokenType.WHITE_SPACE; }
+  {IDENTIFIER}        { yybegin(IN_DEFINE_BODY); return VexTypes.IDENTIFIER; }
+  [^]                 { yybegin(YYINITIAL); yypushback(1); }
+}
+
+<IN_DEFINE_BODY> {
+  [ \t]+ [^\r\n]+     { yybegin(YYINITIAL); return VexTypes.MACRO_BODY; }
+  [ \t]+              { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+  [\r\n]              { yybegin(YYINITIAL); yypushback(1); }
   [^]                 { yybegin(YYINITIAL); yypushback(1); }
 }

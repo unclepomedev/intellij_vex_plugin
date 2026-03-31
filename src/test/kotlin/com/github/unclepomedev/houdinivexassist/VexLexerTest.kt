@@ -295,13 +295,18 @@ class VexLexerTest : VexTestBase() {
         )
 
         doTest(
-            "#define MAX 100",
-            VexTypes.MACRO to "#define MAX 100"
-        )
-
-        doTest(
             "#include_guard",
             VexTypes.MACRO to "#include_guard"
+        )
+    }
+
+    fun testDefineDirective() {
+        doTest(
+            "#define MAX 100",
+            VexTypes.DEFINE_KW to "#define",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.IDENTIFIER to "MAX",
+            VexTypes.MACRO_BODY to " 100"
         )
     }
 }
