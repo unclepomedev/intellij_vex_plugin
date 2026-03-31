@@ -678,4 +678,83 @@ class VexReferenceTest : VexTestBase() {
         assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
         assertEquals("cycle_a.h", resolved?.containingFile?.name)
     }
+
+    fun testFunctionLikeMacroReference() {
+        myFixture.configureByText(
+            VexFileType, """
+            #define ADD(a, b) ((a) + (b))
+            void main() {
+                int x = AD<caret>D(1, 2);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Function-like macro reference should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("ADD", (resolved as VexMacroDef).identifier?.text)
+    }
+
+    fun testConstantMacroWithParenBody() {
+        myFixture.configureByText(
+            VexFileType, """
+            #define FOO (1)
+            void main() {
+                int x = FO<caret>O;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Constant macro with paren body should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("FOO", (resolved as VexMacroDef).identifier?.text)
+        assertNull("Constant macro should not have parameter list", resolved.macroParameterList)
+    }
+
+    fun testFunctionLikeMacroWithoutParameters() {
+        myFixture.configureByText(
+            VexFileType, """
+            #define ZERO() 0
+            
+            void main() {
+                int x = ZE<caret>RO();
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Function-like macro without parameters should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("ZERO", (resolved as VexMacroDef).identifier?.text)
+
+        myFixture.checkHighlighting(false, false, false)
+    }
+
+    fun testFunctionLikeMacroWithoutSpaceAfterParen() {
+        myFixture.configureByText(
+            VexFileType, """
+            #define MULT(a,b)a*b
+            
+            void main() {
+                int x = MU<caret>LT(2, 3);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Function-like macro without space after paren should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("MULT", (resolved as VexMacroDef).identifier?.text)
+
+        myFixture.checkHighlighting(false, false, false)
+    }
 }

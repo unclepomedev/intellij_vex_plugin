@@ -3,6 +3,7 @@ package com.github.unclepomedev.houdinivexassist.reference
 import com.github.unclepomedev.houdinivexassist.psi.VexCallExpr
 import com.github.unclepomedev.houdinivexassist.psi.VexElementFactory
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionResolver
+import com.github.unclepomedev.houdinivexassist.psi.VexMacroResolver
 import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
@@ -18,15 +19,15 @@ class VexFunctionReference(
     override fun resolve(): PsiElement? {
         val callExpr = (element as? VexCallExpr) ?: (element.parent as? VexCallExpr)
 
-        if (callExpr != null) {
+        val result = if (callExpr != null) {
             val args = callExpr.argumentList?.exprList ?: emptyList()
             val argTypes = args.map(VexTypeInference::inferType)
-
-            return VexFunctionResolver.resolveFunction(element, name, args.size, argTypes)
+            VexFunctionResolver.resolveFunction(element, name, args.size, argTypes)
+        } else {
+            VexFunctionResolver.resolveFunction(element, name, arity)
         }
 
-        // Fallback in case CallExpr cannot be obtained.
-        return VexFunctionResolver.resolveFunction(element, name, arity)
+        return result ?: VexMacroResolver.resolveMacro(element, name)
     }
 
     override fun getVariants(): Array<Any> {

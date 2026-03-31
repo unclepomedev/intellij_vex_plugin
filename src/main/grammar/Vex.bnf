@@ -106,11 +106,13 @@ private item_ ::= include_directive | macro_def | MACRO | struct_def | function_
 
 include_directive ::= INCLUDE_KW (STRING | UNCLOSED_STRING | SYS_STRING | UNCLOSED_SYS_STRING) { pin=1 mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexIncludeDirectiveMixin" }
 
-macro_def ::= DEFINE_KW IDENTIFIER MACRO_BODY? {
+macro_def ::= DEFINE_KW IDENTIFIER (LPAREN macro_parameter_list? RPAREN)? MACRO_BODY? {
     pin=1
     implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
     mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
 }
+
+macro_parameter_list ::= IDENTIFIER (COMMA IDENTIFIER)*
 
 type_ref ::= primitive_type | IDENTIFIER {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexTypeRefMixin"

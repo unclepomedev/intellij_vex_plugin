@@ -21,8 +21,10 @@ class VexReferenceAnnotator : Annotator {
         val resolvedElement = VexVariableResolver.resolveVariable(element, varName)
 
         if (resolvedElement == null) {
-            holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved variable: '$varName'")
-                .range(identifier.textRange)
+            val resolvedMacro = VexMacroResolver.resolveMacro(element, varName)
+            if (resolvedMacro != null) return
+
+            holder.newAnnotation(HighlightSeverity.ERROR, "Unresolved variable: '$varName'").range(identifier.textRange)
                 .create()
             return
         }
@@ -30,8 +32,7 @@ class VexReferenceAnnotator : Annotator {
             // Check whether the variable on the right-hand side is within the tree of its own declaration statement.
             if (com.intellij.psi.util.PsiTreeUtil.isAncestor(resolvedElement, element, false)) {
                 holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$varName' is used in its own initialization")
-                    .range(identifier.textRange)
-                    .create()
+                    .range(identifier.textRange).create()
             }
         }
     }
@@ -46,15 +47,16 @@ class VexReferenceAnnotator : Annotator {
         val resolvedVar = VexVariableResolver.resolveVariable(element, funcName)
         if (resolvedVar != null && !com.intellij.psi.util.PsiTreeUtil.isAncestor(resolvedVar, element, false)) {
             holder.newAnnotation(HighlightSeverity.ERROR, "Variable '$funcName' cannot be called as a function")
-                .range(identifier.textRange)
-                .create()
+                .range(identifier.textRange).create()
             return
         }
 
         if (!VexFunctionResolver.isKnownFunction(funcName, containingFile)) {
+            val resolvedMacro = VexMacroResolver.resolveMacro(element, funcName)
+            if (resolvedMacro != null) return
+
             holder.newAnnotation(HighlightSeverity.ERROR, "Unknown VEX function: '$funcName'")
-                .range(identifier.textRange)
-                .create()
+                .range(identifier.textRange).create()
         }
     }
 }

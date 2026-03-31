@@ -18,6 +18,8 @@ import com.intellij.psi.TokenType;
 
 %state IN_INCLUDE
 %state IN_DEFINE
+%state IN_DEFINE_AFTER_NAME
+%state IN_DEFINE_PARAMS
 %state IN_DEFINE_BODY
 
 WHITE_SPACE=[\ \t\n\r\f]+
@@ -144,13 +146,28 @@ MACRO="#".*
 
 <IN_DEFINE> {
   [ \t]+              { return TokenType.WHITE_SPACE; }
-  {IDENTIFIER}        { yybegin(IN_DEFINE_BODY); return VexTypes.IDENTIFIER; }
+  {IDENTIFIER}        { yybegin(IN_DEFINE_AFTER_NAME); return VexTypes.IDENTIFIER; }
+  [^]                 { yybegin(YYINITIAL); yypushback(1); }
+}
+
+<IN_DEFINE_AFTER_NAME> {
+  "("                 { yybegin(IN_DEFINE_PARAMS); return VexTypes.LPAREN; }
+  [ \t]+              { yybegin(IN_DEFINE_BODY); return TokenType.WHITE_SPACE; }
+  [\r\n]              { yybegin(YYINITIAL); yypushback(1); }
+  [^]                 { yybegin(IN_DEFINE_BODY); yypushback(1); }
+}
+
+<IN_DEFINE_PARAMS> {
+  [ \t]+              { return TokenType.WHITE_SPACE; }
+  {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
+  ","                 { return VexTypes.COMMA; }
+  ")"                 { yybegin(IN_DEFINE_BODY); return VexTypes.RPAREN; }
   [^]                 { yybegin(YYINITIAL); yypushback(1); }
 }
 
 <IN_DEFINE_BODY> {
-  [ \t]+ [^\r\n]+     { yybegin(YYINITIAL); return VexTypes.MACRO_BODY; }
-  [ \t]+              { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+  [ \t]+              { return TokenType.WHITE_SPACE; }
+  [^\r\n \t][^\r\n]*  { yybegin(YYINITIAL); return VexTypes.MACRO_BODY; }
   [\r\n]              { yybegin(YYINITIAL); yypushback(1); }
   [^]                 { yybegin(YYINITIAL); yypushback(1); }
 }
