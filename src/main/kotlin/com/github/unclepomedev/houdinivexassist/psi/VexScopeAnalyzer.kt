@@ -18,8 +18,10 @@ import java.io.File
 
 object VexScopeAnalyzer {
     private val includePathTracker = ModificationTracker {
-        ApplicationManager.getApplication().getService(VexSettingsState::class.java)?.includePath?.hashCode()?.toLong()
-            ?: 0L
+        val settings = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val includeHash = settings?.includePath?.hashCode()?.toLong() ?: 0L
+        val hfsHash = settings?.hfsPath?.hashCode()?.toLong() ?: 0L
+        includeHash xor (hfsHash shl 32)
     }
 
     /**
@@ -71,10 +73,11 @@ object VexScopeAnalyzer {
         return includePathStr
             .split(";")
             .flatMap { rawSegment ->
-                val segment = rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
+                val segment =
+                    rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
                 if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
             }
-            .map { it.replace("&", defaultInclude).trim() }
+            .map { segment -> (if (segment.trim() == "&") defaultInclude else segment).trim() }
             .filter { it.isNotEmpty() }
     }
 
