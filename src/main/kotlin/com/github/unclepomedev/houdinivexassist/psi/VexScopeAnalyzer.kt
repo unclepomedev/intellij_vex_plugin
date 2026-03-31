@@ -66,7 +66,7 @@ object VexScopeAnalyzer {
     fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
         val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
         val hfsPath = settingsState?.hfsPath ?: ""
-        val defaultInclude = resolveDefaultIncludePath(hfsPath)
+        val defaultInclude by lazy(LazyThreadSafetyMode.NONE) { resolveDefaultIncludePath(hfsPath) }
 
         // (?<!^[a-zA-Z]) : Backtracking. If the first character is a single letter (e.g., C:), do not split it.
         // (?!//|\\\\)    : Do not split URL schemes (://) or Windows backslashes (:\).
