@@ -7,11 +7,12 @@ import com.intellij.psi.util.PsiTreeUtil
 object VexMacroResolver {
     private fun resolveInFile(
         file: PsiFile,
+        sourceFile: PsiFile,
         name: String,
         maxOffsetExclusive: Int,
         visited: MutableSet<String>
     ): VexMacroDef? {
-        val key = file.originalFile.virtualFile?.path ?: file.name
+        val key = sourceFile.originalFile.virtualFile?.path ?: sourceFile.name
         if (!visited.add(key)) return null
 
         try {
@@ -27,11 +28,11 @@ object VexMacroResolver {
                 when (event) {
                     is VexMacroDef -> if (event.identifier?.text == name) best = event
                     is VexIncludeDirective -> {
-                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event) ?: continue
+                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event, sourceFile) ?: continue
                         val vexFile = (includedPsi as? VexFile)
                             ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
                             ?: continue
-                        val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited)
+                        val nested = resolveInFile(vexFile, includedPsi, name, Int.MAX_VALUE, visited)
                         if (nested != null) best = nested
                     }
                 }
@@ -44,6 +45,6 @@ object VexMacroResolver {
 
     fun resolveMacro(context: PsiElement, name: String): PsiElement? {
         val file = context.containingFile ?: return null
-        return resolveInFile(file, name, context.textOffset, mutableSetOf())
+        return resolveInFile(file, file, name, context.textOffset, mutableSetOf())
     }
 }
