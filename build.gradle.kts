@@ -164,6 +164,7 @@ tasks {
         dependsOn("generateLexer", "generateParser")
     }
 
+    // Disable JVM Class Data Sharing to avoid class-loading issues with IntelliJ Platform tests
     withType<Test> {
         jvmArgs("-Xshare:off")
     }

@@ -11,11 +11,13 @@ import com.intellij.openapi.components.Storage
 )
 class VexSettingsState : PersistentStateComponent<VexSettingsState> {
     var includePath: String = ""
+    var hfsPath: String = ""
 
     override fun getState(): VexSettingsState = this
 
     override fun loadState(state: VexSettingsState) {
         this.includePath = state.includePath
+        this.hfsPath = state.hfsPath
     }
 
     companion object {

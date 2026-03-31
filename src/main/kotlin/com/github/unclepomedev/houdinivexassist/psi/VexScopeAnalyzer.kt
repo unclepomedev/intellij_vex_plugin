@@ -18,8 +18,10 @@ import java.io.File
 
 object VexScopeAnalyzer {
     private val includePathTracker = ModificationTracker {
-        ApplicationManager.getApplication().getService(VexSettingsState::class.java)?.includePath?.hashCode()?.toLong()
-            ?: 0L
+        val settings = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val includeHash = settings?.includePath?.hashCode()?.toLong() ?: 0L
+        val hfsHash = settings?.hfsPath?.hashCode()?.toLong() ?: 0L
+        includeHash xor (hfsHash shl 32)
     }
 
     /**
@@ -52,7 +54,20 @@ object VexScopeAnalyzer {
         return null
     }
 
+    private fun resolveDefaultIncludePath(hfsPath: String): String {
+        if (hfsPath.isEmpty()) return ""
+        val macPath = "$hfsPath/Frameworks/Houdini.framework/Versions/Current/Resources/houdini/vex/include"
+        if (File(macPath).exists()) return macPath
+        val fallback = "$hfsPath/houdini/vex/include"
+        if (File(fallback).exists()) return fallback
+        return ""
+    }
+
     fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
+        val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val hfsPath = settingsState?.hfsPath ?: ""
+        val defaultInclude by lazy(LazyThreadSafetyMode.NONE) { resolveDefaultIncludePath(hfsPath) }
+
         // (?<!^[a-zA-Z]) : Backtracking. If the first character is a single letter (e.g., C:), do not split it.
         // (?!//|\\\\)    : Do not split URL schemes (://) or Windows backslashes (:\).
         val colonSplitter = Regex("(?<!^[a-zA-Z]):(?!//|\\\\)")
@@ -60,10 +75,14 @@ object VexScopeAnalyzer {
         return includePathStr
             .split(";")
             .flatMap { rawSegment ->
-                val segment = rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
+                val segment =
+                    rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
                 if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
             }
-            .map { it.removeSuffix("&").trim() }
+            .map { segment ->
+                val trimmed = segment.trim()
+                if (trimmed == "&") defaultInclude else trimmed
+            }
             .filter { it.isNotEmpty() }
     }
 
