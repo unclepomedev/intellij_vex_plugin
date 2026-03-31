@@ -272,7 +272,7 @@ attribute_expr ::= ATTRIBUTE {
 }
 vector_literal ::= LBRACE argument_list? RBRACE
 
-dict_literal ::= LBRACE dict_item (COMMA dict_item)* RBRACE
+dict_literal ::= LBRACE [dict_item (COMMA dict_item)*] RBRACE
 dict_item ::= expr COLON expr
 
 argument_list ::= expr (COMMA expr)*

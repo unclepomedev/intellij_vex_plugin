@@ -241,6 +241,16 @@ class VexParserTest : VexTestBase() {
         val file = myFixture.configureByText(VexFileType, code)
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Empty dict literal should not produce parse errors", hasErrors)
+
+        val dictLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexDictLiteral::class.java
+        )
+        assertEquals("Empty dict should produce one dict literal node", 1, dictLiterals.size)
+
+        val vectorLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexVectorLiteral::class.java
+        )
+        assertEquals("Empty dict should not be parsed as vector literal", 0, vectorLiterals.size)
     }
 
     fun testDictLiteralWithEntries() {
@@ -260,6 +270,10 @@ class VexParserTest : VexTestBase() {
         val file = myFixture.configureByText(VexFileType, code)
         val hasErrors = PsiTreeUtil.hasErrorElements(file)
         assertFalse("Nested dict literal should not produce parse errors", hasErrors)
+        val dictLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexDictLiteral::class.java
+        )
+        assertEquals("Should parse outer and inner dict literals", 2, dictLiterals.size)
     }
 
     fun testVectorLiteralStillWorks() {

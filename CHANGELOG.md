@@ -10,7 +10,7 @@
 
 * Support for resolving constant and function-like #define macros.
 * Support for Houdini installation path ($HFS) to resolve standard include files.
-* Support for parsing of dict.
+* Support for parsing dictionary literals (`{key: value}` syntax).
 
 ## [0.3.0] - 2026-03-30
 
