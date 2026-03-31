@@ -95,6 +95,16 @@
     STRUCT="struct"
     EXPORT="export"
     FUNCTION="function"
+    CHOP_KW='chop'
+    COP2_KW='cop2'
+    CVEX_KW='cvex'
+    DISPLACE_KW='displace'
+    FOG_KW='fog'
+    IMAGE3D_KW='image3d'
+    LIGHT_KW='light'
+    SHADOW_KW='shadow'
+    SOP_KW='sop'
+    SURFACE_KW='surface'
   ]
   extends(".*_expr")=expr
   extends(".*_statement")=statement
@@ -102,7 +112,7 @@
 
 vexFile ::= item_*
 
-private item_ ::= include_directive | macro_def | MACRO | struct_def | function_def | statement | COMMENT | fallback_item
+private item_ ::= include_directive | macro_def | MACRO | struct_def | context_def | function_def | statement | COMMENT | fallback_item
 
 include_directive ::= INCLUDE_KW (STRING | UNCLOSED_STRING | SYS_STRING | UNCLOSED_SYS_STRING) { pin=1 mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexIncludeDirectiveMixin" }
 
@@ -141,6 +151,14 @@ struct_member ::= type_ref ( IDENTIFIER ARROW function_signature | declaration_i
 private struct_member_recover ::= !(type_ref | RBRACE)
 
 function_signature ::= IDENTIFIER LPAREN parameter_list_sig? RPAREN
+
+CONTEXT_TYPE ::= CHOP_KW | COP2_KW | CVEX_KW | DISPLACE_KW | FOG_KW | IMAGE3D_KW | LIGHT_KW | SHADOW_KW | SOP_KW | SURFACE_KW
+
+context_def ::= CONTEXT_TYPE IDENTIFIER LPAREN parameter_list_def? RPAREN block {
+    pin="LPAREN"
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 function_def ::= EXPORT? FUNCTION? type_ref IDENTIFIER LPAREN parameter_list_def? RPAREN block {
     pin="LPAREN"

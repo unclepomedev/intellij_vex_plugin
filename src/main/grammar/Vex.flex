@@ -128,6 +128,16 @@ INCLUDE_KW="#"[ \t]*"include"
   "struct"            { return VexTypes.STRUCT; }
   "export"            { return VexTypes.EXPORT; }
   "function"          { return VexTypes.FUNCTION; }
+  "chop"              { return VexTypes.CHOP_KW; }
+  "cop2"              { return VexTypes.COP2_KW; }
+  "cvex"              { return VexTypes.CVEX_KW; }
+  "displace"          { return VexTypes.DISPLACE_KW; }
+  "fog"               { return VexTypes.FOG_KW; }
+  "image3d"           { return VexTypes.IMAGE3D_KW; }
+  "light"             { return VexTypes.LIGHT_KW; }
+  "shadow"            { return VexTypes.SHADOW_KW; }
+  "sop"               { return VexTypes.SOP_KW; }
+  "surface"           { return VexTypes.SURFACE_KW; }
 
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
 

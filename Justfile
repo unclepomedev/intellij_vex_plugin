@@ -52,6 +52,15 @@ detect-attr:
     cd "{{ PROJECT_ROOT }}"
     hython tools/detect_attr.py
 
+gen-context-bnf:
+    #!/usr/bin/env bash
+    set -e
+
+    cd "{{ HOUDINI_RESOURCES }}"
+    source houdini_setup
+    cd "{{ PROJECT_ROOT }}"
+    hython tools/gen_context_bnf.py
+
 generate-type-inference:
     #!/usr/bin/env bash
     set -e

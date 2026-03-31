@@ -274,6 +274,43 @@ class VexParserTest : VexTestBase() {
             file, com.github.unclepomedev.houdinivexassist.psi.VexDictLiteral::class.java
         )
         assertEquals("Should parse outer and inner dict literals", 2, dictLiterals.size)
+        val vectorLiterals = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexVectorLiteral::class.java
+        )
+        assertEquals("Should parse { 1, 2, 3 } as vector literal", 1, vectorLiterals.size)
+    }
+
+    fun testBasicContextDef() {
+        val code = "cvex my_cvex() { int a = 1; }"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(PsiTreeUtil.hasErrorElements(file))
+
+        val contextDefs = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexContextDef::class.java
+        )
+        assertEquals(1, contextDefs.size)
+    }
+
+    fun testContextDefWithParameters() {
+        val code = """surface my_shader(float intensity; vector P) { vector color = {1,1,1}; }"""
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(PsiTreeUtil.hasErrorElements(file))
+
+        val contextDefs = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexContextDef::class.java
+        )
+        assertEquals(1, contextDefs.size)
+    }
+
+    fun testSopContextDef() {
+        val code = "sop my_sop() { int id = @ptnum; }"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(PsiTreeUtil.hasErrorElements(file))
+
+        val contextDefs = PsiTreeUtil.findChildrenOfType(
+            file, com.github.unclepomedev.houdinivexassist.psi.VexContextDef::class.java
+        )
+        assertEquals(1, contextDefs.size)
     }
 
     fun testVectorLiteralStillWorks() {
