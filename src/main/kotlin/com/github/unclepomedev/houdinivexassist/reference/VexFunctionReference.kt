@@ -18,6 +18,7 @@ class VexFunctionReference(
 
     override fun resolve(): PsiElement? {
         val callExpr = (element as? VexCallExpr) ?: (element.parent as? VexCallExpr)
+        VexMacroResolver.resolveMacro(callExpr ?: element, name)?.let { return it }
 
         val result = if (callExpr != null) {
             val args = callExpr.argumentList?.exprList ?: emptyList()
@@ -27,7 +28,7 @@ class VexFunctionReference(
             VexFunctionResolver.resolveFunction(element, name, arity)
         }
 
-        return result ?: VexMacroResolver.resolveMacro(element, name)
+        return result
     }
 
     override fun getVariants(): Array<Any> {

@@ -42,6 +42,8 @@ class VexReferenceAnnotator : Annotator {
         val funcName = identifier.text
         val containingFile = element.containingFile as? VexFile ?: return
 
+        if (VexMacroResolver.resolveMacro(element, funcName) != null) return
+
         // If a variable with the same name is resolved, the function call is invalid (shadowed)
         // However, skip if the call is inside the variable's own initializer (e.g., float dot = dot())
         val resolvedVar = VexVariableResolver.resolveVariable(element, funcName)
@@ -52,9 +54,6 @@ class VexReferenceAnnotator : Annotator {
         }
 
         if (!VexFunctionResolver.isKnownFunction(funcName, containingFile)) {
-            val resolvedMacro = VexMacroResolver.resolveMacro(element, funcName)
-            if (resolvedMacro != null) return
-
             holder.newAnnotation(HighlightSeverity.ERROR, "Unknown VEX function: '$funcName'")
                 .range(identifier.textRange).create()
         }

@@ -712,8 +712,9 @@ class VexReferenceTest : VexTestBase() {
 
         assertNotNull("Constant macro with paren body should be resolved", resolved)
         assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
-        assertEquals("FOO", (resolved as VexMacroDef).identifier?.text)
-        assertNull("Constant macro should not have parameter list", resolved.macroParameterList)
+        val macroDef = resolved as VexMacroDef
+        assertEquals("FOO", macroDef.identifier?.text)
+        assertNull("Constant macro should not have parameter list", macroDef.macroParameterList)
     }
 
     fun testFunctionLikeMacroWithoutParameters() {
