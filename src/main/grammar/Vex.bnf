@@ -262,7 +262,8 @@ member_expr ::= expr DOT IDENTIFIER? {
   pin=2
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexMemberExprMixin"
 }
-primary_expr ::= IDENTIFIER | NUMBER | STRING | LPAREN expr RPAREN | vector_literal {
+private paren_expr ::= LPAREN expr RPAREN
+primary_expr ::= IDENTIFIER | NUMBER | STRING | paren_expr | vector_literal {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexPrimaryExprMixin"
   implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
 }
