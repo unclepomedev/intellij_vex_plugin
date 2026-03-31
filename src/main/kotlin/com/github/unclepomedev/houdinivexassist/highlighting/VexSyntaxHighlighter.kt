@@ -69,7 +69,10 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         return when (tokenType) {
             VexTypes.IF, VexTypes.ELSE, VexTypes.FOR, VexTypes.FOREACH,
             VexTypes.WHILE, VexTypes.DO, VexTypes.BREAK, VexTypes.CONTINUE,
-            VexTypes.RETURN, VexTypes.STRUCT, VexTypes.EXPORT, VexTypes.FUNCTION -> KEYWORD_KEYS
+            VexTypes.RETURN, VexTypes.STRUCT, VexTypes.EXPORT, VexTypes.FUNCTION,
+            VexTypes.CHOP_KW, VexTypes.COP2_KW, VexTypes.CVEX_KW, VexTypes.DISPLACE_KW,
+            VexTypes.FOG_KW, VexTypes.IMAGE3D_KW, VexTypes.LIGHT_KW, VexTypes.SHADOW_KW,
+            VexTypes.SOP_KW, VexTypes.SURFACE_KW -> KEYWORD_KEYS
 
             VexTypes.INT_KW, VexTypes.FLOAT_KW, VexTypes.VECTOR_KW,
             VexTypes.VECTOR2_KW, VexTypes.VECTOR4_KW, VexTypes.MATRIX_KW,
