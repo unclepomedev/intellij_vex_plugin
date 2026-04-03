@@ -109,7 +109,7 @@ class VexFormatterTest : VexTestBase() {
         reformatTextAndAssert("int x = 1;\n", "int x = 1;\n")
     }
 
-    fun testEmptyfileNewLineNotAdded() {
+    fun testEmptyFileNewlineNotAdded() {
         reformatTextAndAssert("", "")
     }
 

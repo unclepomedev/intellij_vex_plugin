@@ -17,8 +17,9 @@ class VexTrailingNewlinePostFormatProcessor : PostFormatProcessor {
         if (source.fileType != VexFileType) return rangeToReformat
         val document = source.viewProvider.document ?: return rangeToReformat
         val text = document.text
-        if (text.isNotEmpty() && !text.endsWith("\n")) {
-            document.insertString(document.textLength, "\n")
+        val eofOffset = document.textLength
+        if (text.isNotEmpty() && !text.endsWith("\n") && rangeToReformat.endOffset >= eofOffset) {
+            document.insertString(eofOffset, "\n")
             PsiDocumentManager.getInstance(source.project).commitDocument(document)
             return TextRange(rangeToReformat.startOffset, rangeToReformat.endOffset + 1)
         }
