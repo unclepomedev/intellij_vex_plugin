@@ -54,3 +54,9 @@ Usage and shortcuts conform to standard JetBrains IDE behavior.
 * Create new VEX files (.vfl and .vex) (Custom templates can be set.)
 
 ![new.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/new.png)
+
+### Evaluation of macros
+
+The plugin parses preprocessor directives such as #ifdef, #ifndef, #else, and #endif as flat AST nodes rather than hierarchical blocks. This approach prevents syntax tree corruption when directives interrupt standard VEX statements. A semantic evaluation layer determines whether the subsequent code blocks are active or inactive by resolving macro definitions within the current file and its included files. Code located within inactive blocks is excluded from scope analysis, ensuring that variables and functions defined there do not trigger false duplicate definition errors or appear in code completion results.
+
+There are known limitations regarding the evaluation of complex preprocessor conditions. The plugin does not currently implement a constant expression evaluator or support recursive macro expansion. As a result, #if and #elif directives that rely on mathematical comparisons, logical operators, or the defined() function are not evaluated dynamically. In the current implementation, #if and #elif conditions are treated as unconditionally true.

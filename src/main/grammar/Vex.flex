@@ -21,6 +21,7 @@ import com.intellij.psi.TokenType;
 %state IN_DEFINE_AFTER_NAME
 %state IN_DEFINE_PARAMS
 %state IN_DEFINE_BODY
+%state IN_PP_IDENTIFIER
 
 WHITE_SPACE=[\ \t\n\r\f]+
 COMMENT=("//"[^\r\n]*)|("/"\*([^*]|\*+[^*/])*\*"/")
@@ -54,6 +55,42 @@ INCLUDE_KW="#"[ \t]*"include"
                               yypushback(yylength() - (defineIdx + 6));
                               yybegin(IN_DEFINE);
                               return VexTypes.DEFINE_KW;
+                          }
+                          if (text.matches("^#[ \\t]*ifdef[ \\t]+[a-zA-Z_]\\w*.*$")) {
+                              int idx = text.indexOf("ifdef");
+                              yypushback(yylength() - (idx + 5));
+                              yybegin(IN_PP_IDENTIFIER);
+                              return VexTypes.PP_IFDEF_KW;
+                          }
+                          if (text.matches("^#[ \\t]*ifndef[ \\t]+[a-zA-Z_]\\w*.*$")) {
+                              int idx = text.indexOf("ifndef");
+                              yypushback(yylength() - (idx + 6));
+                              yybegin(IN_PP_IDENTIFIER);
+                              return VexTypes.PP_IFNDEF_KW;
+                          }
+                          if (text.matches("^#[ \\t]*undef[ \\t]+[a-zA-Z_]\\w*.*$")) {
+                              int idx = text.indexOf("undef");
+                              yypushback(yylength() - (idx + 5));
+                              yybegin(IN_PP_IDENTIFIER);
+                              return VexTypes.PP_UNDEF_KW;
+                          }
+                          if (text.matches("^#[ \\t]*if[ \\t]+.*$")) {
+                              int idx = text.indexOf("if");
+                              yypushback(yylength() - (idx + 2));
+                              yybegin(IN_DEFINE_BODY);
+                              return VexTypes.PP_IF_KW;
+                          }
+                          if (text.matches("^#[ \\t]*elif[ \\t]+.*$")) {
+                              int idx = text.indexOf("elif");
+                              yypushback(yylength() - (idx + 4));
+                              yybegin(IN_DEFINE_BODY);
+                              return VexTypes.PP_ELIF_KW;
+                          }
+                          if (text.matches("^#[ \\t]*else[ \\t]*$")) {
+                              return VexTypes.PP_ELSE_KW;
+                          }
+                          if (text.matches("^#[ \\t]*endif[ \\t]*$")) {
+                              return VexTypes.PP_ENDIF_KW;
                           }
                           return VexTypes.MACRO; 
                       }
@@ -171,6 +208,12 @@ INCLUDE_KW="#"[ \t]*"include"
   {IDENTIFIER}        { return VexTypes.IDENTIFIER; }
   ","                 { return VexTypes.COMMA; }
   ")"                 { yybegin(IN_DEFINE_BODY); return VexTypes.RPAREN; }
+  [^]                 { yybegin(YYINITIAL); yypushback(1); }
+}
+
+<IN_PP_IDENTIFIER> {
+  [ \t]+              { return TokenType.WHITE_SPACE; }
+  {IDENTIFIER}        { yybegin(YYINITIAL); return VexTypes.IDENTIFIER; }
   [^]                 { yybegin(YYINITIAL); yypushback(1); }
 }
 

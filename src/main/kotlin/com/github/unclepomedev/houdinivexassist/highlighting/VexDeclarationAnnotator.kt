@@ -30,6 +30,7 @@ class VexDeclarationAnnotator : Annotator {
     // --- Declaration Conflict Checks ---
 
     private fun checkVariableDeclaration(element: VexDeclarationItem, holder: AnnotationHolder) {
+        if (!VexPreprocessorEvaluator.isActive(element)) return
         val identifier = element.identifier
         val varName = identifier.text
         val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
@@ -49,6 +50,7 @@ class VexDeclarationAnnotator : Annotator {
     }
 
     private fun checkFunctionDefinition(element: VexFunctionDef, holder: AnnotationHolder) {
+        if (!VexPreprocessorEvaluator.isActive(element)) return
         val identifier = element.identifier
         val funcName = identifier.text
 
@@ -68,6 +70,7 @@ class VexDeclarationAnnotator : Annotator {
     }
 
     private fun checkStructDefinition(element: VexStructDef, holder: AnnotationHolder) {
+        if (!VexPreprocessorEvaluator.isActive(element)) return
         val identifier = element.identifier ?: return
         val structName = identifier.text
 
@@ -91,23 +94,10 @@ class VexDeclarationAnnotator : Annotator {
         return VexScopeAnalyzer.getDeclarationsInScope(scope).any { prior ->
             prior != element &&
                     prior.identifier.text == name &&
-                    prior.textOffset < element.textOffset &&
-                    !hasMacroBetween(scope, prior.textOffset, element.textOffset)
+                    prior.textOffset < element.textOffset
         }
     }
 
-    // TODO: Taking into account cases where conditional compilation (#ifdef, #ifndef, etc.) is involved and suppresses errors, but this is not a fundamental solution.
-    private fun hasMacroBetween(scope: PsiElement, startOffset: Int, endOffset: Int): Boolean {
-        var child = scope.firstChild
-        while (child != null) {
-            if (child.node.elementType == VexTypes.MACRO) {
-                val offset = child.textOffset
-                if (offset in (startOffset + 1) until endOffset) return true
-            }
-            child = child.nextSibling
-        }
-        return false
-    }
 
     private fun isDefinedAsParameter(name: String, scope: PsiElement): Boolean {
         return VexScopeAnalyzer.getParametersForScope(scope).any { it.identifier.text == name }
