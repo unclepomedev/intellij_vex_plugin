@@ -9,7 +9,7 @@
 ### Added
 
 * The formatter adds a newline at the end of the file in compliance with POSIX.
-* Suppress error highlighting for duplicate definition which has macro between them.
+* Suppress error highlighting for duplicate definitions when a macro exists between them.
 
 ## [0.4.0] - 2026-03-31
 
