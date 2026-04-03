@@ -54,3 +54,9 @@ Usage and shortcuts conform to standard JetBrains IDE behavior.
 * Create new VEX files (.vfl and .vex) (Custom templates can be set.)
 
 ![new.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/new.png)
+
+> **Known Limitations regarding Preprocessor Directives**
+> - `#undef` is currently parsed but its effect is not dynamically evaluated; macros may still be treated as defined after an `#undef` directive.
+> - Recursive macro expansion is not performed.
+> - Complex `#if` and `#elif` conditions containing mathematical or logical operators (e.g., `#if VERSION > 19`) are not fully evaluated and will default to being active (`true`).
+> - However, common patterns such as `#if 0`, `#if 1`, `#if defined(MACRO)`, and `#if !defined(MACRO)` are properly evaluated to support standard dead-code blocks and macro checks.

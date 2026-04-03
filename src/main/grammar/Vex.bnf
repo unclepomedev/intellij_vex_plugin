@@ -24,6 +24,13 @@
     ATTRIBUTE="regexp:[fiuvsp34md]?(\\[\\])?@\\w+"
     INCLUDE_KW='regexp:#[ \t]*include'
     DEFINE_KW='regexp:#[ \t]*define'
+    PP_IFDEF_KW='regexp:#[ \t]*ifdef'
+    PP_IFNDEF_KW='regexp:#[ \t]*ifndef'
+    PP_IF_KW='regexp:#[ \t]*if'
+    PP_ELIF_KW='regexp:#[ \t]*elif'
+    PP_ELSE_KW='regexp:#[ \t]*else'
+    PP_ENDIF_KW='regexp:#[ \t]*endif'
+    PP_UNDEF_KW='regexp:#[ \t]*undef'
     MACRO_BODY='regexp:[^\r\n]+'
     MACRO='regexp:#.*'
     INT_KW='int'
@@ -112,7 +119,7 @@
 
 vexFile ::= item_*
 
-private item_ ::= include_directive | macro_def | MACRO | struct_def | context_def | function_def | statement | COMMENT | fallback_item
+private item_ ::= include_directive | macro_def | preprocessor_directive | MACRO | struct_def | context_def | function_def | statement | COMMENT | fallback_item
 
 include_directive ::= INCLUDE_KW (STRING | UNCLOSED_STRING | SYS_STRING | UNCLOSED_SYS_STRING) { pin=1 mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexIncludeDirectiveMixin" }
 
@@ -123,6 +130,15 @@ macro_def ::= DEFINE_KW IDENTIFIER (LPAREN macro_parameter_list? RPAREN)? MACRO_
 }
 
 macro_parameter_list ::= IDENTIFIER (COMMA IDENTIFIER)*
+
+preprocessor_directive ::= pp_ifdef | pp_ifndef | pp_if | pp_elif | pp_else | pp_endif | pp_undef
+pp_ifdef ::= PP_IFDEF_KW IDENTIFIER { pin=1 }
+pp_ifndef ::= PP_IFNDEF_KW IDENTIFIER { pin=1 }
+pp_if ::= PP_IF_KW MACRO_BODY? { pin=1 }
+pp_elif ::= PP_ELIF_KW MACRO_BODY? { pin=1 }
+pp_else ::= PP_ELSE_KW { pin=1 }
+pp_endif ::= PP_ENDIF_KW { pin=1 }
+pp_undef ::= PP_UNDEF_KW IDENTIFIER { pin=1 }
 
 type_ref ::= primitive_type | IDENTIFIER {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexTypeRefMixin"
@@ -187,6 +203,7 @@ statement ::= block
             | control_statement
             | declaration_statement
             | expr_statement
+            | preprocessor_directive
 
 if_statement ::= IF LPAREN expr RPAREN statement (ELSE statement)? { pin=1 }
 

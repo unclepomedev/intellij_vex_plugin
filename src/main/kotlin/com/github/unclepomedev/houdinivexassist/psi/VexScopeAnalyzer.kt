@@ -135,6 +135,7 @@ object VexScopeAnalyzer {
 
                 val includes = PsiTreeUtil.findChildrenOfType(vexFile, VexIncludeDirective::class.java)
                 for (include in includes) {
+                    if (!VexPreprocessorEvaluator.isActive(include)) continue
                     val resolved = resolveIncludeFile(include, current)
                     if (resolved != null) {
                         visit(resolved)
@@ -167,8 +168,8 @@ object VexScopeAnalyzer {
     fun getDeclarationsInScope(scope: PsiElement): List<VexDeclarationItem> {
         return CachedValuesManager.getCachedValue(scope) {
             val decls = PsiTreeUtil.findChildrenOfType(scope, VexDeclarationItem::class.java)
-                .filter { findDeclarationScope(it) == scope }
-            CachedValueProvider.Result.create(decls, scope)
+                .filter { findDeclarationScope(it) == scope && VexPreprocessorEvaluator.isActive(it) }
+            CachedValueProvider.Result.create(decls, scope, PsiModificationTracker.MODIFICATION_COUNT)
         }
     }
 
@@ -178,7 +179,8 @@ object VexScopeAnalyzer {
         val paramList = funcDef.parameterListDef ?: return emptyList()
 
         return CachedValuesManager.getCachedValue(paramList) {
-            val params = PsiTreeUtil.findChildrenOfType(paramList, VexParameterDef::class.java).toList()
+            val params = PsiTreeUtil.findChildrenOfType(paramList, VexParameterDef::class.java)
+                .filter { VexPreprocessorEvaluator.isActive(it) }
             CachedValueProvider.Result.create(params, paramList)
         }
     }
@@ -188,7 +190,7 @@ object VexScopeAnalyzer {
         return CachedValuesManager.getCachedValue(file) {
             val funcs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
-            }
+            }.filter { VexPreprocessorEvaluator.isActive(it) }
             CachedValueProvider.Result.create(funcs, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
@@ -198,7 +200,7 @@ object VexScopeAnalyzer {
         return CachedValuesManager.getCachedValue(file) {
             val structs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexStructDef::class.java)
-            }
+            }.filter { VexPreprocessorEvaluator.isActive(it) }
             CachedValueProvider.Result.create(structs, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
@@ -234,7 +236,7 @@ object VexScopeAnalyzer {
         return CachedValuesManager.getCachedValue(file) {
             val names = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
-            }.mapNotNull { it.identifier.text }.toSet()
+            }.filter { VexPreprocessorEvaluator.isActive(it) }.mapNotNull { it.identifier.text }.toSet()
             CachedValueProvider.Result.create(names, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
         }
     }
