@@ -4,9 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-04-03
+
 ### Added
 
 * The formatter adds a newline at the end of the file in compliance with POSIX.
+* Suppress error highlighting for duplicate definition which has macro between them.
 
 ## [0.4.0] - 2026-03-31
 
