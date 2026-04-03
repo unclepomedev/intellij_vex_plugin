@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+* The formatter adds a newline at the end of the file in compliance with POSIX.
+
 ## [0.4.0] - 2026-03-31
 
 ### Added
