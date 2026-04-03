@@ -86,10 +86,10 @@ INCLUDE_KW="#"[ \t]*"include"
                               yybegin(IN_DEFINE_BODY);
                               return VexTypes.PP_ELIF_KW;
                           }
-                          if (text.matches("^#[ \\t]*else[ \\t]*$")) {
+                          if (text.matches("^#[ \\t]*else[ \\t]*(//.*|/\\*.*)?$")) {
                               return VexTypes.PP_ELSE_KW;
                           }
-                          if (text.matches("^#[ \\t]*endif[ \\t]*$")) {
+                          if (text.matches("^#[ \\t]*endif[ \\t]*(//.*|/\\*.*)?$")) {
                               return VexTypes.PP_ENDIF_KW;
                           }
                           return VexTypes.MACRO; 

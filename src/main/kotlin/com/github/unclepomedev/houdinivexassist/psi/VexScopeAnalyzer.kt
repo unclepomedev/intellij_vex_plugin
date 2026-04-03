@@ -135,6 +135,7 @@ object VexScopeAnalyzer {
 
                 val includes = PsiTreeUtil.findChildrenOfType(vexFile, VexIncludeDirective::class.java)
                 for (include in includes) {
+                    if (!VexPreprocessorEvaluator.isActive(include)) continue
                     val resolved = resolveIncludeFile(include, current)
                     if (resolved != null) {
                         visit(resolved)
@@ -168,7 +169,7 @@ object VexScopeAnalyzer {
         return CachedValuesManager.getCachedValue(scope) {
             val decls = PsiTreeUtil.findChildrenOfType(scope, VexDeclarationItem::class.java)
                 .filter { findDeclarationScope(it) == scope && VexPreprocessorEvaluator.isActive(it) }
-            CachedValueProvider.Result.create(decls, scope)
+            CachedValueProvider.Result.create(decls, scope, PsiModificationTracker.MODIFICATION_COUNT)
         }
     }
 

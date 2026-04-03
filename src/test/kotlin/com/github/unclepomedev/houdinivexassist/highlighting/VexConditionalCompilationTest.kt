@@ -81,6 +81,38 @@ class VexConditionalCompilationTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false, false)
     }
 
+    fun testIfElif() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #ifdef NEVER_DEFINED
+            int x = 1;
+            #elif 1
+            int x = 2;
+            #else
+            float x = 3.0;
+            #endif
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testUndefAndInlineComment() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #define MACRO
+            #undef MACRO
+            #ifdef MACRO
+            int a = 1;
+            #else // trailing
+            float a = 2.0;
+            #endif /* done */
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
     fun testInactiveFunctionNotResolved() {
         myFixture.configureByText(
             VexFileType,
