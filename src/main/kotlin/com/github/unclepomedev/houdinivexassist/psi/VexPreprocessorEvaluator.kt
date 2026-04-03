@@ -52,8 +52,8 @@ object VexPreprocessorEvaluator {
         when {
             directive.ppIfdef != null -> pushIfdef(stack, directive)
             directive.ppIfndef != null -> pushIfndef(stack, directive)
-            directive.ppIf != null -> stack.add(BranchState(hasTakenBranch = true, isActive = true))
-            directive.ppElif != null -> handleElif(stack)
+            directive.ppIf != null -> pushIf(stack, directive)
+            directive.ppElif != null -> handleElif(stack, directive)
             directive.ppElse != null -> handleElse(stack)
             directive.ppEndif != null -> handleEndif(stack)
             directive.ppUndef != null -> {}
@@ -74,14 +74,22 @@ object VexPreprocessorEvaluator {
         stack.add(BranchState(hasTakenBranch = !defined, isActive = !defined))
     }
 
-    private fun handleElif(stack: MutableList<BranchState>) {
+    private fun pushIf(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
+        val conditionText = directive.ppIf?.macroBody?.text
+        val result = VexConditionEvaluator.evaluate(conditionText, directive)
+        stack.add(BranchState(hasTakenBranch = result, isActive = result))
+    }
+
+    private fun handleElif(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
         if (stack.isNotEmpty()) {
             val state = stack.last()
             if (state.hasTakenBranch) {
                 state.isActive = false
             } else {
-                state.isActive = true
-                state.hasTakenBranch = true
+                val conditionText = directive.ppElif?.macroBody?.text
+                val result = VexConditionEvaluator.evaluate(conditionText, directive)
+                state.isActive = result
+                if (result) state.hasTakenBranch = true
             }
         }
     }
