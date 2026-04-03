@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-04-03
+
+### Added
+
+* Added semantic evaluation for preprocessor directives. (Known [limitations](https://github.com/unclepomedev/intellij_vex_plugin#known-limitations-regarding-preprocessor-directives) regarding `#if` condition evaluations exist.)
+
 ## [0.4.1] - 2026-04-03
 
 ### Added

@@ -55,7 +55,8 @@ Usage and shortcuts conform to standard JetBrains IDE behavior.
 
 ![new.png](https://raw.githubusercontent.com/unclepomedev/intellij_vex_plugin/main/fig/new.png)
 
-> **Known Limitations regarding Preprocessor Directives**
+### Known Limitations regarding Preprocessor Directives
+
 > - `#undef` is currently parsed but its effect is not dynamically evaluated; macros may still be treated as defined after an `#undef` directive.
 > - Recursive macro expansion is not performed.
 > - Complex `#if` and `#elif` conditions containing mathematical or logical operators (e.g., `#if VERSION > 19`) are not fully evaluated and will default to being active (`true`).
