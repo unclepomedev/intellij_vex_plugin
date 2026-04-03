@@ -28,6 +28,15 @@ class VexFormatterTest : VexTestBase() {
         myFixture.checkResult(after)
     }
 
+    private fun reformatTextAndAssert(before: String, after: String) {
+        myFixture.configureByText(VexFileType, before)
+        WriteCommandAction.runWriteCommandAction(project) {
+            val file = myFixture.file
+            CodeStyleManager.getInstance(project).reformatText(file, 0, file.textLength)
+        }
+        myFixture.checkResult(after)
+    }
+
     fun testBasicFormatting() {
         val before = """
             int   myFunc ( int a,int b ){
@@ -90,6 +99,18 @@ class VexFormatterTest : VexTestBase() {
         """.trimIndent()
 
         reformatAndAssert(before, after)
+    }
+
+    fun testTrailingNewlineAdded() {
+        reformatTextAndAssert("int x = 1;", "int x = 1;\n")
+    }
+
+    fun testTrailingNewlineNotDuplicated() {
+        reformatTextAndAssert("int x = 1;\n", "int x = 1;\n")
+    }
+
+    fun testEmptyfileNewLineNotAdded() {
+        reformatTextAndAssert("", "")
     }
 
     fun testAdvancedOperatorsAndMultilineLists() {

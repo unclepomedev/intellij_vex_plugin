@@ -25,6 +25,7 @@
         <completion.contributor language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.completion.VexCompletionContributor"/>
         <lang.documentationProvider language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.documentation.VexDocumentationProvider"/>
         <lang.formatter language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.formatting.VexFormattingModelBuilder"/>
+        <postFormatProcessor implementation="com.github.unclepomedev.houdinivexassist.formatting.VexTrailingNewlinePostFormatProcessor"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexHighlightingAnnotator"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexReferenceAnnotator"/>
         <annotator language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexDeclarationAnnotator"/>
