@@ -820,4 +820,28 @@ class VexAnnotatorTest : VexTestBase() {
         // because UnknownType is always assignable.
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testConditionalCompilationDirectivesNotHighlightedAsError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #ifdef MY_MACRO
+            int x = 1;
+            #endif
+            
+            #ifndef OTHER_MACRO
+            float y = 2.0;
+            #endif
+            
+            void main() {
+            #ifdef DEBUG
+                int debug = 1;
+            #else
+                int debug = 0;
+            #endif
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }

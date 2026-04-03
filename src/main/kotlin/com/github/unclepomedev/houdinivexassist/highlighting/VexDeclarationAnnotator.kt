@@ -88,9 +88,25 @@ class VexDeclarationAnnotator : Annotator {
     // --- Conflict Checks ---
 
     private fun isAlreadyDefinedInScope(element: VexDeclarationItem, name: String, scope: PsiElement): Boolean {
-        return VexScopeAnalyzer.getDeclarationsInScope(scope).any {
-            it != element && it.identifier.text == name && it.textOffset < element.textOffset
+        return VexScopeAnalyzer.getDeclarationsInScope(scope).any { prior ->
+            prior != element &&
+                    prior.identifier.text == name &&
+                    prior.textOffset < element.textOffset &&
+                    !hasMacroBetween(scope, prior.textOffset, element.textOffset)
         }
+    }
+
+    // TODO: Taking into account cases where conditional compilation (#ifdef, #ifndef, etc.) is involved and suppresses errors, but this is not a fundamental solution.
+    private fun hasMacroBetween(scope: PsiElement, startOffset: Int, endOffset: Int): Boolean {
+        var child = scope.firstChild
+        while (child != null) {
+            if (child.node.elementType == VexTypes.MACRO) {
+                val offset = child.textOffset
+                if (offset in (startOffset + 1) until endOffset) return true
+            }
+            child = child.nextSibling
+        }
+        return false
     }
 
     private fun isDefinedAsParameter(name: String, scope: PsiElement): Boolean {
