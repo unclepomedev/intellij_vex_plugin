@@ -74,13 +74,13 @@ INCLUDE_KW="#"[ \t]*"include"
                               yybegin(IN_PP_IDENTIFIER);
                               return VexTypes.PP_UNDEF_KW;
                           }
-                          if (text.matches("^#[ \\t]*if[ \\t]+.*$")) {
+                          if (text.matches("^#[ \\t]*if([ \\t]+.*|[ \\t]*)$")) {
                               int idx = text.indexOf("if");
                               yypushback(yylength() - (idx + 2));
                               yybegin(IN_DEFINE_BODY);
                               return VexTypes.PP_IF_KW;
                           }
-                          if (text.matches("^#[ \\t]*elif[ \\t]+.*$")) {
+                          if (text.matches("^#[ \\t]*elif([ \\t]+.*|[ \\t]*)$")) {
                               int idx = text.indexOf("elif");
                               yypushback(yylength() - (idx + 4));
                               yybegin(IN_DEFINE_BODY);
