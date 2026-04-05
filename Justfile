@@ -1,7 +1,7 @@
 PROJECT_ROOT := justfile_directory()
 MAIN_RESOURCES := "src/main/resources"
 # Override via HOUDINI_RESOURCES env var for your platform/version
-HOUDINI_RESOURCES := env_var_or_default("HOUDINI_RESOURCES", "/Applications/Houdini/Houdini21.0.631/Frameworks/Houdini.framework/Versions/Current/Resources")
+HOUDINI_RESOURCES := env("HOUDINI_RESOURCES", "/Applications/Houdini/Houdini21.0.631/Frameworks/Houdini.framework/Versions/Current/Resources")
 
 default:
     @just --list
