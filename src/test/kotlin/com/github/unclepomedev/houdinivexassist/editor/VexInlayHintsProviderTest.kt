@@ -1,11 +1,19 @@
 package com.github.unclepomedev.houdinivexassist.editor
 
 import com.intellij.testFramework.utils.inlays.InlayHintsProviderTestCase
+import java.util.*
 
 @Suppress("UnstableApiUsage")
 class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
 
-    private fun hasBackgroundPresentation(presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation): Boolean {
+    private fun hasBackgroundPresentation(presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation): Boolean =
+        hasBackgroundPresentation(presentation, Collections.newSetFromMap(IdentityHashMap()))
+
+    private fun hasBackgroundPresentation(
+        presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation,
+        visited: MutableSet<com.intellij.codeInsight.hints.presentation.InlayPresentation>
+    ): Boolean {
+        if (!visited.add(presentation)) return false
         val className = presentation.javaClass.name
         if (className.contains("Background", ignoreCase = true) || className.contains(
                 "Round",
@@ -18,13 +26,13 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
             val value = runCatching { field.get(presentation) }.getOrNull() ?: continue
             when (value) {
                 is com.intellij.codeInsight.hints.presentation.InlayPresentation ->
-                    if (hasBackgroundPresentation(value)) return true
+                    if (hasBackgroundPresentation(value, visited)) return true
 
                 is List<*> -> value.filterIsInstance<com.intellij.codeInsight.hints.presentation.InlayPresentation>()
-                    .forEach { if (hasBackgroundPresentation(it)) return true }
+                    .forEach { if (hasBackgroundPresentation(it, visited)) return true }
 
                 is Array<*> -> value.filterIsInstance<com.intellij.codeInsight.hints.presentation.InlayPresentation>()
-                    .forEach { if (hasBackgroundPresentation(it)) return true }
+                    .forEach { if (hasBackgroundPresentation(it, visited)) return true }
             }
         }
         return false
