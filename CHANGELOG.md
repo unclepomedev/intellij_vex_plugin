@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-04-13
+
+### Changed
+
+* Changed the visual appearance of parameter hints for clarity.
+
 ## [0.4.2] - 2026-04-03
 
 ### Added

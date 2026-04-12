@@ -56,16 +56,17 @@ class VexInlayHintsProvider : InlayHintsProvider<VexInlayHintsProvider.Settings>
                 for (i in args.indices) {
                     if (i < parameters.size) {
                         val paramName = parameters[i]
-                        // Format the hint text
-                        val presentation = factory.seq(
-                            factory.smallText("$paramName:"),
+                        val text = factory.smallText("$paramName =")
+                        val presentation = factory.roundWithBackground(text)
+                        val finalPresentation = factory.seq(
+                            presentation,
                             factory.textSpacePlaceholder(1, true)
                         )
                         sink.addInlineElement(
                             args[i].textRange.startOffset,
-                            true,
-                            presentation,
-                            false
+                            relatesToPrecedingText = true,
+                            presentation = finalPresentation,
+                            placeAtTheEndOfLine = false
                         )
                     }
                 }

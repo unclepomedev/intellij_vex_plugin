@@ -1,9 +1,42 @@
 package com.github.unclepomedev.houdinivexassist.editor
 
 import com.intellij.testFramework.utils.inlays.InlayHintsProviderTestCase
+import java.util.*
 
 @Suppress("UnstableApiUsage")
 class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
+
+    private fun hasBackgroundPresentation(presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation): Boolean =
+        hasBackgroundPresentation(presentation, Collections.newSetFromMap(IdentityHashMap()))
+
+    private fun hasBackgroundPresentation(
+        presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation,
+        visited: MutableSet<com.intellij.codeInsight.hints.presentation.InlayPresentation>
+    ): Boolean {
+        if (!visited.add(presentation)) return false
+        val className = presentation.javaClass.name
+        if (className.contains("Background", ignoreCase = true) || className.contains(
+                "Round",
+                ignoreCase = true
+            )
+        ) return true
+        // Recurse into children via reflection
+        for (field in presentation.javaClass.declaredFields + presentation.javaClass.superclass?.declaredFields.orEmpty()) {
+            field.isAccessible = true
+            val value = runCatching { field.get(presentation) }.getOrNull() ?: continue
+            when (value) {
+                is com.intellij.codeInsight.hints.presentation.InlayPresentation ->
+                    if (hasBackgroundPresentation(value, visited)) return true
+
+                is List<*> -> value.filterIsInstance<com.intellij.codeInsight.hints.presentation.InlayPresentation>()
+                    .forEach { if (hasBackgroundPresentation(it, visited)) return true }
+
+                is Array<*> -> value.filterIsInstance<com.intellij.codeInsight.hints.presentation.InlayPresentation>()
+                    .forEach { if (hasBackgroundPresentation(it, visited)) return true }
+            }
+        }
+        return false
+    }
 
     // Workaround for an issue where test framework markers (`<# ... #>`) break VEX parsing and no hints are generated.
     private fun doTest(text: String) {
@@ -44,6 +77,10 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
                 placeAtTheEndOfLine: Boolean
             ) {
                 actualHints[offset] = presentation.toString()
+                assertTrue(
+                    "Hint at offset $offset should have a background (roundWithBackground), but was: $presentation (class: ${presentation.javaClass.name})",
+                    hasBackgroundPresentation(presentation)
+                )
             }
 
             // For newer API compatibility
@@ -61,6 +98,10 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
                 constraints: com.intellij.codeInsight.hints.HorizontalConstraints?
             ) {
                 actualHints[offset] = presentation.toString()
+                assertTrue(
+                    "Hint at offset $offset should have a background (roundWithBackground), but was: $presentation (class: ${presentation.javaClass.name})",
+                    hasBackgroundPresentation(presentation)
+                )
             }
         }
 
@@ -90,7 +131,7 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
             void myFunc(int a, float b) {}
             
             void main() {
-                myFunc(<# a: #>1, <# b: #>2.0);
+                myFunc(<# a = #>1, <# b = #>2.0);
             }
         """.trimIndent()
         doTest(text)
@@ -102,8 +143,8 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
             void myFunc(float y) {}
             
             void main() {
-                myFunc(<# x: #>1);
-                myFunc(<# y: #>2.0);
+                myFunc(<# x = #>1);
+                myFunc(<# y = #>2.0);
             }
         """.trimIndent()
         doTest(text)
@@ -112,7 +153,7 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
     fun testStandardFunctionInlayHints() {
         val text = """
             void main() {
-                pow(<# n: #>2.0, <# exponent: #>3.0);
+                pow(<# n = #>2.0, <# exponent = #>3.0);
             }
         """.trimIndent()
         doTest(text)
@@ -133,7 +174,7 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
         // printf(string format, ...) only gives a hint for the first element.
         val text = """
             void main() {
-                printf(<# format: #>"%d", 123);
+                printf(<# format = #>"%d", 123);
             }
         """.trimIndent()
         doTest(text)
@@ -142,7 +183,7 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
     fun testSetFunction() {
         val text = """
             void main() {
-                set(<# v1: #>1.0, <# v2: #>2.0, <# v3: #>3.0);
+                set(<# v1 = #>1.0, <# v2 = #>2.0, <# v3 = #>3.0);
             }
         """.trimIndent()
         doTest(text)
