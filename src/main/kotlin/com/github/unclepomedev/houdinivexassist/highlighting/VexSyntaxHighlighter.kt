@@ -86,7 +86,7 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
             VexTypes.NUMBER -> NUMBER_KEYS
             VexTypes.STRING -> STRING_KEYS
             VexTypes.LINE_COMMENT -> LINE_COMMENT_KEYS
-            VexTypes.BLOCK_COMMENT -> BLOCK_COMMENT_KEYS
+            VexTypes.BLOCK_COMMENT, VexTypes.UNCLOSED_BLOCK_COMMENT -> BLOCK_COMMENT_KEYS
             VexTypes.ATTRIBUTE -> ATTRIBUTE_KEYS
             VexTypes.MACRO, VexTypes.INCLUDE_KW, VexTypes.DEFINE_KW, VexTypes.MACRO_BODY -> MACRO_KEYS
             VexTypes.IDENTIFIER -> IDENTIFIER_KEYS
