@@ -26,6 +26,7 @@ import com.intellij.psi.TokenType;
 WHITE_SPACE=[\ \t\n\r\f]+
 LINE_COMMENT="//"[^\r\n]*
 BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*\*"/"
+UNCLOSED_BLOCK_COMMENT="/"\*([^*]|\*+[^*/])*
 NUMBER=([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)
 STRING=(\"[^\r\n\"]*\")|(\'[^\r\n\']*\')
 UNCLOSED_STRING=(\"[^\r\n\"]*)|(\'[^\r\n\']*)
@@ -39,6 +40,7 @@ INCLUDE_KW="#"[ \t]*"include"
   {WHITE_SPACE}       { return TokenType.WHITE_SPACE; }
   {LINE_COMMENT}      { return VexTypes.LINE_COMMENT; }
   {BLOCK_COMMENT}     { return VexTypes.BLOCK_COMMENT; }
+  {UNCLOSED_BLOCK_COMMENT} { return VexTypes.UNCLOSED_BLOCK_COMMENT; }
   {NUMBER}            { return VexTypes.NUMBER; }
   {STRING}            { return VexTypes.STRING; }
   {UNCLOSED_STRING}   { return VexTypes.UNCLOSED_STRING; }

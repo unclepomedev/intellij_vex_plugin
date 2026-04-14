@@ -20,6 +20,7 @@
     NUMBER='regexp:([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][+-]?[0-9]+)?|(0[xX][0-9a-fA-F]+)'
     STRING="regexp:\"[^\"]*\"|'[^']*'"
     UNCLOSED_STRING="regexp:\"[^\r\n\"]*|'[^\r\n']*"
+    UNCLOSED_BLOCK_COMMENT='regexp:/\*([^*]|\*+[^*/])*'
     SYS_STRING="regexp:<[^>]*>"
     UNCLOSED_SYS_STRING="regexp:<[^\r\n>]*"
     ATTRIBUTE="regexp:[fiuvsp34md]?(\\[\\])?@\\w+"
@@ -120,7 +121,7 @@
 
 vexFile ::= item_*
 
-private item_ ::= include_directive | macro_def | preprocessor_directive | MACRO | struct_def | context_def | function_def | statement | COMMENT | fallback_item
+private item_ ::= include_directive | macro_def | preprocessor_directive | MACRO | struct_def | context_def | function_def | statement | LINE_COMMENT | BLOCK_COMMENT | fallback_item
 
 include_directive ::= INCLUDE_KW (STRING | UNCLOSED_STRING | SYS_STRING | UNCLOSED_SYS_STRING) { pin=1 mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexIncludeDirectiveMixin" }
 
