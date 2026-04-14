@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-04-14
+
+### Added
+
+* Separated line comment (`//`) and block comment (`/* */`) into distinct token types (`LINE_COMMENT`, `BLOCK_COMMENT`) in the lexer and grammar.
+* Updated `VexCommenter` to return separate token types for line and block comments, enabling correct comment shortcut behavior (`Ctrl+/` / `Cmd+/`).
+
 ### Fixed
 
 * Fixed parsing of binary operators inside array index expressions (e.g., `pts[(i + 1) % n_pts]`).

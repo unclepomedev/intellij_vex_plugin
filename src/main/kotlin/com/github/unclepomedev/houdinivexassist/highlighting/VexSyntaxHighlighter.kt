@@ -18,7 +18,10 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         private val KEYWORD = createTextAttributesKey("VEX_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
         private val NUMBER = createTextAttributesKey("VEX_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
         private val STRING = createTextAttributesKey("VEX_STRING", DefaultLanguageHighlighterColors.STRING)
-        private val COMMENT = createTextAttributesKey("VEX_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+        private val LINE_COMMENT_KEY =
+            createTextAttributesKey("VEX_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+        private val BLOCK_COMMENT_KEY =
+            createTextAttributesKey("VEX_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT)
         private val ATTRIBUTE =
             createTextAttributesKey("VEX_ATTRIBUTE", DefaultLanguageHighlighterColors.INSTANCE_FIELD)
 
@@ -44,7 +47,8 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
         private val TYPE_KEYS = arrayOf(TYPE)
         private val NUMBER_KEYS = arrayOf(NUMBER)
         private val STRING_KEYS = arrayOf(STRING)
-        private val COMMENT_KEYS = arrayOf(COMMENT)
+        private val LINE_COMMENT_KEYS = arrayOf(LINE_COMMENT_KEY)
+        private val BLOCK_COMMENT_KEYS = arrayOf(BLOCK_COMMENT_KEY)
         private val ATTRIBUTE_KEYS = arrayOf(ATTRIBUTE)
         private val MACRO_KEYS = arrayOf(MACRO)
         private val IDENTIFIER_KEYS = arrayOf(IDENTIFIER)
@@ -81,7 +85,8 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
 
             VexTypes.NUMBER -> NUMBER_KEYS
             VexTypes.STRING -> STRING_KEYS
-            VexTypes.COMMENT -> COMMENT_KEYS
+            VexTypes.LINE_COMMENT -> LINE_COMMENT_KEYS
+            VexTypes.BLOCK_COMMENT, VexTypes.UNCLOSED_BLOCK_COMMENT -> BLOCK_COMMENT_KEYS
             VexTypes.ATTRIBUTE -> ATTRIBUTE_KEYS
             VexTypes.MACRO, VexTypes.INCLUDE_KW, VexTypes.DEFINE_KW, VexTypes.MACRO_BODY -> MACRO_KEYS
             VexTypes.IDENTIFIER -> IDENTIFIER_KEYS
