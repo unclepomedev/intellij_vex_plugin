@@ -313,6 +313,153 @@ class VexParserTest : VexTestBase() {
         assertEquals(1, contextDefs.size)
     }
 
+
+    fun testSimpleArrayAccess() {
+        val code = "a[i];"
+        val file = myFixture.configureByText(VexFileType, code)
+        val errors = PsiTreeUtil.collectElements(file) { it is com.intellij.psi.PsiErrorElement }
+        errors.forEach { println("[DEBUG_LOG] Error: ${(it as com.intellij.psi.PsiErrorElement).errorDescription} at '${it.text}'") }
+        assertFalse("Simple array access should parse without errors", errors.isNotEmpty())
+    }
+
+    fun testModuloInArrayIndexMinimal() {
+        val code = "a[i % n];"
+        val file = myFixture.configureByText(VexFileType, code)
+        val errors = PsiTreeUtil.collectElements(file) { it is com.intellij.psi.PsiErrorElement }
+        errors.forEach { println("[DEBUG_LOG] Error: ${(it as com.intellij.psi.PsiErrorElement).errorDescription} at '${it.text}'") }
+        assertFalse("Minimal modulo in array index should parse without errors", errors.isNotEmpty())
+    }
+
+    fun testModuloInArrayIndexInDeclaration() {
+        val code = "int r = a[(i + 1) % n];"
+        val file = myFixture.configureByText(VexFileType, code)
+        val errors = PsiTreeUtil.collectElements(file) { it is com.intellij.psi.PsiErrorElement }
+        errors.forEach { println("[DEBUG_LOG] Error: ${(it as com.intellij.psi.PsiErrorElement).errorDescription} at '${it.text}'") }
+        assertFalse("Modulo in array index inside declaration should parse without errors", errors.isNotEmpty())
+    }
+
+    fun testArrayVariableDeclaration() {
+        val code = "int pts[] = primpoints(0, prim_num);"
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Array variable declaration should parse without errors", hasErrors)
+    }
+
+    fun testModuloInArrayIndexParsesCorrectly() {
+        val code = """
+            vector get_prim_normal(int prim_num) {
+                int pts[] = primpoints(0, prim_num);
+                int n_pts = len(pts);
+                vector n = set(0, 0, 0);
+
+                for(int i = 0; i < n_pts; i++) {
+                    vector p0 = point(0, "P", pts[i]);
+                    vector p1 = point(0, "P", pts[(i + 1) % n_pts]);
+                    n += cross(p0, p1);
+                }
+
+                if (length(n) < 0.0001) return set(0, 1, 0);
+                return normalize(n);
+            }
+        """.trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        val hasErrors = PsiTreeUtil.hasErrorElements(file)
+        assertFalse("Modulo operator inside array index should parse without errors after fix", hasErrors)
+    }
+
+    fun testAddInArrayIndex() {
+        val code = "a[i + 1];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Add operator in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testSubtractInArrayIndex() {
+        val code = "a[i - 1];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Subtract operator in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testMultiplyInArrayIndex() {
+        val code = "a[i * 2];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Multiply operator in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testDivideInArrayIndex() {
+        val code = "a[i / 2];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Divide operator in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testBitwiseAndInArrayIndex() {
+        val code = "a[i & mask];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Bitwise AND in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testBitwiseOrInArrayIndex() {
+        val code = "a[i | flags];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Bitwise OR in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testBitwiseXorInArrayIndex() {
+        val code = "a[i ^ mask];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Bitwise XOR in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testLeftShiftInArrayIndex() {
+        val code = "a[i << 2];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Left shift in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testRightShiftInArrayIndex() {
+        val code = "a[i >> 2];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Right shift in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testEqualityInArrayIndex() {
+        val code = "a[i == j];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Equality operator in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testRelationalInArrayIndex() {
+        val code = "a[i < n];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(
+            "Relational operator in array index should parse without errors",
+            PsiTreeUtil.hasErrorElements(file)
+        )
+    }
+
+    fun testLogicalAndInArrayIndex() {
+        val code = "a[i > 0 && i < n];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Logical AND in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testLogicalOrInArrayIndex() {
+        val code = "a[i == 0 || i == n];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Logical OR in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testTernaryInArrayIndex() {
+        val code = "a[cond ? i : j];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Ternary operator in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
+    fun testComplexExprInArrayIndex() {
+        val code = "a[(i + 1) * 2 - offset % n];"
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse("Complex expression in array index should parse without errors", PsiTreeUtil.hasErrorElements(file))
+    }
+
     fun testVectorLiteralStillWorks() {
         val code = "vector v = {1, 2, 3};"
         val file = myFixture.configureByText(VexFileType, code)

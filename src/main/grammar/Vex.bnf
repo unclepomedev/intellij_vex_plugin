@@ -287,7 +287,8 @@ private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT | BITNOT
 postfix_expr ::= expr postfix_op
 private postfix_op ::= PLUSPLUS | MINUSMINUS
 
-array_access_expr ::= expr LBRACK expr RBRACK
+array_access_expr ::= expr LBRACK array_index RBRACK
+private array_index ::= expr
 
 call_expr ::= IDENTIFIER LPAREN argument_list? RPAREN {
   mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexCallExprMixin"
