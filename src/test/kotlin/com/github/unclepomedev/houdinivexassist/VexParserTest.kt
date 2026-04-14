@@ -318,24 +318,48 @@ class VexParserTest : VexTestBase() {
         val code = "a[i];"
         val file = myFixture.configureByText(VexFileType, code)
         val errors = PsiTreeUtil.collectElements(file) { it is com.intellij.psi.PsiErrorElement }
-        errors.forEach { println("[DEBUG_LOG] Error: ${(it as com.intellij.psi.PsiErrorElement).errorDescription} at '${it.text}'") }
-        assertFalse("Simple array access should parse without errors", errors.isNotEmpty())
+        val errorMsg = errors.joinToString { (it as com.intellij.psi.PsiErrorElement).errorDescription }
+        assertFalse("Simple array access should parse without errors: $errorMsg", errors.isNotEmpty())
+        val arrayAccess = PsiTreeUtil.findChildOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexArrayAccessExpr::class.java
+        )
+        assertNotNull("VexArrayAccessExpr node should be present", arrayAccess)
+        val indexExpr = arrayAccess!!.exprList.getOrNull(1)
+        assertNotNull("VexArrayAccessExpr should contain an index expression", indexExpr)
     }
 
     fun testModuloInArrayIndexMinimal() {
         val code = "a[i % n];"
         val file = myFixture.configureByText(VexFileType, code)
         val errors = PsiTreeUtil.collectElements(file) { it is com.intellij.psi.PsiErrorElement }
-        errors.forEach { println("[DEBUG_LOG] Error: ${(it as com.intellij.psi.PsiErrorElement).errorDescription} at '${it.text}'") }
-        assertFalse("Minimal modulo in array index should parse without errors", errors.isNotEmpty())
+        val errorMsg = errors.joinToString { (it as com.intellij.psi.PsiErrorElement).errorDescription }
+        assertFalse("Minimal modulo in array index should parse without errors: $errorMsg", errors.isNotEmpty())
+        val arrayAccess = PsiTreeUtil.findChildOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexArrayAccessExpr::class.java
+        )
+        assertNotNull("VexArrayAccessExpr node should be present", arrayAccess)
+        val indexExpr = arrayAccess!!.exprList.getOrNull(1)
+        assertNotNull("VexArrayAccessExpr should contain an index expression", indexExpr)
     }
 
     fun testModuloInArrayIndexInDeclaration() {
         val code = "int r = a[(i + 1) % n];"
         val file = myFixture.configureByText(VexFileType, code)
         val errors = PsiTreeUtil.collectElements(file) { it is com.intellij.psi.PsiErrorElement }
-        errors.forEach { println("[DEBUG_LOG] Error: ${(it as com.intellij.psi.PsiErrorElement).errorDescription} at '${it.text}'") }
-        assertFalse("Modulo in array index inside declaration should parse without errors", errors.isNotEmpty())
+        val errorMsg = errors.joinToString { (it as com.intellij.psi.PsiErrorElement).errorDescription }
+        assertFalse(
+            "Modulo in array index inside declaration should parse without errors: $errorMsg",
+            errors.isNotEmpty()
+        )
+        val arrayAccess = PsiTreeUtil.findChildOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexArrayAccessExpr::class.java
+        )
+        assertNotNull("VexArrayAccessExpr node should be present", arrayAccess)
+        val indexExpr = arrayAccess!!.exprList.getOrNull(1)
+        assertNotNull("VexArrayAccessExpr should contain an index expression", indexExpr)
     }
 
     fun testArrayVariableDeclaration() {
@@ -363,8 +387,21 @@ class VexParserTest : VexTestBase() {
             }
         """.trimIndent()
         val file = myFixture.configureByText(VexFileType, code)
-        val hasErrors = PsiTreeUtil.hasErrorElements(file)
-        assertFalse("Modulo operator inside array index should parse without errors after fix", hasErrors)
+        assertFalse(
+            "Modulo operator inside array index should parse without errors after fix",
+            PsiTreeUtil.hasErrorElements(file)
+        )
+        val arrayAccesses = PsiTreeUtil.findChildrenOfType(
+            file,
+            com.github.unclepomedev.houdinivexassist.psi.VexArrayAccessExpr::class.java
+        )
+        assertTrue("VexArrayAccessExpr nodes should be present", arrayAccesses.isNotEmpty())
+        arrayAccesses.forEach { arrayAccess ->
+            assertNotNull(
+                "Each VexArrayAccessExpr should contain an index expression",
+                arrayAccess.exprList.getOrNull(1)
+            )
+        }
     }
 
     fun testAddInArrayIndex() {
