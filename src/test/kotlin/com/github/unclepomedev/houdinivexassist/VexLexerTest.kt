@@ -47,10 +47,13 @@ class VexLexerTest : VexTestBase() {
 
     fun testComments() {
         doTest(
-            "// comment\nint", VexTypes.COMMENT to "// comment", TokenType.WHITE_SPACE to "\n", VexTypes.INT_KW to "int"
+            "// comment\nint",
+            VexTypes.LINE_COMMENT to "// comment",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.INT_KW to "int"
         )
         doTest(
-            "/* comment\n */int", VexTypes.COMMENT to "/* comment\n */", VexTypes.INT_KW to "int"
+            "/* comment\n */int", VexTypes.BLOCK_COMMENT to "/* comment\n */", VexTypes.INT_KW to "int"
         )
     }
 

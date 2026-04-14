@@ -20,6 +20,7 @@
                                implementationClass="com.github.unclepomedev.houdinivexassist.parser.VexParserDefinition"/>
         <lang.syntaxHighlighterFactory language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.highlighting.VexSyntaxHighlighterFactory"/>
         <lang.braceMatcher language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexBraceMatcher"/>
+        <lang.commenter language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexCommenter"/>
         <lang.quoteHandler language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexQuoteHandler"/>
         <codeInsight.inlayProvider language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.editor.VexInlayHintsProvider"/>
         <completion.contributor language="VEX" implementationClass="com.github.unclepomedev.houdinivexassist.completion.VexCompletionContributor"/>
