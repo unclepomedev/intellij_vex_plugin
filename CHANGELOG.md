@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+* Fixed parsing of binary operators inside array index expressions (e.g., `pts[(i + 1) % n_pts]`).
+
 ## [0.4.3] - 2026-04-13
 
 ### Changed
