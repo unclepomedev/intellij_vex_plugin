@@ -396,6 +396,7 @@ class VexParserTest : VexTestBase() {
             com.github.unclepomedev.houdinivexassist.psi.VexArrayAccessExpr::class.java
         )
         assertTrue("VexArrayAccessExpr nodes should be present", arrayAccesses.isNotEmpty())
+        assertEquals("Expected exactly 2 array accesses in the test function", 2, arrayAccesses.size)
         arrayAccesses.forEach { arrayAccess ->
             assertNotNull(
                 "Each VexArrayAccessExpr should contain an index expression",

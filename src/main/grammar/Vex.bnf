@@ -287,6 +287,8 @@ private prefix_op ::= PLUSPLUS | MINUSMINUS | PLUS | MINUS | NOT | BITNOT
 postfix_expr ::= expr postfix_op
 private postfix_op ::= PLUSPLUS | MINUSMINUS
 
+// private wrapper creates a GrammarKit frame boundary that isolates the index expr
+// from the outer expression context, enabling binary operators (%, +, <<, …) inside brackets.
 array_access_expr ::= expr LBRACK array_index RBRACK
 private array_index ::= expr
 
