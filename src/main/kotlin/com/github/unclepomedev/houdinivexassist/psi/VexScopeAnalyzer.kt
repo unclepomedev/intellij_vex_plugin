@@ -18,7 +18,7 @@ import java.io.File
 
 object VexScopeAnalyzer {
     private val includePathTracker = ModificationTracker {
-        val settings = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val settings = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
         val includeHash = settings?.includePath?.hashCode()?.toLong() ?: 0L
         val hfsHash = settings?.hfsPath?.hashCode()?.toLong() ?: 0L
         includeHash xor (hfsHash shl 32)
@@ -64,7 +64,7 @@ object VexScopeAnalyzer {
     }
 
     fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
-        val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val settingsState = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
         val hfsPath = settingsState?.hfsPath ?: ""
         val defaultInclude by lazy(LazyThreadSafetyMode.NONE) { resolveDefaultIncludePath(hfsPath) }
 
@@ -87,7 +87,7 @@ object VexScopeAnalyzer {
     }
 
     private fun resolveFromIncludePaths(project: Project, fileName: String): PsiFile? {
-        val settingsState = ApplicationManager.getApplication().getService(VexSettingsState::class.java)
+        val settingsState = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
         val includePathStr = settingsState?.includePath ?: return null
 
         val paths = parseIncludePaths(includePathStr)
