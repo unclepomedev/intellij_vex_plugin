@@ -46,8 +46,7 @@ class VexCommenterTest : BasePlatformTestCase() {
         val code = "// line comment"
         val file = myFixture.configureByText(VexFileType, code)
         val comment = file.firstChild
-        if (comment is com.intellij.psi.PsiComment) {
-            assertFalse(commenter.isDocumentationComment(comment))
-        }
+        assertTrue("Expected first child to be a PsiComment", comment is com.intellij.psi.PsiComment)
+        assertFalse(commenter.isDocumentationComment(comment as com.intellij.psi.PsiComment))
     }
 }
