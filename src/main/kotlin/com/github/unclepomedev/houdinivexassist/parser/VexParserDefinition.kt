@@ -17,7 +17,7 @@ import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 
 private val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
-private val COMMENTS = TokenSet.create(VexTypes.LINE_COMMENT, VexTypes.BLOCK_COMMENT)
+private val COMMENTS = TokenSet.create(VexTypes.LINE_COMMENT, VexTypes.BLOCK_COMMENT, VexTypes.UNCLOSED_BLOCK_COMMENT)
 private val STRINGS = TokenSet.create(VexTypes.STRING)
 private val FILE = IFileElementType(VexLanguage.INSTANCE)
 
