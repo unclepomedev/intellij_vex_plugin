@@ -341,4 +341,17 @@ class VexLexerTest : VexTestBase() {
             VexTypes.MACRO_BODY to "(1)"
         )
     }
+
+    fun testMultiLineDefine() {
+        doTest(
+            "#define FOO \\\n1\nint",
+            VexTypes.DEFINE_KW to "#define",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.IDENTIFIER to "FOO",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MACRO_BODY to "\\\n1",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.INT_KW to "int"
+        )
+    }
 }

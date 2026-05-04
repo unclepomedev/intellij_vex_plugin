@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-05-05
+
+### Added
+
+* Macros with line breaks can now be recognized.
+
 ## [0.4.4] - 2026-04-14
 
 ### Added

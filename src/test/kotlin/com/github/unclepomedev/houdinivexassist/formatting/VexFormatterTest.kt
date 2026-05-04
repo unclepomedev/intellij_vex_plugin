@@ -154,4 +154,27 @@ class VexFormatterTest : VexTestBase() {
 
         reformatAndAssert(before, after)
     }
+
+    fun testMacroWithLineContinuation() {
+        val before = """
+            #define FOO \
+            1
+            #define BAR(a,b) \
+              ((a) + \
+               (b))
+            int x = 1;
+        """.trimIndent()
+
+        // No complicated formatting
+        val after = """
+            #define FOO \
+            1
+            #define BAR(a, b) \
+              ((a) + \
+               (b))
+            int x = 1;
+        """.trimIndent()
+
+        reformatAndAssert(before, after)
+    }
 }
