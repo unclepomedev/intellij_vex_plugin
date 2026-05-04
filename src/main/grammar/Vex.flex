@@ -4,6 +4,8 @@ import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes;
 import com.intellij.psi.TokenType;
+import com.github.unclepomedev.houdinivexassist.lexer.VexLexerMacroHandler;
+import com.github.unclepomedev.houdinivexassist.lexer.VexLexerMacroHandler.MacroMatch;
 
 %%
 
@@ -45,56 +47,15 @@ INCLUDE_KW="#"[ \t]*"include"
   {STRING}            { return VexTypes.STRING; }
   {UNCLOSED_STRING}   { return VexTypes.UNCLOSED_STRING; }
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
-  {INCLUDE_KW}        { yybegin(IN_INCLUDE); return VexTypes.INCLUDE_KW; }
-  "#" [^\r\n]*        { 
+
+  "#" [^\r\n]*        {
                           String text = yytext().toString();
-                          if (text.matches("^#[ \\t]*include([ \\t]+.*|)$")) {
-                              int includeIdx = text.indexOf("include");
-                              yypushback(yylength() - (includeIdx + 7));
-                              yybegin(IN_INCLUDE);
-                              return VexTypes.INCLUDE_KW;
-                          }
-                          if (text.matches("^#[ \\t]*define[ \\t]+[a-zA-Z_]\\w*.*$")) {
-                              int defineIdx = text.indexOf("define");
-                              yypushback(yylength() - (defineIdx + 6));
-                              yybegin(IN_DEFINE);
-                              return VexTypes.DEFINE_KW;
-                          }
-                          if (text.matches("^#[ \\t]*ifdef[ \\t]+[a-zA-Z_]\\w*.*$")) {
-                              int idx = text.indexOf("ifdef");
-                              yypushback(yylength() - (idx + 5));
-                              yybegin(IN_PP_IDENTIFIER);
-                              return VexTypes.PP_IFDEF_KW;
-                          }
-                          if (text.matches("^#[ \\t]*ifndef[ \\t]+[a-zA-Z_]\\w*.*$")) {
-                              int idx = text.indexOf("ifndef");
-                              yypushback(yylength() - (idx + 6));
-                              yybegin(IN_PP_IDENTIFIER);
-                              return VexTypes.PP_IFNDEF_KW;
-                          }
-                          if (text.matches("^#[ \\t]*undef[ \\t]+[a-zA-Z_]\\w*.*$")) {
-                              int idx = text.indexOf("undef");
-                              yypushback(yylength() - (idx + 5));
-                              yybegin(IN_PP_IDENTIFIER);
-                              return VexTypes.PP_UNDEF_KW;
-                          }
-                          if (text.matches("^#[ \\t]*if([ \\t]+.*|[ \\t]*)$")) {
-                              int idx = text.indexOf("if");
-                              yypushback(yylength() - (idx + 2));
-                              yybegin(IN_DEFINE_BODY);
-                              return VexTypes.PP_IF_KW;
-                          }
-                          if (text.matches("^#[ \\t]*elif([ \\t]+.*|[ \\t]*)$")) {
-                              int idx = text.indexOf("elif");
-                              yypushback(yylength() - (idx + 4));
-                              yybegin(IN_DEFINE_BODY);
-                              return VexTypes.PP_ELIF_KW;
-                          }
-                          if (text.matches("^#[ \\t]*else[ \\t]*(//.*|/\\*.*)?$")) {
-                              return VexTypes.PP_ELSE_KW;
-                          }
-                          if (text.matches("^#[ \\t]*endif[ \\t]*(//.*|/\\*.*)?$")) {
-                              return VexTypes.PP_ENDIF_KW;
+                          MacroMatch match = VexLexerMacroHandler.INSTANCE.handleMacro(text);
+                          if (match != null) {
+                              int pushback = yylength() - match.getKeywordLength();
+                              yypushback(pushback);
+                              yybegin(match.getNextState());
+                              return match.getType();
                           }
                           return VexTypes.MACRO; 
                       }

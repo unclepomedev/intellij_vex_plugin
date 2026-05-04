@@ -42,6 +42,8 @@ parser:
     rm -rf src/main/gen
     ./gradlew generateLexer generateParser
 
+check:
+    ./gradlew check
 
 detect-attr:
     #!/usr/bin/env bash
