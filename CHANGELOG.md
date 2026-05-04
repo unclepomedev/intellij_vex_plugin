@@ -9,6 +9,7 @@
 ### Added
 
 * Macros with line breaks can now be recognized.
+* Enhanced macro include resolution to prevent infinite recursion.
 
 ## [0.4.4] - 2026-04-14
 

@@ -866,4 +866,33 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testCircularIncludeEvaluationNoInfiniteLoop() {
+        myFixture.addFileToProject(
+            "fileA.vfl",
+            """
+            #ifndef FILE_A_VFL
+            #define FILE_A_VFL
+            #include "fileB.vfl"
+            #endif
+            """.trimIndent()
+        )
+        myFixture.addFileToProject(
+            "fileB.vfl",
+            """
+            #ifndef FILE_B_VFL
+            #define FILE_B_VFL
+            #include "fileA.vfl"
+            #endif
+            """.trimIndent()
+        )
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #include "fileA.vfl"
+            void main() {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }

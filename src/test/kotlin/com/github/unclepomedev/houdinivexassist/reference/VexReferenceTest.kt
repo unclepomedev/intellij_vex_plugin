@@ -679,6 +679,40 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("cycle_a.h", resolved?.containingFile?.name)
     }
 
+    fun testMacroCircularIncludeProtectionWithNonVexFiles() {
+        // cycle_a.inc is not a .vfl/.vex file, so it will be parsed as synthetic VexFile
+        myFixture.addFileToProject(
+            "cycle_a.inc", """
+            #include "cycle_b.inc"
+            #define VAL_INC_A 100
+        """.trimIndent()
+        )
+
+        myFixture.addFileToProject(
+            "cycle_b.inc", """
+            #include "cycle_a.inc"
+            #define VAL_INC_B 200
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "cycle_a.inc"
+            
+            void main() {
+                int a = VAL_INC_<caret>A;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro in non-VEX circular include should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("cycle_a.inc", resolved?.containingFile?.name)
+    }
+
     fun testFunctionLikeMacroReference() {
         myFixture.configureByText(
             VexFileType, """
