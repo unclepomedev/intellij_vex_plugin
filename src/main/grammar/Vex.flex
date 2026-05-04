@@ -48,7 +48,7 @@ INCLUDE_KW="#"[ \t]*"include"
   {UNCLOSED_STRING}   { return VexTypes.UNCLOSED_STRING; }
   {ATTRIBUTE}         { return VexTypes.ATTRIBUTE; }
 
-  "#" [^\r\n]*        {
+  "#" ([^\r\n] | "\\"(\r\n|\r|\n))* {
                           String text = yytext().toString();
                           MacroMatch match = VexLexerMacroHandler.INSTANCE.handleMacro(text);
                           if (match != null) {
@@ -184,7 +184,7 @@ INCLUDE_KW="#"[ \t]*"include"
 
 <IN_DEFINE_BODY> {
   [ \t]+              { return TokenType.WHITE_SPACE; }
-  [^\r\n \t][^\r\n]*  { yybegin(YYINITIAL); return VexTypes.MACRO_BODY; }
+  ([^\r\n \t\\] | "\\"(\r\n|\r|\n) | "\\" [^\r\n])([^\r\n\\] | "\\"(\r\n|\r|\n) | "\\" [^\r\n])*  { yybegin(YYINITIAL); return VexTypes.MACRO_BODY; }
   [\r\n]              { yybegin(YYINITIAL); yypushback(1); }
   [^]                 { yybegin(YYINITIAL); yypushback(1); }
 }

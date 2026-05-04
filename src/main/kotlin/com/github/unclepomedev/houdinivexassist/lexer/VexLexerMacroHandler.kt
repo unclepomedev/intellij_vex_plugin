@@ -5,15 +5,15 @@ import com.intellij.psi.tree.IElementType
 
 object VexLexerMacroHandler {
 
-    private val includeRegex = Regex("^#[ \\t]*include([ \\t]+.*|)$")
+    private val includeRegex = Regex("^#[ \\t]*include([ \\t]+.*|)$", RegexOption.DOT_MATCHES_ALL)
     private val defineRegex = Regex("^#[ \\t]*define[ \\t]+[a-zA-Z_]\\w*.*$", RegexOption.DOT_MATCHES_ALL)
-    private val ifdefRegex = Regex("^#[ \\t]*ifdef[ \\t]+[a-zA-Z_]\\w*.*$")
-    private val ifndefRegex = Regex("^#[ \\t]*ifndef[ \\t]+[a-zA-Z_]\\w*.*$")
-    private val undefRegex = Regex("^#[ \\t]*undef[ \\t]+[a-zA-Z_]\\w*.*$")
-    private val ifRegex = Regex("^#[ \\t]*if([ \\t]+.*|[ \\t]*)$")
-    private val elifRegex = Regex("^#[ \\t]*elif([ \\t]+.*|[ \\t]*)$")
-    private val elseRegex = Regex("^#[ \\t]*else[ \\t]*(//.*|/\\*.*)?$")
-    private val endifRegex = Regex("^#[ \\t]*endif[ \\t]*(//.*|/\\*.*)?$")
+    private val ifdefRegex = Regex("^#[ \\t]*ifdef[ \\t]+[a-zA-Z_]\\w*.*$", RegexOption.DOT_MATCHES_ALL)
+    private val ifndefRegex = Regex("^#[ \\t]*ifndef[ \\t]+[a-zA-Z_]\\w*.*$", RegexOption.DOT_MATCHES_ALL)
+    private val undefRegex = Regex("^#[ \\t]*undef[ \\t]+[a-zA-Z_]\\w*.*$", RegexOption.DOT_MATCHES_ALL)
+    private val ifRegex = Regex("^#[ \\t]*if([ \\t]+.*|[ \\t]*)$", RegexOption.DOT_MATCHES_ALL)
+    private val elifRegex = Regex("^#[ \\t]*elif([ \\t]+.*|[ \\t]*)$", RegexOption.DOT_MATCHES_ALL)
+    private val elseRegex = Regex("^#[ \\t]*else[ \\t]*(//.*|/\\*.*)?$", RegexOption.DOT_MATCHES_ALL)
+    private val endifRegex = Regex("^#[ \\t]*endif[ \\t]*(//.*|/\\*.*)?$", RegexOption.DOT_MATCHES_ALL)
 
     enum class MacroKind {
         INCLUDE, DEFINE, IFDEF, IFNDEF, UNDEF, IF, ELIF, ELSE, ENDIF

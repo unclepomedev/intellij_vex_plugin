@@ -102,4 +102,17 @@ class VexLexerMacroHandlerTest {
         assertNull(VexLexerMacroHandler.handleMacro("#define"))
         assertNull(VexLexerMacroHandler.handleMacro("#ifdef"))
     }
+
+    @Test
+    fun testDefineWithNewLineAndEscape() {
+        val match = VexLexerMacroHandler.handleMacro("#define FOO \\\n1")
+        assertEquals(VexTypes.DEFINE_KW, match?.type)
+        assertEquals(7, match?.keywordLength)
+    }
+
+    @Test
+    fun testDefineWithNewLineNoEscape() {
+        val match = VexLexerMacroHandler.handleMacro("#define FOO 1\n#define BAR 2")
+        assertEquals(VexTypes.DEFINE_KW, match?.type)
+    }
 }
