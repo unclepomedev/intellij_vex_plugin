@@ -34,7 +34,6 @@ STRING=(\"[^\r\n\"]*\")|(\'[^\r\n\']*\')
 UNCLOSED_STRING=(\"[^\r\n\"]*)|(\'[^\r\n\']*)
 ATTRIBUTE=[fiuvsp34md]?(\[\])?\@[a-zA-Z0-9_]+
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
-INCLUDE_KW="#"[ \t]*"include"
 
 %%
 
