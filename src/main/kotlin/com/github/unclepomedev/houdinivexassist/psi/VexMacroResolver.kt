@@ -1,10 +1,12 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 
 object VexMacroResolver {
+    val ORIGINAL_FILE_PATH_KEY = Key.create<String>("VEX_ORIGINAL_FILE_PATH")
     private val resolvingFiles = ThreadLocal.withInitial { mutableSetOf<String>() }
 
     private fun resolveInFile(
@@ -13,7 +15,9 @@ object VexMacroResolver {
         name: String,
         maxOffsetExclusive: Int
     ): VexMacroDef? {
-        val key = sourceFile.originalFile.virtualFile?.path ?: sourceFile.name
+        val key = file.getUserData(ORIGINAL_FILE_PATH_KEY)
+            ?: sourceFile.originalFile.virtualFile?.path
+            ?: sourceFile.name
         val visited = resolvingFiles.get()
         if (!visited.add(key)) return null
 
