@@ -844,4 +844,26 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testMacroWithLineContinuationNotHighlightedAsError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #define MULTI_LINE \
+                int x = 1;
+            
+            #define FUNC_MACRO(a, b) \
+                ((a) + \
+                 (b))
+            
+            #if 1 \
+                && 1
+            void main() {
+                int a = 1;
+            }
+            #endif
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }
