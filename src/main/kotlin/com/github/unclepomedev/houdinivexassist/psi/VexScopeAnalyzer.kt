@@ -117,7 +117,7 @@ object VexScopeAnalyzer {
             val visited = mutableSetOf<String>()
 
             fun visit(current: PsiFile) {
-                val path = current.originalFile.virtualFile?.path ?: current.name
+                val path = VexFile.getFileKey(current)
                 if (!visited.add(path)) return
 
                 val vexFile = if (current is VexFile) {
@@ -127,8 +127,8 @@ object VexScopeAnalyzer {
                     CachedValuesManager.getCachedValue(current) {
                         val parsed = PsiFileFactory.getInstance(project)
                             .createFileFromText(current.name, VexLanguage.INSTANCE, current.text) as VexFile
-                        val originalPath = current.originalFile.virtualFile?.path ?: current.name
-                        parsed.putUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY, originalPath)
+                        val originalPath = VexFile.getFileKey(current)
+                        parsed.putUserData(VexFile.ORIGINAL_FILE_PATH_KEY, originalPath)
                         CachedValueProvider.Result.create(parsed, current)
                     }
                 }

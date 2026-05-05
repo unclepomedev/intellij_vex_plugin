@@ -11,12 +11,31 @@ object VexPreprocessorEvaluator {
 
     private data class BranchState(var hasTakenBranch: Boolean, var isActive: Boolean)
 
+    private val evaluatingFiles = ThreadLocal.withInitial { mutableSetOf<String>() }
+
     fun isActive(element: PsiElement?): Boolean {
         if (element == null || element is PsiFile) return true
         val file = element.containingFile ?: return true
-        val inactiveRanges = getInactiveRanges(file)
-        val offset = element.textOffset
-        return inactiveRanges.none { offset in it.startOffset until it.endOffset }
+
+        val key = file.getUserData(VexFile.ORIGINAL_FILE_PATH_KEY)
+            ?: file.originalFile.virtualFile?.path
+            ?: file.name
+
+        val visited = evaluatingFiles.get()
+        if (visited.contains(key)) {
+            // If already evaluating this file, assume active to avoid infinite recursion
+            return true
+        }
+        visited.add(key)
+
+        try {
+            val inactiveRanges = getInactiveRanges(file)
+            val offset = element.textOffset
+            val isActive = inactiveRanges.none { offset in it.startOffset until it.endOffset }
+            return isActive
+        } finally {
+            visited.remove(key)
+        }
     }
 
     private fun getInactiveRanges(file: PsiFile): List<TextRange> {

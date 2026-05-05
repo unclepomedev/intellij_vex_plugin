@@ -6,20 +6,17 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 
 object VexMacroResolver {
-    val ORIGINAL_FILE_PATH_KEY = Key.create<String>("VEX_ORIGINAL_FILE_PATH")
-    private val resolvingFiles = ThreadLocal.withInitial { mutableSetOf<String>() }
-
     private fun resolveInFile(
         file: PsiFile,
-        sourceFile: PsiFile,
         name: String,
-        maxOffsetExclusive: Int
+        maxOffsetExclusive: Int,
+        visited: MutableSet<String>
     ): VexMacroDef? {
-        val key = file.getUserData(ORIGINAL_FILE_PATH_KEY)
-            ?: sourceFile.originalFile.virtualFile?.path
-            ?: sourceFile.name
-        val visited = resolvingFiles.get()
-        if (!visited.add(key)) return null
+        val key = VexFile.getFileKey(file)
+
+        if (!visited.add(key)) {
+            return null
+        }
 
         try {
             var best: VexMacroDef? = null
@@ -31,14 +28,15 @@ object VexMacroResolver {
                 .sortedBy { it.textOffset }
 
             for (event in events) {
+                if (!VexPreprocessorEvaluator.isActive(event)) continue
                 when (event) {
                     is VexMacroDef -> if (event.identifier?.text == name) best = event
                     is VexIncludeDirective -> {
-                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event, sourceFile) ?: continue
+                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event, file) ?: continue
                         val vexFile = (includedPsi as? VexFile)
                             ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
                             ?: continue
-                        val nested = resolveInFile(vexFile, includedPsi, name, Int.MAX_VALUE)
+                        val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited)
                         if (nested != null) best = nested
                     }
                 }
@@ -51,6 +49,6 @@ object VexMacroResolver {
 
     fun resolveMacro(context: PsiElement, name: String): PsiElement? {
         val file = context.containingFile ?: return null
-        return resolveInFile(file, file, name, context.textOffset)
+        return resolveInFile(file, name, context.textOffset, mutableSetOf())
     }
 }

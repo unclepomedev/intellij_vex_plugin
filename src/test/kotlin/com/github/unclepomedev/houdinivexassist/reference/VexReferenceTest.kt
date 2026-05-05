@@ -713,6 +713,31 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("cycle_a.inc", resolved?.containingFile?.name)
     }
 
+    fun testMacroInfiniteRecursionWithActiveCheck() {
+        myFixture.addFileToProject(
+            "rec.h", """
+            #define REC_VAL 1
+            #include "rec.h"
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "rec.h"
+            void main() {
+                int x = REC_<caret>VAL;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Recursive macro should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("REC_VAL", (resolved as VexMacroDef).name)
+    }
+
     fun testFunctionLikeMacroReference() {
         myFixture.configureByText(
             VexFileType, """
