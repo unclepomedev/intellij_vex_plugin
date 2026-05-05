@@ -21,7 +21,7 @@ object VexScopeAnalyzer {
                 val path = VexFile.getFileKey(current)
                 if (!visited.add(path)) return
 
-                val vexFile = VexSyntheticFileProvider.getAsVexFile(current)
+                val vexFile = VexSyntheticFileProvider.getAsVexFile(current) ?: return
 
                 result.add(vexFile)
 

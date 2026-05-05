@@ -1,27 +1,34 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
 import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 
 object VexSyntheticFileProvider {
+    private val LOG = Logger.getInstance(VexSyntheticFileProvider::class.java)
 
     /**
-     * Parses and returns the specified PsiFile (non-VEX file such as .h) as a VexFile.
-     * Results are cached and reused unless the original file is modified (to avoid heavy operations).
+     * Parses the given PsiFile (non-VEX such as .h) as a VexFile.
+     * Returns null if the file cannot be parsed as VEX. Results are cached.
      */
-    fun getAsVexFile(file: PsiFile): VexFile {
+    fun getAsVexFile(file: PsiFile): VexFile? {
         if (file is VexFile) return file
 
         return CachedValuesManager.getCachedValue(file) {
             val project = file.project
-            val parsed = PsiFileFactory.getInstance(project)
-                .createFileFromText(file.name, VexLanguage.INSTANCE, file.text) as VexFile
+            val parsed = try {
+                PsiFileFactory.getInstance(project)
+                    .createFileFromText(file.name, VexLanguage.INSTANCE, file.text) as? VexFile
+            } catch (e: Exception) {
+                LOG.warn("Failed to parse ${file.name} as VexFile", e)
+                null
+            }
 
             val originalUrl = file.originalFile.virtualFile?.url
-            if (originalUrl != null) {
+            if (parsed != null && originalUrl != null) {
                 parsed.putUserData(VexFile.ORIGINAL_FILE_PATH_KEY, originalUrl)
             }
 

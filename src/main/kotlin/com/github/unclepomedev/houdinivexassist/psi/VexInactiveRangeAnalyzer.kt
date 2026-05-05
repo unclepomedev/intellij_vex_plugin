@@ -32,7 +32,7 @@ object VexInactiveRangeAnalyzer {
 
                 is VexIncludeDirective -> if (wasActive) {
                     val resolved = VexIncludeResolver.resolveIncludeFile(event, file) ?: continue
-                    val vexFile = VexSyntheticFileProvider.getAsVexFile(resolved)
+                    val vexFile = VexSyntheticFileProvider.getAsVexFile(resolved) ?: continue
 
                     val key = VexFile.getFileKey(vexFile)
                     if (visited.add(key)) {

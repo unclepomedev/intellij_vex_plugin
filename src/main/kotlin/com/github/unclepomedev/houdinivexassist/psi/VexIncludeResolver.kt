@@ -13,9 +13,10 @@ import java.io.File
 object VexIncludeResolver {
 
     val includePathTracker = ModificationTracker {
+        // Mask to unsigned 32 bits to prevent sign extension from corrupting the upper half on XOR.
         val settings = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
-        val includeHash = settings?.includePath?.hashCode()?.toLong() ?: 0L
-        val hfsHash = settings?.hfsPath?.hashCode()?.toLong() ?: 0L
+        val includeHash = (settings?.includePath?.hashCode()?.toLong() ?: 0L) and 0xFFFFFFFFL
+        val hfsHash = (settings?.hfsPath?.hashCode()?.toLong() ?: 0L) and 0xFFFFFFFFL
         includeHash xor (hfsHash shl 32)
     }
 

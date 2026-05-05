@@ -1,8 +1,9 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
 object VexConditionEvaluator {
-    private val definedRegex = Regex("""defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
-    private val notDefinedRegex = Regex("""!\s*defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
+    // \b ensures "defined" is not part of a longer identifier (e.g. "definedX").
+    private val definedRegex = Regex("""\bdefined\b\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
+    private val notDefinedRegex = Regex("""!\s*\bdefined\b\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
 
     fun evaluate(conditionText: String?, definedMacros: Set<String>): Boolean {
         val text = conditionText?.trim()

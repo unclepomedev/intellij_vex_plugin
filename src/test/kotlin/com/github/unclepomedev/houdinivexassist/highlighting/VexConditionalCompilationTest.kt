@@ -196,7 +196,7 @@ class VexConditionalCompilationTest : VexTestBase() {
             #if 0 && defined(FOO)
             int a = 1;
             #endif
-            int <error descr="Variable 'a' is already defined in this scope">a</error> = 2;
+            int a = 2;
             int <error descr="Variable 'a' is already defined in this scope">a</error> = 3;
             """.trimIndent()
         )
