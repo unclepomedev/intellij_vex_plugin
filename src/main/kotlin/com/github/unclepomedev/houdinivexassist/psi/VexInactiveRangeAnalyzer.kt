@@ -15,8 +15,7 @@ object VexInactiveRangeAnalyzer {
      */
     fun analyze(file: PsiFile, seedDefinedMacros: Set<String>): List<TextRange> {
         val definedMacros = seedDefinedMacros.toMutableSet()
-        val visitedIncludes = mutableSetOf(VexFile.getFileKey(file))
-        return collect(file, definedMacros, visitedIncludes, trackRanges = true)
+        return process(file, definedMacros, mutableSetOf(), outMap = null, trackRanges = true)
     }
 
     /**
@@ -26,87 +25,60 @@ object VexInactiveRangeAnalyzer {
      */
     fun analyzeWithIncludes(rootFile: PsiFile): Map<String, List<TextRange>> {
         val result = mutableMapOf<String, List<TextRange>>()
-        val definedMacros = mutableSetOf<String>()
-        val visited = mutableSetOf<String>()
-        analyzeFileWithContext(rootFile, definedMacros, visited, result)
+        process(rootFile, mutableSetOf(), mutableSetOf(), result, trackRanges = true)
         return result
     }
 
-    private fun analyzeFileWithContext(
+    private fun process(
         file: PsiFile,
         definedMacros: MutableSet<String>,
-        visited: MutableSet<String>,
-        out: MutableMap<String, List<TextRange>>,
-    ) {
-        val key = VexFile.getFileKey(file)
-        if (!visited.add(key)) return
-
-        val stack = VexBranchStack(file.textLength, trackRanges = true)
-        for (event in collectEvents(file)) {
-            val wasActive = stack.isActive
-            when (event) {
-                is VexPreprocessorDirective -> stack.processDirective(event, definedMacros)
-                is VexMacroDef -> if (wasActive) event.identifier?.text?.let { definedMacros.add(it) }
-                is VexIncludeDirective -> if (wasActive) {
-                    val resolved = VexIncludeResolver.resolveIncludeFile(event, file) ?: continue
-                    val vexFile = VexSyntheticFileProvider.getAsVexFile(resolved) ?: continue
-                    analyzeFileWithContext(vexFile, definedMacros, visited, out)
-                }
-            }
-        }
-        out[key] = stack.finalizeRanges()
-    }
-
-    private fun collect(
-        file: PsiFile,
-        definedMacros: MutableSet<String>,
-        visited: MutableSet<String>,
+        inStack: MutableSet<String>,
+        outMap: MutableMap<String, List<TextRange>>?,
         trackRanges: Boolean
     ): List<TextRange> {
-        val stack = VexBranchStack(file.textLength, trackRanges = trackRanges)
-        val events = collectEvents(file)
+        val key = VexFile.getFileKey(file)
+        if (!inStack.add(key)) return emptyList()
 
-        for (event in events) {
-            val wasActive = stack.isActive
+        try {
+            val shouldTrack = trackRanges && (outMap == null || key !in outMap)
+            val stack = VexBranchStack(file.textLength, trackRanges = shouldTrack)
 
-            when (event) {
-                is VexPreprocessorDirective -> stack.processDirective(event, definedMacros)
-                is VexMacroDef -> {
-                    if (wasActive) event.identifier?.text?.let { definedMacros.add(it) }
-                }
-
-                is VexIncludeDirective -> if (wasActive) {
-                    val resolved = VexIncludeResolver.resolveIncludeFile(event, file) ?: continue
-                    val vexFile = VexSyntheticFileProvider.getAsVexFile(resolved) ?: continue
-
-                    val key = VexFile.getFileKey(vexFile)
-                    if (visited.add(key)) {
-                        try {
-                            // Sub-files only contribute to definedMacros, not to the parent's inactive ranges.
-                            collect(vexFile, definedMacros, visited, trackRanges = false)
-                        } finally {
-                            visited.remove(key)
-                        }
+            for (event in collectEvents(file)) {
+                val wasActive = stack.isActive
+                when (event) {
+                    is VexPreprocessorDirective -> stack.processDirective(event, definedMacros)
+                    is VexMacroDef -> if (wasActive) event.identifier?.text?.let { definedMacros.add(it) }
+                    is VexIncludeDirective -> if (wasActive) {
+                        val resolved = VexIncludeResolver.resolveIncludeFile(event, file) ?: continue
+                        val vexFile = VexSyntheticFileProvider.getAsVexFile(resolved) ?: continue
+                        process(vexFile, definedMacros, inStack, outMap, trackRanges = outMap != null)
                     }
                 }
             }
+
+            val ranges = stack.finalizeRanges()
+            if (shouldTrack && outMap != null) {
+                outMap[key] = ranges
+            }
+            return ranges
+        } finally {
+            inStack.remove(key)
         }
-        return stack.finalizeRanges()
     }
 
     private fun collectEvents(file: PsiFile): List<PsiElement> {
-        val list = mutableListOf<PsiElement>()
+        val events = mutableListOf<PsiElement>()
         file.accept(object : VexVisitor() {
             override fun visitPreprocessorDirective(o: VexPreprocessorDirective) {
-                list.add(o)
+                events.add(o)
             }
 
             override fun visitMacroDef(o: VexMacroDef) {
-                list.add(o)
+                events.add(o)
             }
 
             override fun visitIncludeDirective(o: VexIncludeDirective) {
-                list.add(o)
+                events.add(o)
             }
 
             override fun visitElement(element: PsiElement) {
@@ -114,7 +86,7 @@ object VexInactiveRangeAnalyzer {
             }
         })
 
-        return list.sortedWith(compareBy({ it.textOffset }, {
+        return events.sortedWith(compareBy({ it.textOffset }, {
             when (it) {
                 is VexPreprocessorDirective -> 0
                 is VexMacroDef -> 1

@@ -248,4 +248,31 @@ class VexConditionalCompilationTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testRootSelectionPrefersActiveIncluder() {
+        myFixture.addFileToProject(
+            "inactive_root.vfl", """
+            #if 0
+            #include "child.vfl"
+            #endif
+        """.trimIndent()
+        )
+        myFixture.addFileToProject(
+            "active_root.vfl", """
+            #define ACTIVE
+            #include "child.vfl"
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            "child.vfl", """
+            #ifdef ACTIVE
+            int shared = 1;
+            #endif
+            int <error descr="Variable 'shared' is already defined in this scope">shared</error> = 2;
+        """.trimIndent()
+        )
+
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }

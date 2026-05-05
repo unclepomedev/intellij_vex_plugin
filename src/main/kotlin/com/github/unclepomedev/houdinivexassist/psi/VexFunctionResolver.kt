@@ -11,6 +11,12 @@ import com.intellij.psi.PsiElement
 object VexFunctionResolver {
     private const val EXACT_MATCH_WEIGHT = 1000
 
+    private val VexFunctionDef.paramCount: Int
+        get() = parameterListDef?.parameterDefList?.size ?: 0
+
+    private val VexFunctionDef.paramTypes: List<VexType>
+        get() = parameterListDef?.parameterDefList?.map { VexTypeExtractor.extractType(it) } ?: emptyList()
+
     /**
      * Finds and returns the VexFunctionDef of the specified function name.
      * When argTypes is provided, resolves by matching type signatures.
@@ -32,10 +38,7 @@ object VexFunctionResolver {
         }
 
         if (arity == null) return candidates.firstOrNull()
-        return candidates.firstOrNull { def ->
-            val paramCount = def.parameterListDef?.parameterDefList?.size ?: 0
-            paramCount == arity
-        } ?: candidates.firstOrNull()
+        return candidates.firstOrNull { it.paramCount == arity } ?: candidates.firstOrNull()
     }
 
     /**
@@ -51,8 +54,7 @@ object VexFunctionResolver {
         // Try local function first (resolve by type signature)
         val localFunc = resolveFunction(element, funcName, argTypes = argTypes)
         if (localFunc is VexFunctionDef) {
-            val params = localFunc.parameterListDef?.parameterDefList ?: return null
-            return params.map { VexTypeExtractor.extractType(it) }
+            return localFunc.paramTypes
         }
 
         // Try API functions
@@ -192,29 +194,21 @@ object VexFunctionResolver {
         candidates: Collection<VexFunctionDef>,
         argTypes: List<VexType>
     ): VexFunctionDef? {
-        val sameArity = candidates.filter {
-            (it.parameterListDef?.parameterDefList?.size ?: 0) == argTypes.size
-        }
+        val sameArity = candidates.filter { it.paramCount == argTypes.size }
         if (sameArity.isEmpty()) return null
 
         val fullyAssignable = sameArity.filter { candidate ->
-            val paramTypes =
-                candidate.parameterListDef?.parameterDefList?.map { VexTypeExtractor.extractType(it) } ?: emptyList()
-            calculateMatchScore(paramTypes, argTypes) == Int.MAX_VALUE
+            calculateMatchScore(candidate.paramTypes, argTypes) == Int.MAX_VALUE
         }
 
         if (fullyAssignable.isNotEmpty()) {
             return fullyAssignable.maxByOrNull { candidate ->
-                val paramTypes = candidate.parameterListDef?.parameterDefList?.map { VexTypeExtractor.extractType(it) }
-                    ?: emptyList()
-                calculatePartialMatchScore(paramTypes, argTypes)
+                calculatePartialMatchScore(candidate.paramTypes, argTypes)
             }
         }
 
         return sameArity.maxByOrNull { candidate ->
-            val paramTypes =
-                candidate.parameterListDef?.parameterDefList?.map { VexTypeExtractor.extractType(it) } ?: emptyList()
-            calculatePartialMatchScore(paramTypes, argTypes)
+            calculatePartialMatchScore(candidate.paramTypes, argTypes)
         }
     }
 

@@ -99,8 +99,16 @@ class VexDeclarationAnnotator : Annotator {
     }
 
     private fun isPriorSymbol(candidate: PsiElement, current: PsiElement): Boolean {
-        return candidate.containingFile != current.containingFile ||
-                candidate.textOffset < current.textOffset
+        val currentFile = current.containingFile
+        val candidateFile = candidate.containingFile
+        if (candidateFile == currentFile) {
+            return candidate.textOffset < current.textOffset
+        }
+        // Cross-file: a candidate is prior only if the include directive that brings its file
+        // into the current (root) file appears before [current]'s offset in the root file.
+        val siteOffsets = VexScopeAnalyzer.getIncludeSiteOffsets(currentFile)
+        val site = siteOffsets[VexFile.getFileKey(candidateFile)] ?: return false
+        return site < current.textOffset
     }
 
     private fun isLocalFunctionBefore(element: PsiElement, name: String): Boolean {

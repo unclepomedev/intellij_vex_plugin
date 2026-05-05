@@ -895,4 +895,22 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testLocalFunctionBeforeIncludeIsNotFlaggedAsConflict() {
+        myFixture.addFileToProject(
+            "lib.h",
+            """
+            void shared_fn() {}
+            """.trimIndent()
+        )
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void shared_fn() {}
+            #include "lib.h"
+            void main() {}
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }
