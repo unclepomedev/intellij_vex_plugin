@@ -703,6 +703,33 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("FOO", (resolved as VexMacroDef).identifier?.text)
     }
 
+    fun testFunctionInIncludeGuardedByParentDefine() {
+        myFixture.addFileToProject(
+            "lib.h", """
+            #ifdef PARENT_FLAG
+            void guarded_fn(int a) {}
+            #endif
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #define PARENT_FLAG
+            #include "lib.h"
+
+            void main() {
+                guarded_<caret>fn(1);
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("guarded_fn must resolve when parent defines PARENT_FLAG", resolved)
+        assertTrue(resolved is VexFunctionDef)
+        assertEquals("guarded_fn", (resolved as VexFunctionDef).identifier.text)
+    }
+
     fun testNestedRelativeIncludeInNonVexFile() {
         myFixture.tempDirFixture.findOrCreateDir("subdir")
 

@@ -1,5 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.CachedValueProvider
@@ -8,6 +9,30 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 
 object VexScopeAnalyzer {
+
+    /**
+     * Inactive ranges for the root file and every transitively-included file, computed
+     * with parent-file macro context propagated across includes. Required because
+     * [VexPreprocessorEvaluator.isActive] caches per-file ranges with no parent context,
+     * which mis-evaluates `#ifdef PARENT_MACRO` inside included headers.
+     */
+    private fun activityMap(rootFile: PsiFile): Map<String, List<TextRange>> {
+        return CachedValuesManager.getCachedValue(rootFile) {
+            val map = VexInactiveRangeAnalyzer.analyzeWithIncludes(rootFile)
+            CachedValueProvider.Result.create(
+                map,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
+        }
+    }
+
+    private fun isActiveIn(element: PsiElement, map: Map<String, List<TextRange>>): Boolean {
+        val file = element.containingFile ?: return true
+        val ranges = map[VexFile.getFileKey(file)] ?: return VexPreprocessorEvaluator.isActive(element)
+        val offset = element.textOffset
+        return ranges.none { offset in it.startOffset until it.endOffset }
+    }
 
     /**
      * Recursively retrieves the specified VexFile and all files it includes.
@@ -76,9 +101,10 @@ object VexScopeAnalyzer {
     fun getVisibleFunctions(element: PsiElement): List<VexFunctionDef> {
         val file = element.containingFile as? VexFile ?: return emptyList()
         return CachedValuesManager.getCachedValue(file) {
+            val map = activityMap(file)
             val funcs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
-            }.filter { VexPreprocessorEvaluator.isActive(it) }
+            }.filter { isActiveIn(it, map) }
             CachedValueProvider.Result.create(
                 funcs,
                 PsiModificationTracker.MODIFICATION_COUNT,
@@ -90,9 +116,10 @@ object VexScopeAnalyzer {
     fun getVisibleFunctionsGrouped(element: PsiElement): Map<String, List<VexFunctionDef>> {
         val file = element.containingFile as? VexFile ?: return emptyMap()
         return CachedValuesManager.getCachedValue(file) {
+            val map = activityMap(file)
             val funcs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
-            }.filter { VexPreprocessorEvaluator.isActive(it) }
+            }.filter { isActiveIn(it, map) }
                 .groupBy { it.identifier.text }
 
             CachedValueProvider.Result.create(
@@ -106,9 +133,10 @@ object VexScopeAnalyzer {
     fun getVisibleStructsGrouped(element: PsiElement): Map<String, List<VexStructDef>> {
         val file = element.containingFile as? VexFile ?: return emptyMap()
         return CachedValuesManager.getCachedValue(file) {
+            val map = activityMap(file)
             val structs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexStructDef::class.java)
-            }.filter { VexPreprocessorEvaluator.isActive(it) }
+            }.filter { isActiveIn(it, map) }
                 .groupBy { it.identifier?.text ?: "" }
 
             CachedValueProvider.Result.create(
@@ -122,9 +150,10 @@ object VexScopeAnalyzer {
     fun getVisibleStructs(element: PsiElement): List<VexStructDef> {
         val file = element.containingFile as? VexFile ?: return emptyList()
         return CachedValuesManager.getCachedValue(file) {
+            val map = activityMap(file)
             val structs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexStructDef::class.java)
-            }.filter { VexPreprocessorEvaluator.isActive(it) }
+            }.filter { isActiveIn(it, map) }
             CachedValueProvider.Result.create(
                 structs,
                 PsiModificationTracker.MODIFICATION_COUNT,
@@ -161,9 +190,10 @@ object VexScopeAnalyzer {
 
     fun getLocalFunctionNames(file: VexFile): Set<String> {
         return CachedValuesManager.getCachedValue(file) {
+            val map = activityMap(file)
             val names = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
-            }.filter { VexPreprocessorEvaluator.isActive(it) }.mapNotNull { it.identifier.text }.toSet()
+            }.filter { isActiveIn(it, map) }.mapNotNull { it.identifier.text }.toSet()
             CachedValueProvider.Result.create(
                 names,
                 PsiModificationTracker.MODIFICATION_COUNT,

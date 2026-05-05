@@ -84,8 +84,9 @@ object VexMacroResolver {
     ): VexMacroDef? {
         val includedPsi = VexIncludeResolver.resolveIncludeFile(directive, currentFile) ?: return null
 
+        // Parse non-VEX headers (e.g., .h) as synthetic VexFiles.
         val vexFile = includedPsi as? VexFile
-            ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
+            ?: VexSyntheticFileProvider.getAsVexFile(includedPsi)
             ?: return null
 
         return resolveInFile(vexFile, name, Int.MAX_VALUE, visited, definedSoFar.toSet())
