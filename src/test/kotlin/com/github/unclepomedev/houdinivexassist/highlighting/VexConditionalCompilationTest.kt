@@ -218,6 +218,24 @@ class VexConditionalCompilationTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false, true)
     }
 
+    fun testHeaderOpenedDirectlyUsesParentMacroContext() {
+        myFixture.addFileToProject(
+            "main.vfl", """
+            #define PARENT_FLAG
+            #include "lib.vfl"
+            """.trimIndent()
+        )
+        myFixture.configureByText(
+            "lib.vfl", """
+            #ifdef PARENT_FLAG
+            int shared = 1;
+            #endif
+            int <error descr="Variable 'shared' is already defined in this scope">shared</error> = 2;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
     fun testIncludeDoesNotLeakInactiveRangesToParent() {
         myFixture.addFileToProject("header.vfl", "#if 0\n#endif")
         myFixture.configureByText(
