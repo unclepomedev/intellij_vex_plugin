@@ -18,16 +18,11 @@ class VexDeclarationAnnotator : Annotator {
         }
     }
 
-    // --- Syntax Check (correcting destruction caused by hacks) ---
-
     private fun checkMissingSemicolon(element: VexExprStatement, holder: AnnotationHolder) {
-        val hasSemicolon = element.node.findChildByType(VexTypes.SEMICOLON) != null
-        if (!hasSemicolon) {
+        if (element.node.findChildByType(VexTypes.SEMICOLON) == null) {
             reportError(holder, element, "Missing ';'")
         }
     }
-
-    // --- Declaration Conflict Checks ---
 
     private fun checkVariableDeclaration(element: VexDeclarationItem, holder: AnnotationHolder) {
         if (!VexPreprocessorEvaluator.isActive(element)) return
@@ -88,43 +83,37 @@ class VexDeclarationAnnotator : Annotator {
         }
     }
 
-    // --- Conflict Checks ---
-
     private fun isAlreadyDefinedInScope(element: VexDeclarationItem, name: String, scope: PsiElement): Boolean {
         return VexScopeAnalyzer.getDeclarationsInScope(scope).any { prior ->
-            prior != element &&
-                    prior.identifier.text == name &&
-                    prior.textOffset < element.textOffset
+            val isPrior = prior.containingFile != element.containingFile || prior.textOffset < element.textOffset
+            prior != element && prior.identifier.text == name && isPrior
         }
     }
-
 
     private fun isDefinedAsParameter(name: String, scope: PsiElement): Boolean {
         return VexScopeAnalyzer.getParametersForScope(scope).any { it.identifier.text == name }
     }
 
     private fun isStandardFunction(name: String, context: PsiElement): Boolean {
-        val apiProvider = context.project.getService(VexApiProvider::class.java)
-        return apiProvider?.hasFunction(name) == true
+        return context.project.getService(VexApiProvider::class.java)?.hasFunction(name) == true
     }
 
     private fun isLocalFunctionBefore(element: PsiElement, name: String): Boolean {
-        return VexScopeAnalyzer.getVisibleFunctions(element).any {
-            it.identifier.text == name && it.textOffset < element.textOffset
-        }
+        val candidates = VexScopeAnalyzer.getVisibleFunctionsGrouped(element)[name] ?: return false
+        return candidates.any { it.textOffset < element.textOffset }
     }
 
     private fun isStructNameBefore(element: PsiElement, name: String): Boolean {
-        return VexScopeAnalyzer.getVisibleStructs(element).any {
-            it.identifier?.text == name && it.textOffset < element.textOffset
-        }
+        val candidates = VexScopeAnalyzer.getVisibleStructsGrouped(element)[name] ?: return false
+        return candidates.any { it.textOffset < element.textOffset }
     }
 
     private fun hasExactOverloadConflict(element: VexFunctionDef, name: String): Boolean {
+        val candidates = VexScopeAnalyzer.getVisibleFunctionsGrouped(element)[name] ?: return false
         val myParamTypes = extractParameterTypes(element)
-        return VexScopeAnalyzer.getVisibleFunctions(element).any { sibling ->
+
+        return candidates.any { sibling ->
             sibling != element &&
-                    sibling.identifier.text == name &&
                     sibling.textOffset < element.textOffset &&
                     extractParameterTypes(sibling) == myParamTypes
         }
@@ -132,8 +121,6 @@ class VexDeclarationAnnotator : Annotator {
 
     private fun extractParameterTypes(funcDef: VexFunctionDef) =
         funcDef.parameterListDef?.parameterDefList?.map(VexTypeExtractor::extractType) ?: emptyList()
-
-    // --- Error Reporting Utility ---
 
     private fun reportError(holder: AnnotationHolder, targetElement: PsiElement, message: String) {
         holder.newAnnotation(HighlightSeverity.ERROR, message)

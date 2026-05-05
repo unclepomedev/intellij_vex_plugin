@@ -2,8 +2,14 @@ package com.github.unclepomedev.houdinivexassist.psi
 
 import com.intellij.openapi.util.TextRange
 
-class VexBranchStack(private val maxTextLength: Int) {
-
+/**
+ * Tracks the active/inactive state of preprocessor branches (#if, #ifdef, etc.).
+ * When [trackRanges] is true, it also records the [TextRange]s of inactive code blocks.
+ */
+class VexBranchStack(
+    private val maxTextLength: Int,
+    private val trackRanges: Boolean = true,
+) {
     private data class BranchState(var hasTakenBranch: Boolean, var isActive: Boolean)
 
     private val stack = mutableListOf<BranchState>()
@@ -33,7 +39,7 @@ class VexBranchStack(private val maxTextLength: Int) {
             }
         }
 
-        trackRange(wasActive, directive)
+        if (trackRanges) trackRange(wasActive, directive)
     }
 
     fun finalizeRanges(): List<TextRange> {

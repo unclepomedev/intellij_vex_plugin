@@ -1,7 +1,6 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
 object VexConditionEvaluator {
-
     private val definedRegex = Regex("""defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
     private val notDefinedRegex = Regex("""!\s*defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
 
@@ -9,11 +8,19 @@ object VexConditionEvaluator {
         val text = conditionText?.trim()
         if (text.isNullOrEmpty()) return true
 
-        if (text == "0") return false
-        if (text == "1") return true
+        // Numeric literal: treat 0 as false, any other integer (incl. 00, +0 sign-prefixed nonzero, -1) as truth value.
+        // Using toIntOrNull avoids partial-match pitfalls like "0" vs "00" and handles signed forms uniformly.
+        text.toIntOrNull()?.let { return it != 0 }
 
-        notDefinedRegex.find(text)?.let { return !definedMacros.contains(it.groupValues[1]) }
-        definedRegex.find(text)?.let { return definedMacros.contains(it.groupValues[1]) }
+        notDefinedRegex.matchEntire(text)?.let { match ->
+            val (macroName) = match.destructured
+            return !definedMacros.contains(macroName)
+        }
+
+        definedRegex.matchEntire(text)?.let { match ->
+            val (macroName) = match.destructured
+            return definedMacros.contains(macroName)
+        }
 
         // Default to true for unsupported complex expressions to avoid aggressive hiding
         return true

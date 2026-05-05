@@ -3,25 +3,22 @@ package com.github.unclepomedev.houdinivexassist.psi
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiTreeUtil
 
 object VexInactiveRangeAnalyzer {
 
     fun analyze(file: PsiFile): List<TextRange> {
         val definedMacros = mutableSetOf<String>()
         val visitedIncludes = mutableSetOf(VexFile.getFileKey(file))
-        val stack = VexBranchStack(file.textLength)
-
-        collect(file, definedMacros, visitedIncludes, stack)
-        return stack.finalizeRanges()
+        return collect(file, definedMacros, visitedIncludes, trackRanges = true)
     }
 
     private fun collect(
         file: PsiFile,
         definedMacros: MutableSet<String>,
         visited: MutableSet<String>,
-        stack: VexBranchStack
-    ) {
+        trackRanges: Boolean
+    ): List<TextRange> {
+        val stack = VexBranchStack(file.textLength, trackRanges = trackRanges)
         val events = collectEvents(file)
 
         for (event in events) {
@@ -29,13 +26,19 @@ object VexInactiveRangeAnalyzer {
 
             when (event) {
                 is VexPreprocessorDirective -> stack.processDirective(event, definedMacros)
-                is VexMacroDef -> if (wasActive) event.identifier?.text?.let { definedMacros.add(it) }
+                is VexMacroDef -> {
+                    if (wasActive) event.identifier?.text?.let { definedMacros.add(it) }
+                }
+
                 is VexIncludeDirective -> if (wasActive) {
-                    val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event, file) as? VexFile ?: continue
-                    val key = VexFile.getFileKey(includedPsi)
+                    val resolved = VexIncludeResolver.resolveIncludeFile(event, file) ?: continue
+                    val vexFile = VexSyntheticFileProvider.getAsVexFile(resolved)
+
+                    val key = VexFile.getFileKey(vexFile)
                     if (visited.add(key)) {
                         try {
-                            collect(includedPsi, definedMacros, visited, stack)
+                            // Sub-files only contribute to definedMacros, not to the parent's inactive ranges.
+                            collect(vexFile, definedMacros, visited, trackRanges = false)
                         } finally {
                             visited.remove(key)
                         }
@@ -43,19 +46,35 @@ object VexInactiveRangeAnalyzer {
                 }
             }
         }
+        return stack.finalizeRanges()
     }
 
     private fun collectEvents(file: PsiFile): List<PsiElement> {
-        return (PsiTreeUtil.findChildrenOfType(file, VexPreprocessorDirective::class.java) +
-                PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java) +
-                PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java))
-            .sortedWith(compareBy({ it.textOffset }, {
-                // Process directives first at the same offset to accurately affect subsequent macros
-                when (it) {
-                    is VexPreprocessorDirective -> 0
-                    is VexMacroDef -> 1
-                    else -> 2
-                }
-            }))
+        val list = mutableListOf<PsiElement>()
+        file.accept(object : VexVisitor() {
+            override fun visitPreprocessorDirective(o: VexPreprocessorDirective) {
+                list.add(o)
+            }
+
+            override fun visitMacroDef(o: VexMacroDef) {
+                list.add(o)
+            }
+
+            override fun visitIncludeDirective(o: VexIncludeDirective) {
+                list.add(o)
+            }
+
+            override fun visitElement(element: PsiElement) {
+                element.acceptChildren(this)
+            }
+        })
+
+        return list.sortedWith(compareBy({ it.textOffset }, {
+            when (it) {
+                is VexPreprocessorDirective -> 0
+                is VexMacroDef -> 1
+                else -> 2
+            }
+        }))
     }
 }

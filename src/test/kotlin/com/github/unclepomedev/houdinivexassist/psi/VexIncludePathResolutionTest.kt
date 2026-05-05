@@ -36,7 +36,7 @@ class VexIncludePathResolutionTest : VexTestBase() {
             settings.hfsPath = tmpDir.toString()
 
             val expected = standardDir.toString()
-            val result = VexScopeAnalyzer.parseIncludePaths("&;/other/path", ";")
+            val result = VexIncludeResolver.parseIncludePaths("&;/other/path", ";")
             assertEquals(listOf(expected, "/other/path"), result)
         } finally {
             tmpDir.toFile().deleteRecursively()
@@ -54,7 +54,7 @@ class VexIncludePathResolutionTest : VexTestBase() {
             settings.hfsPath = tmpDir.toString()
 
             val expected = frameworkDir.toString()
-            val result = VexScopeAnalyzer.parseIncludePaths("&", ";")
+            val result = VexIncludeResolver.parseIncludePaths("&", ";")
             assertEquals(listOf(expected), result)
         } finally {
             tmpDir.toFile().deleteRecursively()
@@ -65,7 +65,7 @@ class VexIncludePathResolutionTest : VexTestBase() {
         val settings = VexSettingsState.instance
         settings.hfsPath = ""
 
-        val result = VexScopeAnalyzer.parseIncludePaths("&;/some/path", ";")
+        val result = VexIncludeResolver.parseIncludePaths("&;/some/path", ";")
         assertEquals(listOf("/some/path"), result)
     }
 }

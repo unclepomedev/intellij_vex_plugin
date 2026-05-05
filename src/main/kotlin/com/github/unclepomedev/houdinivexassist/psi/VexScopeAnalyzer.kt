@@ -1,125 +1,16 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
-import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
-import com.github.unclepomedev.houdinivexassist.settings.VexSettingsState
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.ModificationTracker
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiManager
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
-import java.io.File
 
 object VexScopeAnalyzer {
-    private val includePathTracker = ModificationTracker {
-        val settings = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
-        val includeHash = settings?.includePath?.hashCode()?.toLong() ?: 0L
-        val hfsHash = settings?.hfsPath?.hashCode()?.toLong() ?: 0L
-        includeHash xor (hfsHash shl 32)
-    }
-
-    /**
-     * Resolves the #include file path to a VirtualFile.
-     */
-    fun resolveIncludeFile(includeDirective: VexIncludeDirective, contextFile: PsiFile? = null): PsiFile? {
-        val pathStringNode = includeDirective.string ?: includeDirective.unclosedString ?: includeDirective.sysString
-        ?: includeDirective.unclosedSysString ?: return null
-        val rawText = pathStringNode.text
-
-        val fileName = rawText.removePrefix("\"").removeSuffix("\"")
-            .removePrefix("'").removeSuffix("'")
-            .removePrefix("<").removeSuffix(">")
-
-        if (fileName.isEmpty()) return null
-
-        val currentFile = contextFile ?: includeDirective.containingFile ?: return null
-
-        return resolveFromCurrentDirectory(currentFile, fileName)
-            ?: resolveFromIncludePaths(currentFile.project, fileName)
-    }
-
-    private fun resolveFromCurrentDirectory(currentFile: PsiFile, fileName: String): PsiFile? {
-        val virtualFile = currentFile.originalFile.virtualFile
-        val currentDir = if (virtualFile != null && virtualFile !is com.intellij.testFramework.LightVirtualFile) {
-            virtualFile.parent
-        } else {
-            val originalUrl = currentFile.getUserData(VexFile.ORIGINAL_FILE_PATH_KEY)
-            if (originalUrl != null) {
-                com.intellij.openapi.vfs.VirtualFileManager.getInstance().findFileByUrl(originalUrl)?.parent
-            } else {
-                null
-            }
-        } ?: return null
-
-        val file = currentDir.findFileByRelativePath(fileName)
-        if (file != null && !file.isDirectory) {
-            return PsiManager.getInstance(currentFile.project).findFile(file)
-        }
-        return null
-    }
-
-    private fun resolveDefaultIncludePath(hfsPath: String): String {
-        if (hfsPath.isEmpty()) return ""
-        val macPath = "$hfsPath/Frameworks/Houdini.framework/Versions/Current/Resources/houdini/vex/include"
-        if (File(macPath).exists()) return macPath
-        val fallback = "$hfsPath/houdini/vex/include"
-        if (File(fallback).exists()) return fallback
-        return ""
-    }
-
-    fun parseIncludePaths(includePathStr: String, pathSeparator: String = File.pathSeparator): List<String> {
-        val settingsState = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
-        val hfsPath = settingsState?.hfsPath ?: ""
-        val defaultInclude by lazy(LazyThreadSafetyMode.NONE) { resolveDefaultIncludePath(hfsPath) }
-
-        // (?<!^[a-zA-Z]) : Backtracking. If the first character is a single letter (e.g., C:), do not split it.
-        // (?!//|\\\\)    : Do not split URL schemes (://) or Windows backslashes (:\).
-        val colonSplitter = Regex("(?<!^[a-zA-Z]):(?!//|\\\\)")
-
-        return includePathStr
-            .split(";")
-            .flatMap { rawSegment ->
-                val segment =
-                    rawSegment.trim() // To ensure the ^ (leading character) in regular expressions works correctly, trim first.
-                if (pathSeparator == ":") segment.split(colonSplitter) else listOf(segment)
-            }
-            .map { segment ->
-                val trimmed = segment.trim()
-                if (trimmed == "&") defaultInclude else trimmed
-            }
-            .filter { it.isNotEmpty() }
-    }
-
-    private fun resolveFromIncludePaths(project: Project, fileName: String): PsiFile? {
-        val settingsState = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
-        val includePathStr = settingsState?.includePath ?: return null
-
-        val paths = parseIncludePaths(includePathStr)
-        for (path in paths) {
-            var dir = LocalFileSystem.getInstance().findFileByPath(path)
-            if (dir == null) {
-                dir = com.intellij.openapi.vfs.VirtualFileManager.getInstance().findFileByUrl(path)
-            }
-
-            if (dir != null && dir.isDirectory) {
-                val file = dir.findFileByRelativePath(fileName)
-                if (file != null && !file.isDirectory) {
-                    return PsiManager.getInstance(project).findFile(file)
-                }
-            }
-        }
-        return null
-    }
 
     /**
      * Recursively retrieves the specified VexFile and all files it includes.
-     * Prevents infinite loops caused by circular references.
      */
     fun getIncludedFiles(file: PsiFile): List<VexFile> {
         return CachedValuesManager.getCachedValue(file) {
@@ -130,45 +21,28 @@ object VexScopeAnalyzer {
                 val path = VexFile.getFileKey(current)
                 if (!visited.add(path)) return
 
-                val vexFile = if (current is VexFile) {
-                    current
-                } else {
-                    val project = current.project
-                    CachedValuesManager.getCachedValue(current) {
-                        val parsed = PsiFileFactory.getInstance(project)
-                            .createFileFromText(current.name, VexLanguage.INSTANCE, current.text) as VexFile
-                        val originalUrl = current.originalFile.virtualFile?.url
-                        if (originalUrl != null) {
-                            parsed.putUserData(VexFile.ORIGINAL_FILE_PATH_KEY, originalUrl)
-                        }
-                        CachedValueProvider.Result.create(parsed, current)
-                    }
-                }
+                val vexFile = VexSyntheticFileProvider.getAsVexFile(current)
 
                 result.add(vexFile)
 
                 val includes = PsiTreeUtil.findChildrenOfType(vexFile, VexIncludeDirective::class.java)
                 for (include in includes) {
                     if (!VexPreprocessorEvaluator.isActive(include)) continue
-                    val resolved = resolveIncludeFile(include, vexFile)
-                    if (resolved != null) {
-                        visit(resolved)
-                    }
+                    val resolved = VexIncludeResolver.resolveIncludeFile(include, vexFile)
+                    if (resolved != null) visit(resolved)
                 }
             }
 
             visit(file)
 
-            CachedValueProvider.Result.create(result, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
+            CachedValueProvider.Result.create(
+                result,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
         }
     }
 
-    /**
-     * Finds the closest declaration scope (Block, Struct, or File) for the given element.
-     * Safely returns null if the input element is null, or if no such scope exists.
-     * @param element The starting element to search upwards from.
-     * @return The containing scope element, or null.
-     */
     fun findDeclarationScope(element: PsiElement?): PsiElement? {
         if (element == null) return null
         return PsiTreeUtil.getParentOfType(
@@ -205,7 +79,43 @@ object VexScopeAnalyzer {
             val funcs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
             }.filter { VexPreprocessorEvaluator.isActive(it) }
-            CachedValueProvider.Result.create(funcs, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
+            CachedValueProvider.Result.create(
+                funcs,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
+        }
+    }
+
+    fun getVisibleFunctionsGrouped(element: PsiElement): Map<String, List<VexFunctionDef>> {
+        val file = element.containingFile as? VexFile ?: return emptyMap()
+        return CachedValuesManager.getCachedValue(file) {
+            val funcs = getIncludedFiles(file).flatMap { f ->
+                PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
+            }.filter { VexPreprocessorEvaluator.isActive(it) }
+                .groupBy { it.identifier.text }
+
+            CachedValueProvider.Result.create(
+                funcs,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
+        }
+    }
+
+    fun getVisibleStructsGrouped(element: PsiElement): Map<String, List<VexStructDef>> {
+        val file = element.containingFile as? VexFile ?: return emptyMap()
+        return CachedValuesManager.getCachedValue(file) {
+            val structs = getIncludedFiles(file).flatMap { f ->
+                PsiTreeUtil.findChildrenOfType(f, VexStructDef::class.java)
+            }.filter { VexPreprocessorEvaluator.isActive(it) }
+                .groupBy { it.identifier?.text ?: "" }
+
+            CachedValueProvider.Result.create(
+                structs,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
         }
     }
 
@@ -215,7 +125,11 @@ object VexScopeAnalyzer {
             val structs = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexStructDef::class.java)
             }.filter { VexPreprocessorEvaluator.isActive(it) }
-            CachedValueProvider.Result.create(structs, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
+            CachedValueProvider.Result.create(
+                structs,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
         }
     }
 
@@ -240,7 +154,6 @@ object VexScopeAnalyzer {
                 val params = getParametersForScope(currentScope)
                 result.addAll(params)
             }
-
             currentScope = findDeclarationScope(currentScope.parent)
         }
         return result
@@ -251,7 +164,11 @@ object VexScopeAnalyzer {
             val names = getIncludedFiles(file).flatMap { f ->
                 PsiTreeUtil.findChildrenOfType(f, VexFunctionDef::class.java)
             }.filter { VexPreprocessorEvaluator.isActive(it) }.mapNotNull { it.identifier.text }.toSet()
-            CachedValueProvider.Result.create(names, PsiModificationTracker.MODIFICATION_COUNT, includePathTracker)
+            CachedValueProvider.Result.create(
+                names,
+                PsiModificationTracker.MODIFICATION_COUNT,
+                VexIncludeResolver.includePathTracker
+            )
         }
     }
 }

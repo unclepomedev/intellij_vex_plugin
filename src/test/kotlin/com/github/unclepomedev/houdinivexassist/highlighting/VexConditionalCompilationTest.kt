@@ -188,4 +188,46 @@ class VexConditionalCompilationTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testPartialMacroMatchShouldNotShortCircuit() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #if 0 && defined(FOO)
+            int a = 1;
+            #endif
+            int <error descr="Variable 'a' is already defined in this scope">a</error> = 2;
+            int <error descr="Variable 'a' is already defined in this scope">a</error> = 3;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testNonVexIncludeMacroDiscovery() {
+        myFixture.addFileToProject("header.h", "#define FROM_HEADER")
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #include "header.h"
+            #ifdef FROM_HEADER
+            int a = 1;
+            #endif
+            int <error descr="Variable 'a' is already defined in this scope">a</error> = 2;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testIncludeDoesNotLeakInactiveRangesToParent() {
+        myFixture.addFileToProject("header.vfl", "#if 0\n#endif")
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #include "header.vfl"
+            int a = 1;
+            int <error descr="Variable 'a' is already defined in this scope">a</error> = 2;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }

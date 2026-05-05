@@ -1,6 +1,5 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
-import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
@@ -32,7 +31,7 @@ object VexMacroResolver {
                 when (event) {
                     is VexMacroDef -> if (event.identifier?.text == name) best = event
                     is VexIncludeDirective -> {
-                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event, file) ?: continue
+                        val includedPsi = VexIncludeResolver.resolveIncludeFile(event, file) ?: continue
                         val vexFile = (includedPsi as? VexFile)
                             ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
                             ?: continue

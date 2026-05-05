@@ -2,7 +2,7 @@ package com.github.unclepomedev.houdinivexassist.reference
 
 import com.github.unclepomedev.houdinivexassist.psi.VexElementFactory
 import com.github.unclepomedev.houdinivexassist.psi.VexIncludeDirective
-import com.github.unclepomedev.houdinivexassist.psi.VexScopeAnalyzer
+import com.github.unclepomedev.houdinivexassist.psi.VexIncludeResolver
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
@@ -13,7 +13,7 @@ class VexIncludeReference(
 ) : PsiReferenceBase<VexIncludeDirective>(element, textRange) {
 
     override fun resolve(): PsiElement? {
-        return VexScopeAnalyzer.resolveIncludeFile(element)
+        return VexIncludeResolver.resolveIncludeFile(element)
     }
 
     override fun getVariants(): Array<Any> {
@@ -21,7 +21,8 @@ class VexIncludeReference(
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        val stringNode = element.string ?: element.unclosedString ?: element.sysString ?: element.unclosedSysString ?: return element
+        val stringNode =
+            element.string ?: element.unclosedString ?: element.sysString ?: element.unclosedSysString ?: return element
         val oldText = stringNode.text
 
         val startQuote = when {
@@ -49,7 +50,8 @@ class VexIncludeReference(
                 if (isClosed) append(endQuote)
             }
         )
-        val newStringNode = newInclude.string ?: newInclude.unclosedString ?: newInclude.sysString ?: newInclude.unclosedSysString
+        val newStringNode =
+            newInclude.string ?: newInclude.unclosedString ?: newInclude.sysString ?: newInclude.unclosedSysString
         if (newStringNode != null) {
             stringNode.replace(newStringNode)
         }
