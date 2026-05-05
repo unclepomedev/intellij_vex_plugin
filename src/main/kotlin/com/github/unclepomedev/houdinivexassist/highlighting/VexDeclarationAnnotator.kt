@@ -98,14 +98,19 @@ class VexDeclarationAnnotator : Annotator {
         return context.project.getService(VexApiProvider::class.java)?.hasFunction(name) == true
     }
 
+    private fun isPriorSymbol(candidate: PsiElement, current: PsiElement): Boolean {
+        return candidate.containingFile != current.containingFile ||
+                candidate.textOffset < current.textOffset
+    }
+
     private fun isLocalFunctionBefore(element: PsiElement, name: String): Boolean {
         val candidates = VexScopeAnalyzer.getVisibleFunctionsGrouped(element)[name] ?: return false
-        return candidates.any { it.textOffset < element.textOffset }
+        return candidates.any { isPriorSymbol(it, element) }
     }
 
     private fun isStructNameBefore(element: PsiElement, name: String): Boolean {
         val candidates = VexScopeAnalyzer.getVisibleStructsGrouped(element)[name] ?: return false
-        return candidates.any { it.textOffset < element.textOffset }
+        return candidates.any { isPriorSymbol(it, element) }
     }
 
     private fun hasExactOverloadConflict(element: VexFunctionDef, name: String): Boolean {
@@ -114,7 +119,7 @@ class VexDeclarationAnnotator : Annotator {
 
         return candidates.any { sibling ->
             sibling != element &&
-                    sibling.textOffset < element.textOffset &&
+                    isPriorSymbol(sibling, element) &&
                     extractParameterTypes(sibling) == myParamTypes
         }
     }

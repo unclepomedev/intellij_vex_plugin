@@ -2,12 +2,7 @@ package com.github.unclepomedev.houdinivexassist.reference
 
 import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
-import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
-import com.github.unclepomedev.houdinivexassist.psi.VexFile
-import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
-import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
-import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
-import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
+import com.github.unclepomedev.houdinivexassist.psi.*
 import java.nio.file.Files
 
 class VexReferenceTest : VexTestBase() {
@@ -263,9 +258,9 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Include reference should be resolved", resolved)
         assertTrue(
             "Resolved element should be a VexFile",
-            resolved is com.github.unclepomedev.houdinivexassist.psi.VexFile
+            resolved is VexFile
         )
-        assertEquals("my_math.vfl", (resolved as com.github.unclepomedev.houdinivexassist.psi.VexFile).name)
+        assertEquals("my_math.vfl", (resolved as VexFile).name)
     }
 
     fun testIncludeRename() {
@@ -678,6 +673,34 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Macro in circular include should be resolved", resolved)
         assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
         assertEquals("cycle_a.h", resolved?.containingFile?.name)
+    }
+
+    fun testMacroInIncludeGuardedByParentDefine() {
+        myFixture.addFileToProject(
+            "child.h", """
+            #ifdef PARENT_MACRO
+            #define FOO 1
+            #endif
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #define PARENT_MACRO
+            #include "child.h"
+
+            void main() {
+                int x = F<caret>OO;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("FOO must resolve because PARENT_MACRO is defined in the parent file", resolved)
+        assertTrue(resolved is VexMacroDef)
+        assertEquals("FOO", (resolved as VexMacroDef).identifier?.text)
     }
 
     fun testNestedRelativeIncludeInNonVexFile() {

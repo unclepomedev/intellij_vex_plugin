@@ -6,8 +6,15 @@ import com.intellij.psi.PsiFile
 
 object VexInactiveRangeAnalyzer {
 
-    fun analyze(file: PsiFile): List<TextRange> {
-        val definedMacros = mutableSetOf<String>()
+    fun analyze(file: PsiFile): List<TextRange> = analyze(file, emptySet())
+
+    /**
+     * [seedDefinedMacros] lets callers (e.g., VexMacroResolver recursing into includes)
+     * inject macros already defined by the parent file so #ifdef inside the included
+     * file evaluates with the correct context instead of an empty slate.
+     */
+    fun analyze(file: PsiFile, seedDefinedMacros: Set<String>): List<TextRange> {
+        val definedMacros = seedDefinedMacros.toMutableSet()
         val visitedIncludes = mutableSetOf(VexFile.getFileKey(file))
         return collect(file, definedMacros, visitedIncludes, trackRanges = true)
     }

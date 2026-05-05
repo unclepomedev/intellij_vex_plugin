@@ -2,6 +2,7 @@ package com.github.unclepomedev.houdinivexassist.psi
 
 import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.CachedValueProvider
@@ -22,6 +23,8 @@ object VexSyntheticFileProvider {
             val parsed = try {
                 PsiFileFactory.getInstance(project)
                     .createFileFromText(file.name, VexLanguage.INSTANCE, file.text) as? VexFile
+            } catch (e: ProcessCanceledException) {
+                throw e
             } catch (e: Exception) {
                 LOG.warn("Failed to parse ${file.name} as VexFile", e)
                 null
