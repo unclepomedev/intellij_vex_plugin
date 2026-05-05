@@ -11,7 +11,6 @@ object VexMacroResolver {
         name: String,
         maxOffsetExclusive: Int,
         visited: MutableSet<String>,
-        skipActiveCheck: Boolean = false
     ): VexMacroDef? {
         val key = VexFile.getFileKey(file)
 
@@ -29,7 +28,7 @@ object VexMacroResolver {
                 .sortedBy { it.textOffset }
 
             for (event in events) {
-                if (!skipActiveCheck && !VexPreprocessorEvaluator.isActive(event)) continue
+                if (!VexPreprocessorEvaluator.isActive(event)) continue
                 when (event) {
                     is VexMacroDef -> if (event.identifier?.text == name) best = event
                     is VexIncludeDirective -> {
@@ -37,7 +36,7 @@ object VexMacroResolver {
                         val vexFile = (includedPsi as? VexFile)
                             ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
                             ?: continue
-                        val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited, skipActiveCheck)
+                        val nested = resolveInFile(vexFile, name, Int.MAX_VALUE, visited)
                         if (nested != null) best = nested
                     }
                 }
@@ -51,10 +50,5 @@ object VexMacroResolver {
     fun resolveMacro(context: PsiElement, name: String): PsiElement? {
         val file = context.containingFile ?: return null
         return resolveInFile(file, name, context.textOffset, mutableSetOf())
-    }
-
-    fun resolveMacroForPreprocessor(context: PsiElement, name: String): PsiElement? {
-        val file = context.containingFile ?: return null
-        return resolveInFile(file, name, context.textOffset, mutableSetOf(), skipActiveCheck = true)
     }
 }

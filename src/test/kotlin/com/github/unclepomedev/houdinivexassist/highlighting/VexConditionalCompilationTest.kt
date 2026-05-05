@@ -146,6 +146,29 @@ class VexConditionalCompilationTest : VexTestBase() {
         myFixture.checkHighlighting(false, false, false, true)
     }
 
+    fun testMacroDefinedInInactiveBranchShouldNotBeFoundInLaterActiveBranch() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #if 0
+            #define INACTIVE_MACRO
+            #endif
+            
+            #ifdef INACTIVE_MACRO
+            int a = 1;
+            #endif
+            
+            #define ACTIVE_MACRO
+            #ifdef ACTIVE_MACRO
+            int a = 1;
+            #endif
+            
+            int <error descr="Variable 'a' is already defined in this scope">a</error> = 2;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
     fun testNestedIfdefCorrectlyEvaluated() {
         myFixture.configureByText(
             VexFileType,

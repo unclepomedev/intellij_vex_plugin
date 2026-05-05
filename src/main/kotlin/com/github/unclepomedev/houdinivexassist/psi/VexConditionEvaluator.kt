@@ -1,34 +1,21 @@
 package com.github.unclepomedev.houdinivexassist.psi
 
 object VexConditionEvaluator {
-    private val DEFINED_REGEX = Regex("""^defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?$""")
-    private val NOT_DEFINED_REGEX = Regex("""^!\s*defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?$""")
 
-    fun evaluate(conditionText: String?, directive: VexPreprocessorDirective, isPreprocessorContext: Boolean = false): Boolean {
+    private val definedRegex = Regex("""defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
+    private val notDefinedRegex = Regex("""!\s*defined\s*\(?\s*([a-zA-Z_]\w*)\s*\)?""")
+
+    fun evaluate(conditionText: String?, definedMacros: Set<String>): Boolean {
         val text = conditionText?.trim()
         if (text.isNullOrEmpty()) return true
 
-        text.toIntOrNull()?.let { return it != 0 }
+        if (text == "0") return false
+        if (text == "1") return true
 
-        DEFINED_REGEX.matchEntire(text)?.let { match ->
-            val name = match.groupValues[1]
-            return if (isPreprocessorContext) {
-                VexMacroResolver.resolveMacroForPreprocessor(directive, name) != null
-            } else {
-                VexMacroResolver.resolveMacro(directive, name) != null
-            }
-        }
+        notDefinedRegex.find(text)?.let { return !definedMacros.contains(it.groupValues[1]) }
+        definedRegex.find(text)?.let { return definedMacros.contains(it.groupValues[1]) }
 
-        NOT_DEFINED_REGEX.matchEntire(text)?.let { match ->
-            val name = match.groupValues[1]
-            val defined = if (isPreprocessorContext) {
-                VexMacroResolver.resolveMacroForPreprocessor(directive, name) != null
-            } else {
-                VexMacroResolver.resolveMacro(directive, name) != null
-            }
-            return !defined
-        }
-
+        // Default to true for unsupported complex expressions to avoid aggressive hiding
         return true
     }
 }
