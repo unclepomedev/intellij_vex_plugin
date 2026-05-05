@@ -45,9 +45,19 @@ object VexScopeAnalyzer {
     }
 
     private fun resolveFromCurrentDirectory(currentFile: PsiFile, fileName: String): PsiFile? {
-        val currentDir = currentFile.originalFile.virtualFile?.parent ?: return null
-        val file = currentDir.findFileByRelativePath(fileName)
+        val virtualFile = currentFile.originalFile.virtualFile
+        val currentDir = if (virtualFile != null && virtualFile !is com.intellij.testFramework.LightVirtualFile) {
+            virtualFile.parent
+        } else {
+            val originalUrl = currentFile.getUserData(VexFile.ORIGINAL_FILE_PATH_KEY)
+            if (originalUrl != null) {
+                com.intellij.openapi.vfs.VirtualFileManager.getInstance().findFileByUrl(originalUrl)?.parent
+            } else {
+                null
+            }
+        } ?: return null
 
+        val file = currentDir.findFileByRelativePath(fileName)
         if (file != null && !file.isDirectory) {
             return PsiManager.getInstance(currentFile.project).findFile(file)
         }
@@ -127,8 +137,10 @@ object VexScopeAnalyzer {
                     CachedValuesManager.getCachedValue(current) {
                         val parsed = PsiFileFactory.getInstance(project)
                             .createFileFromText(current.name, VexLanguage.INSTANCE, current.text) as VexFile
-                        val originalPath = VexFile.getFileKey(current)
-                        parsed.putUserData(VexFile.ORIGINAL_FILE_PATH_KEY, originalPath)
+                        val originalUrl = current.originalFile.virtualFile?.url
+                        if (originalUrl != null) {
+                            parsed.putUserData(VexFile.ORIGINAL_FILE_PATH_KEY, originalUrl)
+                        }
                         CachedValueProvider.Result.create(parsed, current)
                     }
                 }
@@ -138,7 +150,7 @@ object VexScopeAnalyzer {
                 val includes = PsiTreeUtil.findChildrenOfType(vexFile, VexIncludeDirective::class.java)
                 for (include in includes) {
                     if (!VexPreprocessorEvaluator.isActive(include)) continue
-                    val resolved = resolveIncludeFile(include, current)
+                    val resolved = resolveIncludeFile(include, vexFile)
                     if (resolved != null) {
                         visit(resolved)
                     }

@@ -17,14 +17,12 @@ object VexPreprocessorEvaluator {
         if (element == null || element is PsiFile) return true
         val file = element.containingFile ?: return true
 
-        val key = file.getUserData(VexFile.ORIGINAL_FILE_PATH_KEY)
-            ?: file.originalFile.virtualFile?.path
-            ?: file.name
+        val key = VexFile.getFileKey(file)
 
         val visited = evaluatingFiles.get()
         if (visited.contains(key)) {
-            // If already evaluating this file, assume active to avoid infinite recursion
-            return true
+            // Break recursion during macro resolution to prevent definition leaks.
+            return false
         }
         visited.add(key)
 
@@ -82,20 +80,20 @@ object VexPreprocessorEvaluator {
     private fun pushIfdef(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
         val macroName = directive.ppIfdef!!.identifier?.text
         val defined = macroName != null &&
-                VexMacroResolver.resolveMacro(directive, macroName) != null
+                VexMacroResolver.resolveMacroForPreprocessor(directive, macroName) != null
         stack.add(BranchState(hasTakenBranch = defined, isActive = defined))
     }
 
     private fun pushIfndef(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
         val macroName = directive.ppIfndef!!.identifier?.text
         val defined = macroName != null &&
-                VexMacroResolver.resolveMacro(directive, macroName) != null
+                VexMacroResolver.resolveMacroForPreprocessor(directive, macroName) != null
         stack.add(BranchState(hasTakenBranch = !defined, isActive = !defined))
     }
 
     private fun pushIf(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
         val conditionText = directive.ppIf?.macroBody?.text
-        val result = VexConditionEvaluator.evaluate(conditionText, directive)
+        val result = VexConditionEvaluator.evaluate(conditionText, directive, isPreprocessorContext = true)
         stack.add(BranchState(hasTakenBranch = result, isActive = result))
     }
 
@@ -106,7 +104,7 @@ object VexPreprocessorEvaluator {
                 state.isActive = false
             } else {
                 val conditionText = directive.ppElif?.macroBody?.text
-                val result = VexConditionEvaluator.evaluate(conditionText, directive)
+                val result = VexConditionEvaluator.evaluate(conditionText, directive, isPreprocessorContext = true)
                 state.isActive = result
                 if (result) state.hasTakenBranch = true
             }

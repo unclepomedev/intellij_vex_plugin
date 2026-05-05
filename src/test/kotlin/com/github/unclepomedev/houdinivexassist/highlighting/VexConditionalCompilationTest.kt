@@ -128,4 +128,41 @@ class VexConditionalCompilationTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
+
+    fun testMacroInInactiveBranchDoesNotAffectActiveBranch() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #ifdef NEVER
+            #define SHOULD_BE_INACTIVE
+            #endif
+            
+            #ifdef SHOULD_BE_INACTIVE
+            int a = 1;
+            #endif
+            int a = 2;
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
+
+    fun testNestedIfdefCorrectlyEvaluated() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            #define OUTER
+            #ifdef OUTER
+              #define INNER
+              #ifdef INNER
+                int x = 1;
+              #endif
+            #endif
+            
+            void main() {
+                int y = x;
+            }
+            """.trimIndent()
+        )
+        myFixture.checkHighlighting(false, false, false, true)
+    }
 }

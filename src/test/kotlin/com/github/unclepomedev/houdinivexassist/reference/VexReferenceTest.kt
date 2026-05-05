@@ -3,6 +3,7 @@ package com.github.unclepomedev.houdinivexassist.reference
 import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
+import com.github.unclepomedev.houdinivexassist.psi.VexFile
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
@@ -679,6 +680,53 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("cycle_a.h", resolved?.containingFile?.name)
     }
 
+    fun testNestedRelativeIncludeInNonVexFile() {
+        myFixture.tempDirFixture.findOrCreateDir("subdir")
+
+        myFixture.addFileToProject(
+            "subdir/header_a.h", """
+            #include "header_b.h"
+            #define VAL_FROM_B VAL_B
+        """.trimIndent()
+        )
+
+        myFixture.addFileToProject(
+            "subdir/header_b.h", """
+            #define VAL_B 123
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "subdir/header_a.h"
+            
+            void main() {
+                int x = VAL_FROM_<caret>B;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNotNull("Macro from nested relative include in non-VEX file should be resolved", resolved)
+        assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
+        assertEquals("VAL_FROM_B", (resolved as VexMacroDef).name)
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "subdir/header_a.h"
+            
+            void main() {
+                int x = VAL_<caret>B;
+            }
+        """.trimIndent()
+        )
+        val ref2 = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved2 = ref2.resolve()
+        assertNotNull("Macro from deep nested relative include in non-VEX file should be resolved", resolved2)
+    }
+
     fun testMacroCircularIncludeProtectionWithNonVexFiles() {
         // cycle_a.inc is not a .vfl/.vex file, so it will be parsed as synthetic VexFile
         myFixture.addFileToProject(
@@ -736,6 +784,31 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Recursive macro should be resolved", resolved)
         assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
         assertEquals("REC_VAL", (resolved as VexMacroDef).name)
+    }
+
+    fun testMacroInfiniteRecursionWithInactiveBranchCheck() {
+        myFixture.addFileToProject(
+            "rec_inactive.h", """
+            #if 0
+            #define REC_VAL 1
+            #endif
+            #include "rec_inactive.h"
+        """.trimIndent()
+        )
+
+        myFixture.configureByText(
+            VexFileType, """
+            #include "rec_inactive.h"
+            void main() {
+                int x = REC_<caret>VAL;
+            }
+        """.trimIndent()
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+
+        assertNull("Recursive macro in inactive branch should not be resolved", resolved)
     }
 
     fun testFunctionLikeMacroReference() {
