@@ -35,7 +35,7 @@ dump:
 
     echo "Done"
 
-parser:
+lp:
     #!/usr/bin/env bash
     set -e
 
