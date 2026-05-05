@@ -10,6 +10,7 @@
 
 * Macros with line breaks can now be recognized.
 * Enhanced macro include resolution to prevent infinite recursion.
+* `#undef` is now evaluated correctly.
 
 ## [0.4.4] - 2026-04-14
 

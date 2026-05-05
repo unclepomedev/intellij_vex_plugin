@@ -40,17 +40,14 @@ object VexIncludeResolver {
     }
 
     private fun resolveFromCurrentDirectory(currentFile: PsiFile, fileName: String): PsiFile? {
+        // Fall back to URL-based resolution for synthetic or LightVirtualFiles where the parent directory is not directly accessible.
         val virtualFile = currentFile.originalFile.virtualFile
-        val currentDir = if (virtualFile != null && virtualFile !is com.intellij.testFramework.LightVirtualFile) {
-            virtualFile.parent
-        } else {
-            val originalUrl = currentFile.getUserData(VexFile.ORIGINAL_FILE_PATH_KEY)
-            if (originalUrl != null) {
-                VirtualFileManager.getInstance().findFileByUrl(originalUrl)?.parent
-            } else {
-                null
-            }
-        } ?: return null
+        val currentDir = virtualFile?.parent
+            ?: currentFile.getUserData(VexFile.ORIGINAL_FILE_PATH_KEY)
+                ?.let { VirtualFileManager.getInstance().findFileByUrl(it)?.parent }
+            ?: virtualFile?.url
+                ?.let { VirtualFileManager.getInstance().findFileByUrl(it)?.parent }
+            ?: return null
 
         val file = currentDir.findFileByRelativePath(fileName)
         if (file != null && !file.isDirectory) {
