@@ -27,7 +27,7 @@ jobs:
           build-scan-terms-of-use-agree: 'yes'
 
       - name: Build Plugin
-        run: ./gradlew publishPlugin --no-configuration-cache
+        run: ./gradlew buildPlugin
 
       - name: Upload Release Asset
         env:
@@ -41,4 +41,4 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
           RELEASE_CHANNEL: ${{ github.event.release.prerelease && 'beta' || 'default' }}
-        run: ./gradlew publishPlugin
+        run: ./gradlew publishPlugin --no-configuration-cache
