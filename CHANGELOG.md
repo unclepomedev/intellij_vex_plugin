@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+## [0.4.6] - 2026-06-20
+
+* Improved "New File" action availability and menu organization.
+
 ## [0.4.5] - 2026-05-05
 
 ### Added

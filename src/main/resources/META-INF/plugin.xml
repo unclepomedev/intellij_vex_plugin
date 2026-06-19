@@ -38,8 +38,9 @@
         <internalFileTemplate name="VexFile"/>
     </extensions>
     <actions>
-        <action id="Vex.NewFile" class="com.github.unclepomedev.houdinivexassist.actions.CreateVexFileAction">
-            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        <action id="Vex.NewFile"
+                class="com.github.unclepomedev.houdinivexassist.actions.CreateVexFileAction">
+            <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>
