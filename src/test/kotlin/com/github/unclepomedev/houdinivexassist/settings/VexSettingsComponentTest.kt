@@ -21,7 +21,7 @@ class VexSettingsComponentTest : BasePlatformTestCase() {
         val descLabel = labels.first { it.text.contains("symbol") }
         assertTrue(
             "Label text should contain '&' character, but was: ${descLabel.text}",
-            descLabel.text.contains("&")
+            descLabel.text.contains("&"),
         )
     }
 }

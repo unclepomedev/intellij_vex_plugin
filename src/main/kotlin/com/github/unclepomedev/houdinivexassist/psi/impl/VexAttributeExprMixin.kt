@@ -12,8 +12,8 @@ abstract class VexAttributeExprMixin(node: ASTNode) : VexExprImpl(node), VexAttr
      * Infers [VexType] from the explicit cast prefix of this attribute expression.
      *
      * Examples:
-     * - `f@Cd`   -> FloatType
-     * - `v[]@P`  -> ArrayType(VectorType)
+     * - `f@Cd` -> FloatType
+     * - `v[]@P` -> ArrayType(VectorType)
      * - `@ptnum` -> null (no prefix)
      */
     fun inferCastPrefixType(): VexType? {
@@ -25,18 +25,20 @@ abstract class VexAttributeExprMixin(node: ASTNode) : VexExprImpl(node), VexAttr
         val isArray = prefix.endsWith("[]")
         val typeChar = prefix[0]
 
-        val baseType = when (typeChar) {
-            'f' -> VexType.FloatType
-            'i' -> VexType.IntType
-            'v' -> VexType.VectorType
-            'u' -> VexType.Vector2Type
-            'p' -> VexType.Vector4Type
-            's' -> VexType.StringType
-            'm', '3' -> VexType.Matrix3Type
-            '4' -> VexType.MatrixType
-            'd' -> VexType.DictType
-            else -> VexType.UnknownType
-        }
+        val baseType =
+            when (typeChar) {
+                'f' -> VexType.FloatType
+                'i' -> VexType.IntType
+                'v' -> VexType.VectorType
+                'u' -> VexType.Vector2Type
+                'p' -> VexType.Vector4Type
+                's' -> VexType.StringType
+                'm',
+                '3' -> VexType.Matrix3Type
+                '4' -> VexType.MatrixType
+                'd' -> VexType.DictType
+                else -> VexType.UnknownType
+            }
 
         return if (isArray) VexType.ArrayType(baseType) else baseType
     }
@@ -49,7 +51,9 @@ abstract class VexAttributeExprMixin(node: ASTNode) : VexExprImpl(node), VexAttr
      * 3. If not found, return [VexType.UnknownType].
      */
     fun inferType(): VexType {
-        inferCastPrefixType()?.let { return it }
+        inferCastPrefixType()?.let {
+            return it
+        }
 
         val text = text ?: return VexType.UnknownType
         val atIndex = text.indexOf('@')

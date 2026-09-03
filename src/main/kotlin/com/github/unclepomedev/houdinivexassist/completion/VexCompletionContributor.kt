@@ -16,7 +16,7 @@ class VexCompletionContributor : CompletionContributor() {
         extend(
             CompletionType.BASIC,
             PlatformPatterns.psiElement().withLanguage(VexLanguage.INSTANCE),
-            VexCompletionProvider()
+            VexCompletionProvider(),
         )
     }
 }
@@ -25,7 +25,7 @@ private class VexCompletionProvider : CompletionProvider<CompletionParameters>()
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ) {
         val element = parameters.position
         val memberExpr = PsiTreeUtil.getParentOfType(element, VexMemberExpr::class.java)
@@ -44,8 +44,11 @@ private object VexDotAccessCompletionHandler {
                 addStructMemberCompletions(baseExpr, baseType.name, result)
             }
 
-            VexType.Vector2Type, VexType.VectorType, VexType.Vector4Type,
-            VexType.Matrix3Type, VexType.MatrixType -> {
+            VexType.Vector2Type,
+            VexType.VectorType,
+            VexType.Vector4Type,
+            VexType.Matrix3Type,
+            VexType.MatrixType -> {
                 addSwizzleCompletions(baseType, result)
             }
 
@@ -55,16 +58,23 @@ private object VexDotAccessCompletionHandler {
         }
     }
 
-    private fun addStructMemberCompletions(context: PsiElement, structName: String, result: CompletionResultSet) {
-        val targetStruct = VexScopeAnalyzer.getVisibleStructs(context)
-            .find { it.identifier?.text == structName } ?: return
+    private fun addStructMemberCompletions(
+        context: PsiElement,
+        structName: String,
+        result: CompletionResultSet,
+    ) {
+        val targetStruct =
+            VexScopeAnalyzer.getVisibleStructs(context).find { it.identifier?.text == structName }
+                ?: return
 
         targetStruct.structMemberList.forEach { member ->
             val typeString = member.typeRef.text ?: "unknown"
             member.declarationItemList.forEach { declItem ->
                 val memberName = declItem.identifier.text
                 if (memberName.isNotEmpty()) {
-                    result.addElement(VexLookupElementFactory.createStructMember(memberName, typeString))
+                    result.addElement(
+                        VexLookupElementFactory.createStructMember(memberName, typeString)
+                    )
                 }
             }
         }
@@ -79,12 +89,19 @@ private object VexDotAccessCompletionHandler {
             candidates.addAll(listOf("r", "g", "b", "a", "u", "v", "uv", "rg", "rgb", "rgba"))
         }
 
-        val componentIndices = mapOf(
-            'x' to 1, 'r' to 1, 'u' to 1,
-            'y' to 2, 'g' to 2, 'v' to 2,
-            'z' to 3, 'b' to 3,
-            'w' to 4, 'a' to 4
-        )
+        val componentIndices =
+            mapOf(
+                'x' to 1,
+                'r' to 1,
+                'u' to 1,
+                'y' to 2,
+                'g' to 2,
+                'v' to 2,
+                'z' to 3,
+                'b' to 3,
+                'w' to 4,
+                'a' to 4,
+            )
 
         candidates.forEach { swizzle ->
             val isValid = swizzle.all { char ->
@@ -102,8 +119,10 @@ private object VexDotAccessCompletionHandler {
     private fun getDimension(type: VexType): Int? {
         return when (type) {
             VexType.Vector2Type -> 2
-            VexType.VectorType, VexType.Matrix3Type -> 3
-            VexType.Vector4Type, VexType.MatrixType -> 4
+            VexType.VectorType,
+            VexType.Matrix3Type -> 3
+            VexType.Vector4Type,
+            VexType.MatrixType -> 4
             else -> null
         }
     }
@@ -129,18 +148,33 @@ private object VexStandardCompletionHandler {
     }
 
     private fun addPrimitiveTypes(result: CompletionResultSet) {
-        val primitiveTypes = listOf(
-            "int", "float", "vector", "vector2", "vector4",
-            "matrix", "matrix2", "matrix3", "string", "void",
-            "bsdf", "dict", "struct", "function"
-        )
+        val primitiveTypes =
+            listOf(
+                "int",
+                "float",
+                "vector",
+                "vector2",
+                "vector4",
+                "matrix",
+                "matrix2",
+                "matrix3",
+                "string",
+                "void",
+                "bsdf",
+                "dict",
+                "struct",
+                "function",
+            )
 
         primitiveTypes.forEach { typeName ->
             result.addElement(VexLookupElementFactory.createKeyword(typeName))
         }
     }
 
-    private fun addLocalVariablesAndParameters(parameters: CompletionParameters, result: CompletionResultSet) {
+    private fun addLocalVariablesAndParameters(
+        parameters: CompletionParameters,
+        result: CompletionResultSet,
+    ) {
         val element = parameters.position
         val seenNames = mutableSetOf<String>()
 
@@ -149,12 +183,16 @@ private object VexStandardCompletionHandler {
             if (variable is VexDeclarationItem) {
                 val name = variable.identifier.text
                 if (name.isNotEmpty() && seenNames.add(name)) {
-                    result.addElement(VexLookupElementFactory.createVariable(name, isParameter = false))
+                    result.addElement(
+                        VexLookupElementFactory.createVariable(name, isParameter = false)
+                    )
                 }
             } else if (variable is VexParameterDef) {
                 val name = variable.identifier.text
                 if (name.isNotEmpty() && seenNames.add(name)) {
-                    result.addElement(VexLookupElementFactory.createVariable(name, isParameter = true))
+                    result.addElement(
+                        VexLookupElementFactory.createVariable(name, isParameter = true)
+                    )
                 }
             }
         }
@@ -172,7 +210,10 @@ private object VexStandardCompletionHandler {
         }
     }
 
-    private fun addLocalFunctions(parameters: CompletionParameters, result: CompletionResultSet): Set<String> {
+    private fun addLocalFunctions(
+        parameters: CompletionParameters,
+        result: CompletionResultSet,
+    ): Set<String> {
         val element = parameters.position
         val localFunctions = VexScopeAnalyzer.getVisibleFunctions(element)
 
@@ -191,9 +232,10 @@ private object VexStandardCompletionHandler {
     private fun addStandardFunctions(
         parameters: CompletionParameters,
         result: CompletionResultSet,
-        skipNames: Set<String>
+        skipNames: Set<String>,
     ) {
-        val vexApiProvider = parameters.originalFile.project.getService(VexApiProvider::class.java) ?: return
+        val vexApiProvider =
+            parameters.originalFile.project.getService(VexApiProvider::class.java) ?: return
 
         vexApiProvider.functions.forEach { func ->
             if (func.name in skipNames) return@forEach

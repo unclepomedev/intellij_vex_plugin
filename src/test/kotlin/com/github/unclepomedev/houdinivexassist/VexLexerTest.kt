@@ -11,7 +11,11 @@ class VexLexerTest : VexTestBase() {
         lexer.start(text)
 
         for ((expectedType, expectedText) in expectedTokens) {
-            assertEquals("Token type mismatch for text: $expectedText", expectedType, lexer.tokenType)
+            assertEquals(
+                "Token type mismatch for text: $expectedText",
+                expectedType,
+                lexer.tokenType,
+            )
             assertEquals("Token text mismatch", expectedText, lexer.tokenText)
             lexer.advance()
         }
@@ -24,11 +28,12 @@ class VexLexerTest : VexTestBase() {
             VexTypes.INT_KW to "int",
             TokenType.WHITE_SPACE to " ",
             VexTypes.IDENTIFIER to "a",
-            VexTypes.SEMICOLON to ";"
+            VexTypes.SEMICOLON to ";",
         )
 
         doTest(
-            "internal", VexTypes.IDENTIFIER to "internal"
+            "internal",
+            VexTypes.IDENTIFIER to "internal",
         )
     }
 
@@ -41,7 +46,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.ATTRIBUTE to "i@ptnum",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.ATTRIBUTE to "s@name"
+            VexTypes.ATTRIBUTE to "s@name",
         )
     }
 
@@ -50,19 +55,23 @@ class VexLexerTest : VexTestBase() {
             "// comment\nint",
             VexTypes.LINE_COMMENT to "// comment",
             TokenType.WHITE_SPACE to "\n",
-            VexTypes.INT_KW to "int"
+            VexTypes.INT_KW to "int",
         )
         doTest(
-            "/* comment\n */int", VexTypes.BLOCK_COMMENT to "/* comment\n */", VexTypes.INT_KW to "int"
+            "/* comment\n */int",
+            VexTypes.BLOCK_COMMENT to "/* comment\n */",
+            VexTypes.INT_KW to "int",
         )
     }
 
     fun testStrings() {
         doTest(
-            "\"double\"", VexTypes.STRING to "\"double\""
+            "\"double\"",
+            VexTypes.STRING to "\"double\"",
         )
         doTest(
-            "'single'", VexTypes.STRING to "'single'"
+            "'single'",
+            VexTypes.STRING to "'single'",
         )
     }
 
@@ -71,7 +80,7 @@ class VexLexerTest : VexTestBase() {
             "　あ\u0000",
             TokenType.BAD_CHARACTER to "　",
             TokenType.BAD_CHARACTER to "あ",
-            TokenType.BAD_CHARACTER to "\u0000"
+            TokenType.BAD_CHARACTER to "\u0000",
         )
     }
 
@@ -142,7 +151,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.BITXOR to "^",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.BITNOT to "~"
+            VexTypes.BITNOT to "~",
         )
     }
 
@@ -167,7 +176,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.COMMA to ",",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.MACRO to "#define"
+            VexTypes.MACRO to "#define",
         )
     }
 
@@ -190,7 +199,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.CONTINUE to "continue",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.RETURN to "return"
+            VexTypes.RETURN to "return",
         )
     }
 
@@ -201,7 +210,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.ATTRIBUTE to "i[]@pts",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.ATTRIBUTE to "[]@myattr"
+            VexTypes.ATTRIBUTE to "[]@myattr",
         )
     }
 
@@ -228,7 +237,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.BSDF_KW to "bsdf",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.DICT_KW to "dict"
+            VexTypes.DICT_KW to "dict",
         )
     }
 
@@ -239,7 +248,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.NUMBER to "3.14159",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.NUMBER to "10."
+            VexTypes.NUMBER to "10.",
         )
     }
 
@@ -250,7 +259,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.EXPORT to "export",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.FUNCTION to "function"
+            VexTypes.FUNCTION to "function",
         )
     }
 
@@ -271,7 +280,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.NUMBER to "0x1A",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.NUMBER to "0Xff"
+            VexTypes.NUMBER to "0Xff",
         )
     }
 
@@ -280,26 +289,26 @@ class VexLexerTest : VexTestBase() {
             "#include \"math.h\"",
             VexTypes.INCLUDE_KW to "#include",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.STRING to "\"math.h\""
+            VexTypes.STRING to "\"math.h\"",
         )
 
         doTest(
             "#  include 'utils.vfl'",
             VexTypes.INCLUDE_KW to "#  include",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.STRING to "'utils.vfl'"
+            VexTypes.STRING to "'utils.vfl'",
         )
 
         doTest(
             "#include <math.h>",
             VexTypes.INCLUDE_KW to "#include",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.SYS_STRING to "<math.h>"
+            VexTypes.SYS_STRING to "<math.h>",
         )
 
         doTest(
             "#include_guard",
-            VexTypes.MACRO to "#include_guard"
+            VexTypes.MACRO to "#include_guard",
         )
     }
 
@@ -310,7 +319,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.IDENTIFIER to "MAX",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.MACRO_BODY to "100"
+            VexTypes.MACRO_BODY to "100",
         )
     }
 
@@ -327,7 +336,7 @@ class VexLexerTest : VexTestBase() {
             VexTypes.IDENTIFIER to "b",
             VexTypes.RPAREN to ")",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.MACRO_BODY to "((a) + (b))"
+            VexTypes.MACRO_BODY to "((a) + (b))",
         )
     }
 
@@ -338,7 +347,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.IDENTIFIER to "FOO",
             TokenType.WHITE_SPACE to " ",
-            VexTypes.MACRO_BODY to "(1)"
+            VexTypes.MACRO_BODY to "(1)",
         )
     }
 
@@ -351,7 +360,7 @@ class VexLexerTest : VexTestBase() {
             TokenType.WHITE_SPACE to " ",
             VexTypes.MACRO_BODY to "\\\n1",
             TokenType.WHITE_SPACE to "\n",
-            VexTypes.INT_KW to "int"
+            VexTypes.INT_KW to "int",
         )
     }
 }

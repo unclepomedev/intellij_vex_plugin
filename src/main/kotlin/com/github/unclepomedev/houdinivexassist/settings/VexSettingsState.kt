@@ -7,7 +7,7 @@ import com.intellij.openapi.components.Storage
 
 @State(
     name = "com.github.unclepomedev.houdinivexassist.settings.VexSettingsState",
-    storages = [Storage("VexPluginSettings.xml")]
+    storages = [Storage("VexPluginSettings.xml")],
 )
 class VexSettingsState : PersistentStateComponent<VexSettingsState> {
     var includePath: String = ""

@@ -9,7 +9,6 @@ import com.intellij.psi.PsiFile
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-
 class VexDocumentationProvider : AbstractDocumentationProvider() {
     companion object {
         private const val MAX_DOC_CACHE_ENTRIES = 256
@@ -19,19 +18,24 @@ class VexDocumentationProvider : AbstractDocumentationProvider() {
     private val docCache: MutableMap<String, String> =
         Collections.synchronizedMap(
             object : LinkedHashMap<String, String>(MAX_DOC_CACHE_ENTRIES, 0.75f, true) {
-                override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?): Boolean {
+                override fun removeEldestEntry(
+                    eldest: MutableMap.MutableEntry<String, String>?
+                ): Boolean {
                     return size > MAX_DOC_CACHE_ENTRIES
                 }
             }
         )
 
     override fun getCustomDocumentationElement(
-        editor: Editor, file: PsiFile, contextElement: PsiElement?, targetOffset: Int
+        editor: Editor,
+        file: PsiFile,
+        contextElement: PsiElement?,
+        targetOffset: Int,
     ): PsiElement? {
         if (
             contextElement?.node?.elementType == VexTypes.IDENTIFIER &&
-            contextElement.parent is VexCallExpr &&
-            (contextElement.parent as VexCallExpr).identifier == contextElement
+                contextElement.parent is VexCallExpr &&
+                (contextElement.parent as VexCallExpr).identifier == contextElement
         ) {
             return contextElement
         }
@@ -48,9 +52,10 @@ class VexDocumentationProvider : AbstractDocumentationProvider() {
         }
 
         val path = "vex_help/functions/$name.txt"
-        val helpText = javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
-            stream.bufferedReader(StandardCharsets.UTF_8).readText()
-        } ?: return null
+        val helpText =
+            javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
+                stream.bufferedReader(StandardCharsets.UTF_8).readText()
+            } ?: return null
 
         val formattedDoc = VexDocFormatter.format(name, helpText)
         docCache[name] = formattedDoc

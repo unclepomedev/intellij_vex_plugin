@@ -2,34 +2,32 @@ package com.github.unclepomedev.houdinivexassist.documentation
 
 import com.intellij.lang.documentation.DocumentationMarkup
 
-/**
- * Formatter that converts Houdini's custom help text into IntelliJ standard HTML documentation.
- */
+/** Formatter that converts Houdini's custom help text into IntelliJ standard HTML documentation. */
 object VexDocFormatter {
 
     fun format(name: String, rawText: String): String {
         val usages = mutableListOf<String>()
 
-        val bodyHtml = rawText
-            .escapeHtml()
-            .removeMetadata()
-            .extractUsagesTo(usages)
-            .applyTextDecorations()
-            .formatCodeBlocks()
-            .cleanupWhitespace()
+        val bodyHtml =
+            rawText
+                .escapeHtml()
+                .removeMetadata()
+                .extractUsagesTo(usages)
+                .applyTextDecorations()
+                .formatCodeBlocks()
+                .cleanupWhitespace()
 
         return buildMarkup(name, usages, bodyHtml)
     }
 
-    private fun String.escapeHtml(): String = this
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
+    private fun String.escapeHtml(): String =
+        this.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    private fun String.removeMetadata(): String = this
-        .replace(Regex("(?m)^=\\s*.*\\s*=$"), "")
-        // Remove metadata keys like `#type`: / `#context`:, but keep shebang-style fences like #!vex
-        .replace(Regex("(?m)^#[A-Za-z][\\w-]*\\s*:.*$"), "")
+    private fun String.removeMetadata(): String =
+        this.replace(Regex("(?m)^=\\s*.*\\s*=$"), "")
+            // Remove metadata keys like `#type`: / `#context`:, but keep shebang-style fences like
+            // #!vex
+            .replace(Regex("(?m)^#[A-Za-z][\\w-]*\\s*:.*$"), "")
 
     private fun String.extractUsagesTo(usages: MutableList<String>): String {
         return this.replace(Regex("(?m)^\\s*:usage:\\s*`([^`]+)`")) {
@@ -38,15 +36,17 @@ object VexDocFormatter {
         }
     }
 
-    private fun String.applyTextDecorations(): String = this
-        .replace(Regex("\"\"\"([\\s\\S]*?)\"\"\"")) { "<i>${it.groupValues[1].trim()}</i>" }
-        .replace(Regex("\\[Vex:([^]]+)]")) { "<code>${it.groupValues[1]}</code>" }
-        .replace(Regex("(?m)^\\s*@([a-zA-Z]+)")) { "<br><b>${it.groupValues[1].uppercase()}</b><hr>" }
-        .replace(Regex("(?m)^\\s*:box:(.*)")) { "<br><b>${it.groupValues[1].trim()}</b>" }
+    private fun String.applyTextDecorations(): String =
+        this.replace(Regex("\"\"\"([\\s\\S]*?)\"\"\"")) { "<i>${it.groupValues[1].trim()}</i>" }
+            .replace(Regex("\\[Vex:([^]]+)]")) { "<code>${it.groupValues[1]}</code>" }
+            .replace(Regex("(?m)^\\s*@([a-zA-Z]+)")) {
+                "<br><b>${it.groupValues[1].uppercase()}</b><hr>"
+            }
+            .replace(Regex("(?m)^\\s*:box:(.*)")) { "<br><b>${it.groupValues[1].trim()}</b>" }
 
     /**
-     * Expected block format: "{{{ #!vex ... }}}"
-     * Parsing strategy: split on the start token, take until the first "}}}" as code, then rejoin the remainder.
+     * Expected block format: "{{{ #!vex ... }}}" Parsing strategy: split on the start token, take
+     * until the first "}}}" as code, then rejoin the remainder.
      */
     private fun String.formatCodeBlocks(): String {
         val parts = this.split(Regex("\\{\\{\\{\\s*#!vex", RegexOption.IGNORE_CASE))
@@ -69,14 +69,13 @@ object VexDocFormatter {
         return builder.toString()
     }
 
-    private fun String.cleanOutsideText(): String = this
-        .lines().joinToString("<br>") { it.trim() }
+    private fun String.cleanOutsideText(): String = this.lines().joinToString("<br>") { it.trim() }
 
-    private fun String.cleanupWhitespace(): String = this
-        .replace(Regex("(<br>\\s*){3,}"), "<br><br>")
-        .replace(Regex("<hr>\\s*(<br>\\s*)+"), "<hr>")
-        .replace(Regex("(<br>\\s*)+<pre>"), "<pre>")
-        .replace(Regex("^\\s*(<br>\\s*)+"), "")
+    private fun String.cleanupWhitespace(): String =
+        this.replace(Regex("(<br>\\s*){3,}"), "<br><br>")
+            .replace(Regex("<hr>\\s*(<br>\\s*)+"), "<hr>")
+            .replace(Regex("(<br>\\s*)+<pre>"), "<pre>")
+            .replace(Regex("^\\s*(<br>\\s*)+"), "")
 
     private fun buildMarkup(name: String, usages: List<String>, bodyHtml: String): String {
         val sb = StringBuilder()

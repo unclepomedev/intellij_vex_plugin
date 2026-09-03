@@ -13,7 +13,11 @@ class VexTrailingNewlinePostFormatProcessor : PostFormatProcessor {
         return source
     }
 
-    override fun processText(source: PsiFile, rangeToReformat: TextRange, settings: CodeStyleSettings): TextRange {
+    override fun processText(
+        source: PsiFile,
+        rangeToReformat: TextRange,
+        settings: CodeStyleSettings,
+    ): TextRange {
         if (source.fileType != VexFileType) return rangeToReformat
         val document = source.viewProvider.document ?: return rangeToReformat
         val text = document.text

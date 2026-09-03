@@ -10,16 +10,23 @@ object VexTypeInference {
         if (expr == null) return VexType.UnknownType
 
         return when (expr) {
-            is VexAttributeExpr -> (expr as? com.github.unclepomedev.houdinivexassist.psi.impl.VexAttributeExprMixin)?.inferType()
-                ?: VexType.UnknownType
+            is VexAttributeExpr ->
+                (expr as? com.github.unclepomedev.houdinivexassist.psi.impl.VexAttributeExprMixin)
+                    ?.inferType() ?: VexType.UnknownType
 
             is VexPrimaryExpr -> inferPrimaryExpr(expr)
             is VexCallExpr -> inferCallExpr(expr)
-            is VexAddExpr, is VexMulExpr,
-            is VexBitwiseAndExpr, is VexBitwiseOrExpr, is VexBitwiseXorExpr, is VexShiftExpr -> inferArithmeticExpr(expr)
+            is VexAddExpr,
+            is VexMulExpr,
+            is VexBitwiseAndExpr,
+            is VexBitwiseOrExpr,
+            is VexBitwiseXorExpr,
+            is VexShiftExpr -> inferArithmeticExpr(expr)
 
-            is VexEqualityExpr, is VexRelationalExpr,
-            is VexLogicalAndExpr, is VexLogicalOrExpr -> VexType.IntType // Boolean representation in VEX
+            is VexEqualityExpr,
+            is VexRelationalExpr,
+            is VexLogicalAndExpr,
+            is VexLogicalOrExpr -> VexType.IntType // Boolean representation in VEX
             is VexAssignExpr -> inferAssignmentExpr(expr)
             is VexMemberExpr -> inferMemberExpr(expr)
 
@@ -45,7 +52,7 @@ object VexTypeInference {
         return when {
             node.findChildByType(VexTypes.NUMBER) != null -> inferNumberLiteral(expr.text)
             node.findChildByType(VexTypes.STRING) != null ||
-                    node.findChildByType(VexTypes.UNCLOSED_STRING) != null -> VexType.StringType
+                node.findChildByType(VexTypes.UNCLOSED_STRING) != null -> VexType.StringType
 
             expr.identifier != null -> inferVariableReference(expr)
             else -> VexType.UnknownType
@@ -91,16 +98,19 @@ object VexTypeInference {
         }
     }
 
-
     private fun inferArithmeticExpr(expr: PsiElement): VexType {
         val (left, right) = expr.binaryOperands ?: return VexType.UnknownType
 
-        val operatorKind = expr.operatorKind ?: when (expr) {
-            is VexMulExpr -> VexTypePromotion.OperatorKind.MULTIPLICATIVE
-            is VexBitwiseAndExpr, is VexBitwiseOrExpr, is VexBitwiseXorExpr -> VexTypePromotion.OperatorKind.BITWISE
-            is VexShiftExpr -> VexTypePromotion.OperatorKind.SHIFT
-            else -> return VexType.UnknownType
-        }
+        val operatorKind =
+            expr.operatorKind
+                ?: when (expr) {
+                    is VexMulExpr -> VexTypePromotion.OperatorKind.MULTIPLICATIVE
+                    is VexBitwiseAndExpr,
+                    is VexBitwiseOrExpr,
+                    is VexBitwiseXorExpr -> VexTypePromotion.OperatorKind.BITWISE
+                    is VexShiftExpr -> VexTypePromotion.OperatorKind.SHIFT
+                    else -> return VexType.UnknownType
+                }
 
         return VexTypePromotion.promote(inferType(left), inferType(right), operatorKind)
     }
@@ -135,7 +145,8 @@ object VexTypeInference {
             return resolveStructMemberType(expr, baseType.name, memberName)
         }
 
-        val isSwizzlable = baseType == VexType.Vector2Type ||
+        val isSwizzlable =
+            baseType == VexType.Vector2Type ||
                 baseType == VexType.VectorType ||
                 baseType == VexType.Vector4Type ||
                 baseType == VexType.Matrix3Type ||
@@ -147,9 +158,9 @@ object VexTypeInference {
                 return VexType.UnknownType
             }
             return when (memberName.length) {
-                1 -> VexType.FloatType   // .x, .r, .u
+                1 -> VexType.FloatType // .x, .r, .u
                 2 -> VexType.Vector2Type // .xy, .uv
-                3 -> VexType.VectorType  // .xyz, .rgb
+                3 -> VexType.VectorType // .xyz, .rgb
                 4 -> VexType.Vector4Type // .xyzw, .rgba
                 else -> VexType.UnknownType
             }
@@ -157,10 +168,15 @@ object VexTypeInference {
         return VexType.UnknownType
     }
 
-    private fun resolveStructMemberType(context: PsiElement, structName: String, memberName: String): VexType {
+    private fun resolveStructMemberType(
+        context: PsiElement,
+        structName: String,
+        memberName: String,
+    ): VexType {
         val structDefs = VexScopeAnalyzer.getVisibleStructs(context)
 
-        val targetStruct = structDefs.find { it.identifier?.text == structName } ?: return VexType.UnknownType
+        val targetStruct =
+            structDefs.find { it.identifier?.text == structName } ?: return VexType.UnknownType
 
         for (member in targetStruct.structMemberList) {
             val matchedDecl = member.declarationItemList.find { it.identifier.text == memberName }
@@ -202,7 +218,9 @@ object VexTypeInference {
             is VexType.ArrayType -> baseType.elementType
             VexType.MatrixType -> VexType.Vector4Type
             VexType.Matrix3Type -> VexType.VectorType
-            VexType.VectorType, VexType.Vector2Type, VexType.Vector4Type -> VexType.FloatType
+            VexType.VectorType,
+            VexType.Vector2Type,
+            VexType.Vector4Type -> VexType.FloatType
 
             else -> VexType.UnknownType
         }
@@ -211,8 +229,9 @@ object VexTypeInference {
     private fun inferPrefixExpr(expr: VexPrefixExpr): VexType {
         val operand = expr.children.firstOrNull { it is VexExpr } ?: return VexType.UnknownType
 
-        if (expr.node.findChildByType(VexTypes.NOT) != null ||
-            expr.node.findChildByType(VexTypes.BITNOT) != null
+        if (
+            expr.node.findChildByType(VexTypes.NOT) != null ||
+                expr.node.findChildByType(VexTypes.BITNOT) != null
         ) {
             return VexType.IntType
         }

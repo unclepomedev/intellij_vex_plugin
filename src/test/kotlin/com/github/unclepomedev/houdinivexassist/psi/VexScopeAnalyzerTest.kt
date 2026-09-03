@@ -14,12 +14,16 @@ class VexScopeAnalyzerTest {
 
     @Test
     fun testParseIncludePathsWithWindowsSeparator() {
-        val pathStr = "C:\\Program Files\\Side Effects Software\\Houdini\\vex\\include;D:\\my_vex_lib;&"
+        val pathStr =
+            "C:\\Program Files\\Side Effects Software\\Houdini\\vex\\include;D:\\my_vex_lib;&"
         // simulating the separator as Windows ;
         val parsed = VexScopeAnalyzer.parseIncludePaths(pathStr, ";")
         assertEquals(
-            listOf("C:\\Program Files\\Side Effects Software\\Houdini\\vex\\include", "D:\\my_vex_lib"),
-            parsed
+            listOf(
+                "C:\\Program Files\\Side Effects Software\\Houdini\\vex\\include",
+                "D:\\my_vex_lib",
+            ),
+            parsed,
         )
     }
 

@@ -9,7 +9,7 @@ import com.intellij.psi.PsiReferenceBase
 
 class VexStructReference(
     element: VexTypeRef,
-    textRange: TextRange
+    textRange: TextRange,
 ) : PsiReferenceBase<VexTypeRef>(element, textRange) {
 
     override fun resolve(): PsiElement? {

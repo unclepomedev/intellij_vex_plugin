@@ -11,8 +11,9 @@ import com.intellij.psi.util.PsiTreeUtil
 class VexReturnChecker(private val reporter: VexTypeCheckReporter) {
 
     fun check(element: VexReturnStatement) {
-        val enclosingFunction = PsiTreeUtil.getParentOfType(element, VexFunctionDef::class.java)
-            ?: return // Not inside a function
+        val enclosingFunction =
+            PsiTreeUtil.getParentOfType(element, VexFunctionDef::class.java)
+                ?: return // Not inside a function
 
         val declaredReturnType = VexTypeExtractor.extractType(enclosingFunction)
         if (declaredReturnType == VexType.UnknownType) return

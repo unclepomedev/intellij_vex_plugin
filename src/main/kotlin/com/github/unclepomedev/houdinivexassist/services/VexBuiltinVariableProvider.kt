@@ -12,26 +12,31 @@ class VexBuiltinVariableProvider {
     private val builtinTypes: Map<String, VexType> by lazy { loadBuiltinTypes() }
 
     private fun loadBuiltinTypes(): Map<String, VexType> {
-        val resourceStream = javaClass.classLoader.getResourceAsStream("type_inference_data.json")
-            ?: run {
-                logger.info("type_inference_data.json not found in resources; builtin attribute types unavailable")
-                return emptyMap()
-            }
+        val resourceStream =
+            javaClass.classLoader.getResourceAsStream("type_inference_data.json")
+                ?: run {
+                    logger.info(
+                        "type_inference_data.json not found in resources; builtin attribute types unavailable"
+                    )
+                    return emptyMap()
+                }
 
         return try {
             resourceStream.reader().use { reader ->
                 val mapType = object : TypeToken<Map<String, Map<String, List<String>>>>() {}.type
                 val data: Map<String, Map<String, List<String>>> = Gson().fromJson(reader, mapType)
 
-                data.mapNotNull { (name, typeMap) ->
-                    if (typeMap.size == 1) {
-                        val typeName = typeMap.keys.first()
-                        val vexType = VexType.fromString(typeName)
-                        if (vexType != VexType.UnknownType) name to vexType else null
-                    } else {
-                        null // conflicting types -> skip
+                data
+                    .mapNotNull { (name, typeMap) ->
+                        if (typeMap.size == 1) {
+                            val typeName = typeMap.keys.first()
+                            val vexType = VexType.fromString(typeName)
+                            if (vexType != VexType.UnknownType) name to vexType else null
+                        } else {
+                            null // conflicting types -> skip
+                        }
                     }
-                }.toMap()
+                    .toMap()
             }
         } catch (e: Exception) {
             logger.warn("Failed to load type_inference_data.json", e)

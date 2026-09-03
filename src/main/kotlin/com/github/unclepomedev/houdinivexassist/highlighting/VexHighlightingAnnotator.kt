@@ -21,7 +21,8 @@ class VexHighlightingAnnotator : Annotator {
         val containingFile = element.containingFile as? VexFile ?: return
 
         if (VexFunctionResolver.isKnownFunction(identifier.text, containingFile)) {
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+            holder
+                .newSilentAnnotation(HighlightSeverity.INFORMATION)
                 .range(identifier.textRange)
                 .textAttributes(DefaultLanguageHighlighterColors.FUNCTION_CALL)
                 .create()
@@ -29,7 +30,8 @@ class VexHighlightingAnnotator : Annotator {
     }
 
     private fun highlightFunctionDef(element: VexFunctionDef, holder: AnnotationHolder) {
-        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+        holder
+            .newSilentAnnotation(HighlightSeverity.INFORMATION)
             .range(element.identifier.textRange)
             .textAttributes(DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
             .create()
@@ -37,7 +39,8 @@ class VexHighlightingAnnotator : Annotator {
 
     private fun highlightStructDef(element: VexStructDef, holder: AnnotationHolder) {
         val identifier = element.identifier ?: return
-        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+        holder
+            .newSilentAnnotation(HighlightSeverity.INFORMATION)
             .range(identifier.textRange)
             .textAttributes(DefaultLanguageHighlighterColors.CLASS_NAME)
             .create()

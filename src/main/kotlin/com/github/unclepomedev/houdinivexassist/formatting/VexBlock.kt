@@ -10,7 +10,7 @@ class VexBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    private val spacingBuilder: SpacingBuilder
+    private val spacingBuilder: SpacingBuilder,
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
@@ -29,10 +29,10 @@ class VexBlock(
         val type = myNode.elementType
         if (
             type == VexTypes.BLOCK ||
-            type == VexTypes.STRUCT_DEF ||
-            type == VexTypes.PARAMETER_LIST_DEF ||
-            type == VexTypes.PARAMETER_LIST_SIG ||
-            type == VexTypes.ARGUMENT_LIST
+                type == VexTypes.STRUCT_DEF ||
+                type == VexTypes.PARAMETER_LIST_DEF ||
+                type == VexTypes.PARAMETER_LIST_SIG ||
+                type == VexTypes.ARGUMENT_LIST
         ) {
             return ChildAttributes(Indent.getNormalIndent(), null)
         }
@@ -45,16 +45,18 @@ class VexBlock(
 
         return when (parentType) {
             VexTypes.STRUCT_DEF -> {
-                if (type in NO_INDENT_TOKENS_STRUCT_DEF) Indent.getNoneIndent() else Indent.getNormalIndent()
+                if (type in NO_INDENT_TOKENS_STRUCT_DEF) Indent.getNoneIndent()
+                else Indent.getNormalIndent()
             }
 
             VexTypes.BLOCK -> {
-                if (type in NO_INDENT_TOKENS_BLOCK) Indent.getNoneIndent() else Indent.getNormalIndent()
+                if (type in NO_INDENT_TOKENS_BLOCK) Indent.getNoneIndent()
+                else Indent.getNormalIndent()
             }
 
             VexTypes.PARAMETER_LIST_DEF, // function parameter
-            VexTypes.PARAMETER_LIST_SIG,  // struct method signature
-            VexTypes.ARGUMENT_LIST -> {  // function argument
+            VexTypes.PARAMETER_LIST_SIG, // struct method signature
+            VexTypes.ARGUMENT_LIST -> { // function argument
                 Indent.getNormalIndent()
             }
 
@@ -71,11 +73,17 @@ class VexBlock(
     }
 
     companion object {
-        private val NO_INDENT_TOKENS_STRUCT_DEF = setOf(
-            VexTypes.STRUCT, VexTypes.IDENTIFIER, VexTypes.LBRACE, VexTypes.RBRACE
-        )
-        private val NO_INDENT_TOKENS_BLOCK = setOf(
-            VexTypes.LBRACE, VexTypes.RBRACE
-        )
+        private val NO_INDENT_TOKENS_STRUCT_DEF =
+            setOf(
+                VexTypes.STRUCT,
+                VexTypes.IDENTIFIER,
+                VexTypes.LBRACE,
+                VexTypes.RBRACE,
+            )
+        private val NO_INDENT_TOKENS_BLOCK =
+            setOf(
+                VexTypes.LBRACE,
+                VexTypes.RBRACE,
+            )
     }
 }

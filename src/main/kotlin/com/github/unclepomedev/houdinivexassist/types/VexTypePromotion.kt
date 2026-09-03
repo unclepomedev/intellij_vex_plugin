@@ -4,7 +4,13 @@ import com.github.unclepomedev.houdinivexassist.psi.VexTypes
 
 object VexTypePromotion {
 
-    enum class OperatorKind { ADDITIVE, SUBTRACTIVE, MULTIPLICATIVE, BITWISE, SHIFT }
+    enum class OperatorKind {
+        ADDITIVE,
+        SUBTRACTIVE,
+        MULTIPLICATIVE,
+        BITWISE,
+        SHIFT,
+    }
 
     fun promote(t1: VexType, t2: VexType, operatorKind: OperatorKind): VexType {
         if (t1 == VexType.UnknownType || t2 == VexType.UnknownType) {
@@ -15,7 +21,8 @@ object VexTypePromotion {
             OperatorKind.ADDITIVE -> promoteAdditive(t1, t2)
             OperatorKind.SUBTRACTIVE -> promoteNumeric(t1, t2)
             OperatorKind.MULTIPLICATIVE -> promoteMultiplicative(t1, t2)
-            OperatorKind.BITWISE, OperatorKind.SHIFT -> promoteBitwiseOrShift(t1, t2)
+            OperatorKind.BITWISE,
+            OperatorKind.SHIFT -> promoteBitwiseOrShift(t1, t2)
         }
     }
 
@@ -35,8 +42,10 @@ object VexTypePromotion {
         if (t1 == VexType.Matrix3Type && t2 == VexType.Matrix3Type) return VexType.Matrix3Type
 
         val types = setOf(t1, t2)
-        if (types.contains(VexType.VectorType) && types.contains(VexType.MatrixType)) return VexType.VectorType
-        if (types.contains(VexType.VectorType) && types.contains(VexType.Matrix3Type)) return VexType.VectorType
+        if (types.contains(VexType.VectorType) && types.contains(VexType.MatrixType))
+            return VexType.VectorType
+        if (types.contains(VexType.VectorType) && types.contains(VexType.Matrix3Type))
+            return VexType.VectorType
 
         return promoteNumeric(t1, t2)
     }
@@ -76,7 +85,9 @@ object VexTypePromotion {
     }
 
     private fun isVector(type: VexType): Boolean {
-        return type == VexType.Vector2Type || type == VexType.VectorType || type == VexType.Vector4Type
+        return type == VexType.Vector2Type ||
+            type == VexType.VectorType ||
+            type == VexType.Vector4Type
     }
 
     private fun isMatrix(type: VexType): Boolean {
@@ -89,25 +100,36 @@ object VexTypePromotion {
 
     fun getOperatorKind(tokenType: com.intellij.psi.tree.IElementType): OperatorKind? {
         return when (tokenType) {
-            VexTypes.PLUS, VexTypes.PLUSEQ -> OperatorKind.ADDITIVE
-            VexTypes.MINUS, VexTypes.MINUSEQ -> OperatorKind.SUBTRACTIVE
-            VexTypes.MUL, VexTypes.MULEQ,
-            VexTypes.DIV, VexTypes.DIVEQ,
-            VexTypes.MOD, VexTypes.MODEQ -> OperatorKind.MULTIPLICATIVE
+            VexTypes.PLUS,
+            VexTypes.PLUSEQ -> OperatorKind.ADDITIVE
+            VexTypes.MINUS,
+            VexTypes.MINUSEQ -> OperatorKind.SUBTRACTIVE
+            VexTypes.MUL,
+            VexTypes.MULEQ,
+            VexTypes.DIV,
+            VexTypes.DIVEQ,
+            VexTypes.MOD,
+            VexTypes.MODEQ -> OperatorKind.MULTIPLICATIVE
 
-            VexTypes.BITAND, VexTypes.ANDEQ,
-            VexTypes.BITOR, VexTypes.OREQ,
-            VexTypes.BITXOR, VexTypes.XOREQ -> OperatorKind.BITWISE
+            VexTypes.BITAND,
+            VexTypes.ANDEQ,
+            VexTypes.BITOR,
+            VexTypes.OREQ,
+            VexTypes.BITXOR,
+            VexTypes.XOREQ -> OperatorKind.BITWISE
 
-            VexTypes.LSHIFT, VexTypes.LSHIFTEQ,
-            VexTypes.RSHIFT, VexTypes.RSHIFTEQ -> OperatorKind.SHIFT
+            VexTypes.LSHIFT,
+            VexTypes.LSHIFTEQ,
+            VexTypes.RSHIFT,
+            VexTypes.RSHIFTEQ -> OperatorKind.SHIFT
 
             else -> null
         }
     }
 
     /**
-     * Determines whether the type of the right-hand side (rhs) is substitutable for the type of the left-hand side (lhs) (i.e., whether an implicit cast is possible).
+     * Determines whether the type of the right-hand side (rhs) is substitutable for the type of the
+     * left-hand side (lhs) (i.e., whether an implicit cast is possible).
      */
     fun isAssignable(lhs: VexType, rhs: VexType): Boolean {
         if (lhs == rhs || lhs == VexType.UnknownType || rhs == VexType.UnknownType) {

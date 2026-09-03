@@ -72,7 +72,8 @@ object VexLookupElementFactory {
 }
 
 /**
- * Handler that inserts `()` and moves the cursor to the appropriate position immediately after completion is confirmed.
+ * Handler that inserts `()` and moves the cursor to the appropriate position immediately after
+ * completion is confirmed.
  */
 private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandler<LookupElement> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
@@ -86,14 +87,17 @@ private class FunctionInsertHandler(private val hasArgs: Boolean) : InsertHandle
 
         val hasParen = offset < document.textLength && document.charsSequence[offset] == '('
         val hasClosingParen =
-            hasParen && offset + 1 < document.textLength && document.charsSequence[offset + 1] == ')'
+            hasParen &&
+                offset + 1 < document.textLength &&
+                document.charsSequence[offset + 1] == ')'
 
         if (!hasParen) {
             document.insertString(offset, "()")
         }
 
         // Calculate cursor movement:
-        // Move outside (+2) ONLY IF the function has NO arguments AND it has cleanly closed empty parentheses `()`.
+        // Move outside (+2) ONLY IF the function has NO arguments AND it has cleanly closed empty
+        // parentheses `()`.
         // Otherwise, move inside (+1).
         val moveOffset = if (!hasArgs && (!hasParen || hasClosingParen)) offset + 2 else offset + 1
         editor.caretModel.moveToOffset(moveOffset)

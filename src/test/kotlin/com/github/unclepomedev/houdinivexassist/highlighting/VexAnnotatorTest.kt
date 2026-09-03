@@ -13,7 +13,7 @@ class VexAnnotatorTest : VexTestBase() {
     fun testUnknownFunctionIsHighlightedAsError() {
         myFixture.configureByText(
             VexFileType,
-            "float d = <error descr=\"Unknown VEX function: 'hogehoge'\">hogehoge</error>(p1, p2);"
+            "float d = <error descr=\"Unknown VEX function: 'hogehoge'\">hogehoge</error>(p1, p2);",
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
@@ -25,11 +25,12 @@ class VexAnnotatorTest : VexTestBase() {
             float myLocalFunc() {
                 return 1.0;
             }
-            
+
             void main() {
                 float d = myLocalFunc();
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.checkHighlighting(false, false, false, false)
@@ -41,7 +42,8 @@ class VexAnnotatorTest : VexTestBase() {
             """
             int myVar = 1;
             float <error descr="Variable 'myVar' is already defined in this scope">myVar</error> = 2.0;
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -53,7 +55,8 @@ class VexAnnotatorTest : VexTestBase() {
             void myFunc(int myParam) {
                 float <error descr="Variable 'myParam' is already defined as a parameter">myParam</error> = 1.0;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -66,7 +69,8 @@ class VexAnnotatorTest : VexTestBase() {
             if (myVar > 0) {
                 int myVar = 2;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -77,7 +81,8 @@ class VexAnnotatorTest : VexTestBase() {
             """
             struct A { int val; }
             struct B { int val; }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -88,7 +93,8 @@ class VexAnnotatorTest : VexTestBase() {
             """
             int a = 1;
             int b = a + <error descr="Unresolved variable: 'c'">c</error>;
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -104,7 +110,8 @@ class VexAnnotatorTest : VexTestBase() {
                     @P.x += innerVar;
                 }
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -114,7 +121,8 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             float distance = 1.0;
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -125,7 +133,8 @@ class VexAnnotatorTest : VexTestBase() {
             """
             float distance = 1.0;
             <error descr="Variable 'distance' cannot be called as a function">distance</error>(@P, @P);
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -135,11 +144,12 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             void myLocalFunc() {}
-            
+
             void main() {
                 int <error descr="Variable name 'myLocalFunc' conflicts with a local function">myLocalFunc</error> = 1;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -149,7 +159,8 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             void <error descr="Function name 'normalize' conflicts with a standard VEX function">normalize</error>(vector v) {}
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -159,9 +170,10 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             struct MyData { int a; }
-            
+
             void <error descr="Function name 'MyData' conflicts with a struct definition">MyData</error>() {}
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -171,11 +183,12 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             void myFunc(int a) {}
-            
+
             void myFunc(int a, float b) {}
-            
+
             void <error descr="Function 'myFunc' with 1 parameters is already defined">myFunc</error>(int a) {}
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -186,7 +199,8 @@ class VexAnnotatorTest : VexTestBase() {
             """
             struct MyData { int a; }
             struct <error descr="Struct 'MyData' is already defined">MyData</error> { float b; }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -196,7 +210,8 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             struct <error descr="Struct name 'length' conflicts with a standard VEX function">length</error> { int val; }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -206,9 +221,10 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             void myProc() {}
-            
+
             struct <error descr="Struct name 'myProc' conflicts with a local function">myProc</error> { int val; }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -217,10 +233,11 @@ class VexAnnotatorTest : VexTestBase() {
         myFixture.configureByText(
             VexFileType,
             """
-        float d = myLaterFunc();
-        
-        float myLaterFunc() { return 0.0; }
-        """.trimIndent()
+            float d = myLaterFunc();
+
+            float myLaterFunc() { return 0.0; }
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -232,7 +249,8 @@ class VexAnnotatorTest : VexTestBase() {
             void main() {
                 int <weak_warning descr="Unused variable 'myVar'">myVar</weak_warning> = 1;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
@@ -245,7 +263,8 @@ class VexAnnotatorTest : VexTestBase() {
                 int myVar = 1;
                 @P.x += myVar;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
@@ -257,11 +276,12 @@ class VexAnnotatorTest : VexTestBase() {
             void myFunc(int <weak_warning descr="Unused parameter 'unusedParam'">unusedParam</weak_warning>, int usedParam) {
                 int <weak_warning descr="Unused variable 'a'">a</weak_warning> = usedParam;
             }
-            
+
             void main() {
                 myFunc(1, 2);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
@@ -272,11 +292,12 @@ class VexAnnotatorTest : VexTestBase() {
             """
             void <weak_warning descr="Unused function 'myHelper'">myHelper</weak_warning>() {
             }
-            
+
             void main() {
                 // main is not marked as unused
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
@@ -287,11 +308,12 @@ class VexAnnotatorTest : VexTestBase() {
             """
             void myHelper() {
             }
-            
+
             void main() {
                 myHelper();
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
@@ -308,7 +330,8 @@ class VexAnnotatorTest : VexTestBase() {
             void main() {
                 Engine e;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         // e is also unused
         myFixture.checkHighlighting(true, false, true, true)
@@ -328,7 +351,8 @@ class VexAnnotatorTest : VexTestBase() {
                 e.power = 100;
                 float <weak_warning descr="Unused variable 't'">t</weak_warning> = e.torque;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(true, false, true, false)
     }
@@ -344,7 +368,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 int a = 1;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -362,7 +387,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 B objB;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         // objB is also unused
         myFixture.checkHighlighting(true, false, true, true)
@@ -378,7 +404,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 int b = <error descr="Incompatible types: cannot assign 'string' to 'int'">"hello"</error>;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -393,7 +420,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 s = <error descr="Incompatible types: cannot assign 'vector' to 'string'">v</error>;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -410,7 +438,8 @@ class VexAnnotatorTest : VexTestBase() {
                 string s = <error descr="Incompatible types: cannot assign 'vector' to 'string'">myVectorFunc()</error>;
                 vector v = myVectorFunc();
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -430,7 +459,8 @@ class VexAnnotatorTest : VexTestBase() {
                 int i = 1;
                 <error descr="Incompatible types: cannot assign result of type 'string' to 'int'">i += "text"</error>;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -449,7 +479,8 @@ class VexAnnotatorTest : VexTestBase() {
                 vector v;
                 m = <error descr="Incompatible types: cannot assign 'vector' to 'matrix'">v</error>;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -460,7 +491,7 @@ class VexAnnotatorTest : VexTestBase() {
             """
             struct A { int val; }
             struct B { int val; }
-            
+
             void main() {
                 int int_arr[];
                 float float_arr[];
@@ -472,7 +503,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 a_obj = <error descr="Incompatible types: cannot assign 'struct B' to 'struct A'">b_obj</error>;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -491,7 +523,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 float d = distance({0,0,0}, <error descr="Type mismatch in argument 2: expected 'vector', got 'string'">"string"</error>);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -506,7 +539,8 @@ class VexAnnotatorTest : VexTestBase() {
                 // The exact-match tie-breaker selects the float overload.
                 vector v = set(1.0, <error descr="Type mismatch in argument 2: expected 'float', got 'string'">"string"</error>, 3.0);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -523,7 +557,8 @@ class VexAnnotatorTest : VexTestBase() {
                 process("a", "b");       // OK: matches (string, string)
                 process(1, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -542,7 +577,8 @@ class VexAnnotatorTest : VexTestBase() {
                 process("a", "b", "c");  // OK: matches (string, string, string)
                 process(1, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -552,7 +588,7 @@ class VexAnnotatorTest : VexTestBase() {
             VexFileType,
             """
             void myProcessIntArray(int arr[], int val) {}
-            
+
             void main() {
                 int valid_arr[] = {1, 2, 3};
                 float invalid_arr[] = {1.0, 2.0, 3.0};
@@ -563,7 +599,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 myProcessIntArray(valid_arr, <error descr="Type mismatch in argument 2: expected 'int', got 'string'">"text"</error>);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -574,10 +611,11 @@ class VexAnnotatorTest : VexTestBase() {
             """
             // First definition
             void myFunc(int a, float b) {}
-            
+
             // Second definition: different parameter names, but same type signature
             void <error descr="Function 'myFunc' with 2 parameters is already defined">myFunc</error>(int x, float y) {}
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -588,10 +626,11 @@ class VexAnnotatorTest : VexTestBase() {
             """
             // First definition
             void processArray(int arr[]) {}
-            
+
             // Second definition: identical signature, should trigger conflict error
             void <error descr="Function 'processArray' with 1 parameters is already defined">processArray</error>(int arr[]) {}
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -603,14 +642,15 @@ class VexAnnotatorTest : VexTestBase() {
             // Define overloads with 1 and 2 arguments
             void myProc(int a) {}
             void myProc(int a, float b) {}
-            
+
             void main() {
                 // Calling with 3 arguments. 
                 // It should NOT fall back to myProc(int, float).
                 // It should correctly report that no matching overload exists.
                 <error descr="No matching overload for function 'myProc' with 3 arguments">myProc</error>(1, 2.0, 3.0);
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, true)
     }
@@ -639,19 +679,22 @@ class VexAnnotatorTest : VexTestBase() {
             vector myVectorFunc() {
                 return 1.0; // OK: float implicitly casts to vector
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testFileNamedFunctionIsNotHighlightedAsUnused() {
         myFixture.configureByText(
-            "my_wrangle.vex", """
+            "my_wrangle.vex",
+            """
             void my_wrangle() {
                 int a = 1;
                 @P.x += a;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.checkHighlighting(true, false, true, false)
@@ -659,11 +702,13 @@ class VexAnnotatorTest : VexTestBase() {
 
     fun testDifferentNamedFunctionIsHighlightedAsUnused() {
         myFixture.configureByText(
-            "my_wrangle.vex", """
+            "my_wrangle.vex",
+            """
             void <weak_warning descr="Unused function 'another_func'">another_func</weak_warning>() {
                 int <weak_warning descr="Unused variable 'a'">a</weak_warning> = 1;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.checkHighlighting(true, false, true, false)
@@ -671,12 +716,14 @@ class VexAnnotatorTest : VexTestBase() {
 
     fun testSanitizedFileNamedFunctionIsNotHighlighted() {
         myFixture.configureByText(
-            "my-awesome-wrangle.vex", """
+            "my-awesome-wrangle.vex",
+            """
             void my_awesome_wrangle() {
                 int a = 1;
                 @P.x += a;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.checkHighlighting(true, false, true, false)
@@ -690,7 +737,8 @@ class VexAnnotatorTest : VexTestBase() {
                 float dot = dot({1,0,0}, {0,1,0});
                 float len = length({1,2,3});
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -702,7 +750,8 @@ class VexAnnotatorTest : VexTestBase() {
             void main() {
                 float dot = abs(dot({1,0,0}, {0,1,0}));
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -723,7 +772,8 @@ class VexAnnotatorTest : VexTestBase() {
                     int a = 10;
                 }
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -737,7 +787,8 @@ class VexAnnotatorTest : VexTestBase() {
                 printf("%d %f %s\n", 1, 2.0, "test");
                 printf("no args");
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -748,7 +799,8 @@ class VexAnnotatorTest : VexTestBase() {
             """
             void my_lib_func() {}
             int my_lib_var = 123;
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.configureByText(
             VexFileType,
@@ -758,20 +810,23 @@ class VexAnnotatorTest : VexTestBase() {
                 my_lib_func();
                 int a = my_lib_var;
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         // Everything should be resolved, no errors
         myFixture.checkHighlighting(false, false, false, false)
     }
 
     fun testIncludeUnusedWarning() {
-        val libFile = myFixture.addFileToProject(
-            "my_lib.vfl",
-            """
-            void my_lib_func() {}
-            int my_lib_var = 123;
-            """.trimIndent()
-        )
+        val libFile =
+            myFixture.addFileToProject(
+                "my_lib.vfl",
+                """
+                void my_lib_func() {}
+                int my_lib_var = 123;
+                """
+                    .trimIndent(),
+            )
         myFixture.configureByText(
             VexFileType,
             """
@@ -781,7 +836,8 @@ class VexAnnotatorTest : VexTestBase() {
                 int a = my_lib_var;
                 a = 2; // to mark 'a' as used
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         // No unused warnings for my_lib_func and my_lib_var because they are used in main
         myFixture.checkHighlighting(true, false, true, false)
@@ -799,7 +855,8 @@ class VexAnnotatorTest : VexTestBase() {
                 int a = 10;
                 int b = floor(@ptnum / float(a));
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -813,7 +870,8 @@ class VexAnnotatorTest : VexTestBase() {
                 float b = @I + 1.0;
                 vector v = @I * {1, 2, 3};
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         // @I has conflicting types (vector and int) in the builtin data,
         // so it resolves to UnknownType. No error should be reported
@@ -828,11 +886,11 @@ class VexAnnotatorTest : VexTestBase() {
             #ifdef MY_MACRO
             int x = 1;
             #endif
-            
+
             #ifndef OTHER_MACRO
             float y = 2.0;
             #endif
-            
+
             void main() {
             #ifdef DEBUG
                 int debug = 1;
@@ -840,7 +898,8 @@ class VexAnnotatorTest : VexTestBase() {
                 int debug = 0;
             #endif
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -851,18 +910,19 @@ class VexAnnotatorTest : VexTestBase() {
             """
             #define MULTI_LINE \
                 int x = 1;
-            
+
             #define FUNC_MACRO(a, b) \
                 ((a) + \
                  (b))
-            
+
             #if 1 \
                 && 1
             void main() {
                 int a = 1;
             }
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -875,7 +935,8 @@ class VexAnnotatorTest : VexTestBase() {
             #define FILE_A_VFL
             #include "fileB.vfl"
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.addFileToProject(
             "fileB.vfl",
@@ -884,14 +945,16 @@ class VexAnnotatorTest : VexTestBase() {
             #define FILE_B_VFL
             #include "fileA.vfl"
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.configureByText(
             VexFileType,
             """
             #include "fileA.vfl"
             void main() {}
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }

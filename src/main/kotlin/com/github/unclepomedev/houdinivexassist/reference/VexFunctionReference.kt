@@ -13,20 +13,23 @@ class VexFunctionReference(
     element: PsiElement,
     textRange: TextRange,
     private val name: String,
-    private val arity: Int
+    private val arity: Int,
 ) : PsiReferenceBase<PsiElement>(element, textRange) {
 
     override fun resolve(): PsiElement? {
         val callExpr = (element as? VexCallExpr) ?: (element.parent as? VexCallExpr)
-        VexMacroResolver.resolveMacro(callExpr ?: element, name)?.let { return it }
-
-        val result = if (callExpr != null) {
-            val args = callExpr.argumentList?.exprList ?: emptyList()
-            val argTypes = args.map(VexTypeInference::inferType)
-            VexFunctionResolver.resolveFunction(element, name, args.size, argTypes)
-        } else {
-            VexFunctionResolver.resolveFunction(element, name, arity)
+        VexMacroResolver.resolveMacro(callExpr ?: element, name)?.let {
+            return it
         }
+
+        val result =
+            if (callExpr != null) {
+                val args = callExpr.argumentList?.exprList ?: emptyList()
+                val argTypes = args.map(VexTypeInference::inferType)
+                VexFunctionResolver.resolveFunction(element, name, args.size, argTypes)
+            } else {
+                VexFunctionResolver.resolveFunction(element, name, arity)
+            }
 
         return result
     }

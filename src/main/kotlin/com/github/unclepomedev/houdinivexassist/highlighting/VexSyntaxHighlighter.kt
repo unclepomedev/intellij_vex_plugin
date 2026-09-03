@@ -15,31 +15,53 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
 
     companion object {
         // attach attribute keys ==========================================================
-        private val KEYWORD = createTextAttributesKey("VEX_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
-        private val NUMBER = createTextAttributesKey("VEX_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
-        private val STRING = createTextAttributesKey("VEX_STRING", DefaultLanguageHighlighterColors.STRING)
+        private val KEYWORD =
+            createTextAttributesKey("VEX_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
+        private val NUMBER =
+            createTextAttributesKey("VEX_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
+        private val STRING =
+            createTextAttributesKey("VEX_STRING", DefaultLanguageHighlighterColors.STRING)
         private val LINE_COMMENT_KEY =
-            createTextAttributesKey("VEX_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+            createTextAttributesKey(
+                "VEX_LINE_COMMENT",
+                DefaultLanguageHighlighterColors.LINE_COMMENT,
+            )
         private val BLOCK_COMMENT_KEY =
-            createTextAttributesKey("VEX_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT)
+            createTextAttributesKey(
+                "VEX_BLOCK_COMMENT",
+                DefaultLanguageHighlighterColors.BLOCK_COMMENT,
+            )
         private val ATTRIBUTE =
-            createTextAttributesKey("VEX_ATTRIBUTE", DefaultLanguageHighlighterColors.INSTANCE_FIELD)
+            createTextAttributesKey(
+                "VEX_ATTRIBUTE",
+                DefaultLanguageHighlighterColors.INSTANCE_FIELD,
+            )
 
-        private val MACRO = createTextAttributesKey("VEX_MACRO", DefaultLanguageHighlighterColors.METADATA)
+        private val MACRO =
+            createTextAttributesKey("VEX_MACRO", DefaultLanguageHighlighterColors.METADATA)
 
-        private val IDENTIFIER = createTextAttributesKey("VEX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
-        private val TYPE = createTextAttributesKey("VEX_TYPE", DefaultLanguageHighlighterColors.KEYWORD)
+        private val IDENTIFIER =
+            createTextAttributesKey("VEX_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER)
+        private val TYPE =
+            createTextAttributesKey("VEX_TYPE", DefaultLanguageHighlighterColors.KEYWORD)
         private val BAD_CHARACTER =
             createTextAttributesKey("VEX_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
 
         private val OPERATION_SIGN =
-            createTextAttributesKey("VEX_OPERATION_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
+            createTextAttributesKey(
+                "VEX_OPERATION_SIGN",
+                DefaultLanguageHighlighterColors.OPERATION_SIGN,
+            )
         private val PARENTHESES =
             createTextAttributesKey("VEX_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES)
-        private val BRACES = createTextAttributesKey("VEX_BRACES", DefaultLanguageHighlighterColors.BRACES)
-        private val BRACKETS = createTextAttributesKey("VEX_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
-        private val COMMA = createTextAttributesKey("VEX_COMMA", DefaultLanguageHighlighterColors.COMMA)
-        private val SEMICOLON = createTextAttributesKey("VEX_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
+        private val BRACES =
+            createTextAttributesKey("VEX_BRACES", DefaultLanguageHighlighterColors.BRACES)
+        private val BRACKETS =
+            createTextAttributesKey("VEX_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
+        private val COMMA =
+            createTextAttributesKey("VEX_COMMA", DefaultLanguageHighlighterColors.COMMA)
+        private val SEMICOLON =
+            createTextAttributesKey("VEX_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON)
         private val DOT = createTextAttributesKey("VEX_DOT", DefaultLanguageHighlighterColors.DOT)
 
         // array per color ================================================================
@@ -71,42 +93,101 @@ class VexSyntaxHighlighter : SyntaxHighlighterBase() {
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {
         return when (tokenType) {
-            VexTypes.IF, VexTypes.ELSE, VexTypes.FOR, VexTypes.FOREACH,
-            VexTypes.WHILE, VexTypes.DO, VexTypes.BREAK, VexTypes.CONTINUE,
-            VexTypes.RETURN, VexTypes.STRUCT, VexTypes.EXPORT, VexTypes.FUNCTION,
-            VexTypes.CHOP_KW, VexTypes.COP2_KW, VexTypes.CVEX_KW, VexTypes.DISPLACE_KW,
-            VexTypes.FOG_KW, VexTypes.IMAGE3D_KW, VexTypes.LIGHT_KW, VexTypes.SHADOW_KW,
-            VexTypes.SOP_KW, VexTypes.SURFACE_KW -> KEYWORD_KEYS
+            VexTypes.IF,
+            VexTypes.ELSE,
+            VexTypes.FOR,
+            VexTypes.FOREACH,
+            VexTypes.WHILE,
+            VexTypes.DO,
+            VexTypes.BREAK,
+            VexTypes.CONTINUE,
+            VexTypes.RETURN,
+            VexTypes.STRUCT,
+            VexTypes.EXPORT,
+            VexTypes.FUNCTION,
+            VexTypes.CHOP_KW,
+            VexTypes.COP2_KW,
+            VexTypes.CVEX_KW,
+            VexTypes.DISPLACE_KW,
+            VexTypes.FOG_KW,
+            VexTypes.IMAGE3D_KW,
+            VexTypes.LIGHT_KW,
+            VexTypes.SHADOW_KW,
+            VexTypes.SOP_KW,
+            VexTypes.SURFACE_KW -> KEYWORD_KEYS
 
-            VexTypes.INT_KW, VexTypes.FLOAT_KW, VexTypes.VECTOR_KW,
-            VexTypes.VECTOR2_KW, VexTypes.VECTOR4_KW, VexTypes.MATRIX_KW,
-            VexTypes.MATRIX3_KW, VexTypes.STRING_KW, VexTypes.VOID_KW,
-            VexTypes.BSDF_KW, VexTypes.DICT_KW -> TYPE_KEYS
+            VexTypes.INT_KW,
+            VexTypes.FLOAT_KW,
+            VexTypes.VECTOR_KW,
+            VexTypes.VECTOR2_KW,
+            VexTypes.VECTOR4_KW,
+            VexTypes.MATRIX_KW,
+            VexTypes.MATRIX3_KW,
+            VexTypes.STRING_KW,
+            VexTypes.VOID_KW,
+            VexTypes.BSDF_KW,
+            VexTypes.DICT_KW -> TYPE_KEYS
 
             VexTypes.NUMBER -> NUMBER_KEYS
             VexTypes.STRING -> STRING_KEYS
             VexTypes.LINE_COMMENT -> LINE_COMMENT_KEYS
-            VexTypes.BLOCK_COMMENT, VexTypes.UNCLOSED_BLOCK_COMMENT -> BLOCK_COMMENT_KEYS
+            VexTypes.BLOCK_COMMENT,
+            VexTypes.UNCLOSED_BLOCK_COMMENT -> BLOCK_COMMENT_KEYS
             VexTypes.ATTRIBUTE -> ATTRIBUTE_KEYS
-            VexTypes.MACRO, VexTypes.INCLUDE_KW, VexTypes.DEFINE_KW, VexTypes.MACRO_BODY -> MACRO_KEYS
+            VexTypes.MACRO,
+            VexTypes.INCLUDE_KW,
+            VexTypes.DEFINE_KW,
+            VexTypes.MACRO_BODY -> MACRO_KEYS
             VexTypes.IDENTIFIER -> IDENTIFIER_KEYS
 
             TokenType.BAD_CHARACTER -> BAD_CHAR_KEYS
 
-            VexTypes.LPAREN, VexTypes.RPAREN -> PARENTHESES_KEYS
-            VexTypes.LBRACE, VexTypes.RBRACE -> BRACES_KEYS
-            VexTypes.LBRACK, VexTypes.RBRACK -> BRACKETS_KEYS
+            VexTypes.LPAREN,
+            VexTypes.RPAREN -> PARENTHESES_KEYS
+            VexTypes.LBRACE,
+            VexTypes.RBRACE -> BRACES_KEYS
+            VexTypes.LBRACK,
+            VexTypes.RBRACK -> BRACKETS_KEYS
             VexTypes.COMMA -> COMMA_KEYS
             VexTypes.SEMICOLON -> SEMICOLON_KEYS
             VexTypes.DOT -> DOT_KEYS
 
-            VexTypes.PLUS, VexTypes.MINUS, VexTypes.MUL, VexTypes.DIV, VexTypes.MOD,
-            VexTypes.EQUALS, VexTypes.PLUSEQ, VexTypes.MINUSEQ, VexTypes.MULEQ, VexTypes.DIVEQ,
-            VexTypes.MODEQ, VexTypes.ANDEQ, VexTypes.OREQ, VexTypes.XOREQ, VexTypes.LSHIFTEQ, VexTypes.RSHIFTEQ,
-            VexTypes.EQEQ, VexTypes.NEQ, VexTypes.LT, VexTypes.GT, VexTypes.LE, VexTypes.GE,
-            VexTypes.ANDAND, VexTypes.OROR, VexTypes.NOT, VexTypes.PLUSPLUS, VexTypes.MINUSMINUS,
-            VexTypes.LSHIFT, VexTypes.RSHIFT, VexTypes.BITAND, VexTypes.BITOR, VexTypes.BITXOR, VexTypes.BITNOT,
-            VexTypes.QMARK, VexTypes.COLON, VexTypes.ARROW -> OPERATION_SIGN_KEYS
+            VexTypes.PLUS,
+            VexTypes.MINUS,
+            VexTypes.MUL,
+            VexTypes.DIV,
+            VexTypes.MOD,
+            VexTypes.EQUALS,
+            VexTypes.PLUSEQ,
+            VexTypes.MINUSEQ,
+            VexTypes.MULEQ,
+            VexTypes.DIVEQ,
+            VexTypes.MODEQ,
+            VexTypes.ANDEQ,
+            VexTypes.OREQ,
+            VexTypes.XOREQ,
+            VexTypes.LSHIFTEQ,
+            VexTypes.RSHIFTEQ,
+            VexTypes.EQEQ,
+            VexTypes.NEQ,
+            VexTypes.LT,
+            VexTypes.GT,
+            VexTypes.LE,
+            VexTypes.GE,
+            VexTypes.ANDAND,
+            VexTypes.OROR,
+            VexTypes.NOT,
+            VexTypes.PLUSPLUS,
+            VexTypes.MINUSMINUS,
+            VexTypes.LSHIFT,
+            VexTypes.RSHIFT,
+            VexTypes.BITAND,
+            VexTypes.BITOR,
+            VexTypes.BITXOR,
+            VexTypes.BITNOT,
+            VexTypes.QMARK,
+            VexTypes.COLON,
+            VexTypes.ARROW -> OPERATION_SIGN_KEYS
 
             else -> EMPTY_KEYS
         }

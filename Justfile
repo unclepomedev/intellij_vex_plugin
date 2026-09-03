@@ -45,6 +45,9 @@ lp:
 check:
     ./gradlew check
 
+fmt:
+    ktfmt --kotlinlang-style .
+
 detect-attr:
     #!/usr/bin/env bash
     set -e

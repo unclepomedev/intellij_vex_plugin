@@ -13,12 +13,14 @@ class VexReferenceTest : VexTestBase() {
 
     fun testVariableReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             function void test() {
                 int myVar = 1;
                 m<caret>yVar = 2;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -30,11 +32,13 @@ class VexReferenceTest : VexTestBase() {
 
     fun testParameterReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             function void test(int param1) {
                 p<caret>aram1 = 2;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -46,14 +50,16 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void myTargetFunction(int a) {
             }
 
             void main() {
                 myTarg<caret>etFunction(1);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -66,15 +72,17 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionOverloadReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void myFunc(int a) {}
-            
+
             void myFunc(int a, float b) {} 
 
             void main() {
                 myF<caret>unc(1, 2.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -92,7 +100,8 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionOverloadReferenceByTypeSignature() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void process(int a) {}      // candidate 1 (Int)
             void process(string a) {}   // candidate 2 (String)
             void process(float a) {}    // candidate 3 (Float)
@@ -101,7 +110,8 @@ class VexReferenceTest : VexTestBase() {
                 // This should jump to the string overload, not the first one defined.
                 proce<caret>ss("hello");
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -120,7 +130,8 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionOverloadReferenceWithImplicitCast() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void set(int a, int b) {}       // candidate 1
             void set(vector a, vector b) {} // candidate 2
 
@@ -128,7 +139,8 @@ class VexReferenceTest : VexTestBase() {
                 // This should jump to the vector overload due to implicit casting from float
                 s<caret>et({1,2,3}, 2.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -142,17 +154,23 @@ class VexReferenceTest : VexTestBase() {
 
         // Ensure we jumped to the correct overload by checking the parameter type
         val paramType = funcDef.parameterListDef?.parameterDefList?.firstOrNull()?.typeRef?.text
-        assertEquals("Should resolve to the overload with vector parameter via implicit cast", "vector", paramType)
+        assertEquals(
+            "Should resolve to the overload with vector parameter via implicit cast",
+            "vector",
+            paramType,
+        )
     }
 
     fun testVariableRename() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             function void test() {
                 int oldVar = 1;
                 <caret>oldVar = 2;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -166,17 +184,20 @@ class VexReferenceTest : VexTestBase() {
                 int newVarName = 1;
                 newVarName = 2;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testFunctionParameterRename() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void myFunc(int p) {
                 <caret>p = 10;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.renameElementAtCaret("paramNew")
@@ -186,20 +207,23 @@ class VexReferenceTest : VexTestBase() {
             void myFunc(int paramNew) {
                 paramNew = 10;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testFunctionRename() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void oldName() {
             }
 
             void main() {
                 old<caret>Name();
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -215,20 +239,23 @@ class VexReferenceTest : VexTestBase() {
             void main() {
                 newName();
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testFunctionDeclarationRename() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             void old<caret>Name() {
             }
 
             void main() {
                 oldName();
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.renameElementAtCaret("newName")
@@ -241,19 +268,22 @@ class VexReferenceTest : VexTestBase() {
             void main() {
                 newName();
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testIncludeReference() {
         myFixture.addFileToProject("my_math.vfl", "int add(int a, int b) { return a + b; }")
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "my_<caret>math.vfl"
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -262,20 +292,25 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Include reference should be resolved", resolved)
         assertTrue(
             "Resolved element should be a VexFile",
-            resolved is com.github.unclepomedev.houdinivexassist.psi.VexFile
+            resolved is com.github.unclepomedev.houdinivexassist.psi.VexFile,
         )
-        assertEquals("my_math.vfl", (resolved as com.github.unclepomedev.houdinivexassist.psi.VexFile).name)
+        assertEquals(
+            "my_math.vfl",
+            (resolved as com.github.unclepomedev.houdinivexassist.psi.VexFile).name,
+        )
     }
 
     fun testIncludeRename() {
         myFixture.addFileToProject("my_math.vfl", "int add(int a, int b) { return a + b; }")
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "my_<caret>math.vfl"
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -289,19 +324,22 @@ class VexReferenceTest : VexTestBase() {
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testIncludeHeaderFileReference() {
         myFixture.addFileToProject("my_math.h", "int add_header(int a, int b) { return a + b; }")
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "my_<caret>math.h"
             void main() {
                 add_header(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -310,18 +348,20 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Include reference should be resolved", resolved)
         assertTrue(
             "Resolved element should be a PsiFile",
-            resolved is com.intellij.psi.PsiFile
+            resolved is com.intellij.psi.PsiFile,
         )
         assertEquals("my_math.h", (resolved as com.intellij.psi.PsiFile).name)
 
         // Ensure that function reference from the .h file resolves correctly
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "my_math.h"
             void main() {
                 add_head<caret>er(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val funcRef = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -330,19 +370,21 @@ class VexReferenceTest : VexTestBase() {
         assertTrue(funcResolved is VexFunctionDef)
         assertEquals(
             "add_header",
-            (funcResolved as VexFunctionDef).identifier.text
+            (funcResolved as VexFunctionDef).identifier.text,
         )
     }
 
     fun testIncludeRenameWithDirectoryPath() {
         myFixture.addFileToProject("subdir/my_math.vfl", "int add(int a, int b) { return a + b; }")
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "subdir/my_<caret>math.vfl"
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -356,21 +398,27 @@ class VexReferenceTest : VexTestBase() {
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testIncludeHeaderFileRelativeResolution() {
         myFixture.addFileToProject("lib/core.h", "int core_func() { return 1; }")
-        myFixture.addFileToProject("lib/wrapper.h", "#include \"core.h\"\nint wrapper_func() { return core_func(); }")
+        myFixture.addFileToProject(
+            "lib/wrapper.h",
+            "#include \"core.h\"\nint wrapper_func() { return core_func(); }",
+        )
 
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "lib/wrapper.h"
             void main() {
                 wrap<caret>per_func();
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val funcRef = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -381,36 +429,45 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("wrapper_func", (funcResolved as VexFunctionDef).identifier.text)
 
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "lib/wrapper.h"
             void main() {
                 cor<caret>e_func();
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val nestedFuncRef = myFixture.getReferenceAtCaretPositionWithAssertion()
         val nestedFuncResolved = nestedFuncRef.resolve()
-        assertNotNull("Function reference from deeply nested .h should be resolved", nestedFuncResolved)
+        assertNotNull(
+            "Function reference from deeply nested .h should be resolved",
+            nestedFuncResolved,
+        )
         assertTrue(nestedFuncResolved is VexFunctionDef)
         assertEquals("core_func", (nestedFuncResolved as VexFunctionDef).identifier.text)
     }
 
     fun testIncludeSystemHeaderFileReference() {
         // test my_sys_lib.h included via <my_sys_lib.h>
-        val headerCode = """
+        val headerCode =
+            """
             void my_sys_lib_func() {
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.addFileToProject("my_sys_lib.h", headerCode)
 
-        val mainCode = """
+        val mainCode =
+            """
             #include <my_sys_lib.h>
-            
+
             void main() {
                 my_sys_lib_f<caret>unc();
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
         myFixture.configureByText("main.vfl", mainCode)
 
@@ -429,12 +486,14 @@ class VexReferenceTest : VexTestBase() {
     fun testIncludeRenameSystemHeaderFile() {
         myFixture.addFileToProject("my_sys_lib.h", "int add(int a, int b) { return a + b; }")
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include <my_sys_<caret>lib.h>
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -448,18 +507,21 @@ class VexReferenceTest : VexTestBase() {
             void main() {
                 add(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testStructReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             struct MyStruct { int a; }
             void main() {
                 MySt<caret>ruct s;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
         val resolved = ref.resolve()
@@ -470,12 +532,14 @@ class VexReferenceTest : VexTestBase() {
 
     fun testStructRename() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             struct MyStruct { int a; }
             void main() {
                 MySt<caret>ruct s;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.renameElementAtCaret("NewStruct")
         myFixture.checkResult(
@@ -484,19 +548,22 @@ class VexReferenceTest : VexTestBase() {
             void main() {
                 NewStruct s;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testStructMemberReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             struct MyStruct { int my_field; }
             void main() {
                 MyStruct s;
                 s.my_fie<caret>ld = 1;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
         val resolved = ref.resolve()
@@ -507,13 +574,15 @@ class VexReferenceTest : VexTestBase() {
 
     fun testStructMemberRename() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             struct MyStruct { int my_field; }
             void main() {
                 MyStruct s;
                 s.my_fie<caret>ld = 1;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.renameElementAtCaret("new_field")
         myFixture.checkResult(
@@ -523,18 +592,21 @@ class VexReferenceTest : VexTestBase() {
                 MyStruct s;
                 s.new_field = 1;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testMacroDefReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #define MY_VAL 10
             void main() {
                 int x = MY_<caret>VAL;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -548,12 +620,14 @@ class VexReferenceTest : VexTestBase() {
     fun testMacroDefFromIncludedFile() {
         myFixture.addFileToProject("constants.h", "#define INCLUDED_CONST 42")
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "constants.h"
             void main() {
                 int x = INCLUDED_<caret>CONST;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -569,28 +643,38 @@ class VexReferenceTest : VexTestBase() {
         val libFile = tempDir.resolve("lib.vfl").toFile()
         libFile.writeText("void my_lib_func() {}")
 
-        val vfsDir = com.intellij.openapi.vfs.LocalFileSystem.getInstance().refreshAndFindFileByIoFile(tempDir.toFile())
+        val vfsDir =
+            com.intellij.openapi.vfs.LocalFileSystem.getInstance()
+                .refreshAndFindFileByIoFile(tempDir.toFile())
         assertNotNull("Temp directory should be found by VFS", vfsDir)
 
-        val settings = com.intellij.openapi.application.ApplicationManager.getApplication()
-            .getService(com.github.unclepomedev.houdinivexassist.settings.VexSettingsState::class.java)
+        val settings =
+            com.intellij.openapi.application.ApplicationManager.getApplication()
+                .getService(
+                    com.github.unclepomedev.houdinivexassist.settings.VexSettingsState::class.java
+                )
         val oldPath = settings.includePath
         try {
             // Append ; and & to the path
             settings.includePath = "${tempDir.toAbsolutePath()};&"
 
             myFixture.configureByText(
-                VexFileType, """
+                VexFileType,
+                """
                 #include "l<caret>ib.vfl"
                 void main() {
                     my_lib_func();
                 }
-            """.trimIndent()
+                """
+                    .trimIndent(),
             )
 
             val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
             val resolved = ref.resolve()
-            assertNotNull("Include reference should be resolved using complex include paths", resolved)
+            assertNotNull(
+                "Include reference should be resolved using complex include paths",
+                resolved,
+            )
             assertTrue("Resolved element should be a file", resolved is com.intellij.psi.PsiFile)
             assertEquals("lib.vfl", (resolved as com.intellij.psi.PsiFile).name)
         } finally {
@@ -605,14 +689,16 @@ class VexReferenceTest : VexTestBase() {
         myFixture.addFileToProject("def_second.h", "#define OVERRIDE_ME 2")
 
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "def_first.h"
             #include "def_second.h"
-            
+
             void main() {
                 int x = OVERRIDE_<caret>ME;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -626,17 +712,20 @@ class VexReferenceTest : VexTestBase() {
     fun testMacroLocalOverridesInclude() {
         myFixture.addFileToProject("base_const.h", "#define CONFIG_VAL 100")
 
-        val mainFile = myFixture.configureByText(
-            VexFileType, """
-            #include "base_const.h"
-            
-            #define CONFIG_VAL 999
-            
-            void main() {
-                int x = CONFIG_<caret>VAL;
-            }
-        """.trimIndent()
-        )
+        val mainFile =
+            myFixture.configureByText(
+                VexFileType,
+                """
+                #include "base_const.h"
+
+                #define CONFIG_VAL 999
+
+                void main() {
+                    int x = CONFIG_<caret>VAL;
+                }
+                """
+                    .trimIndent(),
+            )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
         val resolved = ref.resolve()
@@ -648,27 +737,33 @@ class VexReferenceTest : VexTestBase() {
 
     fun testMacroCircularIncludeProtection() {
         myFixture.addFileToProject(
-            "cycle_a.h", """
+            "cycle_a.h",
+            """
             #include "cycle_b.h"
             #define VAL_A 10
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.addFileToProject(
-            "cycle_b.h", """
+            "cycle_b.h",
+            """
             #include "cycle_a.h"
             #define VAL_B 20
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "cycle_a.h"
-            
+
             void main() {
                 int a = VAL_<caret>A;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -682,27 +777,33 @@ class VexReferenceTest : VexTestBase() {
     fun testMacroCircularIncludeProtectionWithNonVexFiles() {
         // cycle_a.inc is not a .vfl/.vex file, so it will be parsed as synthetic VexFile
         myFixture.addFileToProject(
-            "cycle_a.inc", """
+            "cycle_a.inc",
+            """
             #include "cycle_b.inc"
             #define VAL_INC_A 100
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.addFileToProject(
-            "cycle_b.inc", """
+            "cycle_b.inc",
+            """
             #include "cycle_a.inc"
             #define VAL_INC_B 200
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #include "cycle_a.inc"
-            
+
             void main() {
                 int a = VAL_INC_<caret>A;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -715,12 +816,14 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionLikeMacroReference() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #define ADD(a, b) ((a) + (b))
             void main() {
                 int x = AD<caret>D(1, 2);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -733,12 +836,14 @@ class VexReferenceTest : VexTestBase() {
 
     fun testConstantMacroWithParenBody() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #define FOO (1)
             void main() {
                 int x = FO<caret>O;
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -753,13 +858,15 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionLikeMacroWithoutParameters() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #define ZERO() 0
-            
+
             void main() {
                 int x = ZE<caret>RO();
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
@@ -774,13 +881,15 @@ class VexReferenceTest : VexTestBase() {
 
     fun testFunctionLikeMacroWithoutSpaceAfterParen() {
         myFixture.configureByText(
-            VexFileType, """
+            VexFileType,
+            """
             #define MULT(a,b)a*b
-            
+
             void main() {
                 int x = MU<caret>LT(2, 3);
             }
-        """.trimIndent()
+            """
+                .trimIndent(),
         )
 
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()

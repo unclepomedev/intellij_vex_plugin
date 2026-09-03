@@ -8,7 +8,9 @@ object VexConditionEvaluator {
         val text = conditionText?.trim()
         if (text.isNullOrEmpty()) return true
 
-        text.toIntOrNull()?.let { return it != 0 }
+        text.toIntOrNull()?.let {
+            return it != 0
+        }
 
         DEFINED_REGEX.matchEntire(text)?.let { match ->
             return VexMacroResolver.resolveMacro(directive, match.groupValues[1]) != null
