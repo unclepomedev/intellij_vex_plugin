@@ -76,7 +76,7 @@ generate-type-inference:
     hython tools/merge_type_inference.py
 
 # Run in a local environment where Houdini can run.
-setup-e2e: dump generate-type-inference parser
+setup-e2e: dump generate-type-inference lp
 
 # python =============================================================================
 fmt-py:
