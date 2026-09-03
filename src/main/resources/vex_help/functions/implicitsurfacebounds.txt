@@ -1,0 +1,44 @@
+= implicitsurfacebounds =
+
+#type: vex
+#context: all
+#tags: sdf, implicit, bounds
+#group: geo
+
+"""Returns an SDF min/max interval over a sphere around a point."""
+
+:usage: `int implicitsurfacebounds(<geometry>, vector center, float radius, float &min, float &max)`
+
+:include _common#geometry:
+
+:arg:center:
+    Sphere center in world space.
+
+:arg:radius:
+    Sphere radius.
+
+:arg:min:
+    Output lower bound on SDF values over the sphere.
+
+:arg:max:
+    Output upper bound on SDF values over the sphere.
+
+:returns:
+    `1` on success, `0` if no valid implicit-surface data is available.
+
+This function requires the same implicit-surface attributes as
+[implicitsurface|Vex:implicitsurface].
+
+@examples
+
+{{{
+#!vex
+float dmin, dmax;
+int ok = implicitsurfacebounds(0, @P, chf("radius"), dmin, dmax);
+if (ok)
+    f@interval = dmax - dmin;
+}}}
+
+@related
+- [implicitsurface|Vex:implicitsurface]
+- [implicitsurfacevel|Vex:implicitsurfacevel]

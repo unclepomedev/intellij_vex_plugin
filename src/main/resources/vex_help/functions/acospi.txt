@@ -1,0 +1,29 @@
+= acospi =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the inverse cosine of the argument divided by Pi."""
+
+:usage: `float acospi(float n)`
+    The inverse cosine of `n`, where `n` is [-1..1]. The return value
+    is in the range 0 to 1.
+
+:usage: `vector2 acospi(vector2 n)`
+:usage: `vector acospi(vector n)`
+:usage: `vector4 acospi(vector4 n)`
+
+     Returns a new vector with `acospi()` applied to all components.
+
+
+@related
+
+- [Vex:asin]
+- [Vex:acos]
+- [Vex:atan]
+- [Vex:asinpi]
+- [Vex:acospi]
+- [Vex:atanpi]
+

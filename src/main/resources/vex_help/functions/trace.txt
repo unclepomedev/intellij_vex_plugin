@@ -1,7 +1,7 @@
 = trace =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading, rays
 #group: shading
 

@@ -45,5 +45,5 @@ float val2 = volumesmoothsample(0, "density", P + u);
 
 // And the second order approximation:
 // `val1 + (u, grad) + 0.5 * dot(u, u*hess)`
-// is appriximately equal to `val2`
+// is approximately equal to `val2`
 }}}

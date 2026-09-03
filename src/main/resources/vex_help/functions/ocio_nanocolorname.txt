@@ -1,0 +1,19 @@
+= ocio_nanocolorname =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Returns the Nanocolor name identifier of the given color space."""
+
+Not all color spaces have a corresponding Nanocolor name, so this function may return an empty string.
+
+The Nanocolor names are defined in https://github.com/meshula/Nanocolor
+
+:usage: `string ocio_nanocolorname(string name)`
+
+@related
+
+- [Vex:ocio_openusdname]
+- [Vex:ocio_bestname]

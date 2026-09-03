@@ -4,6 +4,7 @@
 #context: cop2
 #tags: input_plane
 #group: image
+#index: no
 
 """Returns the frame rate of the specified input."""
 

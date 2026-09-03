@@ -1,0 +1,28 @@
+= atan2pi =
+
+#type: vex
+#context: all
+#tags: trig
+#group: math
+
+"""Returns the inverse tangent of y/x divided by Pi."""
+
+:usage: `float atan2pi(float y, float x)`
+
+Returns the principal value of the inverse tangent of y/x, using the signs
+of the two arguments to determine the quadrant of the result. The return value
+is in the range -1 to 1.
+
+
+@related
+
+- [Vex:atanpi]
+- [Vex:tanpi]
+- [Vex:sinpi]
+- [Vex:cospi]
+- [Vex:atan]
+- [Vex:tan]
+- [Vex:sin]
+- [Vex:cos]
+
+

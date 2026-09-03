@@ -1,7 +1,7 @@
 = getlocalcurvature =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading raytracing
 #group: shading
 

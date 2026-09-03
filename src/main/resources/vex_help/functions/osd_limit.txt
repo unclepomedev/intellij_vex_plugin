@@ -84,5 +84,8 @@ vector attributes for all partial derivatives.
 
 - [Vex:pointprimuv]
 - [Vex:osd_patchcount]
+- [Vex:osd_limitcurvature]
+- [Vex:osd_limitgradient]
+- [Vex:osd_limitnormal]
 - [Vex:osd_limitsurface]
 

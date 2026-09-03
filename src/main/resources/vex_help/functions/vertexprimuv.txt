@@ -1,0 +1,40 @@
+= vertexprimuv =
+
+#type: vex
+#context: all
+#tags: vertex, prim
+#group: geo
+
+"""Returns the intrinsic uv location of the vertex in the primitive."""
+
+:usage: `vector vertexprimuv(<geometry>, int primnum, int vtxidx)`
+:usage: `vector vertexprimuv(<geometry>, int linearvtx)`
+
+:include _common#geometry:
+
+:arg:vtxidx:
+    The vertex in the primitive of the intrinsic uv location.
+
+:arg:linearvtx:
+    The linear vertex of the intrinsic uv location.
+
+:returns:
+    A vector with the intrinsic uv location.
+
+
+@examples
+
+:box: Sets a distinct random color value for a particular intrinsic uv value for a given vertex.
+    {{{
+    #!vex
+    int primnum = vertexprim(file, vtxnum);
+    int vindex = vertexprimindex(file, vtxnum);
+    vector primuv = vertexprimuv(file, primnum, vindex);
+    vector color = random(primuv[0], primuv[1]);
+    @Cd = color;
+    }}}
+
+@related
+
+- [Vex:pointprimuv]
+

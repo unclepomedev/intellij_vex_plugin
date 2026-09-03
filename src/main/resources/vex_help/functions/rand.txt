@@ -36,6 +36,14 @@ Note that even the smallest changes in the seed value will produce
 completely different numbers, so it may produce different results
 on different operating systems or compilers.
 
+TIP:
+    To get a random number from `-1` to `1`, you can use `fit01`:
+    {{{
+    #!vex
+
+    fit01(rand(seed), -1, 1);
+    }}}
+
 If the result is a vector2, vector, or vector4, each component will be a
 different random number.  Thus, if you have the code:
 
@@ -57,6 +65,29 @@ vector	pos = 1;
 float	seed = 0;
 
 pos *= float(rand(seed));
+}}}
+
+Note that VEX has return value casting, so if you use `rand` in an
+expression it may surprisingly become scalar:
+{{{
+#!vex
+
+vector  pos = 1;
+float   seed = 0;
+
+pos *= fit01(rand(seed), -1, 1);
+}}}
+
+Will have same scale per component because the fit01 function will
+select the float version.  In these cases use a vector cast:
+
+{{{
+#!vex
+
+vector  pos = 1;
+float   seed = 0;
+
+pos *= fit01(vector(rand(seed)), -1, 1);
 }}}
 
 @related

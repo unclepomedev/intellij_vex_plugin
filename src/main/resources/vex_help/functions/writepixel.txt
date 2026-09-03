@@ -2,7 +2,7 @@
 
 #type: vex
 #tags: file, experimental
-#context: shading
+#context: shading_contexts
 #group: shading
 
 """Writes color information to a pixel in the output image """

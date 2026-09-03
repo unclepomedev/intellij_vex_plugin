@@ -1,0 +1,22 @@
+= random_shash =
+
+#type: vex
+#context: all
+#tags: random
+#group: noise
+
+"""Hashes a string to an integer."""
+
+:usage: `int fnv1a_hash(string seed)`
+
+Hashes the given string into an integer value using the Fowlder-Noll-Vo string hashing function.
+
+NOTE:
+    Two different strings may hash to the same value, but the chance of duplicate strings is much less than with `random_shash`.
+
+NOTE:
+    The returned value may be very large and can cause an overflow when further multiplied or is cast to float.
+
+@related
+
+- [Vex:random_shash]

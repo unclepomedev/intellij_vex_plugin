@@ -4,6 +4,7 @@
 #context: cop2
 #tags: cop2, pixel, sample
 #group: image
+#index: no
 
 """Returns fully filtered pixel input."""
 

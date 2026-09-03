@@ -55,6 +55,7 @@ each point on the poly cage and set the evaluation data as attributes at the giv
 
 @related
 
+- [Vex:vertexprimuv]
 - [Vex:osd_lookuppatch]
 - [Vex:osd_limit]
 - [Vex:osd_limitsurface]

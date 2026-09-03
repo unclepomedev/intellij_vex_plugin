@@ -60,4 +60,8 @@ For vertex attributes, use [Vex:osd_limitsurfacevertex].
 - [Vex:osd_firstpatch]
 - [Vex:osd_patchcount]
 - [Vex:osd_limit]
+- [Vex:osd_limitcurvature]
+- [Vex:osd_limitgradient]
+- [Vex:osd_limitnormal]
+
 

@@ -1,0 +1,110 @@
+= volumetransform =
+
+#type: vex
+#context: all
+#tags: volume
+#group: volume
+
+"""Returns transform between various spaces connected to a volume."""
+
+:usage: `matrix volumetransform(<geometry>, int primnum, string src, string trg)`
+:usage: `matrix volumetransform(<geometry>, string volumename, string src, string trg)`
+
+For a given volume, this function returns the transformation matrix from `src` space to `trg` space. Both spaces must be one of `"texture"`, `"local"`, `"voxel"`, `"index"`, or `"world"`.
+
+This function is very similar to `primintrinsic(geo, "transform", primnum)`, which returns a transform from a reference space to world space. However, `volumetransform` provides more precise control about the source and target spaces of the transform.
+
+=== Spaces ===
+
+Here are visualizations of all the different spaces. For illustration purposes we show only 2D volume.
+
+* `"texture"` -- Unit cube `[0,1]³`.
+[Image:/images/vex/volume_texture.png]
+
+* `"local"` -- Reference cube `[-1,1]³`.
+[Image:/images/vex/volume_local.png]
+
+* `"voxel"` -- Voxel space `[0,xres]×[0,yres]×[0,zres]` with voxels centered at half-integer coordinates.
+[Image:/images/vex/volume_voxel.png]
+
+* `"index"` -- Index space `[-0.5,xres-0.5]×[-0.5,yres-0.5]×[-0.5,zres-0.5]` with voxels centered at integer coordinates.
+[Image:/images/vex/volume_index.png]
+
+* `"world"` -- World space.
+[Image:/images/vex/volume_world.png]
+
+
+=== Arguments ===
+
+:include _common#geometry:
+
+:arg:primnum:
+    The index of the volume primitive.
+
+:arg:volumename:
+    The name of the volume primitive.
+
+:arg:src:
+    Source coordinate space to transform from. Must be one of: `"texture"`, `"local"`, `"voxel"`, `"index"`, or `"world"`.
+
+:arg:trg:
+    Target coordinate space to transform to. Must be one of: `"texture"`, `"local"`, `"voxel"`, `"index"`, or `"world"`.
+
+:returns:
+    The transform matrix between `src` and `trg` spaces of a given volume.
+    
+    Returns 0 if `primnum` or `inputnum` is out of range, the geometry is invalid, the given primitive is not a volume primitive, or the source or target space are invalid.
+
+
+=== Relation to intrinsic transform ===
+
+The primitive intrinsic `"transform"` behaves differently for volumes and VDBs.
+
+For volumes, the intrinsic returns `"local"` to `"world"` 3×3 matrix which is missing the translation by the volume position.
+{{{
+#!vex
+matrix3 A = primintrinsic(geo, "transform", vol);
+matrix B = volumetransform(geo, vol, "local", "world");
+
+matrix3(B) == A;
+}}}
+
+For VDBs, the intrinsic returns `"index"` to `"world"` 4×4 matrix.
+{{{
+#!vex
+matrix A = primintrinsic(geo, "transform", vdb);
+matrix B = volumetransform(geo, vdb, "index", "world");
+
+B == A;
+}}}
+
+=== Relation to volumeindextopos ===
+
+This function is tightly connected to VEX functions `volumepostoindex` and `volumeindextopos`. You can relate them to `volumetransform`, but you have to be careful as they always round the coordinates to the closest integer value in the index space.
+{{{
+#!vex
+vector voxel;
+vector P;
+
+matrix index_to_world = volumetransform(geo, vdb, "index", "world");
+matrix world_to_index = volumetransform(geo, vdb, "world", "index");
+
+volumeindextopos(geo, primnum, voxel) == index_to_world * rint(voxel);
+volumepostoindex(geo, primnum, P)     == rint(world_to_index * P);
+}}}
+
+
+@examples
+
+{{{
+#!vex
+vector P_world = {1.0, 2.0, 3.0};
+vector v_world = {10.0, -2.0, 0.0};
+
+matrix A = volumetransform(0, "density", "world", "index");
+
+// Transform points
+vector P_index = A * P_world;
+// Transform vectors
+vector v_index = matrix3(A) * v_world;
+}}}

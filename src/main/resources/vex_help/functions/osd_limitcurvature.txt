@@ -1,0 +1,73 @@
+= osd_limitcurvature =
+
+#type: vex
+#context: all
+#tags: subd
+#group: subd
+
+"""Computes principal curvature values and directions at a point attribute evaluated on the subdivision limit using Open Subdiv."""
+
+`osd_limitcurvature` curvature values and directions at a point attribute on the geometry specified as a
+subdivision surface.
+
+:usage: `int osd_limitcurvature(<geometry>, string attrib_name, int patch_id, float u, float v, float &result_max, float &result_min, vector &result_max_dir, vector &result_min_dir)`
+
+:include _common#geometry:
+
+:arg:&result_max:
+    The maximum principal curvature value with respect to the subdivision limit at the given attribute value is stored in the float you pass to this argument.
+   
+:arg:&result_min:
+    The minimum principal curvature value with respect to the subdivision limit at the given attribute value is stored in the float you pass to this argument.
+     
+:arg:&result_max_dir:
+    The maximum principal curvature direction with respect to the subdivision limit at the given attribute value is stored in the vector you pass to this argument.
+   
+:arg:&result_min_dir:
+    The minimum principal curvature direction with respect to the subdivision limit at the given attribute value is stored in the vector you pass to this argument.
+
+:returns:
+    `1` if computing the attribute was successful, `0` if it failed.
+
+    Possible reasons for failure are:
+
+    * The geometry contains no polygons or the topology can't be converted using Open Subdiv
+
+    * The attribute doesn't exist on the input geometry.
+
+    * The attribute size/type doesn't match the VEX type of the `result` argument.
+
+
+@examples
+
+:box:Evaluate curvature data on the subdivision surface limit at the center of  
+each primitive of the poly cage and set the curvature information as attributes 
+on the primitive.
+    {{{
+    #!vex
+    float prim_u = 0.5, prim_v = 0.5;
+    int patch_id;
+    float patch_u, patch_v;
+    osd_lookuppatch(file, primnum, prim_u, prim_v, patch_id, patch_u, patch_v);
+    float result_max, result_min;
+    vector result_max_dir, result_min_dir;
+    if (osd_limitcurvature(file, "P", patch_id, patch_u, patch_v, result_max, result_min, result_max_dir, result_min_dir))
+    {
+        setprimattrib(file, "maxk", primnum, result_max);
+        setprimattrib(file, "mink", primnum, result_min);
+        setprimattrib(file, "max_dir", primnum, result_max_dir);
+        setprimattrib(file, "min_dir", primnum, result_min_dir);
+    }
+    }}}
+
+
+@related
+
+- [Vex:osd_facecount]
+- [Vex:osd_firstpatch]
+- [Vex:osd_patchcount]
+- [Vex:osd_limit]
+- [Vex:osd_limitgradient]
+- [Vex:osd_limitnormal]
+- [Vex:osd_limitsurface]
+

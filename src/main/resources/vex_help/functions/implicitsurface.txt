@@ -1,0 +1,120 @@
+= implicitsurface =
+
+#type: vex
+#context: all
+#tags: sdf, implicit
+#group: geo
+
+"""Evaluates a compound implicit surface."""
+
+:usage: `float implicitsurface(<geometry>, vector pos)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, float &dparm)`
+:usage: `float implicitsurface(<geometry>, vector pos, int &shape_id)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, int &shape_id)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, float &dparm, int &shape_id)`
+:usage: `float implicitsurface(<geometry>, vector pos, string attr_name, float &attr)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, string attr_name, float &attr)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, float &dparm, string attr_name, float &attr)`
+:usage: `float implicitsurface(<geometry>, vector pos, string attr_name, vector &attr)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, string attr_name, vector &attr)`
+:usage: `float implicitsurface(<geometry>, vector pos, vector &grad, float &dparm, string attr_name, vector &attr)`
+
+:include _common#geometry:
+
+:arg:pos:
+    The world-space position at which to evaluate the implicit surface.
+
+:arg:grad:
+    The spatial gradient of the implicit surface at the evaluation point.
+    The gradient points in the direction of increasing distance.
+
+:arg:dparm:
+    The time derivative of the implicit surface at the evaluation point.
+    This accounts for moving shapes (via `v` and `w`) and changing parameters
+    (via `implicit_surface_dparms` and `implicit_surface_op_dparms`).
+    The normal speed is `-dparm / length(grad)`.
+
+:arg:shape_id:
+    The index of the closest contributing shape in the implicit-surface point array.
+    Returns `-1` when no valid shape contributes.
+
+:arg:attr_name:
+    Name of a point attribute to interpolate from the contributing shapes.
+    The attribute must exist as either float or vector depending on overload.
+
+:arg:attr:
+    Interpolated attribute value at `pos`.
+
+:returns:
+    Signed distance to the implicit surface at `pos`.
+    Negative values are inside, positive values are outside.
+
+The implicit surface is defined by point attributes on the input geometry:
+
+table>>
+    tr>>
+        th>> Attribute
+        th>> Type
+        th>> Description
+    tr>>
+        td>> `P`
+        td>> vector
+        td>> Shape center position
+    tr>>
+        td>> `orient`
+        td>> quaternion
+        td>> Shape orientation
+    tr>>
+        td>> `implicit_surface_id`
+        td>> int
+        td>> Shape type ID
+    tr>>
+        td>> `implicit_surface_parms`
+        td>> vector4
+        td>> Shape parameters
+    tr>>
+        td>> `implicit_surface_invert`
+        td>> int
+        td>> If non-zero, invert the shape
+    tr>>
+        td>> `implicit_surface_op_id`
+        td>> int
+        td>> Operation type ID
+    tr>>
+        td>> `implicit_surface_op_parms`
+        td>> vector4
+        td>> Operation parameters
+
+@examples
+
+Basic SDF query:
+{{{
+#!vex
+float sdf = implicitsurface(0, @P);
+}}}
+
+Query SDF + gradient + dparm:
+{{{
+#!vex
+vector grad;
+float dparm;
+float sdf = implicitsurface(0, @P, grad, dparm);
+}}}
+
+Query with shape id and interpolated attribute:
+{{{
+#!vex
+int sid;
+vector grad;
+vector Cd_interp;
+float w_interp;
+float sdf = implicitsurface(0, @P, grad, sid);
+float sdf2 = implicitsurface(0, @P, "myweight", w_interp);
+float sdf3 = implicitsurface(0, @P, grad, "Cd", Cd_interp);
+}}}
+
+@related
+- [Implicit Surface|Node:sop/implicitsurface]
+- [implicitsurfacevel|Vex:implicitsurfacevel]
+- [implicitsurfacebounds|Vex:implicitsurfacebounds]

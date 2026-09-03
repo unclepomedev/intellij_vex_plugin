@@ -32,14 +32,22 @@
 :arg:attribclass:
     #id: attribclassnogroup
     
-    One of `"detail"` (or `"global"`), `"point"`, `"prim"`, or `"vertex"`.
+    One of `"detail"` (or `"global"`), `"point"`, `"prim"` (or `"primitive"`), or `"vertex"`.
 
 :arg:attribclass:
     #id: attribclass
     
-    One of `"detail"` (or `"global"`), `"point"`, `"prim"`, or `"vertex"`.
+    One of `"detail"` (or `"global"`), `"point"`, `"prim"` (or `"primitive"`), or `"vertex"`.
     
     You can also use `"primgroup"`, `"pointgroup"` or `"vertexgroup"` to [read from groups|/vex/groups].
+
+:arg:attribclass:
+    #id: attribclasswithedgegroup
+    
+    One of `"detail"` (or `"global"`), `"point"`, `"prim"` (or `"primitive"`), or `"vertex"`.
+    
+    You can also use `"primgroup"`, `"pointgroup"`, `"edgegroup"` or
+    `"vertexgroup"` to [apply to groups|/vex/groups].
 
 :arg:attribute_name:
     #id: attribnamenogroup

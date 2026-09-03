@@ -4,6 +4,7 @@
 #context: cop2
 #tags: cop2, pixel, sample
 #group: image
+#index: no
 
 """Samples a 2x2 pixel block around the given UV position, and bilinearly interpolates these pixels."""
 

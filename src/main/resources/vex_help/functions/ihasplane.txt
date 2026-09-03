@@ -4,6 +4,7 @@
 #context: cop2
 #tags: input_plane
 #group: image
+#index: no
 
 """Returns 1 if the specified input has a plane named `planename`."""
 

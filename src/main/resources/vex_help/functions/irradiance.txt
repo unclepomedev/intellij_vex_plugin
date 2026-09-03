@@ -1,7 +1,7 @@
 = irradiance =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: surface, light
 #group: shading
 

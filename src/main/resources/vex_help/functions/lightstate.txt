@@ -1,7 +1,7 @@
 = lightstate =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading, properties
 #group: shading
 
@@ -67,7 +67,7 @@ for convenience, but you can query any property from the
     (float) The object's surface area.
 
 `object:materialname`:
-    (string) Path to the material that's assigned to the object being shaded. 
+    (string) Path to the material that's assigned to the object being shaded.
     NOTE:
         This is for informational purpose only and has no effect on material assignment or appearance.
 
@@ -79,7 +79,7 @@ for convenience, but you can query any property from the
     As a vector, gives the renderer version as {<<major>>, <<minor>>, <<build>>}.
 
 `renderer:renderengine`:
-    (string) The render method in use, such as `micropoly` or `raytrace`. 
+    (string) The render method in use, such as `micropoly` or `raytrace`.
     See the [properties list|/props/mantra] for the full list of possible values.
 
 `shader:name`:
@@ -105,7 +105,7 @@ For example:
 
 {{{
 #!vex
-surface showversion() 
+surface showversion()
 {
     string    rname, rversion;
     if (!lightstate("renderer:name", rname))

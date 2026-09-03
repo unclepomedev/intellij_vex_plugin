@@ -1,7 +1,7 @@
 = getfogname =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading, fog
 #group: shading
 
@@ -10,4 +10,3 @@
 :usage: `string getfogname()`
 
 Returns the name of the current fog object whose shader is being run, or the empty string if there is no current fog object.
-

@@ -1,7 +1,7 @@
 = getsmoothP =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading
 #group: shading
 
@@ -10,7 +10,7 @@
 Returns a modified surface position based on a smoothing function.
 
 :usage: `int getsmoothP(vector &smoothP, vector ray_origin, ...)`
-    
+
     Overwrites the `smoothP` variable with the modified surface position.
     This function is only meaningful for some primitive types (such as polygons).
 
@@ -23,7 +23,7 @@ Returns a modified surface position based on a smoothing function.
 
 :varg:style:
     #type: string
-    
+
     `none`:
         No smoothing.
 

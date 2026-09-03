@@ -228,16 +228,18 @@ cf = colormap(map, u, v, "channel", channelname);
     *For Houdini native formats*, this specifies whether RAT files should interpolate between different MIP levels. By default, this is turned off. Turning interpolation on will help remove discontinuities when different
     MIP levels of a `.rat` file are accessed. However, the results of texture evaluation will be slightly softer (i.e. blurrier) and will take more time.
 
-    There are three possible values for this argument.
+    There are four possible values for this argument.
     
     `0`:
         Disable MIP map interpolation (fastest).
     `1`:
         Approximate MIP map interpolation (fast).
     `2`:
-        High Quality MIP map interpolation (slower but highest quality).
+        High Quality MIP map interpolation (slower but higher quality).
+    `3`:
+        Anisotropic MIP map interpolation (slowest but highest quality). Currently unsupported by `.rat` format (falls back to `2`).
 
-    *For all other formats (loaded by OpenImageIO)*, a value of 0 specifies a single MIP level, any other value specifies trilinear interpolation.
+    *For all other formats (loaded by OpenImageIO)*, a value of 0 specifies a single MIP level, 1 and 2 specifies trilinear interpolation, and 3 specifies anisotropic interpolation.
 
 :varg:depthinterp:
     #type: string

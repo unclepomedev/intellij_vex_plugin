@@ -1,7 +1,7 @@
 = opend =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: statistics, interrupt, progress
 #group: utility
 
