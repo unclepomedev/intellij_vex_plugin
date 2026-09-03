@@ -61,3 +61,4 @@ Usage and shortcuts conform to standard JetBrains IDE behavior.
 > - Recursive macro expansion is not performed.
 > - Complex `#if` and `#elif` conditions containing mathematical or logical operators (e.g., `#if VERSION > 19`) are not fully evaluated and will default to being active (`true`).
 > - However, common patterns such as `#if 0`, `#if 1`, `#if defined(MACRO)`, and `#if !defined(MACRO)` are properly evaluated to support standard dead-code blocks and macro checks.
+> - Policy for tracking Houdini version updates in Quick Documentation: TBD.
