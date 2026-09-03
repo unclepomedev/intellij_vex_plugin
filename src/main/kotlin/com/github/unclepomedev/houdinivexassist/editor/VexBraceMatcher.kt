@@ -12,11 +12,14 @@ class VexBraceMatcher : PairedBraceMatcher {
         return arrayOf(
             BracePair(VexTypes.LBRACE, VexTypes.RBRACE, true),
             BracePair(VexTypes.LPAREN, VexTypes.RPAREN, false),
-            BracePair(VexTypes.LBRACK, VexTypes.RBRACK, false)
+            BracePair(VexTypes.LBRACK, VexTypes.RBRACK, false),
         )
     }
 
-    override fun isPairedBracesAllowedBeforeType(lbraceType: IElementType, contextType: IElementType?): Boolean {
+    override fun isPairedBracesAllowedBeforeType(
+        lbraceType: IElementType,
+        contextType: IElementType?,
+    ): Boolean {
         return true
     }
 

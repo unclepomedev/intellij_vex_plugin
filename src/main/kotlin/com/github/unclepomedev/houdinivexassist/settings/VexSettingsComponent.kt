@@ -17,33 +17,36 @@ class VexSettingsComponent {
 
     companion object {
         private val bundle = ResourceBundle.getBundle("messages.MyBundle")
+
         fun getRawMessage(key: String): String = bundle.getString(key)
     }
 
     init {
-        val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().apply {
-            title = MyBundle.message("vex.settings.hfs.path.dialog.title")
-            description = getRawMessage("vex.settings.hfs.path.description")
-        }
+        val descriptor =
+            FileChooserDescriptorFactory.createSingleFolderDescriptor().apply {
+                title = MyBundle.message("vex.settings.hfs.path.dialog.title")
+                description = getRawMessage("vex.settings.hfs.path.description")
+            }
         hfsPathField.addBrowseFolderListener(TextBrowseFolderListener(descriptor))
 
-        panel = FormBuilder.createFormBuilder()
-            .addLabeledComponent(
-                JBLabel(MyBundle.message("vex.settings.hfs.path.label")),
-                hfsPathField,
-                1,
-                false
-            )
-            .addComponent(JBLabel(getRawMessage("vex.settings.hfs.path.description")))
-            .addSeparator()
-            .addLabeledComponent(
-                JBLabel(MyBundle.message("vex.settings.include.path.label")),
-                includePathTextField,
-                1,
-                false
-            )
-            .addComponent(JBLabel(MyBundle.message("vex.settings.include.path.description")))
-            .addComponentFillVertically(JPanel(), 0)
-            .panel
+        panel =
+            FormBuilder.createFormBuilder()
+                .addLabeledComponent(
+                    JBLabel(MyBundle.message("vex.settings.hfs.path.label")),
+                    hfsPathField,
+                    1,
+                    false,
+                )
+                .addComponent(JBLabel(getRawMessage("vex.settings.hfs.path.description")))
+                .addSeparator()
+                .addLabeledComponent(
+                    JBLabel(MyBundle.message("vex.settings.include.path.label")),
+                    includePathTextField,
+                    1,
+                    false,
+                )
+                .addComponent(JBLabel(MyBundle.message("vex.settings.include.path.description")))
+                .addComponentFillVertically(JPanel(), 0)
+                .panel
     }
 }

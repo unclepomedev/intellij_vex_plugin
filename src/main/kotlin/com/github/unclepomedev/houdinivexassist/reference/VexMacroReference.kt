@@ -19,8 +19,7 @@ class VexMacroReference(
     override fun getVariants(): Array<Any> = emptyArray()
 
     override fun handleElementRename(newElementName: String): PsiElement {
-        val named = element as? VexNamedElement
-            ?: return element
+        val named = element as? VexNamedElement ?: return element
         return named.setName(newElementName)
     }
 }

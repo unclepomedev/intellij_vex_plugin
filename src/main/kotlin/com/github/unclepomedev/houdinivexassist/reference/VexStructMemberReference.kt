@@ -11,7 +11,7 @@ import com.intellij.psi.PsiReferenceBase
 
 class VexStructMemberReference(
     element: VexMemberExpr,
-    textRange: TextRange
+    textRange: TextRange,
 ) : PsiReferenceBase<VexMemberExpr>(element, textRange) {
 
     override fun resolve(): PsiElement? {
@@ -25,7 +25,8 @@ class VexStructMemberReference(
             val targetStruct = structDefs.find { it.identifier?.text == structName } ?: return null
 
             for (member in targetStruct.structMemberList) {
-                val matchedDecl = member.declarationItemList.find { it.identifier.text == memberName }
+                val matchedDecl =
+                    member.declarationItemList.find { it.identifier.text == memberName }
                 if (matchedDecl != null) {
                     return matchedDecl
                 }

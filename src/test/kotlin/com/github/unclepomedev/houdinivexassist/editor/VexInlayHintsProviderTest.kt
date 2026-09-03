@@ -6,39 +6,55 @@ import java.util.*
 @Suppress("UnstableApiUsage")
 class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
 
-    private fun hasBackgroundPresentation(presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation): Boolean =
+    private fun hasBackgroundPresentation(
+        presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation
+    ): Boolean =
         hasBackgroundPresentation(presentation, Collections.newSetFromMap(IdentityHashMap()))
 
     private fun hasBackgroundPresentation(
         presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation,
-        visited: MutableSet<com.intellij.codeInsight.hints.presentation.InlayPresentation>
+        visited: MutableSet<com.intellij.codeInsight.hints.presentation.InlayPresentation>,
     ): Boolean {
         if (!visited.add(presentation)) return false
         val className = presentation.javaClass.name
-        if (className.contains("Background", ignoreCase = true) || className.contains(
-                "Round",
-                ignoreCase = true
-            )
-        ) return true
+        if (
+            className.contains("Background", ignoreCase = true) ||
+                className.contains(
+                    "Round",
+                    ignoreCase = true,
+                )
+        )
+            return true
         // Recurse into children via reflection
-        for (field in presentation.javaClass.declaredFields + presentation.javaClass.superclass?.declaredFields.orEmpty()) {
+        for (field in
+            presentation.javaClass.declaredFields +
+                presentation.javaClass.superclass?.declaredFields.orEmpty()) {
             field.isAccessible = true
             val value = runCatching { field.get(presentation) }.getOrNull() ?: continue
             when (value) {
                 is com.intellij.codeInsight.hints.presentation.InlayPresentation ->
                     if (hasBackgroundPresentation(value, visited)) return true
 
-                is List<*> -> value.filterIsInstance<com.intellij.codeInsight.hints.presentation.InlayPresentation>()
-                    .forEach { if (hasBackgroundPresentation(it, visited)) return true }
+                is List<*> ->
+                    value
+                        .filterIsInstance<
+                            com.intellij.codeInsight.hints.presentation.InlayPresentation
+                        >()
+                        .forEach { if (hasBackgroundPresentation(it, visited)) return true }
 
-                is Array<*> -> value.filterIsInstance<com.intellij.codeInsight.hints.presentation.InlayPresentation>()
-                    .forEach { if (hasBackgroundPresentation(it, visited)) return true }
+                is Array<*> ->
+                    value
+                        .filterIsInstance<
+                            com.intellij.codeInsight.hints.presentation.InlayPresentation
+                        >()
+                        .forEach { if (hasBackgroundPresentation(it, visited)) return true }
             }
         }
         return false
     }
 
-    // Workaround for an issue where test framework markers (`<# ... #>`) break VEX parsing and no hints are generated.
+    // Workaround for an issue where test framework markers (`<# ... #>`) break VEX parsing and no
+    // hints are generated.
     private fun doTest(text: String) {
         val expectedHints = mutableMapOf<Int, String>()
         var strippedText = text
@@ -60,59 +76,62 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
         val settings = provider.createSettings()
 
         val actualHints = mutableMapOf<Int, String>()
-        val sink = object : com.intellij.codeInsight.hints.InlayHintsSink {
-            override fun addBlockElement(
-                offset: Int,
-                relatesToPrecedingText: Boolean,
-                showAbove: Boolean,
-                priority: Int,
-                presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation
-            ) {
-            }
+        val sink =
+            object : com.intellij.codeInsight.hints.InlayHintsSink {
+                override fun addBlockElement(
+                    offset: Int,
+                    relatesToPrecedingText: Boolean,
+                    showAbove: Boolean,
+                    priority: Int,
+                    presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation,
+                ) {}
 
-            override fun addInlineElement(
-                offset: Int,
-                relatesToPrecedingText: Boolean,
-                presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation,
-                placeAtTheEndOfLine: Boolean
-            ) {
-                actualHints[offset] = presentation.toString()
-                assertTrue(
-                    "Hint at offset $offset should have a background (roundWithBackground), but was: $presentation (class: ${presentation.javaClass.name})",
-                    hasBackgroundPresentation(presentation)
-                )
-            }
+                override fun addInlineElement(
+                    offset: Int,
+                    relatesToPrecedingText: Boolean,
+                    presentation: com.intellij.codeInsight.hints.presentation.InlayPresentation,
+                    placeAtTheEndOfLine: Boolean,
+                ) {
+                    actualHints[offset] = presentation.toString()
+                    assertTrue(
+                        "Hint at offset $offset should have a background (roundWithBackground), but was: $presentation (class: ${presentation.javaClass.name})",
+                        hasBackgroundPresentation(presentation),
+                    )
+                }
 
-            // For newer API compatibility
-            override fun addBlockElement(
-                logicalLine: Int,
-                showAbove: Boolean,
-                presentation: com.intellij.codeInsight.hints.presentation.RootInlayPresentation<*>,
-                constraints: com.intellij.codeInsight.hints.BlockConstraints?
-            ) {
-            }
+                // For newer API compatibility
+                override fun addBlockElement(
+                    logicalLine: Int,
+                    showAbove: Boolean,
+                    presentation:
+                        com.intellij.codeInsight.hints.presentation.RootInlayPresentation<*>,
+                    constraints: com.intellij.codeInsight.hints.BlockConstraints?,
+                ) {}
 
-            override fun addInlineElement(
-                offset: Int,
-                presentation: com.intellij.codeInsight.hints.presentation.RootInlayPresentation<*>,
-                constraints: com.intellij.codeInsight.hints.HorizontalConstraints?
-            ) {
-                actualHints[offset] = presentation.toString()
-                assertTrue(
-                    "Hint at offset $offset should have a background (roundWithBackground), but was: $presentation (class: ${presentation.javaClass.name})",
-                    hasBackgroundPresentation(presentation)
-                )
+                override fun addInlineElement(
+                    offset: Int,
+                    presentation:
+                        com.intellij.codeInsight.hints.presentation.RootInlayPresentation<*>,
+                    constraints: com.intellij.codeInsight.hints.HorizontalConstraints?,
+                ) {
+                    actualHints[offset] = presentation.toString()
+                    assertTrue(
+                        "Hint at offset $offset should have a background (roundWithBackground), but was: $presentation (class: ${presentation.javaClass.name})",
+                        hasBackgroundPresentation(presentation),
+                    )
+                }
             }
-        }
 
         val collector = provider.getCollectorFor(file, editor, settings, sink)
         if (collector != null) {
-            file.accept(object : com.intellij.psi.PsiRecursiveElementWalkingVisitor() {
-                override fun visitElement(element: com.intellij.psi.PsiElement) {
-                    collector.collect(element, editor, sink)
-                    super.visitElement(element)
+            file.accept(
+                object : com.intellij.psi.PsiRecursiveElementWalkingVisitor() {
+                    override fun visitElement(element: com.intellij.psi.PsiElement) {
+                        collector.collect(element, editor, sink)
+                        super.visitElement(element)
+                    }
                 }
-            })
+            )
         }
 
         assertEquals("Number of hints", expectedHints.size, actualHints.size)
@@ -120,42 +139,51 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
             val actualText = actualHints[offset]
             assertNotNull(
                 "Expected hint '$expectedText' at offset $offset but found none. Actual hints: $actualHints",
-                actualText
+                actualText,
             )
-            assertTrue("Expected hint '$expectedText' but was '$actualText'", actualText!!.contains(expectedText))
+            assertTrue(
+                "Expected hint '$expectedText' but was '$actualText'",
+                actualText!!.contains(expectedText),
+            )
         }
     }
 
     fun testInlayHints() {
-        val text = """
+        val text =
+            """
             void myFunc(int a, float b) {}
-            
+
             void main() {
                 myFunc(<# a = #>1, <# b = #>2.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         doTest(text)
     }
 
     fun testInlayHintsOverloads() {
-        val text = """
+        val text =
+            """
             void myFunc(int x) {}
             void myFunc(float y) {}
-            
+
             void main() {
                 myFunc(<# x = #>1);
                 myFunc(<# y = #>2.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         doTest(text)
     }
 
     fun testStandardFunctionInlayHints() {
-        val text = """
+        val text =
+            """
             void main() {
                 pow(<# n = #>2.0, <# exponent = #>3.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         doTest(text)
     }
 
@@ -172,20 +200,24 @@ class VexInlayHintsProviderTest : InlayHintsProviderTestCase() {
 
     fun testVariadicFunction() {
         // printf(string format, ...) only gives a hint for the first element.
-        val text = """
+        val text =
+            """
             void main() {
                 printf(<# format = #>"%d", 123);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         doTest(text)
     }
 
     fun testSetFunction() {
-        val text = """
+        val text =
+            """
             void main() {
                 set(<# v1 = #>1.0, <# v2 = #>2.0, <# v3 = #>3.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         doTest(text)
     }
 }

@@ -22,7 +22,10 @@ object VexPreprocessorEvaluator {
     private fun getInactiveRanges(file: PsiFile): List<TextRange> {
         return CachedValuesManager.getCachedValue(file) {
             val ranges = computeInactiveRanges(file)
-            com.intellij.psi.util.CachedValueProvider.Result.create(ranges, PsiModificationTracker.MODIFICATION_COUNT)
+            com.intellij.psi.util.CachedValueProvider.Result.create(
+                ranges,
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
         }
     }
 
@@ -35,7 +38,14 @@ object VexPreprocessorEvaluator {
         for (directive in directives) {
             val wasActive = isStackActive(stack)
             updateStack(stack, directive)
-            inactiveStart = trackInactiveRange(wasActive, isStackActive(stack), directive, inactiveStart, result)
+            inactiveStart =
+                trackInactiveRange(
+                    wasActive,
+                    isStackActive(stack),
+                    directive,
+                    inactiveStart,
+                    result,
+                )
         }
 
         if (inactiveStart != null) {
@@ -62,15 +72,15 @@ object VexPreprocessorEvaluator {
 
     private fun pushIfdef(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
         val macroName = directive.ppIfdef!!.identifier?.text
-        val defined = macroName != null &&
-                VexMacroResolver.resolveMacro(directive, macroName) != null
+        val defined =
+            macroName != null && VexMacroResolver.resolveMacro(directive, macroName) != null
         stack.add(BranchState(hasTakenBranch = defined, isActive = defined))
     }
 
     private fun pushIfndef(stack: MutableList<BranchState>, directive: VexPreprocessorDirective) {
         val macroName = directive.ppIfndef!!.identifier?.text
-        val defined = macroName != null &&
-                VexMacroResolver.resolveMacro(directive, macroName) != null
+        val defined =
+            macroName != null && VexMacroResolver.resolveMacro(directive, macroName) != null
         stack.add(BranchState(hasTakenBranch = !defined, isActive = !defined))
     }
 
@@ -112,7 +122,7 @@ object VexPreprocessorEvaluator {
         nowActive: Boolean,
         directive: VexPreprocessorDirective,
         inactiveStart: Int?,
-        result: MutableList<TextRange>
+        result: MutableList<TextRange>,
     ): Int? {
         if (wasActive && !nowActive) {
             return directive.textRange.endOffset

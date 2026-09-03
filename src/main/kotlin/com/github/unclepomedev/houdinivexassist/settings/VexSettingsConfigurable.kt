@@ -22,7 +22,7 @@ class VexSettingsConfigurable : Configurable {
         val component = mySettingsComponent ?: return false
         val state = VexSettingsState.instance
         return component.hfsPathField.text != state.hfsPath ||
-                component.includePathTextField.text != state.includePath
+            component.includePathTextField.text != state.includePath
     }
 
     override fun apply() {

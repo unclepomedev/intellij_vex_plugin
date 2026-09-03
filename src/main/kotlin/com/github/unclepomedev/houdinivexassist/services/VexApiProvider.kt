@@ -9,33 +9,36 @@ data class VexFunction(
     val name: String,
     val args: List<String>,
     val returnType: String,
-    val isVariadic: Boolean = false
+    val isVariadic: Boolean = false,
 )
 
-private data class ApiDumpDto(
-    @SerializedName("Vex") val vex: VexContextDto?
-)
+private data class ApiDumpDto(@SerializedName("Vex") val vex: VexContextDto?)
 
 private data class VexContextDto(val cvex: CvexContextDto?)
+
 private data class CvexContextDto(val functions: Map<String, List<FunctionOverloadDto>>?)
+
 private data class FunctionOverloadDto(
     @SerializedName("return") val returnType: String?, // avoid reserved word with annotation
     val args: List<String>?,
-    val variadic: Boolean?
+    val variadic: Boolean?,
 )
 
 @Service(Service.Level.PROJECT)
 class VexApiProvider {
     private val logger = Logger.getInstance(VexApiProvider::class.java)
     val functions: List<VexFunction> by lazy { loadApiDump() }
-    private val overloadsByName: Map<String, List<VexFunction>> by lazy { functions.groupBy(VexFunction::name) }
-    private val helpArgNamesCache = java.util.concurrent.ConcurrentHashMap<String, List<List<String>>>()
+    private val overloadsByName: Map<String, List<VexFunction>> by lazy {
+        functions.groupBy(VexFunction::name)
+    }
+    private val helpArgNamesCache =
+        java.util.concurrent.ConcurrentHashMap<String, List<List<String>>>()
     private val usageRegex = Regex(":usage:\\s*`.*?\\((.*?)\\)`")
     private val whitespaceRegex = Regex("\\s+")
 
     private fun loadApiDump(): List<VexFunction> {
-        val resourceStream = javaClass.classLoader.getResourceAsStream("vex_api_dump.json")
-            ?: return emptyList()
+        val resourceStream =
+            javaClass.classLoader.getResourceAsStream("vex_api_dump.json") ?: return emptyList()
 
         return try {
             resourceStream.reader().use { reader ->
@@ -67,42 +70,53 @@ class VexApiProvider {
     }
 
     fun getParameterNamesFromHelp(functionName: String, arity: Int): List<String>? {
-        val overloads = helpArgNamesCache.computeIfAbsent(functionName) { name ->
-            val path = "vex_help/functions/$name.txt"
-            val helpText = javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
-                stream.reader().readText()
-            } ?: return@computeIfAbsent emptyList()
+        val overloads =
+            helpArgNamesCache.computeIfAbsent(functionName) { name ->
+                val path = "vex_help/functions/$name.txt"
+                val helpText =
+                    javaClass.classLoader.getResourceAsStream(path)?.use { stream ->
+                        stream.reader().readText()
+                    } ?: return@computeIfAbsent emptyList()
 
-            val matches = usageRegex.findAll(helpText)
+                val matches = usageRegex.findAll(helpText)
 
-            val result = mutableListOf<List<String>>()
-            for (match in matches) {
-                val paramsStr = match.groupValues[1].trim()
-                if (paramsStr.isEmpty()) {
-                    result.add(emptyList())
-                    continue
-                }
-                val params = paramsStr.split("[,;]".toRegex()).map { it.trim() }
-
-                // variadic function like `printf(string format, ...)`
-                if (params.last() == "...") {
-                    // Exclude type information and get only variable names (excluding modifiers such as & and *)
-                    val names = params.dropLast(1).map { param ->
-                        param.split(whitespaceRegex).last().trimStart('&', '*')
-                    }.toMutableList()
-                    result.add(names)
-                } else {
-                    val names = params.map { param ->
-                        param.split(whitespaceRegex).last().trimStart('&', '*')
+                val result = mutableListOf<List<String>>()
+                for (match in matches) {
+                    val paramsStr = match.groupValues[1].trim()
+                    if (paramsStr.isEmpty()) {
+                        result.add(emptyList())
+                        continue
                     }
-                    result.add(names)
+                    val params = paramsStr.split("[,;]".toRegex()).map { it.trim() }
+
+                    // variadic function like `printf(string format, ...)`
+                    if (params.last() == "...") {
+                        // Exclude type information and get only variable names (excluding modifiers
+                        // such as & and *)
+                        val names =
+                            params
+                                .dropLast(1)
+                                .map { param ->
+                                    param.split(whitespaceRegex).last().trimStart('&', '*')
+                                }
+                                .toMutableList()
+                        result.add(names)
+                    } else {
+                        val names = params.map { param ->
+                            param.split(whitespaceRegex).last().trimStart('&', '*')
+                        }
+                        result.add(names)
+                    }
                 }
+                result
             }
-            result
-        }
 
         // Exact match takes priority
-        overloads.find { it.size == arity }?.let { return it }
+        overloads
+            .find { it.size == arity }
+            ?.let {
+                return it
+            }
         return overloads.filter { arity >= it.size }.maxByOrNull { it.size }
     }
 }

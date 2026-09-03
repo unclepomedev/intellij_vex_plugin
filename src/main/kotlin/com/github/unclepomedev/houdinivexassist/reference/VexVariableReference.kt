@@ -13,12 +13,13 @@ class VexVariableReference(
 ) : PsiReferenceBase<PsiElement>(element, textRange) {
 
     override fun resolve(): PsiElement? {
-        return ResolveCache.getInstance(element.project).resolveWithCaching(
-            this,
-            Resolver,
-            false,
-            false
-        )
+        return ResolveCache.getInstance(element.project)
+            .resolveWithCaching(
+                this,
+                Resolver,
+                false,
+                false,
+            )
     }
 
     private object Resolver : ResolveCache.AbstractResolver<VexVariableReference, PsiElement> {

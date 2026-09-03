@@ -47,7 +47,9 @@ class VexIncludePathResolutionTest : VexTestBase() {
         val tmpDir = Files.createTempDirectory("hfs_test")
         try {
             val frameworkDir =
-                tmpDir.resolve("Frameworks/Houdini.framework/Versions/Current/Resources/houdini/vex/include")
+                tmpDir.resolve(
+                    "Frameworks/Houdini.framework/Versions/Current/Resources/houdini/vex/include"
+                )
             Files.createDirectories(frameworkDir)
 
             val settings = VexSettingsState.instance

@@ -13,31 +13,39 @@ object VexMacroResolver {
         file: PsiFile,
         sourceFile: PsiFile,
         name: String,
-        maxOffsetExclusive: Int
+        maxOffsetExclusive: Int,
     ): VexMacroDef? {
-        val key = file.getUserData(ORIGINAL_FILE_PATH_KEY)
-            ?: sourceFile.originalFile.virtualFile?.path
-            ?: sourceFile.name
+        val key =
+            file.getUserData(ORIGINAL_FILE_PATH_KEY)
+                ?: sourceFile.originalFile.virtualFile?.path
+                ?: sourceFile.name
         val visited = resolvingFiles.get()
         if (!visited.add(key)) return null
 
         try {
             var best: VexMacroDef? = null
 
-            val events = mutableListOf<PsiElement>().apply {
-                addAll(PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java))
-                addAll(PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java))
-            }.filter { it.textOffset < maxOffsetExclusive }
-                .sortedBy { it.textOffset }
+            val events =
+                mutableListOf<PsiElement>()
+                    .apply {
+                        addAll(PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java))
+                        addAll(
+                            PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java)
+                        )
+                    }
+                    .filter { it.textOffset < maxOffsetExclusive }
+                    .sortedBy { it.textOffset }
 
             for (event in events) {
                 when (event) {
                     is VexMacroDef -> if (event.identifier?.text == name) best = event
                     is VexIncludeDirective -> {
-                        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(event, sourceFile) ?: continue
-                        val vexFile = (includedPsi as? VexFile)
-                            ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
-                            ?: continue
+                        val includedPsi =
+                            VexScopeAnalyzer.resolveIncludeFile(event, sourceFile) ?: continue
+                        val vexFile =
+                            (includedPsi as? VexFile)
+                                ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
+                                ?: continue
                         val nested = resolveInFile(vexFile, includedPsi, name, Int.MAX_VALUE)
                         if (nested != null) best = nested
                     }

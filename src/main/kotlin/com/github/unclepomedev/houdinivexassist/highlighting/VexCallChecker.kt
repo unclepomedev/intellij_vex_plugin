@@ -36,7 +36,7 @@ class VexCallChecker(private val reporter: VexTypeCheckReporter) {
     private fun reportTypeMismatches(
         args: List<VexExpr>,
         argTypes: List<VexType>,
-        paramTypes: List<VexType>
+        paramTypes: List<VexType>,
     ) {
         for (i in args.indices) {
             if (i >= paramTypes.size) break

@@ -12,14 +12,18 @@ class VexApiProviderTest : VexTestBase() {
         assertNotNull("Functions list should not be null", functions)
         assertTrue(
             "Functions list should not be empty. Make sure vex_api_dump.json is generated.",
-            functions.isNotEmpty()
+            functions.isNotEmpty(),
         )
 
-        val distanceFunc = requireNotNull(functions.find { it.name == "distance" }) {
-            "Should contain 'distance' function"
-        }
+        val distanceFunc =
+            requireNotNull(functions.find { it.name == "distance" }) {
+                "Should contain 'distance' function"
+            }
 
         assertTrue("distance function should have arguments", distanceFunc.args.isNotEmpty())
-        assertTrue("distance function should have a return type", distanceFunc.returnType.isNotEmpty())
+        assertTrue(
+            "distance function should have a return type",
+            distanceFunc.returnType.isNotEmpty(),
+        )
     }
 }

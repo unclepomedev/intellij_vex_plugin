@@ -15,7 +15,8 @@ class VexInlayHintsProvider : InlayHintsProvider<VexInlayHintsProvider.Settings>
 
     override val key: SettingsKey<Settings> = SettingsKey("vex.inlay.hints")
     override val name: String = "VEX Parameter Hints"
-    override val previewText: String = "void myFunc(int a, float b) {}\nvoid main() {\n    myFunc(1, 2.0);\n}"
+    override val previewText: String =
+        "void myFunc(int a, float b) {}\nvoid main() {\n    myFunc(1, 2.0);\n}"
 
     override fun createSettings(): Settings = Settings()
 
@@ -31,6 +32,7 @@ class VexInlayHintsProvider : InlayHintsProvider<VexInlayHintsProvider.Settings>
                 panel.add(checkbox)
                 return panel
             }
+
             override val mainCheckboxText: String = "Show parameter hints"
         }
     }
@@ -39,12 +41,16 @@ class VexInlayHintsProvider : InlayHintsProvider<VexInlayHintsProvider.Settings>
         file: PsiFile,
         editor: Editor,
         settings: Settings,
-        sink: InlayHintsSink
+        sink: InlayHintsSink,
     ): InlayHintsCollector? {
         if (!settings.showParameterHints) return null
 
         return object : FactoryInlayHintsCollector(editor) {
-            override fun collect(element: PsiElement, editor: Editor, sink: InlayHintsSink): Boolean {
+            override fun collect(
+                element: PsiElement,
+                editor: Editor,
+                sink: InlayHintsSink,
+            ): Boolean {
                 if (element !is VexCallExpr) return true
 
                 val argumentList = element.argumentList ?: return true
@@ -58,15 +64,16 @@ class VexInlayHintsProvider : InlayHintsProvider<VexInlayHintsProvider.Settings>
                         val paramName = parameters[i]
                         val text = factory.smallText("$paramName =")
                         val presentation = factory.roundWithBackground(text)
-                        val finalPresentation = factory.seq(
-                            presentation,
-                            factory.textSpacePlaceholder(1, true)
-                        )
+                        val finalPresentation =
+                            factory.seq(
+                                presentation,
+                                factory.textSpacePlaceholder(1, true),
+                            )
                         sink.addInlineElement(
                             args[i].textRange.startOffset,
                             relatesToPrecedingText = true,
                             presentation = finalPresentation,
-                            placeAtTheEndOfLine = false
+                            placeAtTheEndOfLine = false,
                         )
                     }
                 }

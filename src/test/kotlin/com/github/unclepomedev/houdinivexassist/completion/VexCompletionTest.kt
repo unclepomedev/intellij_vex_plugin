@@ -5,11 +5,13 @@ import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 
 class VexCompletionTest : VexTestBase() {
     fun testFunctionCompletion() {
-        val code = """
+        val code =
+            """
             void main() {
                 dis<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         val lookups = myFixture.completeBasic()
         assertNotNull("Completion list should not be null", lookups)
@@ -18,15 +20,17 @@ class VexCompletionTest : VexTestBase() {
     }
 
     fun testStructCompletion() {
-        val code = """
+        val code =
+            """
             struct MyAwesomeStruct {
                 int a;
             }
-            
+
             void main() {
                 MyAwes<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         myFixture.completeBasic()
 
@@ -35,21 +39,24 @@ class VexCompletionTest : VexTestBase() {
             struct MyAwesomeStruct {
                 int a;
             }
-            
+
             void main() {
                 MyAwesomeStruct<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testLocalVariableCompletion() {
-        val code = """
+        val code =
+            """
             void main() {
                 int my_local_var = 123;
                 my_<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         myFixture.completeBasic()
 
@@ -59,16 +66,19 @@ class VexCompletionTest : VexTestBase() {
                 int my_local_var = 123;
                 my_local_var<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testParameterCompletion() {
-        val code = """
+        val code =
+            """
             void main(float my_param_val) {
                 my_<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         myFixture.completeBasic()
 
@@ -77,23 +87,26 @@ class VexCompletionTest : VexTestBase() {
             void main(float my_param_val) {
                 my_param_val<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testFutureVariableNotCompleted() {
-        val code = """
+        val code =
+            """
             void main() {
                 my_<caret>
                 int my_future_var = 1;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         val lookups = myFixture.completeBasic()
         val lookupStrings = lookups?.map { it.lookupString }.orEmpty()
         assertFalse(
             "Completion should not contain future variable 'my_future_var'",
-            lookupStrings.contains("my_future_var")
+            lookupStrings.contains("my_future_var"),
         )
 
         myFixture.checkResult(
@@ -102,12 +115,14 @@ class VexCompletionTest : VexTestBase() {
                 my_<caret>
                 int my_future_var = 1;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testVariableShadowingCompletion() {
-        val code = """
+        val code =
+            """
             int my_shadow_var = 1;
             void main() {
                 int my_shadow_var = 2;
@@ -116,7 +131,8 @@ class VexCompletionTest : VexTestBase() {
                     my_shad<caret>
                 }
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val lookups = myFixture.completeBasic()
@@ -132,16 +148,22 @@ class VexCompletionTest : VexTestBase() {
                         my_shadow_var<caret>
                     }
                 }
-            """.trimIndent()
+                """
+                    .trimIndent()
             )
         } else {
             val shadowVarCount = lookups.count { it.lookupString == "my_shadow_var" }
-            assertEquals("Shadowed variable should appear exactly once in completion list", 1, shadowVarCount)
+            assertEquals(
+                "Shadowed variable should appear exactly once in completion list",
+                1,
+                shadowVarCount,
+            )
         }
     }
 
     fun testStructMemberCompletion() {
-        val code = """
+        val code =
+            """
             struct Engine {
                 int power;
             }
@@ -156,7 +178,8 @@ class VexCompletionTest : VexTestBase() {
                 // 'sp' should complete to 'speed'
                 myCar.sp<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val lookups = myFixture.completeBasic()
@@ -178,10 +201,12 @@ class VexCompletionTest : VexTestBase() {
                 // 'sp' should complete to 'speed'
                 myCar.speed<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
 
-        val nestedCode = """
+        val nestedCode =
+            """
             struct Engine {
                 int power;
             }
@@ -196,7 +221,8 @@ class VexCompletionTest : VexTestBase() {
                 // 'pow' should complete to 'power'
                 myCar.engine.pow<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, nestedCode)
         myFixture.completeBasic()
 
@@ -216,18 +242,21 @@ class VexCompletionTest : VexTestBase() {
                 // 'pow' should complete to 'power'
                 myCar.engine.power<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testSwizzleCompletion() {
-        val code = """
+        val code =
+            """
             void main() {
                 vector pos = {1, 2, 3};
                 // 'xy' should be in the completion list for vector
                 pos.<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val lookups = myFixture.completeBasic()
@@ -240,18 +269,29 @@ class VexCompletionTest : VexTestBase() {
         assertTrue("Completion should contain 'xyz'", lookupStrings.contains("xyz"))
 
         assertFalse("Completion should NOT contain 'w' for vector3", lookupStrings.contains("w"))
-        assertFalse("Completion should NOT contain 'xyzw' for vector3", lookupStrings.contains("xyzw"))
+        assertFalse(
+            "Completion should NOT contain 'xyzw' for vector3",
+            lookupStrings.contains("xyzw"),
+        )
 
-        assertFalse("Completion should NOT contain local variables during dot access", lookupStrings.contains("pos"))
-        assertFalse("Completion should NOT contain standard functions during dot access", lookupStrings.contains("abs"))
+        assertFalse(
+            "Completion should NOT contain local variables during dot access",
+            lookupStrings.contains("pos"),
+        )
+        assertFalse(
+            "Completion should NOT contain standard functions during dot access",
+            lookupStrings.contains("abs"),
+        )
     }
 
     fun testPrimitiveTypeCompletion() {
-        val code = """
+        val code =
+            """
             void main() {
                 vec<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         val lookups = myFixture.completeBasic()
 
@@ -267,11 +307,13 @@ class VexCompletionTest : VexTestBase() {
     }
 
     fun testPrimitiveTypeCompletionInsertsSpaceNormally() {
-        val code1 = """
+        val code1 =
+            """
             void main() {
                 in<caret>my_var;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code1)
 
         var targetLookup = myFixture.completeBasic()?.find { it.lookupString == "int" }
@@ -284,12 +326,15 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 int <caret>my_var;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
 
-        val code2 = """
+        val code2 =
+            """
             void myFunc(in<caret>, float b) {}
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code2)
 
         targetLookup = myFixture.completeBasic()?.find { it.lookupString == "int" }
@@ -300,16 +345,19 @@ class VexCompletionTest : VexTestBase() {
         myFixture.checkResult(
             """
             void myFunc(int <caret>, float b) {}
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testPrimitiveTypeCompletionDoesNotInsertSpaceBeforeBrackets() {
-        val code1 = """
+        val code1 =
+            """
             void main() {
                 vector pos = vec<caret>(1.0, 2.0, 3.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code1)
 
         var targetLookup = myFixture.completeBasic()?.find { it.lookupString == "vector" }
@@ -322,14 +370,17 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 vector pos = vector<caret>(1.0, 2.0, 3.0);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
 
-        val code2 = """
+        val code2 =
+            """
             void main() {
                 vector a = vector(floa<caret>);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code2)
 
         targetLookup = myFixture.completeBasic()?.find { it.lookupString == "float" }
@@ -342,14 +393,17 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 vector a = vector(float<caret>);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
 
-        val code3 = """
+        val code3 =
+            """
             void main() {
                 floa<caret>[] my_array;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code3)
 
         targetLookup = myFixture.completeBasic()?.find { it.lookupString == "float" }
@@ -362,18 +416,21 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 float<caret>[] my_array;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testZeroArgFunctionInsert() {
-        val code = """
+        val code =
+            """
             void my_zero_arg() {}
             void my_zero_dummy() {}
             void main() {
                 my_zero<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_zero_arg" }
@@ -389,18 +446,21 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 my_zero_arg()<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testArgFunctionInsert() {
-        val code = """
+        val code =
+            """
             void my_arg_func(int a) {}
             void my_arg_dummy() {}
             void main() {
                 my_arg_<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_arg_func" }
@@ -416,18 +476,21 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 my_arg_func(<caret>)
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testFunctionInsertWithParenTyped() {
-        val code = """
+        val code =
+            """
             void my_arg_func(int a) {}
             void my_arg_dummy() {}
             void main() {
                 my_arg_<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_arg_func" }
@@ -443,18 +506,21 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 my_arg_func(<caret>)
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testFunctionInsertWithExistingParens() {
-        val code = """
+        val code =
+            """
             void my_arg_func(int a) {}
             void my_arg_dummy() {}
             void main() {
                 my_arg_<caret>()
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_arg_func" }
@@ -470,18 +536,21 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 my_arg_func(<caret>)
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
     fun testZeroArgFunctionInsertWithExistingParens() {
-        val code = """
+        val code =
+            """
             void my_zero_arg() {}
             void my_zero_dummy() {}
             void main() {
                 my_zero<caret>()
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
 
         val targetLookup = myFixture.completeBasic()?.find { it.lookupString == "my_zero_arg" }
@@ -497,7 +566,8 @@ class VexCompletionTest : VexTestBase() {
             void main() {
                 my_zero_arg()<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         )
     }
 
@@ -508,20 +578,26 @@ class VexCompletionTest : VexTestBase() {
             void my_lib_func() { }
             int my_lib_var = 123;
             struct my_lib_struct { int a; }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
-        val code = """
+        val code =
+            """
             #include "my_lib.vfl"
             void main() {
                 my_lib_<caret>
             }
-        """.trimIndent()
+            """
+                .trimIndent()
         myFixture.configureByText(VexFileType, code)
         val lookups = myFixture.completeBasic()
         assertNotNull("Completion list should not be null", lookups)
         val lookupStrings = lookups!!.map { it.lookupString }
         assertTrue("Completion should contain 'my_lib_func'", lookupStrings.contains("my_lib_func"))
         assertTrue("Completion should contain 'my_lib_var'", lookupStrings.contains("my_lib_var"))
-        assertTrue("Completion should contain 'my_lib_struct'", lookupStrings.contains("my_lib_struct"))
+        assertTrue(
+            "Completion should contain 'my_lib_struct'",
+            lookupStrings.contains("my_lib_struct"),
+        )
     }
 }

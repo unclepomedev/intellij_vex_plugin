@@ -38,29 +38,34 @@ class VexFormatterTest : VexTestBase() {
     }
 
     fun testBasicFormatting() {
-        val before = """
+        val before =
+            """
             int   myFunc ( int a,int b ){
                 int c=a+b ;
                 return c;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
-        val after = """
+        val after =
+            """
             int myFunc(int a, int b) {
                 int c = a + b;
                 return c;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
         reformatAndAssert(before, after)
     }
 
     fun testComprehensiveFormatting() {
-        val before = """
+        val before =
+            """
             struct   MyData{
             int  val;
             }
-            
+
             int   myFunc ( int a,int b ){
                 int c=a+b ;
                     int d = -5;
@@ -71,32 +76,35 @@ class VexFormatterTest : VexTestBase() {
                 
                 return c;
             }
-            
+
             void test ( ){
             myFunc ( 1 ,-2) ;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
-        val after = """
+        val after =
+            """
             struct MyData {
                 int val;
             }
-            
+
             int myFunc(int a, int b) {
                 int c = a + b;
                 int d = -5;
-            
+
                 if (c == d) {
                     c += 1;
                 }
-            
+
                 return c;
             }
-            
+
             void test() {
                 myFunc(1, -2);
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
         reformatAndAssert(before, after)
     }
@@ -114,7 +122,8 @@ class VexFormatterTest : VexTestBase() {
     }
 
     fun testAdvancedOperatorsAndMultilineLists() {
-        val before = """
+        val before =
+            """
             int myFunc (
             int a,
             int b
@@ -131,9 +140,11 @@ class VexFormatterTest : VexTestBase() {
                 2
                 ) ;
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
-        val after = """
+        val after =
+            """
             int myFunc(
                 int a,
                 int b
@@ -150,30 +161,35 @@ class VexFormatterTest : VexTestBase() {
                     2
                 );
             }
-        """.trimIndent()
+            """
+                .trimIndent()
 
         reformatAndAssert(before, after)
     }
 
     fun testMacroWithLineContinuation() {
-        val before = """
+        val before =
+            """
             #define FOO \
             1
             #define BAR(a,b) \
               ((a) + \
                (b))
             int x = 1;
-        """.trimIndent()
+            """
+                .trimIndent()
 
         // No complicated formatting
-        val after = """
+        val after =
+            """
             #define FOO \
             1
             #define BAR(a, b) \
               ((a) + \
                (b))
             int x = 1;
-        """.trimIndent()
+            """
+                .trimIndent()
 
         reformatAndAssert(before, after)
     }

@@ -6,8 +6,8 @@ import com.intellij.psi.PsiElement
 object VexTypeExtractor {
 
     /**
-     * Extracts the VexType from PSI elements such as variable declarations, parameter definitions, and function definitions.
-     * Returns [VexType.UnknownType] if extraction is not possible.
+     * Extracts the VexType from PSI elements such as variable declarations, parameter definitions,
+     * and function definitions. Returns [VexType.UnknownType] if extraction is not possible.
      */
     fun extractType(element: PsiElement): VexType {
         return when (element) {

@@ -44,7 +44,11 @@ class VexDeclarationAnnotator : Annotator {
             return
         }
         if (isLocalFunctionBefore(element, varName)) {
-            reportError(holder, identifier, "Variable name '$varName' conflicts with a local function")
+            reportError(
+                holder,
+                identifier,
+                "Variable name '$varName' conflicts with a local function",
+            )
             return
         }
     }
@@ -55,16 +59,28 @@ class VexDeclarationAnnotator : Annotator {
         val funcName = identifier.text
 
         if (isStandardFunction(funcName, element)) {
-            reportError(holder, identifier, "Function name '$funcName' conflicts with a standard VEX function")
+            reportError(
+                holder,
+                identifier,
+                "Function name '$funcName' conflicts with a standard VEX function",
+            )
             return
         }
         if (isStructNameBefore(element, funcName)) {
-            reportError(holder, identifier, "Function name '$funcName' conflicts with a struct definition")
+            reportError(
+                holder,
+                identifier,
+                "Function name '$funcName' conflicts with a struct definition",
+            )
             return
         }
         if (hasExactOverloadConflict(element, funcName)) {
             val paramCount = element.parameterListDef?.parameterDefList?.size ?: 0
-            reportError(holder, identifier, "Function '$funcName' with $paramCount parameters is already defined")
+            reportError(
+                holder,
+                identifier,
+                "Function '$funcName' with $paramCount parameters is already defined",
+            )
             return
         }
     }
@@ -79,25 +95,36 @@ class VexDeclarationAnnotator : Annotator {
             return
         }
         if (isStandardFunction(structName, element)) {
-            reportError(holder, identifier, "Struct name '$structName' conflicts with a standard VEX function")
+            reportError(
+                holder,
+                identifier,
+                "Struct name '$structName' conflicts with a standard VEX function",
+            )
             return
         }
         if (isLocalFunctionBefore(element, structName)) {
-            reportError(holder, identifier, "Struct name '$structName' conflicts with a local function")
+            reportError(
+                holder,
+                identifier,
+                "Struct name '$structName' conflicts with a local function",
+            )
             return
         }
     }
 
     // --- Conflict Checks ---
 
-    private fun isAlreadyDefinedInScope(element: VexDeclarationItem, name: String, scope: PsiElement): Boolean {
+    private fun isAlreadyDefinedInScope(
+        element: VexDeclarationItem,
+        name: String,
+        scope: PsiElement,
+    ): Boolean {
         return VexScopeAnalyzer.getDeclarationsInScope(scope).any { prior ->
             prior != element &&
-                    prior.identifier.text == name &&
-                    prior.textOffset < element.textOffset
+                prior.identifier.text == name &&
+                prior.textOffset < element.textOffset
         }
     }
-
 
     private fun isDefinedAsParameter(name: String, scope: PsiElement): Boolean {
         return VexScopeAnalyzer.getParametersForScope(scope).any { it.identifier.text == name }
@@ -124,19 +151,21 @@ class VexDeclarationAnnotator : Annotator {
         val myParamTypes = extractParameterTypes(element)
         return VexScopeAnalyzer.getVisibleFunctions(element).any { sibling ->
             sibling != element &&
-                    sibling.identifier.text == name &&
-                    sibling.textOffset < element.textOffset &&
-                    extractParameterTypes(sibling) == myParamTypes
+                sibling.identifier.text == name &&
+                sibling.textOffset < element.textOffset &&
+                extractParameterTypes(sibling) == myParamTypes
         }
     }
 
     private fun extractParameterTypes(funcDef: VexFunctionDef) =
-        funcDef.parameterListDef?.parameterDefList?.map(VexTypeExtractor::extractType) ?: emptyList()
+        funcDef.parameterListDef?.parameterDefList?.map(VexTypeExtractor::extractType)
+            ?: emptyList()
 
     // --- Error Reporting Utility ---
 
     private fun reportError(holder: AnnotationHolder, targetElement: PsiElement, message: String) {
-        holder.newAnnotation(HighlightSeverity.ERROR, message)
+        holder
+            .newAnnotation(HighlightSeverity.ERROR, message)
             .range(targetElement.textRange)
             .create()
     }

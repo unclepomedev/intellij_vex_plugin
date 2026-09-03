@@ -1,8 +1,8 @@
 package com.github.unclepomedev.houdinivexassist.types
 
 /**
- * A Sealed Class representing all types in the VEX language.
- * It does not depend on the Syntax Tree (PSI) and has only the concept of pure types.
+ * A Sealed Class representing all types in the VEX language. It does not depend on the Syntax Tree
+ * (PSI) and has only the concept of pure types.
  */
 sealed class VexType {
     abstract val displayName: String
@@ -69,7 +69,8 @@ sealed class VexType {
 
     companion object {
         /**
-         * Converts a string of a type obtained from a PSI (e.g., "int", "vector") into a VexType object.
+         * Converts a string of a type obtained from a PSI (e.g., "int", "vector") into a VexType
+         * object.
          */
         fun fromString(typeName: String): VexType {
             return when (typeName) {

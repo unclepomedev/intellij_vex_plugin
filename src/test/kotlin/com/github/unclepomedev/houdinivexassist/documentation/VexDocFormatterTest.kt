@@ -1,20 +1,22 @@
 package com.github.unclepomedev.houdinivexassist.documentation
 
-import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class VexDocFormatterTest {
 
     @Test
     fun testFormat_RemovesMetadata() {
-        val rawText = """
+        val rawText =
+            """
             = abs =
             #type: vex
             #context: all
-            
+
             This is content.
-        """.trimIndent()
+            """
+                .trimIndent()
 
         val html = VexDocFormatter.format("abs", rawText)
 
@@ -26,12 +28,14 @@ class VexDocFormatterTest {
 
     @Test
     fun testFormat_ExtractsUsages() {
-        val rawText = """
+        val rawText =
+            """
             :usage: `int abs(int n)`
             :usage: `float abs(float n)`
-            
+
             Content.
-        """.trimIndent()
+            """
+                .trimIndent()
 
         val html = VexDocFormatter.format("abs", rawText)
 
@@ -41,7 +45,8 @@ class VexDocFormatterTest {
 
     @Test
     fun testFormat_FormatsCodeBlocks() {
-        val rawText = """
+        val rawText =
+            """
             :box:Scalar example
                 {{{
                 #!vex
@@ -49,7 +54,8 @@ class VexDocFormatterTest {
                     // n is greater than 1
                 }
                 }}}
-        """.trimIndent()
+            """
+                .trimIndent()
 
         val html = VexDocFormatter.format("abs", rawText)
 
@@ -59,13 +65,15 @@ class VexDocFormatterTest {
 
     @Test
     fun testFormat_FormatsCodeBlocksUnindented() {
-        val rawText = """
+        val rawText =
+            """
             {{{
             #!vex
             if (abs(n) > 1) {
             }
             }}}
-        """.trimIndent()
+            """
+                .trimIndent()
 
         val html = VexDocFormatter.format("abs", rawText)
 
@@ -75,28 +83,32 @@ class VexDocFormatterTest {
 
     @Test
     fun testFormat_HandlesUnclosedCodeBlock() {
-        val rawText = """
-        {{{
-        #!vex
-        int x = 1;
-    """.trimIndent()
+        val rawText =
+            """
+            {{{
+            #!vex
+            int x = 1;
+            """
+                .trimIndent()
 
         val html = VexDocFormatter.format("test", rawText)
 
         assertTrue("Should handle unclosed block", html.isNotEmpty())
         assertFalse(
             "Should not produce unclosed code tags",
-            html.contains("<pre><code>") && !html.contains("</code></pre>")
+            html.contains("<pre><code>") && !html.contains("</code></pre>"),
         )
     }
 
     @Test
     fun testFormat_HandlesNoCodeBlocks() {
-        val rawText = """
-        :usage: `int foo()`
-        
-        Simple description with no code blocks.
-    """.trimIndent()
+        val rawText =
+            """
+            :usage: `int foo()`
+
+            Simple description with no code blocks.
+            """
+                .trimIndent()
 
         val html = VexDocFormatter.format("foo", rawText)
 

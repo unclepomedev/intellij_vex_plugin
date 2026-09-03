@@ -13,7 +13,8 @@ class VexConditionalCompilationTest : VexTestBase() {
             #ifdef MACRO
             int a = 1;
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -26,7 +27,8 @@ class VexConditionalCompilationTest : VexTestBase() {
             int a = 1;
             #endif
             float a = 2.0;
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -38,13 +40,14 @@ class VexConditionalCompilationTest : VexTestBase() {
             #ifndef MACRO
             int a = 1;
             #endif
-            
+
             #define OTHER
             #ifndef OTHER
             int b = 1;
             #endif
             float b = 2.0;
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -59,7 +62,8 @@ class VexConditionalCompilationTest : VexTestBase() {
             #else
             float x = 2.0;
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -76,7 +80,8 @@ class VexConditionalCompilationTest : VexTestBase() {
             int a = 2;
             #endif
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -92,7 +97,8 @@ class VexConditionalCompilationTest : VexTestBase() {
             #else
             float x = 3.0;
             #endif
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -108,7 +114,8 @@ class VexConditionalCompilationTest : VexTestBase() {
             #else // trailing
             float a = 2.0;
             #endif /* done */
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
@@ -120,11 +127,12 @@ class VexConditionalCompilationTest : VexTestBase() {
             #ifdef NEVER_DEFINED
             void foo() {}
             #endif
-            
+
             void main() {
                 <error descr="Unknown VEX function: 'foo'">foo</error>();
             }
-            """.trimIndent()
+            """
+                .trimIndent(),
         )
         myFixture.checkHighlighting(false, false, false, true)
     }

@@ -7,8 +7,11 @@ import com.intellij.psi.PsiElement
 
 class VexTypeCheckAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        if (element !is VexDeclarationItem && element !is VexAssignExpr &&
-            element !is VexCallExpr && element !is VexReturnStatement
+        if (
+            element !is VexDeclarationItem &&
+                element !is VexAssignExpr &&
+                element !is VexCallExpr &&
+                element !is VexReturnStatement
         ) {
             return
         }
