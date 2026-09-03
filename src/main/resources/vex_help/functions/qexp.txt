@@ -1,0 +1,12 @@
+= qexp =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: math
+
+""" Computes the exponential of a quaternion. """
+
+:usage: `vector4 qexp(vector4 quaternion)`
+
+Returns the value of `e` raised to the given [quaternion|Wp:Quaternion].

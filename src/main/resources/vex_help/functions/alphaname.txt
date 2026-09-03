@@ -4,6 +4,7 @@
 #context: cop2
 #tags: output_plane
 #group: image
+#index: no
 
 """Returns the default name of the alpha plane (as it appears in the
 compositor preferences)."""

@@ -16,3 +16,7 @@ NOTE:
 
 NOTE:
     The returned value may be very large and can cause an overflow when further multiplied or is cast to float.
+
+@related
+
+- [Vex:fnv1a_hash]

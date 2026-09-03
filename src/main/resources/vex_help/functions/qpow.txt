@@ -1,0 +1,12 @@
+= qpow =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: math
+
+""" Raises the quaternion to the power of the exponent. """
+
+:usage: `vector4 qpow(vector4 quaternion, float exponent)`
+
+Returns the quaternion raised to the power of the exponent.

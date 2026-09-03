@@ -4,6 +4,7 @@
 #context: cop2
 #tags: cop2
 #group: image
+#index: no
 
 """Queries if metadata exists on a composite operator."""
 

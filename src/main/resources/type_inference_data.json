@@ -60,6 +60,11 @@
             "attribute"
         ]
     },
+    "gl_alphacutoff": {
+        "float": [
+            "attribute"
+        ]
+    },
     "gl_spritecutoff": {
         "float": [
             "attribute"
@@ -350,6 +355,11 @@
             "Sop"
         ]
     },
+    "vel": {
+        "vector": [
+            "attribute"
+        ]
+    },
     "volvis_shadowcolor": {
         "vector": [
             "attribute"
@@ -390,6 +400,11 @@
             "attribute"
         ]
     },
+    "gl_alphablend": {
+        "int": [
+            "attribute"
+        ]
+    },
     "gl_lit": {
         "int": [
             "attribute"
@@ -411,6 +426,11 @@
         ]
     },
     "gl_spriteblend": {
+        "int": [
+            "attribute"
+        ]
+    },
+    "gl_transparencysort": {
         "int": [
             "attribute"
         ]

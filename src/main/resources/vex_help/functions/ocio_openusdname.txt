@@ -1,0 +1,17 @@
+= ocio_openusdname =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Returns the OpenUSD name identifier of the given color space."""
+
+Not all color spaces have a corresponding Nanocolor name, so this function may return an empty string.
+
+The OpenUSD names are defined in https://openusd.org/release/user_guides/color_user_guide.html#color-spaces-supported-by-openusd
+
+:usage: `string ocio_openusdname(string name)`
+
+- [Vex:ocio_nanocolorname]
+- [Vex:ocio_bestname]

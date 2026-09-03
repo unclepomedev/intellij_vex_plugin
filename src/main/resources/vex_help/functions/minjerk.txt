@@ -1,0 +1,32 @@
+= minjerk =
+
+#type: vex
+#context: all
+#tags: math, solve, minjerk
+#group: math
+
+"""Samples position, velocity, and acceleration for a MinJerk curve."""
+
+:usage: `float[] minjerk(float pos0, float vel0, float acc0, float pos1, float vel1, float acc1, float sample_time, float total_time)`
+:usage: `vector2[] minjerk(vector2 pos0, vector2 vel0, vector2 acc0, vector2 pos1, vector2 vel1, vector2 acc1, float sample_time, float total_time)`
+:usage: `vector[] minjerk(vector pos0, vector vel0, vector acc0, vector pos1, vector vel1, vector acc1, float sample_time, float total_time)`
+
+Samples position, velocity, and acceleration for a MinJerk curve.
+
+`sample_time` is expected to be clamped between `0` and `total_time`.
+
+
+@examples
+
+{{{
+#!vex
+// Plot a path 
+float totaltime = 5.0;
+float step = 0.1;
+
+for (float sample=0; sample<totaltime; sample+=step)
+{
+	vector pva[] = minjerk(p0, v0, a0, p1, v1, a1, sample, totaltime);
+	addpoint(0, pva[0]);
+}
+}}}

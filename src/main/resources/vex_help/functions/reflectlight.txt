@@ -1,7 +1,7 @@
 = reflectlight =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: surface
 #group: shading
 
@@ -55,4 +55,3 @@ surface mirror(vector refl_color=1; float bias=.005)
 - [Vex:gather]
 - [Vex:trace]
 - [Vex:irradiance]
-

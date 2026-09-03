@@ -5,6 +5,7 @@
 #type: vex
 #context: cop2
 #group: image
+#index: no
 
 :usage: `void accessframe(int frame)`
 

@@ -1,0 +1,29 @@
+= asinpi =
+
+#type: vex
+#context: all
+#tags: math, trig
+#group: math
+
+"""Returns the inverse sine of the argument divided by Pi."""
+
+:usage: `float asinpi(float n)`
+    The inverse sine of `n`, where `n` is [-1..1]. The return value
+    is in the range -0.5 to 0.5.
+
+:usage: `vector2 asinpi(vector2 n)`
+:usage: `vector asinpi(vector n)`
+:usage: `vector4 asinpi(vector4 n)`
+
+     Returns a new vector with `asinpi()` applied to all components.
+
+
+@related
+
+- [Vex:asin]
+- [Vex:acos]
+- [Vex:atan]
+- [Vex:asinpi]
+- [Vex:acospi]
+- [Vex:atanpi]
+

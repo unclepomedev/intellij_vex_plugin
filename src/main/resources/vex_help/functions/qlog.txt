@@ -1,0 +1,12 @@
+= qlog =
+
+#type: vex
+#context: all
+#tags: quaternion
+#group: math
+
+""" Computes the natural logarithm of a quaternion. """
+
+:usage: `vector4 qlog(vector4 quaternion)`
+
+Returns the natural logarithm of the given [quaternion|Wp:Quaternion].

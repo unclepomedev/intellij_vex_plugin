@@ -1,0 +1,10 @@
+= ocio_aliases =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Returns the list of aliases for a given color space."""
+
+:usage: `string[] ocio_aliases(string name)`

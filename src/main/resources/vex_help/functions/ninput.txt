@@ -4,6 +4,7 @@
 #context: cop2
 #tags: cop2, pixel, sample
 #group: image
+#index: no
 
 """Reads a component from a pixel and its eight neighbors."""
 

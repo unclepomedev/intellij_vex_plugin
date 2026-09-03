@@ -1,0 +1,43 @@
+= implicitsurfacevel =
+
+#type: vex
+#context: all
+#tags: sdf, implicit, velocity
+#group: geo
+
+"""Evaluates implicit surface SDF, normal, and surface velocity."""
+
+:usage: `float implicitsurfacevel(<geometry>, vector pos, vector &N, vector &vel)`
+
+:include _common#geometry:
+
+:arg:pos:
+    The world-space position at which to evaluate the implicit surface.
+
+:arg:N:
+    Output unit normal, computed from the SDF gradient.
+
+:arg:vel:
+    Output surface velocity.
+    The velocity combines normal motion from `dparm` and interpolated rigid-body
+    motion from shape `v`/`w` attributes:
+    `vel = grad * dparm + tangent(interpolated_rigid_velocity)`.
+
+:returns:
+    Signed distance to the implicit surface at `pos`.
+
+This function requires the same implicit-surface attributes as
+[implicitsurface|Vex:implicitsurface]. For non-zero velocity, include per-shape
+`v`, `w`, `implicitsurfacedparms`, and `implicitsurfaceopdparms` attributes.
+
+@examples
+
+{{{
+#!vex
+vector N;
+vector vel;
+float sdf = implicitsurfacevel(0, @P, N, vel);
+}}}
+
+@related
+- [implicitsurface|Vex:implicitsurface]

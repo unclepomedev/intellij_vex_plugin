@@ -1,7 +1,7 @@
 = phong =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading, pbr, bsdf, phong
 #group: bsdf
 

@@ -1,7 +1,7 @@
 = pathtrace =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #group: shading
 
 """Computes global illumination using PBR for secondary bounces."""
@@ -26,4 +26,3 @@ Irradiance caching works the same way it works with [Vex:occlusion].
 
 - [Vex:occlusion]
 - [Vex:irradiance]
-

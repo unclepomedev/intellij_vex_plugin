@@ -1,7 +1,7 @@
 = getmaterialid =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading
 #group: shading
 
@@ -10,5 +10,5 @@
 :usage: `int getmaterialid()`
 
 Returns the material id of the primitive being shaded. The id corresponds to
-the material being evaluated and accounts for overrides from style sheets and 
+the material being evaluated and accounts for overrides from style sheets and
 detail assignments.

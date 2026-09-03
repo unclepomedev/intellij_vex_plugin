@@ -1,0 +1,10 @@
+= ocio_aliases =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Returns the full name defined by the OCIO config for the given color space."""
+
+:usage: `string ocio_fullname(string name)`

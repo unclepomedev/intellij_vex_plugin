@@ -1,0 +1,13 @@
+= ocio_bestname =
+
+#type: vex
+#context: all
+#tags: color, ocio
+#group: ocio
+
+"""Uses the state of the HOUDINI_OCIO_NANOCOLOR_NAMES variable to determine whether to return the Nanocolor or OpenUSD name for the color.  If there are no valid Nanocolor or OpenUSD aliases, the original color space will be returned."""
+
+:usage: `string ocio_bestname(string name)`
+
+- [Vex:ocio_nanocolorname]
+- [Vex:ocio_openusdname]

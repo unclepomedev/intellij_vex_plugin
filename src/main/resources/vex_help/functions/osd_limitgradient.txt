@@ -1,0 +1,71 @@
+= osd_limitgradient =
+
+#type: vex
+#context: all
+#tags: subd
+#group: subd
+
+"""Computes the gradient to a scalar point attribute evaluated at the subdivision limit using Open Subdiv and maps the gradient into the tangent space of a given vector point attribute (typically `P`)."""
+
+`osd_limitgradient` computes the gradient to a scalar point attribute in the geometry specified as a
+subdivision surface and maps the gradient into the tangent space of a given vector point attribute.
+
+:usage: `int osd_limitgradient(<geometry>, string scalar_attrib, string vector_attrib, int patch_id, float u, float v, <type> &result)`
+
+:include _common#geometry:
+
+:arg:&result:
+    The gradient vector with respect to the subdivision limit at the given attribute value is stored in the vector you pass to this argument.
+    
+:returns:
+    `1` if computing the attribute was successful, `0` if it failed.
+
+    Possible reasons for failure are:
+
+    * The geometry contains no polygons or the topology can't be converted using Open Subdiv.
+
+    * The attribute doesn't exist on the input geometry.
+
+    * The attribute size/type doesn't match the VEX type of the `result` argument.
+
+    * The gradient attribute is not a scalar type.
+    
+@examples
+
+:box:Evaluate the gradient at the subdivision surface limit position at
+each point on the poly cage and sets the gradient as an attribute at the given point number.
+    {{{
+    #!vex
+    int prims[] = pointprims(file, ptnum);
+    if (len(prims))
+    {
+        int primnum = prims[0];
+        float prim_u, prim_v;
+        if (pointprimuv(file, ptnum, primnum, prim_u, prim_v))
+        {
+            int patch_id;
+            float patch_u, patch_v;
+            if (osd_lookuppatch(file, primnum, prim_u, prim_v, patch_id, patch_u, patch_v))
+            {
+                vector gradient;
+                if (osd_limitgradient(file, scalar_attrib, "P", patch_id, patch_u, patch_v, gradient))
+                {
+                    setpointattrib(file, "gradient", ptnum, gradient);
+                }
+            }
+        }
+    }
+    }}}
+
+
+@related
+
+- [Vex:pointprimuv]
+- [Vex:osd_facecount]
+- [Vex:osd_firstpatch]
+- [Vex:osd_patchcount]
+- [Vex:osd_limit]
+- [Vex:osd_limitcurvature]
+- [Vex:osd_limitnormal]
+- [Vex:osd_limitsurface]
+

@@ -15,4 +15,6 @@ See [Vex:osd_limitsurface] for more information.
 
 :include _common#geometry:
 
-
+@related
+- [Vex:osd_limitsurfacevertex]
+- [Vex:vertexprimuv]

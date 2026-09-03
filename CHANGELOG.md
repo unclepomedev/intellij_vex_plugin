@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-03
+
+* Fixed deprecated DynamicBundle constructor usage (JetBrains API update)
+* Updated Quick Documentation to support Houdini 22 instead of 21.
+
 ## [0.4.6] - 2026-06-20
 
 * Improved "New File" action availability and menu organization.

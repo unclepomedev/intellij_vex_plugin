@@ -4,6 +4,7 @@
 #context: cop2
 #tags: input_plane
 #group: image
+#index: no
 
 """Returns the last frame of the specified input."""
 

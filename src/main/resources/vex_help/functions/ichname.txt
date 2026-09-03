@@ -4,6 +4,7 @@
 #context: cop2
 #tags: input_plane
 #group: image
+#index: no
 
 """Returns the channel name of the indexed plane of the given input."""
 

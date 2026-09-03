@@ -1,7 +1,7 @@
 = getrayweight =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: shading
 #group: shading
 

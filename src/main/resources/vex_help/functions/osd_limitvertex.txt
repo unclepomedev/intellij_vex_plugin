@@ -1,0 +1,95 @@
+= osd_limitvertex =
+
+#type: vex
+#context: all
+#tags: subd
+#group: subd
+
+"""Evaluates a vertex attribute at the subdivision limit surface using Open Subdiv, and also evaluates all first and second partial derivatives with respect to the given attribute."""
+
+`osd_limitvertex` evaluates the vertex attribute in the geometry specified as a
+subdivision surface along with all first and second partial derivatives.
+
+:usage: `int osd_limitvertex(<geometry>, string attrib_name, int patch_id, float u, float v, <type> &result, <type> &result_du, <type> &result_dv, <type> &result_duu, <type> &result_duv, <type> &result_dvv)`
+:usage: `int osd_limitvertex(<geometry>, string attrib_name, int patch_id, float u, float v, float &result[], float &result_du[], float &result_dv[], float &result_duu[], float &result_duv[], float &result_dvv[])`
+
+:include _common#geometry:
+
+:arg:&result:
+    The computed attribute values are stored in the variables you pass to this argument.
+    The type of all the output variables should match the type of the attribute 
+    you are reading.
+
+:arg:&result_du:
+    The first partial derivative in the U-parametric direction of the 
+    computed attribute values.
+    
+:arg:&result_dv:
+    The first partial derivative in the V-parametric direction of the 
+    computed attribute values.
+    
+:arg:&result_duu:
+    The second partial derivative in the U-parametric direction of the 
+    computed attribute values.
+    
+:arg:&result_duv:
+    The second mixed-partial derivative of the 
+    computed attribute values.
+    
+:arg:&result_dvv:
+    The second partial derivative in the V-parametric direction of the 
+    computed attribute values.
+    
+:returns:
+    `1` if computing the attribute was successful, `0` if it failed.
+
+    Possible reasons for failure are:
+
+    * The geometry contains no polygons or the topology can't be converted using Open Subdiv
+
+    * The attribute doesn't exist on the input geometry.
+
+    * The attribute size/type doesn't match the VEX type of the `result` arguments.
+
+
+@examples
+
+:box:Evaluates texture UV vertex attributes on the subdivision limit and sets
+the position and derivatives as point positions with point attributes.
+    {{{
+    #!vex
+    int nv = nvertices(file);
+    for (int vtxnum = 0; vtxnum < nv; ++vtxnum)
+    {
+        int primnum = vertexprim(file, vtxnum);
+        int vtxindx = vertexprimindex(file, vtxnum);
+        vector uvw = vertexprimuv(file, primnum, vtxindx);
+
+        int patch;
+        float patch_u, patch_v;
+        if (osd_lookuppatch(file, primnum, uvw.x, uvw.y, patch, patch_u, patch_v))
+        {
+            vector uv, du, dv, duu, duv, dvv;
+            if (osd_limitvertex(file, "uv", patch, patch_u, patch_v,
+                                uv, du, dv, duu, duv, dvv))
+            {
+                int ptid = addpoint(geohandle, @P);
+                setpointattrib(geohandle, "P", ptid, uv);
+                setpointattrib(geohandle, "du", ptid, du);
+                setpointattrib(geohandle, "dv", ptid, dv);
+                setpointattrib(geohandle, "duu", ptid, duu);
+                setpointattrib(geohandle, "duv", ptid, duv);
+                setpointattrib(geohandle, "dvv", ptid, dvv);
+            }
+        }
+    }
+    }}}
+
+
+@related
+
+- [Vex:vertexprimuv]
+- [Vex:osd_patchcount]
+- [Vex:osd_limit]
+- [Vex:osd_limitsurfacevertex]
+

@@ -14,7 +14,7 @@ If you know the class of attribute you want to add ahead of time, using [Vex:add
 
 :include _common#geohandle_arg:
 
-:include _common#attribclass:
+:include _common#attribclasswithedgegroup:
 
 :arg:name:
     The name of the attribute to create.

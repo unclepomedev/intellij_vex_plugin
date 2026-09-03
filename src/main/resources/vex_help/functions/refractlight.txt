@@ -1,7 +1,7 @@
 = refractlight =
 
 #type: vex
-#context: shading
+#context: shading_contexts
 #tags: surface
 #group: shading
 
@@ -65,4 +65,3 @@ glass(float eta=1.3, bias = 0.005)
 - [Vex:gather]
 - [Vex:trace]
 - [Vex:irradiance]
-

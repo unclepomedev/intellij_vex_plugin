@@ -1,7 +1,7 @@
 PROJECT_ROOT := justfile_directory()
 MAIN_RESOURCES := "src/main/resources"
 # Override via HOUDINI_RESOURCES env var for your platform/version
-HOUDINI_RESOURCES := env("HOUDINI_RESOURCES", "/Applications/Houdini/Houdini21.0.631/Frameworks/Houdini.framework/Versions/Current/Resources")
+HOUDINI_RESOURCES := env("HOUDINI_RESOURCES", "/Applications/Houdini/Houdini22.0.429/Frameworks/Houdini.framework/Versions/Current/Resources")
 
 default:
     @just --list
@@ -17,7 +17,7 @@ dump:
     echo "Dumping VEX API to {{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_api_dump.json ..."
     tmp_json="$(mktemp "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_api_dump.json.tmp.XXXXXX")"
     trap 'rm -f "$tmp_json"' EXIT
-    hython "$HH/python3.11libs/opnode_sum.py" > "$tmp_json"
+    hython "$HH/python3.13libs/opnode_sum.py" > "$tmp_json"
     mv "$tmp_json" "{{ PROJECT_ROOT }}/{{ MAIN_RESOURCES }}/vex_api_dump.json"
     trap - EXIT
 

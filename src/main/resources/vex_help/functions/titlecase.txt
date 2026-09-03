@@ -16,6 +16,8 @@ Converts a normal sentence into titlecase. The rules in use are as follows:
 - Hyphenated words that are capitalized should have their second part capitalized as well
 - Words that already contain capital letters are not modified
 
+This roughly follows the pre-2024 Chicago style.
+
 @related
 
 - [Vex:tolower]
