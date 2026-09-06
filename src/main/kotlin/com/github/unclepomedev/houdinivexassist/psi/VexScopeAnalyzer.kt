@@ -18,27 +18,42 @@ import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 
 object VexScopeAnalyzer {
-    private val SYNTHETIC_VEX_FILE_KEY = Key.create<Pair<Long, VexFile>>("VEX_SYNTHETIC_FILE")
+    private data class SyntheticCacheEntry(
+        val modificationStamp: Long,
+        val filePath: String,
+        val fileName: String,
+        val vexFile: VexFile,
+    )
+
+    private val SYNTHETIC_VEX_FILE_KEY = Key.create<SyntheticCacheEntry>("VEX_SYNTHETIC_FILE")
 
     fun getOrCreateSyntheticVexFile(current: PsiFile): VexFile {
         val stamp = current.modificationStamp
+        val originalPath = current.originalFile.virtualFile?.path ?: current.name
+        val name = current.name
         val cached = current.getUserData(SYNTHETIC_VEX_FILE_KEY)
-        if (cached != null && cached.first == stamp) {
-            return cached.second
+        if (cached != null &&
+            cached.modificationStamp == stamp &&
+            cached.filePath == originalPath &&
+            cached.fileName == name
+        ) {
+            return cached.vexFile
         }
         val parsed =
             PsiFileFactory.getInstance(current.project)
                 .createFileFromText(
-                    current.name,
+                    name,
                     VexLanguage.INSTANCE,
                     current.text,
                 ) as VexFile
-        val originalPath = current.originalFile.virtualFile?.path ?: current.name
         parsed.putUserData(
             VexMacroResolver.ORIGINAL_FILE_PATH_KEY,
             originalPath,
         )
-        current.putUserData(SYNTHETIC_VEX_FILE_KEY, Pair(stamp, parsed))
+        current.putUserData(
+            SYNTHETIC_VEX_FILE_KEY,
+            SyntheticCacheEntry(stamp, originalPath, name, parsed),
+        )
         return parsed
     }
 
