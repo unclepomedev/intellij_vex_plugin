@@ -1,7 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.grammarkit.tasks.GenerateLexerTask
-import org.jetbrains.grammarkit.tasks.GenerateParserTask
+import org.jetbrains.intellij.platform.gradle.tasks.GenerateLexerTask
+import org.jetbrains.intellij.platform.gradle.tasks.GenerateParserTask
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
-    id("org.jetbrains.grammarkit") version "2023.3.0.4"
+    alias(libs.plugins.grammarKit)
 }
 
 group = providers.gradleProperty("pluginGroup").get()
@@ -169,7 +169,8 @@ tasks {
 
     named<GenerateLexerTask>("generateLexer") {
         sourceFile.set(file("src/main/grammar/Vex.flex"))
-        targetOutputDir.set(file("src/main/gen/com/github/unclepomedev/houdinivexassist/lexer"))
+        targetRootOutputDir.set(file("src/main/gen"))
+        pathToClass.set("com/github/unclepomedev/houdinivexassist/lexer/VexLexer.java")
         purgeOldFiles.set(true)
     }
 
