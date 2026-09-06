@@ -7,6 +7,7 @@ import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
 import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
+import com.intellij.openapi.util.registry.Registry
 import java.nio.file.Files
 
 class VexReferenceTest : VexTestBase() {
@@ -772,6 +773,11 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Macro in circular include should be resolved", resolved)
         assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
         assertEquals("cycle_a.h", resolved?.containingFile?.name)
+    }
+
+    fun testMacroCircularIncludeProtectionWithIdempotenceCheck() {
+        Registry.get("platform.random.idempotence.check.rate").setValue(1, testRootDisposable)
+        testMacroCircularIncludeProtection()
     }
 
     fun testMacroCircularIncludeProtectionWithNonVexFiles() {

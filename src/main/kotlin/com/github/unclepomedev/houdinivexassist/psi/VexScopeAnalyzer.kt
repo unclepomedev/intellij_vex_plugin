@@ -4,6 +4,7 @@ import com.github.unclepomedev.houdinivexassist.lang.VexLanguage
 import com.github.unclepomedev.houdinivexassist.settings.VexSettingsState
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.ModificationTracker
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiElement
@@ -17,6 +18,30 @@ import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 
 object VexScopeAnalyzer {
+    private val SYNTHETIC_VEX_FILE_KEY = Key.create<Pair<Long, VexFile>>("VEX_SYNTHETIC_FILE")
+
+    fun getOrCreateSyntheticVexFile(current: PsiFile): VexFile {
+        val stamp = current.modificationStamp
+        val cached = current.getUserData(SYNTHETIC_VEX_FILE_KEY)
+        if (cached != null && cached.first == stamp) {
+            return cached.second
+        }
+        val parsed =
+            PsiFileFactory.getInstance(current.project)
+                .createFileFromText(
+                    current.name,
+                    VexLanguage.INSTANCE,
+                    current.text,
+                ) as VexFile
+        val originalPath = current.originalFile.virtualFile?.path ?: current.name
+        parsed.putUserData(
+            VexMacroResolver.ORIGINAL_FILE_PATH_KEY,
+            originalPath,
+        )
+        current.putUserData(SYNTHETIC_VEX_FILE_KEY, Pair(stamp, parsed))
+        return parsed
+    }
+
     private val includePathTracker = ModificationTracker {
         val settings = ApplicationManager.getApplication()?.getService(VexSettingsState::class.java)
         val includeHash = settings?.includePath?.hashCode()?.toLong() ?: 0L
@@ -143,23 +168,7 @@ object VexScopeAnalyzer {
                     if (current is VexFile) {
                         current
                     } else {
-                        val project = current.project
-                        CachedValuesManager.getCachedValue(current) {
-                            val parsed =
-                                PsiFileFactory.getInstance(project)
-                                    .createFileFromText(
-                                        current.name,
-                                        VexLanguage.INSTANCE,
-                                        current.text,
-                                    ) as VexFile
-                            val originalPath =
-                                current.originalFile.virtualFile?.path ?: current.name
-                            parsed.putUserData(
-                                VexMacroResolver.ORIGINAL_FILE_PATH_KEY,
-                                originalPath,
-                            )
-                            CachedValueProvider.Result.create(parsed, current)
-                        }
+                        getOrCreateSyntheticVexFile(current)
                     }
 
                 result.add(vexFile)
@@ -178,7 +187,7 @@ object VexScopeAnalyzer {
             visit(file)
 
             CachedValueProvider.Result.create(
-                result,
+                result.toList(),
                 PsiModificationTracker.MODIFICATION_COUNT,
                 includePathTracker,
             )

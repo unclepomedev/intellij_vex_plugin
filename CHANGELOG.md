@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+* Fixed PluginException caused by non-idempotent synthetic VEX file caching when resolving non-VEX include files.
+
 ## [0.5.0] - 2026-09-03
 
 * Fixed deprecated DynamicBundle constructor usage (JetBrains API update)
