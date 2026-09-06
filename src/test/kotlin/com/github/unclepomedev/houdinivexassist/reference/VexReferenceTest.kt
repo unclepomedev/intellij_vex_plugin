@@ -5,8 +5,11 @@ import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
+import com.github.unclepomedev.houdinivexassist.psi.VexMacroResolver
 import com.github.unclepomedev.houdinivexassist.psi.VexParameterDef
+import com.github.unclepomedev.houdinivexassist.psi.VexScopeAnalyzer
 import com.github.unclepomedev.houdinivexassist.psi.VexStructDef
+import com.intellij.openapi.util.registry.Registry
 import java.nio.file.Files
 
 class VexReferenceTest : VexTestBase() {
@@ -774,6 +777,11 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("cycle_a.h", resolved?.containingFile?.name)
     }
 
+    fun testMacroCircularIncludeProtectionWithIdempotenceCheck() {
+        Registry.get("platform.random.idempotence.check.rate").setValue(1, testRootDisposable)
+        testMacroCircularIncludeProtection()
+    }
+
     fun testMacroCircularIncludeProtectionWithNonVexFiles() {
         // cycle_a.inc is not a .vfl/.vex file, so it will be parsed as synthetic VexFile
         myFixture.addFileToProject(
@@ -812,6 +820,37 @@ class VexReferenceTest : VexTestBase() {
         assertNotNull("Macro in non-VEX circular include should be resolved", resolved)
         assertTrue("Resolved element should be a VexMacroDef", resolved is VexMacroDef)
         assertEquals("cycle_a.inc", resolved?.containingFile?.name)
+    }
+
+    fun testSyntheticVexFileCacheInvalidatedOnRename() {
+        val incFile =
+            myFixture.addFileToProject(
+                "old_name.inc",
+                """
+                #define MACRO_VAL 42
+                """
+                    .trimIndent(),
+            )
+
+        val vexFile =
+            VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
+        assertEquals(
+            incFile.originalFile.virtualFile?.path ?: incFile.name,
+            vexFile.getUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY),
+        )
+        assertEquals("old_name.inc", vexFile.name)
+
+        // Rename the file
+        myFixture.renameElement(incFile, "new_name.inc")
+
+        val renamedVexFile =
+            VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
+        assertEquals(
+            incFile.originalFile.virtualFile?.path ?: incFile.name,
+            renamedVexFile.getUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY),
+        )
+        assertEquals("new_name.inc", renamedVexFile.name)
+        assertNotSame(vexFile, renamedVexFile)
     }
 
     fun testFunctionLikeMacroReference() {

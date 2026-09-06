@@ -44,8 +44,7 @@ object VexMacroResolver {
                             VexScopeAnalyzer.resolveIncludeFile(event, sourceFile) ?: continue
                         val vexFile =
                             (includedPsi as? VexFile)
-                                ?: VexScopeAnalyzer.getIncludedFiles(includedPsi).firstOrNull()
-                                ?: continue
+                                ?: VexScopeAnalyzer.getOrCreateSyntheticVexFile(includedPsi)
                         val nested = resolveInFile(vexFile, includedPsi, name, Int.MAX_VALUE)
                         if (nested != null) best = nested
                     }
