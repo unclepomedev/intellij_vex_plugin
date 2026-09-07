@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+* Fixed unresolved reference for `foreach` loop variables.
+* Fixed scope leakage of loop variables declared in `for` loops.
+* Fixed false positive type mismatch error when assigning brace initializer lists (`{...}`) to arrays.
+
 ## [0.5.1] - 2026-09-06
 
 ### Fixed
