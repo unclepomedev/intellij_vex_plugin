@@ -8,6 +8,7 @@ private fun PsiElement.getLastIdentifier(): PsiElement? {
     return identifiers.lastOrNull()?.psi
 }
 
+// TODO
 val VexDeclarationItem.identifier: PsiElement
     get() = this.getLastIdentifier()!!
 
@@ -25,3 +26,6 @@ val VexStructDef.identifier: PsiElement?
 
 val VexStructMember.identifier: PsiElement?
     get() = this.getLastIdentifier()
+
+val VexForeachVar.identifier: PsiElement
+    get() = this.getLastIdentifier()!!

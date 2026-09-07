@@ -14,6 +14,27 @@ object VexTypeExtractor {
             is VexDeclarationItem -> extractFromDeclarationItem(element)
             is VexParameterDef -> extractFromParameterDef(element)
             is VexFunctionDef -> extractFromFunctionDef(element)
+            is VexForeachVar -> extractFromForeachVar(element)
+            else -> VexType.UnknownType
+        }
+    }
+
+    private fun extractFromForeachVar(element: VexForeachVar): VexType {
+        val typeRef = element.typeRef
+        if (typeRef != null) {
+            val typeString = typeRef.text ?: return VexType.UnknownType
+            return VexType.fromString(typeString)
+        }
+        val parent = element.parent as? VexForeachStatement ?: return VexType.UnknownType
+        val vars = parent.foreachVarList
+        val expr = parent.expr
+        val arrayType = if (expr != null) VexTypeInference.inferType(expr) else VexType.UnknownType
+        val elementType = (arrayType as? VexType.ArrayType)?.elementType ?: VexType.UnknownType
+
+        return when {
+            vars.size == 1 -> elementType
+            vars.size == 2 && vars[0] == element -> VexType.IntType
+            vars.size == 2 && vars[1] == element -> elementType
             else -> VexType.UnknownType
         }
     }

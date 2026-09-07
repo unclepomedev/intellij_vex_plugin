@@ -32,10 +32,11 @@ object VexScopeAnalyzer {
         val originalPath = current.originalFile.virtualFile?.path ?: current.name
         val name = current.name
         val cached = current.getUserData(SYNTHETIC_VEX_FILE_KEY)
-        if (cached != null &&
-            cached.modificationStamp == stamp &&
-            cached.filePath == originalPath &&
-            cached.fileName == name
+        if (
+            cached != null &&
+                cached.modificationStamp == stamp &&
+                cached.filePath == originalPath &&
+                cached.fileName == name
         ) {
             return cached.vexFile
         }
@@ -221,6 +222,7 @@ object VexScopeAnalyzer {
         return PsiTreeUtil.getParentOfType(
             element,
             VexBlock::class.java,
+            VexForStatement::class.java,
             VexStructDef::class.java,
             VexFile::class.java,
         )
@@ -290,27 +292,41 @@ object VexScopeAnalyzer {
 
     fun getVisibleVariables(element: PsiElement): List<PsiElement> {
         val result = mutableListOf<PsiElement>()
-        var currentScope = findDeclarationScope(element)
-        while (currentScope != null) {
-            if (currentScope is VexFile) {
-                val decls = getDeclarationsInScope(currentScope)
+
+        var curr: PsiElement? = element
+        while (curr != null && curr !is VexFile) {
+            val parent = curr.parent
+            if (parent is VexBlock) {
+                val decls = getDeclarationsInScope(parent)
                 result.addAll(decls.filter { it.textOffset < element.textOffset })
 
-                val includedFiles = getIncludedFiles(currentScope)
-                for (incFile in includedFiles) {
-                    if (incFile != currentScope) {
-                        result.addAll(getDeclarationsInScope(incFile))
-                    }
-                }
-            } else {
-                val decls = getDeclarationsInScope(currentScope)
-                result.addAll(decls.filter { it.textOffset < element.textOffset })
-
-                val params = getParametersForScope(currentScope)
+                val params = getParametersForScope(parent)
                 result.addAll(params)
+            } else if (parent is VexForStatement) {
+                val decls = getDeclarationsInScope(parent)
+                result.addAll(decls.filter { it.textOffset < element.textOffset })
+            } else if (parent is VexForeachStatement) {
+                if (
+                    parent.statement != null &&
+                        PsiTreeUtil.isAncestor(parent.statement, element, false)
+                ) {
+                    result.addAll(parent.foreachVarList)
+                }
             }
+            curr = parent
+        }
 
-            currentScope = findDeclarationScope(currentScope.parent)
+        val file = element.containingFile as? VexFile
+        if (file != null) {
+            val decls = getDeclarationsInScope(file)
+            result.addAll(decls.filter { it.textOffset < element.textOffset })
+
+            val includedFiles = getIncludedFiles(file)
+            for (incFile in includedFiles) {
+                if (incFile != file) {
+                    result.addAll(getDeclarationsInScope(incFile))
+                }
+            }
         }
         return result
     }

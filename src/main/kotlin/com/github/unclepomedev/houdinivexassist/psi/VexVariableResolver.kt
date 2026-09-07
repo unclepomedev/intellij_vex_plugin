@@ -14,6 +14,7 @@ object VexVariableResolver {
                 when (it) {
                     is VexDeclarationItem -> it.identifier
                     is VexParameterDef -> it.identifier
+                    is VexForeachVar -> it.identifier
                     else -> return@find false
                 }
             ident.text == varName

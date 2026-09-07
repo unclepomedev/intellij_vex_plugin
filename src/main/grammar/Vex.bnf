@@ -216,7 +216,10 @@ foreach_statement ::= FOREACH LPAREN foreach_body RPAREN statement { pin=1 }
 private foreach_body ::= foreach_var SEMICOLON foreach_var SEMICOLON expr
                        | foreach_var COMMA foreach_var SEMICOLON expr
                        | foreach_var SEMICOLON expr
-private foreach_var ::= (type_ref IDENTIFIER) | IDENTIFIER
+foreach_var ::= (type_ref IDENTIFIER) | IDENTIFIER {
+    implements="com.github.unclepomedev.houdinivexassist.psi.VexNamedElement"
+    mixin="com.github.unclepomedev.houdinivexassist.psi.impl.VexNamedElementImpl"
+}
 
 while_statement ::= WHILE LPAREN expr RPAREN statement { pin=1 }
 do_while_statement ::= DO statement WHILE LPAREN expr RPAREN SEMICOLON { pin=1 }

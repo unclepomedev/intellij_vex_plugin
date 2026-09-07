@@ -1,6 +1,8 @@
 package com.github.unclepomedev.houdinivexassist.types
 
+import com.github.unclepomedev.houdinivexassist.psi.VexPrimaryExpr
 import com.github.unclepomedev.houdinivexassist.psi.VexTypes
+import com.intellij.psi.PsiElement
 
 object VexTypePromotion {
 
@@ -28,7 +30,11 @@ object VexTypePromotion {
 
     private fun promoteAdditive(t1: VexType, t2: VexType): VexType {
         if (t1 == VexType.StringType || t2 == VexType.StringType) {
-            return VexType.StringType
+            return if (t1 == VexType.StringType && t2 == VexType.StringType) {
+                VexType.StringType
+            } else {
+                VexType.UnknownType
+            }
         }
         return promoteNumeric(t1, t2)
     }
@@ -161,6 +167,20 @@ object VexTypePromotion {
         }
 
         return false
+    }
+
+    /**
+     * Checks whether all elements of a brace initializer list (e.g., `{1, 2, 3}`) can be assigned
+     * to the given array type.
+     */
+    fun isArrayLiteralAssignable(targetArrayType: VexType.ArrayType, expr: PsiElement?): Boolean {
+        if (expr !is VexPrimaryExpr) return false
+        val vectorLiteral = expr.vectorLiteral ?: return false
+        val members = vectorLiteral.argumentList?.exprList ?: emptyList()
+        return members.all { member ->
+            val memberType = VexTypeInference.inferType(member)
+            isAssignable(targetArrayType.elementType, memberType)
+        }
     }
 
     private fun isNumericType(type: VexType): Boolean {

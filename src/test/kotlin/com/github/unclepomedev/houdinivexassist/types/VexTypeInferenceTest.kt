@@ -251,8 +251,8 @@ class VexTypeInferenceTest : VexTestBase() {
                 // float < float -> int
                 int v3 = 1.0 < 2.0;
                 
-                // string + int -> string
-                string v4 = "Value: " + 100;
+                // string + string -> string
+                string v4 = "Value: " + "100";
                 
                 // += represents the type of the left operand
                 int a = 1;
@@ -299,7 +299,6 @@ class VexTypeInferenceTest : VexTestBase() {
                 float v1 = 1 + 2.0;          // ADDITIVE: int + float -> float
                 vector v2 = {1,2,3} * 0.5;   // MULTIPLICATIVE: vector * float -> vector
                 string v3 = "a" + "b";       // ADDITIVE: string + string -> string
-                string v4 = "a" + 1;         // ADDITIVE: string + int -> string
                 int v5 = 1 << 2;             // SHIFT: int << int -> int
                 int v6 = 1 & 2;              // BITWISE: int & int -> int
                 
@@ -307,6 +306,7 @@ class VexTypeInferenceTest : VexTestBase() {
                 int inv1 = "x" * 2;          // MULTIPLICATIVE: string * int -> UnknownType
                 int inv2 = 1 << 2.0;         // SHIFT: int << float -> UnknownType
                 int inv3 = 2.0 & 1.0;        // BITWISE: float & float -> UnknownType
+                int inv4 = "a" + 1;          // ADDITIVE: string + int -> UnknownType
             }
             """
                 .trimIndent()
@@ -322,13 +322,13 @@ class VexTypeInferenceTest : VexTestBase() {
         assertEquals(VexType.FloatType, VexTypeInference.inferType(exprs[0])) // v1: 1 + 2.0
         assertEquals(VexType.VectorType, VexTypeInference.inferType(exprs[1])) // v2: {1,2,3} * 0.5
         assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[2])) // v3: "a" + "b"
-        assertEquals(VexType.StringType, VexTypeInference.inferType(exprs[3])) // v4: "a" + 1
-        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[4])) // v5: 1 << 2
-        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[5])) // v6: 1 & 2
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[3])) // v5: 1 << 2
+        assertEquals(VexType.IntType, VexTypeInference.inferType(exprs[4])) // v6: 1 & 2
 
-        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6])) // inv1: "x" * 2
-        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[7])) // inv2: 1 << 2.0
-        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8])) // inv3: 2.0 & 1.0
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[5])) // inv1: "x" * 2
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[6])) // inv2: 1 << 2.0
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[7])) // inv3: 2.0 & 1.0
+        assertEquals(VexType.UnknownType, VexTypeInference.inferType(exprs[8])) // inv4: "a" + 1
     }
 
     fun testChainedOperatorExpressions() {

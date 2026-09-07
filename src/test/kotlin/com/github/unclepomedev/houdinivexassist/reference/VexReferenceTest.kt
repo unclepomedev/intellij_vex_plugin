@@ -3,6 +3,8 @@ package com.github.unclepomedev.houdinivexassist.reference
 import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
+import com.github.unclepomedev.houdinivexassist.psi.VexForStatement
+import com.github.unclepomedev.houdinivexassist.psi.VexForeachVar
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
 import com.github.unclepomedev.houdinivexassist.psi.VexMacroResolver
@@ -832,8 +834,7 @@ class VexReferenceTest : VexTestBase() {
                     .trimIndent(),
             )
 
-        val vexFile =
-            VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
+        val vexFile = VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
         assertEquals(
             incFile.originalFile.virtualFile?.path ?: incFile.name,
             vexFile.getUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY),
@@ -842,8 +843,7 @@ class VexReferenceTest : VexTestBase() {
 
         myFixture.renameElement(incFile, "new_name.inc")
 
-        val renamedVexFile =
-            VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
+        val renamedVexFile = VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
         assertEquals(
             incFile.originalFile.virtualFile?.path ?: incFile.name,
             renamedVexFile.getUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY),
@@ -938,5 +938,236 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("MULT", (resolved as VexMacroDef).identifier?.text)
 
         myFixture.checkHighlighting(false, false, false)
+    }
+
+    fun testNestedBlockVariableScope() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                {
+                    int inner = 42;
+                    int a = in<caret>ner;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Nested block variable 'inner' should resolve inside its block", resolved)
+        assertTrue("Resolved element should be VexDeclarationItem", resolved is VexDeclarationItem)
+        assertEquals("inner", (resolved as VexDeclarationItem).identifier.text)
+    }
+
+    fun testNestedBlockVariableNotVisibleOutsideBlock() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                {
+                    int inner = 42;
+                }
+                int x = in<caret>ner;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("Nested block variable 'inner' should NOT resolve outside its block", resolved)
+    }
+
+    fun testUnknownStructMemberReference() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct Point { float x; float y; }
+            void main() {
+                Point pt;
+                float z = pt.no<caret>nsense;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("Unknown struct member 'nonsense' should resolve to null", resolved)
+    }
+
+    fun testForeachSingleVariableReference() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int arr[] = {1, 2, 3};
+                foreach (int elem; arr) {
+                    int x = el<caret>em;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Foreach variable 'elem' should be resolved", resolved)
+        assertTrue("Resolved element should be a VexForeachVar", resolved is VexForeachVar)
+        assertEquals("elem", (resolved as VexForeachVar).identifier.text)
+    }
+
+    fun testForeachUntypedVariableReference() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int arr[] = {1, 2, 3};
+                foreach (elem; arr) {
+                    el<caret>em;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Foreach untyped variable 'elem' should be resolved", resolved)
+        assertTrue("Resolved element should be a VexForeachVar", resolved is VexForeachVar)
+        assertEquals("elem", (resolved as VexForeachVar).identifier.text)
+    }
+
+    fun testForeachTwoVariablesReference() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                string arr[] = {"a", "b"};
+                foreach (int i; string s; arr) {
+                    int idx = <caret>i;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Foreach index variable 'i' should be resolved", resolved)
+        assertTrue("Resolved element should be a VexForeachVar", resolved is VexForeachVar)
+        assertEquals("i", (resolved as VexForeachVar).identifier.text)
+    }
+
+    fun testForeachCommaTwoVariablesReference() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                string arr[] = {"a", "b"};
+                foreach (i, val; arr) {
+                    string v = v<caret>al;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Foreach value variable 'val' should be resolved", resolved)
+        assertTrue("Resolved element should be a VexForeachVar", resolved is VexForeachVar)
+        assertEquals("val", (resolved as VexForeachVar).identifier.text)
+    }
+
+    fun testForeachVariableNotVisibleOutsideLoop() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int arr[] = {1, 2, 3};
+                foreach (int elem; arr) {
+                }
+                int x = el<caret>em;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("Foreach variable 'elem' should NOT resolve outside loop", resolved)
+    }
+
+    fun testForLoopVariableReferenceInsideLoop() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                for (int i = 0; i < 10; i++) {
+                    int x = <caret>i;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("For loop variable 'i' should be resolved inside loop", resolved)
+        assertTrue(
+            "Resolved element should be a VexDeclarationItem",
+            resolved is VexDeclarationItem,
+        )
+        assertEquals("i", (resolved as VexDeclarationItem).identifier.text)
+    }
+
+    fun testForLoopVariableNotVisibleOutsideLoop() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                for (int i = 0; i < 10; i++) {
+                }
+                int x = <caret>i;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("For loop variable 'i' should NOT resolve outside loop", resolved)
+    }
+
+    fun testForLoopVariableShadowingOuterVariable() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int i = 100;
+                for (int i = 0; i < 10; i++) {
+                    int x = <caret>i;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("For loop variable 'i' should resolve to the loop-local variable", resolved)
+        assertTrue(
+            "Resolved element should be a VexDeclarationItem",
+            resolved is VexDeclarationItem,
+        )
+        val declItem = resolved as VexDeclarationItem
+        val parentFor = declItem.parent.parent
+        assertTrue(
+            "Resolved variable should belong to VexForStatement",
+            parentFor is VexForStatement,
+        )
     }
 }

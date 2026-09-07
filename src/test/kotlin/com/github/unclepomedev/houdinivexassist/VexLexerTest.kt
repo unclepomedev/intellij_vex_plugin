@@ -363,4 +363,36 @@ class VexLexerTest : VexTestBase() {
             VexTypes.INT_KW to "int",
         )
     }
+
+    fun testUnclosedStrings() {
+        doTest(
+            "\"unclosed\nint",
+            VexTypes.UNCLOSED_STRING to "\"unclosed",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.INT_KW to "int",
+        )
+        doTest(
+            "'unclosed\nint",
+            VexTypes.UNCLOSED_STRING to "'unclosed",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.INT_KW to "int",
+        )
+    }
+
+    fun testConditionalDirectives() {
+        doTest(
+            "#ifdef FOO\n#elif BAR\n#else\n#endif",
+            VexTypes.PP_IFDEF_KW to "#ifdef",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.IDENTIFIER to "FOO",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.PP_ELIF_KW to "#elif",
+            TokenType.WHITE_SPACE to " ",
+            VexTypes.MACRO_BODY to "BAR",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.PP_ELSE_KW to "#else",
+            TokenType.WHITE_SPACE to "\n",
+            VexTypes.PP_ENDIF_KW to "#endif",
+        )
+    }
 }
