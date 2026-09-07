@@ -980,4 +980,38 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testForLoopVariableScopeAndShadowingNoError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int i = 0;
+                for (int i = 0; i < 10; i++) {
+                    int x = i;
+                }
+                for (int i = 0; i < 5; i++) {
+                    int y = i;
+                }
+                int z = i;
+            }
+            """
+                .trimIndent(),
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
+
+    fun testForLoopVariableUnusedWarning() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                for (int <weak_warning descr="Unused variable 'unused_var'">unused_var</weak_warning> = 0; ; ) {
+                }
+            }
+            """
+                .trimIndent(),
+        )
+        myFixture.checkHighlighting(false, false, true, false)
+    }
 }

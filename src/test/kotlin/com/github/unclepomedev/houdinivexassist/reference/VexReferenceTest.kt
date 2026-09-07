@@ -3,6 +3,7 @@ package com.github.unclepomedev.houdinivexassist.reference
 import com.github.unclepomedev.houdinivexassist.VexTestBase
 import com.github.unclepomedev.houdinivexassist.lang.VexFileType
 import com.github.unclepomedev.houdinivexassist.psi.VexDeclarationItem
+import com.github.unclepomedev.houdinivexassist.psi.VexForStatement
 import com.github.unclepomedev.houdinivexassist.psi.VexForeachVar
 import com.github.unclepomedev.houdinivexassist.psi.VexFunctionDef
 import com.github.unclepomedev.houdinivexassist.psi.VexMacroDef
@@ -1098,5 +1099,75 @@ class VexReferenceTest : VexTestBase() {
         val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
         val resolved = ref.resolve()
         assertNull("Foreach variable 'elem' should NOT resolve outside loop", resolved)
+    }
+
+    fun testForLoopVariableReferenceInsideLoop() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                for (int i = 0; i < 10; i++) {
+                    int x = <caret>i;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("For loop variable 'i' should be resolved inside loop", resolved)
+        assertTrue(
+            "Resolved element should be a VexDeclarationItem",
+            resolved is VexDeclarationItem,
+        )
+        assertEquals("i", (resolved as VexDeclarationItem).identifier.text)
+    }
+
+    fun testForLoopVariableNotVisibleOutsideLoop() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                for (int i = 0; i < 10; i++) {
+                }
+                int x = <caret>i;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("For loop variable 'i' should NOT resolve outside loop", resolved)
+    }
+
+    fun testForLoopVariableShadowingOuterVariable() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int i = 100;
+                for (int i = 0; i < 10; i++) {
+                    int x = <caret>i;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("For loop variable 'i' should resolve to the loop-local variable", resolved)
+        assertTrue(
+            "Resolved element should be a VexDeclarationItem",
+            resolved is VexDeclarationItem,
+        )
+        val declItem = resolved as VexDeclarationItem
+        val parentFor = declItem.parent.parent
+        assertTrue(
+            "Resolved variable should belong to VexForStatement",
+            parentFor is VexForStatement,
+        )
     }
 }

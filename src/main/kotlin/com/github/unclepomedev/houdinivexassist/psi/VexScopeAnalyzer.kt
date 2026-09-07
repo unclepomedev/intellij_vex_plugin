@@ -222,6 +222,7 @@ object VexScopeAnalyzer {
         return PsiTreeUtil.getParentOfType(
             element,
             VexBlock::class.java,
+            VexForStatement::class.java,
             VexStructDef::class.java,
             VexFile::class.java,
         )
@@ -301,6 +302,9 @@ object VexScopeAnalyzer {
 
                 val params = getParametersForScope(parent)
                 result.addAll(params)
+            } else if (parent is VexForStatement) {
+                val decls = getDeclarationsInScope(parent)
+                result.addAll(decls.filter { it.textOffset < element.textOffset })
             } else if (parent is VexForeachStatement) {
                 if (
                     parent.statement != null &&
