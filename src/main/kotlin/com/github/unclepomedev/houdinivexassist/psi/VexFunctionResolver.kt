@@ -48,7 +48,8 @@ object VexFunctionResolver {
         // Try local function first (resolve by type signature)
         val localFunc = resolveFunction(element, funcName, argTypes = argTypes)
         if (localFunc is VexFunctionDef) {
-            return localFunc.parameterTypes
+            val params = localFunc.parameterListDef?.parameterDefList ?: return null
+            return params.map(VexTypeExtractor::extractType)
         }
 
         // Try API functions
