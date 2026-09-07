@@ -180,12 +180,7 @@ object VexScopeAnalyzer {
                 val path = current.originalFile.virtualFile?.path ?: current.name
                 if (!visited.add(path)) return
 
-                val vexFile =
-                    if (current is VexFile) {
-                        current
-                    } else {
-                        getOrCreateSyntheticVexFile(current)
-                    }
+                val vexFile = current as? VexFile ?: getOrCreateSyntheticVexFile(current)
 
                 result.add(vexFile)
 
