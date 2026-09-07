@@ -832,8 +832,7 @@ class VexReferenceTest : VexTestBase() {
                     .trimIndent(),
             )
 
-        val vexFile =
-            VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
+        val vexFile = VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
         assertEquals(
             incFile.originalFile.virtualFile?.path ?: incFile.name,
             vexFile.getUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY),
@@ -842,8 +841,7 @@ class VexReferenceTest : VexTestBase() {
 
         myFixture.renameElement(incFile, "new_name.inc")
 
-        val renamedVexFile =
-            VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
+        val renamedVexFile = VexScopeAnalyzer.getOrCreateSyntheticVexFile(incFile)
         assertEquals(
             incFile.originalFile.virtualFile?.path ?: incFile.name,
             renamedVexFile.getUserData(VexMacroResolver.ORIGINAL_FILE_PATH_KEY),
@@ -938,5 +936,63 @@ class VexReferenceTest : VexTestBase() {
         assertEquals("MULT", (resolved as VexMacroDef).identifier?.text)
 
         myFixture.checkHighlighting(false, false, false)
+    }
+
+    fun testNestedBlockVariableScope() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                {
+                    int inner = 42;
+                    int a = in<caret>ner;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNotNull("Nested block variable 'inner' should resolve inside its block", resolved)
+        assertTrue("Resolved element should be VexDeclarationItem", resolved is VexDeclarationItem)
+        assertEquals("inner", (resolved as VexDeclarationItem).identifier.text)
+    }
+
+    fun testNestedBlockVariableNotVisibleOutsideBlock() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                {
+                    int inner = 42;
+                }
+                int x = in<caret>ner;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("Nested block variable 'inner' should NOT resolve outside its block", resolved)
+    }
+
+    fun testUnknownStructMemberReference() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            struct Point { float x; float y; }
+            void main() {
+                Point pt;
+                float z = pt.no<caret>nsense;
+            }
+            """
+                .trimIndent(),
+        )
+
+        val ref = myFixture.getReferenceAtCaretPositionWithAssertion()
+        val resolved = ref.resolve()
+        assertNull("Unknown struct member 'nonsense' should resolve to null", resolved)
     }
 }

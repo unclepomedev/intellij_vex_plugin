@@ -49,4 +49,19 @@ class VexScopeAnalyzerTest {
         val parsed = VexScopeAnalyzer.parseIncludePaths(pathStr, ":")
         assertEquals(listOf("C:\\path1", "D:\\path2"), parsed)
     }
+
+    @Test
+    fun testParseIncludePathsEmptyAndWhitespace() {
+        assertEquals(emptyList<String>(), VexScopeAnalyzer.parseIncludePaths("", ":"))
+        assertEquals(emptyList<String>(), VexScopeAnalyzer.parseIncludePaths("   ", ":"))
+        assertEquals(emptyList<String>(), VexScopeAnalyzer.parseIncludePaths("&", ":"))
+        assertEquals(emptyList<String>(), VexScopeAnalyzer.parseIncludePaths("  ;  : & ; ", ":"))
+    }
+
+    @Test
+    fun testParseIncludePathsRedundantSeparators() {
+        val pathStr = "::/path1/inc::/path2/inc;:;&"
+        val parsed = VexScopeAnalyzer.parseIncludePaths(pathStr, ":")
+        assertEquals(listOf("/path1/inc", "/path2/inc"), parsed)
+    }
 }

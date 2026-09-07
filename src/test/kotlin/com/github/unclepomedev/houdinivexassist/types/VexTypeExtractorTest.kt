@@ -64,4 +64,76 @@ class VexTypeExtractorTest : VexTestBase() {
 
         assertEquals(VexType.UnknownType, VexTypeExtractor.extractType(primaryExpr!!))
     }
+
+    fun testExtractStructMemberType() {
+        val code =
+            """
+            struct Person {
+                string name;
+                int age;
+                vector scores[];
+            }
+            """
+                .trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems =
+            PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        assertEquals(3, declItems.size)
+
+        assertEquals(VexType.StringType, VexTypeExtractor.extractType(declItems[0]))
+        assertEquals(VexType.IntType, VexTypeExtractor.extractType(declItems[1]))
+        assertEquals(
+            VexType.ArrayType(VexType.VectorType),
+            VexTypeExtractor.extractType(declItems[2]),
+        )
+    }
+
+    fun testExtractArrayParameterType() {
+        val code =
+            """
+            void process(int items[], string tags[]) {}
+            """
+                .trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val paramDefs = PsiTreeUtil.findChildrenOfType(file, VexParameterDef::class.java).toList()
+        assertEquals(2, paramDefs.size)
+
+        assertEquals(VexType.ArrayType(VexType.IntType), VexTypeExtractor.extractType(paramDefs[0]))
+        assertEquals(
+            VexType.ArrayType(VexType.StringType),
+            VexTypeExtractor.extractType(paramDefs[1]),
+        )
+    }
+
+    fun testExtractStructTypeVariable() {
+        val code =
+            """
+            struct MyPoint { float x; float y; }
+            void main() {
+                MyPoint pt;
+                MyPoint pts[];
+            }
+            """
+                .trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val declItems =
+            PsiTreeUtil.findChildrenOfType(file, VexDeclarationItem::class.java).toList()
+        // members: x, y (0, 1), local vars: pt, pts (2, 3)
+        assertEquals(4, declItems.size)
+
+        assertEquals(VexType.StructType("MyPoint"), VexTypeExtractor.extractType(declItems[2]))
+        assertEquals(
+            VexType.ArrayType(VexType.StructType("MyPoint")),
+            VexTypeExtractor.extractType(declItems[3]),
+        )
+    }
 }

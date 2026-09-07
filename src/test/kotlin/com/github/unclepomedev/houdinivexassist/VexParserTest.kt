@@ -629,4 +629,66 @@ class VexParserTest : VexTestBase() {
             )
         assertEquals(1, vectorLiterals.size)
     }
+
+    fun testEmptyStatementsAndSemicolons() {
+        val code =
+            """
+            void main() {
+                ;
+                ;;
+                int x = 1;;
+            }
+            """
+                .trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(
+            "Empty statements (lone semicolons) should parse without errors",
+            PsiTreeUtil.hasErrorElements(file),
+        )
+    }
+
+    fun testNestedControlFlow() {
+        val code =
+            """
+            void main() {
+                if (1) {
+                    while (1) {
+                        for (int i = 0; i < 10; i++) {
+                            if (i == 5) break;
+                            else continue;
+                        }
+                    }
+                } else if (0) {
+                    do {
+                    } while (0);
+                } else {
+                }
+            }
+            """
+                .trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(
+            "Deeply nested control flow should parse without errors",
+            PsiTreeUtil.hasErrorElements(file),
+        )
+    }
+
+    fun testConditionalCompilationInParser() {
+        val code =
+            """
+            #ifdef FOO
+            int x = 1;
+            #elif BAR
+            int x = 2;
+            #else
+            int x = 3;
+            #endif
+            """
+                .trimIndent()
+        val file = myFixture.configureByText(VexFileType, code)
+        assertFalse(
+            "Conditional compilation directives should parse without errors",
+            PsiTreeUtil.hasErrorElements(file),
+        )
+    }
 }

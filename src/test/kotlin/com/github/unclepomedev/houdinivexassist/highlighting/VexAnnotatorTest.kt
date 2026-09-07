@@ -458,6 +458,8 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 int i = 1;
                 <error descr="Incompatible types: cannot assign result of type 'string' to 'int'">i += "text"</error>;
+                <error descr="Invalid operation: cannot apply operator to 'int' and 'string'">i -= "text"</error>;
+                <error descr="Invalid operation: cannot apply operator to 'float' and 'int'">1.5 &= 2</error>;
             }
             """
                 .trimIndent(),

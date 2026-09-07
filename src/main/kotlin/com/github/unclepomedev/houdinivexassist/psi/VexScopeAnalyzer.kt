@@ -32,10 +32,11 @@ object VexScopeAnalyzer {
         val originalPath = current.originalFile.virtualFile?.path ?: current.name
         val name = current.name
         val cached = current.getUserData(SYNTHETIC_VEX_FILE_KEY)
-        if (cached != null &&
-            cached.modificationStamp == stamp &&
-            cached.filePath == originalPath &&
-            cached.fileName == name
+        if (
+            cached != null &&
+                cached.modificationStamp == stamp &&
+                cached.filePath == originalPath &&
+                cached.fileName == name
         ) {
             return cached.vexFile
         }
