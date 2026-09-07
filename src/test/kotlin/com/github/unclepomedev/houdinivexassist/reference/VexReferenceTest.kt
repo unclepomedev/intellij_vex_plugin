@@ -840,7 +840,6 @@ class VexReferenceTest : VexTestBase() {
         )
         assertEquals("old_name.inc", vexFile.name)
 
-        // Rename the file
         myFixture.renameElement(incFile, "new_name.inc")
 
         val renamedVexFile =
