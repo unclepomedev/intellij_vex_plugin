@@ -22,50 +22,48 @@ class VexUnusedSymbolAnnotator : Annotator {
     private fun checkUnusedVariable(element: VexDeclarationItem, holder: AnnotationHolder) {
         val identifier = element.identifier
         val varName = identifier.text
-
         val structDef = PsiTreeUtil.getParentOfType(element, VexStructDef::class.java)
-        val isStructField = structDef != null
-        val parentStructName = structDef?.identifier?.text
 
         val isUsed =
-            if (isStructField && parentStructName != null) {
-                val project = element.project
-                val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
-
-                files.any { file ->
-                    val relevantAccesses = VexUsageAnalyzer.getMemberAccesses(file, varName)
-                    relevantAccesses.any { access ->
-                        val baseType = VexTypeInference.inferType(access.expr)
-                        baseType is VexType.StructType && baseType.name == parentStructName
-                    }
-                }
+            if (structDef != null) {
+                val parentStructName = structDef.identifier?.text ?: return
+                isStructFieldUsed(element, varName, parentStructName)
             } else {
-                val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return
-                if (scope is VexFile) {
-                    val project = element.project
-                    val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
-
-                    files.any { file ->
-                        val usages = VexUsageAnalyzer.getVariableUsages(file, varName)
-                        usages.any { expr ->
-                            VexVariableResolver.resolveVariable(expr, varName) == element
-                        }
-                    }
-                } else {
-                    val usages = VexUsageAnalyzer.getVariableUsages(scope, varName)
-                    usages.any { expr ->
-                        VexVariableResolver.resolveVariable(expr, varName) == element
-                    }
-                }
+                isVariableUsed(element, varName)
             }
 
         if (!isUsed) {
-            val messageType = if (isStructField) "field" else "variable"
-            holder
-                .newAnnotation(HighlightSeverity.WEAK_WARNING, "Unused $messageType '$varName'")
-                .range(identifier.textRange)
-                .textAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES)
-                .create()
+            val messageType = if (structDef != null) "field" else "variable"
+            reportUnused(holder, identifier, "Unused $messageType '$varName'")
+        }
+    }
+
+    private fun isStructFieldUsed(
+        element: VexDeclarationItem,
+        fieldName: String,
+        structName: String,
+    ): Boolean {
+        val files = VexUsageAnalyzer.getAllProjectVexFiles(element.project)
+        return files.any { file ->
+            VexUsageAnalyzer.getMemberAccesses(file, fieldName).any { access ->
+                val baseType = VexTypeInference.inferType(access.expr)
+                baseType is VexType.StructType && baseType.name == structName
+            }
+        }
+    }
+
+    private fun isVariableUsed(element: VexDeclarationItem, varName: String): Boolean {
+        val scope = VexScopeAnalyzer.findDeclarationScope(element) ?: return true
+        val targetScopes =
+            when (scope) {
+                is VexFile -> VexUsageAnalyzer.getAllProjectVexFiles(element.project)
+                else -> listOf(scope)
+            }
+
+        return targetScopes.any { target ->
+            VexUsageAnalyzer.getVariableUsages(target, varName).any { expr ->
+                VexVariableResolver.resolveVariable(expr, varName) == element
+            }
         }
     }
 
@@ -74,42 +72,48 @@ class VexUnusedSymbolAnnotator : Annotator {
         val funcName = identifier.text
         val file = element.containingFile as? VexFile ?: return
 
-        // entrypoint is not marked as unused
-        val fileBaseName = file.virtualFile?.nameWithoutExtension
-        val sanitizedBaseName = fileBaseName?.replace(Regex("[^A-Za-z0-9_]"), "_")
-        if (funcName == "main" || (sanitizedBaseName != null && funcName == sanitizedBaseName))
-            return
+        if (isEntryPoint(file, funcName)) return
 
-        val project = element.project
-        val files = VexUsageAnalyzer.getAllProjectVexFiles(project)
+        val isUsed = isFunctionUsed(element, funcName)
+        if (!isUsed) {
+            reportUnused(holder, identifier, "Unused function '$funcName'")
+        }
+    }
 
-        val isUsed = files.any { f ->
-            val usages = VexUsageAnalyzer.getFunctionCalls(f, funcName)
-            usages.any { call ->
-                val argTypes =
-                    call.argumentList?.exprList?.map(VexTypeInference::inferType) ?: emptyList()
-                val resolved =
-                    VexFunctionResolver.resolveFunction(
-                        element = call,
-                        functionName = funcName,
-                        argTypes = argTypes,
-                    )
-                        ?: VexFunctionResolver.resolveFunction(
-                            element = call,
-                            functionName = funcName,
-                            arity = argTypes.size,
-                        )
-                resolved == element
+    private fun isEntryPoint(file: VexFile, funcName: String): Boolean {
+        if (funcName == "main") return true
+        val fileBaseName = file.virtualFile?.nameWithoutExtension ?: return false
+        val sanitizedBaseName = fileBaseName.replace(Regex("[^A-Za-z0-9_]"), "_")
+        return funcName == sanitizedBaseName
+    }
+
+    private fun isFunctionUsed(element: VexFunctionDef, funcName: String): Boolean {
+        val files = VexUsageAnalyzer.getAllProjectVexFiles(element.project)
+        return files.any { file ->
+            VexUsageAnalyzer.getFunctionCalls(file, funcName).any { call ->
+                resolvesTo(call, funcName, element)
             }
         }
+    }
 
-        if (!isUsed) {
-            holder
-                .newAnnotation(HighlightSeverity.WEAK_WARNING, "Unused function '$funcName'")
-                .range(identifier.textRange)
-                .textAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES)
-                .create()
-        }
+    private fun resolvesTo(
+        call: VexCallExpr,
+        funcName: String,
+        expectedDef: VexFunctionDef,
+    ): Boolean {
+        val argTypes = call.argumentList?.exprList?.map(VexTypeInference::inferType).orEmpty()
+        val resolved =
+            VexFunctionResolver.resolveFunction(
+                element = call,
+                functionName = funcName,
+                argTypes = argTypes,
+            )
+                ?: VexFunctionResolver.resolveFunction(
+                    element = call,
+                    functionName = funcName,
+                    arity = argTypes.size,
+                )
+        return resolved == expectedDef
     }
 
     private fun checkUnusedParameter(element: VexParameterDef, holder: AnnotationHolder) {
@@ -119,17 +123,21 @@ class VexUnusedSymbolAnnotator : Annotator {
         val functionDef = PsiTreeUtil.getParentOfType(element, VexFunctionDef::class.java) ?: return
         val block = functionDef.block ?: return
 
-        val usages = VexUsageAnalyzer.getVariableUsages(block, paramName)
-        val isUsed = usages.any { expr ->
-            VexVariableResolver.resolveVariable(expr, paramName) == element
-        }
+        val isUsed =
+            VexUsageAnalyzer.getVariableUsages(block, paramName).any { expr ->
+                VexVariableResolver.resolveVariable(expr, paramName) == element
+            }
 
         if (!isUsed) {
-            holder
-                .newAnnotation(HighlightSeverity.WEAK_WARNING, "Unused parameter '$paramName'")
-                .range(identifier.textRange)
-                .textAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES)
-                .create()
+            reportUnused(holder, identifier, "Unused parameter '$paramName'")
         }
+    }
+
+    private fun reportUnused(holder: AnnotationHolder, identifier: PsiElement, message: String) {
+        holder
+            .newAnnotation(HighlightSeverity.WEAK_WARNING, message)
+            .range(identifier.textRange)
+            .textAttributes(CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES)
+            .create()
     }
 }

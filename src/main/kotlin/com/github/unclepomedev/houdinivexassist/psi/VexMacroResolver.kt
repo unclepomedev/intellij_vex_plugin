@@ -9,55 +9,66 @@ object VexMacroResolver {
     val ORIGINAL_FILE_PATH_KEY = Key.create<String>("VEX_ORIGINAL_FILE_PATH")
     private val resolvingFiles = ThreadLocal.withInitial { mutableSetOf<String>() }
 
+    fun resolveMacro(context: PsiElement, name: String): PsiElement? {
+        val file = context.containingFile ?: return null
+        return resolveInFile(file, file, name, context.textOffset)
+    }
+
     private fun resolveInFile(
         file: PsiFile,
         sourceFile: PsiFile,
         name: String,
         maxOffsetExclusive: Int,
     ): VexMacroDef? {
-        val key =
-            file.getUserData(ORIGINAL_FILE_PATH_KEY)
-                ?: sourceFile.originalFile.virtualFile?.path
-                ?: sourceFile.name
+        val key = getFileKey(file, sourceFile)
         val visited = resolvingFiles.get()
         if (!visited.add(key)) return null
 
         try {
-            var best: VexMacroDef? = null
-
-            val events =
-                mutableListOf<PsiElement>()
-                    .apply {
-                        addAll(PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java))
-                        addAll(
-                            PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java)
-                        )
-                    }
-                    .filter { it.textOffset < maxOffsetExclusive }
-                    .sortedBy { it.textOffset }
-
-            for (event in events) {
-                when (event) {
-                    is VexMacroDef -> if (event.identifier?.text == name) best = event
-                    is VexIncludeDirective -> {
-                        val includedPsi =
-                            VexScopeAnalyzer.resolveIncludeFile(event, sourceFile) ?: continue
-                        val vexFile =
-                            (includedPsi as? VexFile)
-                                ?: VexScopeAnalyzer.getOrCreateSyntheticVexFile(includedPsi)
-                        val nested = resolveInFile(vexFile, includedPsi, name, Int.MAX_VALUE)
-                        if (nested != null) best = nested
-                    }
-                }
-            }
-            return best
+            return collectPrecedingDirectives(file, maxOffsetExclusive)
+                .mapNotNull { directive -> resolveDirective(directive, sourceFile, name) }
+                .lastOrNull()
         } finally {
             visited.remove(key)
         }
     }
 
-    fun resolveMacro(context: PsiElement, name: String): PsiElement? {
-        val file = context.containingFile ?: return null
-        return resolveInFile(file, file, name, context.textOffset)
+    private fun getFileKey(file: PsiFile, sourceFile: PsiFile): String =
+        file.getUserData(ORIGINAL_FILE_PATH_KEY)
+            ?: sourceFile.originalFile.virtualFile?.path
+            ?: sourceFile.name
+
+    private fun collectPrecedingDirectives(
+        file: PsiFile,
+        maxOffsetExclusive: Int,
+    ): List<PsiElement> {
+        val macroDefs = PsiTreeUtil.findChildrenOfType(file, VexMacroDef::class.java)
+        val includeDirectives =
+            PsiTreeUtil.findChildrenOfType(file, VexIncludeDirective::class.java)
+        return (macroDefs + includeDirectives)
+            .filter { it.textOffset < maxOffsetExclusive }
+            .sortedBy { it.textOffset }
+    }
+
+    private fun resolveDirective(
+        directive: PsiElement,
+        sourceFile: PsiFile,
+        name: String,
+    ): VexMacroDef? =
+        when (directive) {
+            is VexMacroDef -> directive.takeIf { it.identifier?.text == name }
+            is VexIncludeDirective -> resolveIncludeDirective(directive, sourceFile, name)
+            else -> null
+        }
+
+    private fun resolveIncludeDirective(
+        directive: VexIncludeDirective,
+        sourceFile: PsiFile,
+        name: String,
+    ): VexMacroDef? {
+        val includedPsi = VexScopeAnalyzer.resolveIncludeFile(directive, sourceFile) ?: return null
+        val vexFile =
+            (includedPsi as? VexFile) ?: VexScopeAnalyzer.getOrCreateSyntheticVexFile(includedPsi)
+        return resolveInFile(vexFile, includedPsi, name, Int.MAX_VALUE)
     }
 }

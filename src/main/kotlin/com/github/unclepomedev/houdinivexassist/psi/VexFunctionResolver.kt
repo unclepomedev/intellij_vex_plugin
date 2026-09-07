@@ -28,16 +28,12 @@ object VexFunctionResolver {
             }
         if (candidates.isEmpty()) return null
 
-        if (argTypes != null) {
-            // Resolve by type signature matching
-            return resolveByTypeSignature(candidates, argTypes)
+        return when {
+            argTypes != null -> resolveByTypeSignature(candidates, argTypes)
+            arity != null ->
+                candidates.firstOrNull { it.parameterCount == arity } ?: candidates.firstOrNull()
+            else -> candidates.firstOrNull()
         }
-
-        if (arity == null) return candidates.firstOrNull()
-        return candidates.firstOrNull { def ->
-            val paramCount = def.parameterListDef?.parameterDefList?.size ?: 0
-            paramCount == arity
-        } ?: candidates.firstOrNull()
     }
 
     /**
@@ -47,13 +43,13 @@ object VexFunctionResolver {
     fun resolveParameterTypes(element: VexCallExpr): List<VexType>? {
         val funcName = element.identifier.text
         val args = element.argumentList?.exprList ?: return null
-        val argTypes = args.map { VexTypeInference.inferType(it) }
+        val argTypes = args.map(VexTypeInference::inferType)
 
         // Try local function first (resolve by type signature)
         val localFunc = resolveFunction(element, funcName, argTypes = argTypes)
         if (localFunc is VexFunctionDef) {
             val params = localFunc.parameterListDef?.parameterDefList ?: return null
-            return params.map { VexTypeExtractor.extractType(it) }
+            return params.map(VexTypeExtractor::extractType)
         }
 
         // Try API functions
@@ -72,27 +68,18 @@ object VexFunctionResolver {
     fun resolveParameterNames(element: VexCallExpr): List<String> {
         val funcName = element.identifier.text
         val args = element.argumentList?.exprList ?: return emptyList()
-        val argTypes = args.map { VexTypeInference.inferType(it) }
+        val argTypes = args.map(VexTypeInference::inferType)
 
-        // try to resolve to local function
+        // Try to resolve to local function
         val resolved = resolveFunction(element, funcName, args.size, argTypes)
         if (resolved is VexFunctionDef) {
-            return resolved.parameterListDef?.parameterDefList?.map { it.identifier.text }
-                ?: emptyList()
+            return resolved.parameterNames
         }
 
-        // try to resolve to standard function
+        // Try to resolve to standard function
         val apiProvider =
             element.project.getService(VexApiProvider::class.java) ?: return emptyList()
-
-        // First try to get from help files
-        val helpNames = apiProvider.getParameterNamesFromHelp(funcName, args.size)
-        if (!helpNames.isNullOrEmpty()) {
-            return helpNames
-        }
-
-        // No parameter names available from help files
-        return emptyList()
+        return apiProvider.getParameterNamesFromHelp(funcName, args.size).orEmpty()
     }
 
     /**
@@ -101,10 +88,8 @@ object VexFunctionResolver {
      */
     fun isKnownFunction(functionName: String, file: VexFile): Boolean {
         val apiProvider = file.project.getService(VexApiProvider::class.java)
-        if (apiProvider?.hasFunction(functionName) == true) return true
-
-        val localFunctions = VexScopeAnalyzer.getLocalFunctionNames(file)
-        return functionName in localFunctions
+        return apiProvider?.hasFunction(functionName) == true ||
+            functionName in VexScopeAnalyzer.getLocalFunctionNames(file)
     }
 
     /** Parses the argument strings of the standard API and converts them to VexType. */
@@ -125,7 +110,6 @@ object VexFunctionResolver {
             }
 
         val isArray = rawType.endsWith("[]") || rawName.endsWith("[]")
-
         val normalizedType =
             when (val base = rawType.removeSuffix("[]")) {
                 "vector3" -> "vector"
@@ -138,50 +122,41 @@ object VexFunctionResolver {
         else baseType
     }
 
-    /**
-     * Calculates the matching score between expected parameter types and actual argument types.
-     * Returns null if any argument is completely unassignable. Otherwise, returns a weighted score
-     * prioritizing exact matches.
-     */
-    private fun calculateMatchScore(
+    private data class MatchResult(
+        val exactMatches: Int,
+        val assignableMatches: Int,
+        val isAllAssignable: Boolean,
+    )
+
+    private fun evaluateMatch(
         expectedTypes: List<VexType>,
         actualTypes: List<VexType>,
-    ): Int? {
+    ): MatchResult? {
         if (expectedTypes.size != actualTypes.size) return null
 
         var exactMatches = 0
         var assignableMatches = 0
 
         for ((expected, actual) in expectedTypes.zip(actualTypes)) {
-            if (expected == actual) {
-                exactMatches++
-                assignableMatches++
-            } else if (
-                expected == VexType.UnknownType ||
+            val isExact = expected == actual
+            val isAssignable =
+                isExact ||
+                    expected == VexType.UnknownType ||
                     actual == VexType.UnknownType ||
-                    VexTypePromotion.isAssignable(
-                        expected,
-                        actual,
-                    )
-            ) {
-                assignableMatches++
-            } else {
-                return null
-            }
+                    VexTypePromotion.isAssignable(expected, actual)
+
+            if (isExact) exactMatches++
+            if (isAssignable) assignableMatches++ else return null
         }
 
-        // use exactMatches to tie-break between multiple valid overloads.
-        return if (assignableMatches == actualTypes.size) {
-            Int.MAX_VALUE
-        } else {
-            exactMatches * EXACT_MATCH_WEIGHT + assignableMatches
-        }
+        return MatchResult(
+            exactMatches,
+            assignableMatches,
+            isAllAssignable = assignableMatches == actualTypes.size,
+        )
     }
 
-    /**
-     * Calculates a partial match score for error reporting when no overload is perfectly
-     * assignable.
-     */
+    /** Calculates a partial match score for error reporting or tie-breaking. */
     private fun calculatePartialMatchScore(
         expectedTypes: List<VexType>,
         actualTypes: List<VexType>,
@@ -190,16 +165,11 @@ object VexFunctionResolver {
         var assignableMatches = 0
 
         for ((expected, actual) in expectedTypes.zip(actualTypes)) {
-            if (expected == actual) {
-                exactMatches++
-            }
+            if (expected == actual) exactMatches++
             if (
                 expected == VexType.UnknownType ||
                     actual == VexType.UnknownType ||
-                    VexTypePromotion.isAssignable(
-                        expected,
-                        actual,
-                    )
+                    VexTypePromotion.isAssignable(expected, actual)
             ) {
                 assignableMatches++
             }
@@ -211,82 +181,67 @@ object VexFunctionResolver {
         candidates: Collection<VexFunctionDef>,
         argTypes: List<VexType>,
     ): VexFunctionDef? {
-        val sameArity = candidates.filter {
-            (it.parameterListDef?.parameterDefList?.size ?: 0) == argTypes.size
-        }
+        val sameArity = candidates.filter { it.parameterCount == argTypes.size }
         if (sameArity.isEmpty()) return null
 
         val fullyAssignable = sameArity.filter { candidate ->
-            val paramTypes =
-                candidate.parameterListDef?.parameterDefList?.map {
-                    VexTypeExtractor.extractType(it)
-                } ?: emptyList()
-            calculateMatchScore(paramTypes, argTypes) == Int.MAX_VALUE
+            val match = evaluateMatch(candidate.parameterTypes, argTypes)
+            match?.isAllAssignable == true
         }
 
-        if (fullyAssignable.isNotEmpty()) {
-            return fullyAssignable.maxByOrNull { candidate ->
-                val paramTypes =
-                    candidate.parameterListDef?.parameterDefList?.map {
-                        VexTypeExtractor.extractType(it)
-                    } ?: emptyList()
-                calculatePartialMatchScore(paramTypes, argTypes)
-            }
-        }
-
-        return sameArity.maxByOrNull { candidate ->
-            val paramTypes =
-                candidate.parameterListDef?.parameterDefList?.map {
-                    VexTypeExtractor.extractType(it)
-                } ?: emptyList()
-            calculatePartialMatchScore(paramTypes, argTypes)
-        }
+        val pool = fullyAssignable.ifEmpty { sameArity }
+        return pool.maxByOrNull { calculatePartialMatchScore(it.parameterTypes, argTypes) }
     }
 
     private fun findBestApiOverload(
         overloads: List<VexFunction>,
         argTypes: List<VexType>,
     ): List<VexType>? {
-        val sameArityOverloads = overloads.filter {
+        val candidateOverloads = overloads.filter {
             it.args.size == argTypes.size || (it.isVariadic && argTypes.size >= it.args.size)
         }
-        if (sameArityOverloads.isEmpty()) return null
+        if (candidateOverloads.isEmpty()) return null
 
-        val parsedOverloads = sameArityOverloads.associateWith { overload ->
-            val baseArgs = overload.args.map { arg -> parseApiArgType(arg) }
-            if (overload.isVariadic && argTypes.size > baseArgs.size) {
-                baseArgs + List(argTypes.size - baseArgs.size) { VexType.UnknownType }
-            } else {
-                baseArgs
-            }
+        val parsedOverloads = candidateOverloads.associateWith {
+            it.resolveExpectedArgTypes(argTypes.size)
         }
 
-        // look for an overload where all arguments are assignable.
-        // If multiple are completely assignable (due to implicit casting), tie-break using exact
-        // matches.
-        val fullyAssignable = sameArityOverloads.filter { overload ->
-            val paramTypes = parsedOverloads[overload]!!
-            calculateMatchScore(paramTypes, argTypes) == Int.MAX_VALUE
+        val fullyAssignable = candidateOverloads.filter { overload ->
+            val match = evaluateMatch(parsedOverloads.getValue(overload), argTypes)
+            match?.isAllAssignable == true
         }
 
         if (fullyAssignable.isNotEmpty()) {
             val best =
-                fullyAssignable.maxByOrNull { overload ->
-                    val paramTypes = parsedOverloads[overload]!!
-                    calculatePartialMatchScore(
-                        paramTypes,
-                        argTypes,
-                    )
+                fullyAssignable.maxByOrNull {
+                    calculatePartialMatchScore(parsedOverloads.getValue(it), argTypes)
                 } ?: fullyAssignable.first()
-            return parsedOverloads[best]!!
+            return parsedOverloads[best]
         }
 
         val bestPartial =
-            sameArityOverloads.maxByOrNull { overload ->
-                val paramTypes = parsedOverloads[overload]!!
-                calculatePartialMatchScore(paramTypes, argTypes)
+            candidateOverloads.maxByOrNull {
+                calculatePartialMatchScore(parsedOverloads.getValue(it), argTypes)
             } ?: return null
 
-        return parsedOverloads[bestPartial]!!
+        return parsedOverloads[bestPartial]
     }
+
+    private fun VexFunction.resolveExpectedArgTypes(targetArity: Int): List<VexType> {
+        val baseArgs = args.map(::parseApiArgType)
+        return if (isVariadic && targetArity > baseArgs.size) {
+            baseArgs + List(targetArity - baseArgs.size) { VexType.UnknownType }
+        } else {
+            baseArgs
+        }
+    }
+
+    private val VexFunctionDef.parameterCount: Int
+        get() = parameterListDef?.parameterDefList?.size ?: 0
+
+    private val VexFunctionDef.parameterTypes: List<VexType>
+        get() = parameterListDef?.parameterDefList?.map(VexTypeExtractor::extractType).orEmpty()
+
+    private val VexFunctionDef.parameterNames: List<String>
+        get() = parameterListDef?.parameterDefList?.map { it.identifier.text }.orEmpty()
 }
