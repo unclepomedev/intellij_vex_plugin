@@ -960,4 +960,24 @@ class VexAnnotatorTest : VexTestBase() {
         )
         myFixture.checkHighlighting(false, false, false, false)
     }
+
+    fun testForeachVariableNoError() {
+        myFixture.configureByText(
+            VexFileType,
+            """
+            void main() {
+                int arr[] = {1, 2, 3};
+                foreach (int elem; arr) {
+                    int x = elem;
+                }
+                foreach (idx, val; arr) {
+                    int a = idx;
+                    int b = val;
+                }
+            }
+            """
+                .trimIndent(),
+        )
+        myFixture.checkHighlighting(false, false, false, false)
+    }
 }

@@ -25,3 +25,6 @@ val VexStructDef.identifier: PsiElement?
 
 val VexStructMember.identifier: PsiElement?
     get() = this.getLastIdentifier()
+
+val VexForeachVar.identifier: PsiElement
+    get() = this.getLastIdentifier()!!

@@ -194,6 +194,13 @@ private object VexStandardCompletionHandler {
                         VexLookupElementFactory.createVariable(name, isParameter = true)
                     )
                 }
+            } else if (variable is VexForeachVar) {
+                val name = variable.identifier.text
+                if (name.isNotEmpty() && seenNames.add(name)) {
+                    result.addElement(
+                        VexLookupElementFactory.createVariable(name, isParameter = false)
+                    )
+                }
             }
         }
     }

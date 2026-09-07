@@ -136,4 +136,32 @@ class VexTypeExtractorTest : VexTestBase() {
             VexTypeExtractor.extractType(declItems[3]),
         )
     }
+
+    fun testExtractForeachVarType() {
+        val code =
+            """
+            void main() {
+                int numbers[] = {1, 2, 3};
+                foreach (int n; numbers) {}
+                foreach (idx, val; numbers) {}
+                foreach (x; numbers) {}
+            }
+            """
+                .trimIndent()
+
+        myFixture.configureByText(VexFileType, code)
+        val file = myFixture.file as VexFile
+
+        val foreachVars = PsiTreeUtil.findChildrenOfType(file, VexForeachVar::class.java).toList()
+        assertEquals(4, foreachVars.size)
+
+        // int n
+        assertEquals(VexType.IntType, VexTypeExtractor.extractType(foreachVars[0]))
+        // idx (first of 2)
+        assertEquals(VexType.IntType, VexTypeExtractor.extractType(foreachVars[1]))
+        // val (second of 2)
+        assertEquals(VexType.IntType, VexTypeExtractor.extractType(foreachVars[2]))
+        // x (single untyped)
+        assertEquals(VexType.IntType, VexTypeExtractor.extractType(foreachVars[3]))
+    }
 }
