@@ -31,10 +31,10 @@ object VexTypeExtractor {
         val arrayType = if (expr != null) VexTypeInference.inferType(expr) else VexType.UnknownType
         val elementType = (arrayType as? VexType.ArrayType)?.elementType ?: VexType.UnknownType
 
-        return when {
-            vars.size == 1 -> elementType
-            vars.size == 2 && vars[0] == element -> VexType.IntType
-            vars.size == 2 && vars[1] == element -> elementType
+        return when (vars.size) {
+            1 -> elementType
+            2 if vars[0] == element -> VexType.IntType
+            2 if vars[1] == element -> elementType
             else -> VexType.UnknownType
         }
     }
