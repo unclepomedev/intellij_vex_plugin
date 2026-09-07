@@ -16,12 +16,9 @@ class VexAssignmentChecker(private val reporter: VexTypeCheckReporter) {
         val operatorKind = element.operatorKind
 
         if (operatorKind == null) {
-            if (
-                lhsType is VexType.ArrayType &&
-                    isLiteralInitializerList(rhsExpr) &&
-                    rhsType == VexType.UnknownType
-            )
+            if (lhsType is VexType.ArrayType && isLiteralInitializerList(rhsExpr)) {
                 return
+            }
             if (!VexTypePromotion.isAssignable(lhsType, rhsType)) {
                 reporter.reportIncompatibleAssignment(lhsType, rhsType, rhsExpr)
             }

@@ -500,6 +500,10 @@ class VexAnnotatorTest : VexTestBase() {
                 
                 int_arr = <error descr="Incompatible types: cannot assign 'float[]' to 'int[]'">float_arr</error>;
                 
+                // Vector literal assignment to array
+                int_arr = {1, 2, 3};
+                float_arr = {1.0, 2.0, 3.0};
+                
                 A a_obj;
                 B b_obj;
                 
