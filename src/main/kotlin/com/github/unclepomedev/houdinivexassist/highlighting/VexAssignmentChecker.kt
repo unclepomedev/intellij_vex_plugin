@@ -1,8 +1,10 @@
 package com.github.unclepomedev.houdinivexassist.highlighting
 
-import com.github.unclepomedev.houdinivexassist.psi.*
-import com.github.unclepomedev.houdinivexassist.types.*
-import com.intellij.psi.PsiElement
+import com.github.unclepomedev.houdinivexassist.psi.VexAssignExpr
+import com.github.unclepomedev.houdinivexassist.types.VexType
+import com.github.unclepomedev.houdinivexassist.types.VexTypeInference
+import com.github.unclepomedev.houdinivexassist.types.VexTypePromotion
+import com.github.unclepomedev.houdinivexassist.types.operatorKind
 
 class VexAssignmentChecker(private val reporter: VexTypeCheckReporter) {
     fun check(element: VexAssignExpr) {
@@ -16,7 +18,10 @@ class VexAssignmentChecker(private val reporter: VexTypeCheckReporter) {
         val operatorKind = element.operatorKind
 
         if (operatorKind == null) {
-            if (lhsType is VexType.ArrayType && isLiteralInitializerList(rhsExpr)) {
+            if (
+                lhsType is VexType.ArrayType &&
+                    VexTypePromotion.isArrayLiteralAssignable(lhsType, rhsExpr)
+            ) {
                 return
             }
             if (!VexTypePromotion.isAssignable(lhsType, rhsType)) {
@@ -36,7 +41,4 @@ class VexAssignmentChecker(private val reporter: VexTypeCheckReporter) {
             }
         }
     }
-
-    private fun isLiteralInitializerList(expr: PsiElement?): Boolean =
-        expr is VexPrimaryExpr && expr.vectorLiteral != null
 }

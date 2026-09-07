@@ -450,14 +450,15 @@ class VexAnnotatorTest : VexTestBase() {
             """
             void main() {
                 string s = "test";
-                s += 1; // OK: string + int = string
+                <error descr="Invalid operation: cannot apply operator to 'string' and 'int'">s += 1</error>;
+                s += "ing"; // OK: string + string = string
                 
                 vector v = {1,2,3};
                 matrix m = 1;
                 v *= m; // OK: vector * matrix = vector
                 
                 int i = 1;
-                <error descr="Incompatible types: cannot assign result of type 'string' to 'int'">i += "text"</error>;
+                <error descr="Invalid operation: cannot apply operator to 'int' and 'string'">i += "text"</error>;
                 <error descr="Invalid operation: cannot apply operator to 'int' and 'string'">i -= "text"</error>;
                 <error descr="Invalid operation: cannot apply operator to 'float' and 'int'">1.5 &= 2</error>;
             }
@@ -497,12 +498,15 @@ class VexAnnotatorTest : VexTestBase() {
             void main() {
                 int int_arr[];
                 float float_arr[];
+                string str_arr[];
                 
                 int_arr = <error descr="Incompatible types: cannot assign 'float[]' to 'int[]'">float_arr</error>;
                 
                 // Vector literal assignment to array
                 int_arr = {1, 2, 3};
                 float_arr = {1.0, 2.0, 3.0};
+                str_arr = <error descr="Incompatible types: cannot assign 'vector' to 'string[]'">{1, 2, 3}</error>;
+                int_arr = <error descr="Incompatible types: cannot assign 'vector' to 'int[]'">{"a", "b"}</error>;
                 
                 A a_obj;
                 B b_obj;
@@ -598,6 +602,7 @@ class VexAnnotatorTest : VexTestBase() {
             void main() {
                 int valid_arr[] = {1, 2, 3};
                 float invalid_arr[] = {1.0, 2.0, 3.0};
+                string bad_arr[] = <error descr="Incompatible types: cannot assign 'vector' to 'string[]'">{1, 2, 3}</error>;
                 
                 myProcessIntArray(valid_arr, 4); // OK: (int[], int)
                 

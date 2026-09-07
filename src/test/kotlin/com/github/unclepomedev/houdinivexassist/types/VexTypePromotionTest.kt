@@ -103,7 +103,7 @@ class VexTypePromotionTest {
             ),
         )
         assertEquals(
-            VexType.StringType,
+            VexType.UnknownType,
             VexTypePromotion.promote(
                 VexType.StringType,
                 VexType.IntType,
@@ -111,7 +111,7 @@ class VexTypePromotionTest {
             ),
         )
         assertEquals(
-            VexType.StringType,
+            VexType.UnknownType,
             VexTypePromotion.promote(
                 VexType.FloatType,
                 VexType.StringType,
