@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-09-07
+
 ### Fixed
 
 * Fixed unresolved reference for `foreach` loop variables.
